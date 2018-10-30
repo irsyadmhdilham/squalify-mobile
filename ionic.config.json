@@ -1,0 +1,8 @@
+{
+  "name": "mobile",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "pro_id": "e6e0337b"
+}
