@@ -1,4 +1,5 @@
 page-home
+
   header
     display: grid
     grid-template-columns: 1fr auto 1fr
@@ -10,3 +11,62 @@ page-home
   
     button
       justify-self: end
+  
+  #main
+    background: color($colors, light)
+
+    .container
+      background: white
+
+
+    #top-container
+
+      #agency-image
+        background: lighten(grey, 40%)
+        width: 55px
+        border-radius: 100%
+        height: 55px
+
+      #title
+        margin-left: 1em
+
+        h2
+          margin: 0
+          font-weight: 300
+          
+        h3
+          margin: 0
+          font-weight: bold
+      
+      #create-container
+        h6
+          margin: 0 0 5px 0
+          font-size: 1em
+          font-weight: bold
+        
+        .create-wrapper
+          display: flex
+          flex-direction: column
+
+          p
+            margin: 2px 0 0 0
+            font-size: 0.95em
+
+    #points-container
+      margin-top: 8px
+
+      h6
+        font-weight: bold
+        font-size: 1em
+      
+      .points-wrapper
+        display: flex
+        flex-direction: column
+
+        .points-button
+          font-size: 2.7em
+          font-weight: 300
+          height: 1.1em
+        
+        p
+          font-size: 0.95em

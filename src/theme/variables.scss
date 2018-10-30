@@ -37,7 +37,7 @@ $colors: (
   primary:    #17BFB9,
   secondary:  #32db64,
   danger:     #f53d3d,
-  light:      #f4f4f4,
+  light:      #F5F5F5,
   dark:       #4A4A4A,
   grey:       #9B9B9B
 );
@@ -87,3 +87,8 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+
+$tabs-background: #FFF;
+$toolbar-background: #FFF;
+$text-color: color($colors, dark);
+$img-placeholder-background: transparent;
