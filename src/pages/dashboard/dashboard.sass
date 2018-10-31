@@ -9,7 +9,7 @@ page-dashboard
     p
       font-size: 0.93em
 
-    h5
+    h6
       font-weight: bold
       margin: 0 0 0 0.5em
   
@@ -21,3 +21,29 @@ page-dashboard
   
   .point-image
     width: 2em
+  
+  section
+    margin-top: 1em
+
+    ion-row + ion-row .schedule div
+      padding-top: 1em
+
+    .schedule
+      display: grid
+      grid-template-columns: 1fr 2.8fr
+      grid-column-gap: 1em
+      width: 100%
+
+      div:first-child
+        border-right: solid 1px color($colors, lightGrey)
+      
+      div:last-child
+
+        .schedule-title
+          font-size: 1em
+        
+        ion-row
+          margin-top: 0.3em
+
+          p
+            margin-left: 0.5em
