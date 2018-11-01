@@ -10,6 +10,9 @@ import { ApplicationsPage } from "../pages/applications/applications";
 import { InboxPage } from "../pages/inbox/inbox";
 import { ProfilePage } from "../pages/profile/profile";
 
+import { EpfCalculatorPage } from "../pages/applications/epf-calculator/epf-calculator";
+import { EpfElaborationPage } from "../pages/applications/epf-calculator/epf-elaboration/epf-elaboration";
+
 import { DirectivesModule } from "../directives/directives.module";
 import { ComponentsModule } from "../components/components.module";
 
@@ -24,6 +27,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     TabsPage,
     ApplicationsPage,
+    EpfCalculatorPage,
+    EpfElaborationPage,
     InboxPage
   ],
   imports: [
@@ -40,6 +45,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     TabsPage,
     ApplicationsPage,
+    EpfCalculatorPage,
+    EpfElaborationPage,
     InboxPage
   ],
   providers: [

@@ -1,10 +1,19 @@
 <ion-header>
-  <app-header></app-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear=true color="grey">
+        <ion-icon name="notifications"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 <ion-content padding>
   <section>
-    <div class="app" *ngFor="let app of apps">
+    <div (tap)="navigate(app)" class="app" *ngFor="let app of apps">
       <img src="{{app.img}}" alt="{{app.caption}}">
       <p text-center>{{app.caption}}</p>
     </div>
