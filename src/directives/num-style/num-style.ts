@@ -15,7 +15,7 @@ export class NumStyleDirective implements OnInit {
     if (this.numFontSize) {
       this.el.nativeElement.style.fontSize = this.numFontSize;
     } else {
-      this.el.nativeElement.style.fontSize = '3em';
+      this.el.nativeElement.style.fontSize = '2.5em';
     }
   }
 

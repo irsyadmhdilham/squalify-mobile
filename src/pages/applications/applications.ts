@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the ApplicationsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+interface app {
+  img: string;
+  caption: string;
+}
 
 @IonicPage()
 @Component({
@@ -15,11 +13,13 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ApplicationsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  apps: app[];
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad ApplicationsPage');
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.apps = [
+      { img: '../../assets/imgs/apps/epf.png', caption: 'Unit trust EPF calculator' },
+      { img: '../../assets/imgs/apps/cash.png', caption: 'Unit trust cash calculator' }
+    ];
   }
 
 }

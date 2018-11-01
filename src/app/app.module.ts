@@ -11,6 +11,7 @@ import { InboxPage } from "../pages/inbox/inbox";
 import { ProfilePage } from "../pages/profile/profile";
 
 import { DirectivesModule } from "../directives/directives.module";
+import { ComponentsModule } from "../components/components.module";
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -28,6 +29,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   imports: [
     BrowserModule,
     DirectivesModule,
+    ComponentsModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
