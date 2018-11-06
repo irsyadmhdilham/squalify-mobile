@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { EpfCalculatorPage } from "./epf-calculator/epf-calculator";
+import { EpfElaborationPage } from "./epf-calculator/epf-elaboration/epf-elaboration";
 
 interface app {
   img: string;
@@ -27,6 +28,11 @@ export class ApplicationsPage {
 
   navigate(page) {
     this.navCtrl.push(page.component);
+  }
+
+  ionViewDidLoad() {
+    this.navCtrl.push(EpfElaborationPage);
+    // this.navCtrl.push(EpfCalculatorPage);
   }
 
 }

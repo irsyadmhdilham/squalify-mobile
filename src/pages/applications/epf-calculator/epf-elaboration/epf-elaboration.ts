@@ -1,13 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the EpfElaborationPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @IonicPage()
 @Component({
   selector: 'page-epf-elaboration',
@@ -15,11 +8,29 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class EpfElaborationPage {
 
+  rate = 6;
+  rates: number[] = [6, 8, 10, 12];
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EpfElaborationPage');
+  rateActive(rate) {
+    if (rate === this.rate) {
+      return 'white';
+    } else {
+      return 'dark';
+    }
+  }
+
+  rateSelect(rate) {
+    this.rate = rate;
+  }
+
+  active(rate) {
+    if (rate !== this.rate) {
+      return false;
+    }
+    return true;
   }
 
 }

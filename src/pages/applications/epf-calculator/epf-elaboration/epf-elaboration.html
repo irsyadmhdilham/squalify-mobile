@@ -4,6 +4,14 @@
       <img style="width: 5em" src="../../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
   </ion-navbar>
+  <section padding-horizontal>
+    <h6 no-margin>Interest rate</h6>
+    <ion-row id="interests-container">
+      <div (tap)="rateSelect(rate)" header-button [activeButton]="active(rate)" *ngFor="let rate of rates">
+        <p ion-text [color]="rateActive(rate)" no-margin>{{rate}}%</p>
+      </div>
+    </ion-row>
+  </section>
 </ion-header>
 
 <ion-content padding>
