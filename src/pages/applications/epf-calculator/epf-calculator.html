@@ -12,11 +12,11 @@
     <ion-list>
       <ion-item no-lines no-padding>
         <ion-label stacked>TOTAL ACCOUNT ONE</ion-label>
-        <ion-input [(ngModel)]="accountOne" type="number" placeholder="Insert amount"></ion-input>
+        <ion-input [(ngModel)]="accountOne" (keydown)="accountOneKey($event)" #accOne="ngModel" type="number" required placeholder="Insert amount"></ion-input>
       </ion-item>
       <ion-item no-lines no-padding>
         <ion-label stacked>AGE</ion-label>
-        <ion-input [(ngModel)]="age" type="number" placeholder="Insert age"></ion-input>
+        <ion-input [(ngModel)]="age" type="number" (keydown)="ageKey($event, accOne, currentAge)" #_age #currentAge="ngModel" required placeholder="Insert age"></ion-input>
       </ion-item>
     </ion-list>
     <div id="basic-saving-wrapper">
@@ -29,6 +29,6 @@
     </div>
   </section>
   <ion-row margin-top justify-content-center>
-    <button (tap)="toElaborate()" ion-button clear strong>View elaboration</button>
+    <button (tap)="toElaborate(accOne, currentAge)" ion-button clear strong>View elaboration</button>
   </ion-row>
 </ion-content>

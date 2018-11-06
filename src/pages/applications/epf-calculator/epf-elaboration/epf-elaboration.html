@@ -34,22 +34,31 @@
     <ion-col col-2></ion-col>
     <ion-col padding>
       <p no-margin>Present to retirement</p>
-      <h3 ion-text color="primary" no-margin>{{presentToRetirement}} years</h3>
+      <h3 ion-text color="primary" no-margin>{{presentToRetirement()}} years</h3>
     </ion-col>
   </ion-row>
   <ion-row margin-top>
     <ion-col col-2>
       <div no-margin class="bullet"></div>
     </ion-col>
-    <ion-col class="container" padding>
-      <div>
-        <h3 ion-text color="primary" no-margin num-style numFontSize="2em">55</h3>
-        <p class="descriptor" ion-text color="grey" no-margin>RETIREMENT AGE</p>
-      </div>
-      <div margin-top>
-        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{futureValue | numCommas}}</h3>
-        <p ion-text class="descriptor" color="grey" no-margin>FUTURE VALUE</p>
-      </div>
+    <ion-col [ngClass]="showFV ? 'container' : false" padding>
+      <ng-container *ngIf="!showFV; then showFVButton; else FV"></ng-container>
+      <ng-template #showFVButton>
+        <button ion-button outline round (tap)="_showFV()">Show future value</button>
+      </ng-template>
+      <ng-template #FV>
+        <div>
+          <h3 ion-text color="primary" no-margin num-style numFontSize="2em">55</h3>
+          <p class="descriptor" ion-text color="grey" no-margin>RETIREMENT AGE</p>
+        </div>
+        <div margin-top>
+          <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{futureValue() | numCommas}}</h3>
+          <p ion-text class="descriptor" color="grey" no-margin>FUTURE VALUE</p>
+        </div>
+      </ng-template>
     </ion-col>
+  </ion-row>
+  <ion-row margin-top justify-content-center>
+    <button (tap)="toRetirementPlan()" ion-button clear strong>Retirement plan</button>
   </ion-row>
 </ion-content>

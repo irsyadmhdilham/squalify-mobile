@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { EpfCalculatorPage } from "./epf-calculator/epf-calculator";
-import { EpfElaborationPage } from "./epf-calculator/epf-elaboration/epf-elaboration";
 
 interface app {
   img: string;

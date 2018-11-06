@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { EpfRetirementPlanPage } from "../epf-retirement-plan/epf-retirement-plan";
+
 @IonicPage()
 @Component({
   selector: 'page-epf-elaboration',
@@ -12,10 +14,19 @@ export class EpfElaborationPage {
   rates: number[] = [6, 8, 10, 12];
   presentAge = 0;
   presentValue = 0;
-  presentToRetirement = 28;
-  futureValue = 23233;
+  showFV = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams
+  ) { }
+
+  presentToRetirement() {
+    return 55 - this.presentAge;
+  }
+
+  _showFV() {
+    this.showFV = true;
   }
 
   rateActive(rate) {
@@ -42,6 +53,17 @@ export class EpfElaborationPage {
           presentValue = this.navParams.get('presentValue');
     this.presentAge = age;
     this.presentValue = presentValue;
+  }
+
+  futureValue() {
+    const rate = (1 + (this.rate / 100)),
+          power = Math.pow(rate, ( 55 - this.presentAge)),
+          result = Math.round(this.presentValue * power);
+    return result;
+  }
+
+  toRetirementPlan() {
+    this.navCtrl.push(EpfRetirementPlanPage);
   }
 
 }

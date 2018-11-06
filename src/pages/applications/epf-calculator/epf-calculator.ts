@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Alert } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, AlertController, Keyboard } from 'ionic-angular';
 
 import { EpfElaborationPage } from "./epf-elaboration/epf-elaboration";
 const epfSchemes = require('../../../assets/epf-schemes.json');
@@ -17,27 +17,43 @@ export class EpfCalculatorPage {
   accountOne: string;
   age: string;
   saving: number;
+  @ViewChild('_age') _age;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private keyboard: Keyboard
   ) { }
 
-  toElaborate() {
-    if (!this.age || this.age === '') {
+  accountOneKey(event) {
+    const key = event.key;
+    if (key === 'Enter') {
+      this._age.setFocus();
+    }
+  }
+
+  ageKey(event) {
+    const key = event.key;
+    if (key === 'Enter') {
+      this.keyboard.close();
+    }
+  }
+
+  toElaborate(accountOne, age) {
+    if (accountOne.invalid) {
       const alert = this.alertCtrl.create({
-        title: 'Age not defined',
-        subTitle: 'Please insert age',
+        title: 'Account one not defined',
+        subTitle: 'Please insert ammount account one',
         buttons: ['Ok']
       });
       alert.present();
       return;
     }
-    if ( !this.accountOne || this.accountOne === '') {
+    if (age.invalid) {
       const alert = this.alertCtrl.create({
-        title: 'Account one not defined',
-        subTitle: 'Please insert ammount account one',
+        title: 'Age not defined',
+        subTitle: 'Please insert age',
         buttons: ['Ok']
       });
       alert.present();
@@ -67,7 +83,11 @@ export class EpfCalculatorPage {
     if (!this.age || this.age === '' || !this.accountOne || this.accountOne === '') {
       return 0;
     }
-    return ( accountOne - this.saving ) * 0.3;
+    const value = ( accountOne - this.saving ) * 0.3
+    if (value < 0) {
+      return 0;
+    }
+    return value;
   }
 
 }
