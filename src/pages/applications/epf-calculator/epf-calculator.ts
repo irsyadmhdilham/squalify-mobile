@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Alert } from 'ionic-angular';
 
 import { EpfElaborationPage } from "./epf-elaboration/epf-elaboration";
 const epfSchemes = require('../../../assets/epf-schemes.json');
@@ -18,11 +18,35 @@ export class EpfCalculatorPage {
   age: string;
   saving: number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private alertCtrl: AlertController
+  ) { }
 
   toElaborate() {
-    this.navCtrl.push(EpfElaborationPage);
+    if (!this.age || this.age === '') {
+      const alert = this.alertCtrl.create({
+        title: 'Age not defined',
+        subTitle: 'Please insert age',
+        buttons: ['Ok']
+      });
+      alert.present();
+      return;
+    }
+    if ( !this.accountOne || this.accountOne === '') {
+      const alert = this.alertCtrl.create({
+        title: 'Account one not defined',
+        subTitle: 'Please insert ammount account one',
+        buttons: ['Ok']
+      });
+      alert.present();
+      return;
+    }
+    this.navCtrl.push(EpfElaborationPage, {
+      age: this.age,
+      presentValue: this.total()
+    });
   }
 
   basicSaving() {
@@ -43,7 +67,7 @@ export class EpfCalculatorPage {
     if (!this.age || this.age === '' || !this.accountOne || this.accountOne === '') {
       return 0;
     }
-    return roundDecimal(( accountOne - this.saving ) * 0.3);
+    return ( accountOne - this.saving ) * 0.3;
   }
 
 }

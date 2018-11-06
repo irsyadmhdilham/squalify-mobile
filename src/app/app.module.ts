@@ -15,6 +15,7 @@ import { EpfElaborationPage } from "../pages/applications/epf-calculator/epf-ela
 
 import { DirectivesModule } from "../directives/directives.module";
 import { ComponentsModule } from "../components/components.module";
+import { PipesModule } from "../pipes/pipes.module";
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -35,6 +36,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     BrowserModule,
     DirectivesModule,
     ComponentsModule,
+    PipesModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
