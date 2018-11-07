@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Change email</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list no-lines>
+    <ion-item>
+      <ion-label stacked>EMAIL</ion-label>
+      <ion-input
+        ngModel
+        #email="ngModel"
+        (keydown)="focusInputField($event)"
+        type="email"
+        required
+        placeholder="Insert current email"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>NEW EMAIL</ion-label>
+      <ion-input
+        ngModel
+        #newEmail="ngModel"
+        required
+        #_newEmail
+        (keydown)="returnKeyNewEmail(email, newEmail)"
+        type="email"
+        placeholder="Insert new email"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button (tap)="submit(email, newEmail)" ion-button clear strong>Change email</button>
+  </ion-row>
+</ion-content>

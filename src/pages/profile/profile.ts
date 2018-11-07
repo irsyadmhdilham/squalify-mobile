@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
+import { ChangePasswordComponent } from "../../components/change-password/change-password";
+import { ChangeEmailComponent } from "../../components/change-email/change-email";
+import { EditProfileComponent } from "../../components/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
-import { PushNotificationsPage } from "./settings/push-notifications/push-notifications";
 
 @IonicPage()
 @Component({
@@ -16,15 +18,29 @@ export class ProfilePage {
   agency = 'Vision Victory Empire';
   company = 'CWA';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private modalCtrl: ModalController
+  ) { }
 
   toSettings() {
     this.navCtrl.push(SettingsPage);
   }
 
-  ionViewDidLoad() {
-    this.navCtrl.push(PushNotificationsPage);
+  changePassword() {
+    const modal = this.modalCtrl.create(ChangePasswordComponent);
+    modal.present();
+  }
+
+  changeEmail() {
+    const modal = this.modalCtrl.create(ChangeEmailComponent);
+    modal.present();
+  }
+
+  editProfile() {
+    const modal = this.modalCtrl.create(EditProfileComponent);
+    modal.present();
   }
 
 }

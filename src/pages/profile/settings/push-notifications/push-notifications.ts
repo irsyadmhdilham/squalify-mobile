@@ -11,11 +11,13 @@ export class PushNotificationsPage {
   schedule: boolean;
   agencySales: boolean;
   mentions: boolean;
+  directMessage: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.schedule = true;
     this.agencySales = true;
     this.mentions = true;
+    this.directMessage = true;
   }
 
 }

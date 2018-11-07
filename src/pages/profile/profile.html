@@ -14,7 +14,7 @@
 <ion-content>
   <section padding>
     <ion-row justify-content-end>
-      <button ion-button clear small no-margin no-padding>Edit profile</button>
+      <button (tap)="editProfile()" ion-button clear small no-margin no-padding>Edit profile</button>
     </ion-row>
     <section id="profile-container">
       <div id="profile-image"></div>
@@ -28,10 +28,10 @@
   </section>
   <section class="bottom">
     <ion-list no-lines>
-      <ion-item>
+      <ion-item (tap)="changeEmail()">
         <button no-padding ion-button clear color="dark">Change email</button>
       </ion-item>
-      <ion-item>
+      <ion-item (tap)="changePassword()">
         <button no-padding ion-button clear color="dark">Change password</button>
       </ion-item>
       <ion-item (tap)="toSettings()">

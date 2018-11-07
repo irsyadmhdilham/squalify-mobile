@@ -26,6 +26,10 @@ import { PipesModule } from "../pipes/pipes.module";
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
+import { ChangePasswordComponent } from "../components/change-password/change-password";
+import { ChangeEmailComponent } from "../components/change-email/change-email";
+import { EditProfileComponent } from "../components/edit-profile/edit-profile";
+
 @NgModule({
   declarations: [
     MyApp,
@@ -41,7 +45,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     EpfRetirementPlanPage,
     CashCalculatorPage,
     CashElaborationPage,
-    InboxPage
+    InboxPage,
+    ChangePasswordComponent,
+    ChangeEmailComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +72,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     EpfRetirementPlanPage,
     CashCalculatorPage,
     CashElaborationPage,
-    InboxPage
+    InboxPage,
+    ChangePasswordComponent,
+    ChangeEmailComponent,
+    EditProfileComponent
   ],
   providers: [
     StatusBar,

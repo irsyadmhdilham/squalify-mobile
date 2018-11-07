@@ -14,17 +14,17 @@
       <ion-item no-padding>
         <img src="../../../assets/imgs/google.png" alt="google" item-start>
         <p no-margin ion-text color="dark">Google</p>
-        <button item-end ion-button clear>Connect</button>
+        <button [color]="socialNetwork.google === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.google === null ? 'Connect' : socialNetwork.google}}</button>
       </ion-item>
       <ion-item no-padding>
         <img src="../../../assets/imgs/facebook.png" alt="facebook" item-start>
         <p no-margin ion-text color="dark">Facebook</p>
-        <button item-end ion-button clear>Connect</button>
+        <button [color]="socialNetwork.facebook === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.facebook === null ? 'Connect' : socialNetwork.facebook}}</button>
       </ion-item>
       <ion-item no-padding>
         <img src="../../../assets/imgs/dropbox.png" alt="dropbox" item-start>
         <p no-margin ion-text color="dark">Dropbox</p>
-        <button item-end ion-button clear>Connect</button>
+        <button [color]="socialNetwork.dropbox === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.dropbox === null ? 'Connect' : socialNetwork.dropbox}}</button>
       </ion-item>
     </ion-list>
   </section>
@@ -33,7 +33,7 @@
     <ion-list no-lines>
       <ion-item no-padding>
         <ion-label class="setting-label" color="dark">Email notification</ion-label>
-        <ion-toggle></ion-toggle>
+        <ion-toggle [(ngModel)]="emailNotification"></ion-toggle>
       </ion-item>
       <ion-item (tap)="pushNotifications()" no-padding detail-push>
         <ion-label class="setting-label" color="dark">Push notifications</ion-label>
