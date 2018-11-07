@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 
 import { ChangePasswordComponent } from "../../components/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/change-email/change-email";
@@ -21,7 +21,8 @@ export class ProfilePage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private alertCtrl: AlertController
   ) { }
 
   toSettings() {
@@ -41,6 +42,22 @@ export class ProfilePage {
   editProfile() {
     const modal = this.modalCtrl.create(EditProfileComponent);
     modal.present();
+  }
+
+  _signOut() {
+    
+  }
+
+  signOut() {
+    const alert = this.alertCtrl.create({
+      title: 'Are you sure',
+      subTitle: 'Are you sure to sign out?',
+      buttons: [
+        { text: 'Cancel' },
+        { text: 'Sign out', cssClass: 'danger-alert', handler: this._signOut }
+      ]
+    });
+    alert.present();
   }
 
 }
