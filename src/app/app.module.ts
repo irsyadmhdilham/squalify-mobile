@@ -13,6 +13,8 @@ import { ProfilePage } from "../pages/profile/profile";
 import { EpfCalculatorPage } from "../pages/applications/epf-calculator/epf-calculator";
 import { EpfElaborationPage } from "../pages/applications/epf-calculator/epf-elaboration/epf-elaboration";
 import { EpfRetirementPlanPage } from "../pages/applications/epf-calculator/epf-retirement-plan/epf-retirement-plan";
+import { CashCalculatorPage } from "../pages/applications/cash-calculator/cash-calculator";
+import { CashElaborationPage } from "../pages/applications/cash-calculator/cash-elaboration/cash-elaboration";
 
 import { DirectivesModule } from "../directives/directives.module";
 import { ComponentsModule } from "../components/components.module";
@@ -32,6 +34,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     EpfCalculatorPage,
     EpfElaborationPage,
     EpfRetirementPlanPage,
+    CashCalculatorPage,
+    CashElaborationPage,
     InboxPage
   ],
   imports: [
@@ -52,6 +56,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     EpfCalculatorPage,
     EpfElaborationPage,
     EpfRetirementPlanPage,
+    CashCalculatorPage,
+    CashElaborationPage,
     InboxPage
   ],
   providers: [

@@ -7,5 +7,65 @@
 </ion-header>
 
 <ion-content content-bg padding>
-
+  <div margin-bottom id="desired-monthly-income-wrapper">
+    <ion-label stacked>DESIRED MONTHLY INCOME</ion-label>
+    <ion-input [(ngModel)]="desiredIncome" type="number" no-margin placeholder="Insert amount"></ion-input>
+  </div>
+  <ion-row margin-bottom>
+    <ion-col col-2>
+      <div no-margin class="bullet"></div>
+    </ion-col>
+    <ion-col padding class="container">
+      <div>
+        <h3 ion-text color="primary" num-style numFontSize="2em" no-margin>{{presentAge}}</h3>
+        <p class="descriptor" ion-text color="grey" no-margin>PRESENT AGE</p>
+      </div>
+      <div margin-top>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{presentIncome() | numCommas}}</h3>
+        <p class="descriptor" ion-text color="grey" no-margin>PRESENT VALUE</p>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row padding-vertical>
+    <ion-col col-2></ion-col>
+    <ion-col padding>
+      <p no-margin>Present to retirement</p>
+      <h3 ion-text color="primary" no-margin>{{presentToRetirement()}} years</h3>
+    </ion-col>
+  </ion-row>
+  <ion-row margin-top>
+    <ion-col col-2>
+      <div no-margin class="bullet"></div>
+    </ion-col>
+    <ion-col padding class="container">
+      <div>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2em">55</h3>
+        <p class="descriptor" ion-text color="grey" no-margin>RETIREMENT AGE</p>
+      </div>
+      <div margin-top>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{requiredAmount() | numCommas}}</h3>
+        <p ion-text class="descriptor" color="grey" no-margin>REQUIRED AMOUNT</p>
+      </div>
+      <div margin-top>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{amountAfterInflation() | numCommas}}</h3>
+        <p ion-text class="descriptor" color="grey" no-margin>AMOUNT AFTER INFLATION</p>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row padding-vertical>
+    <ion-col col-2></ion-col>
+    <ion-col padding>
+      <p no-margin>Retirement to end</p>
+      <h3 ion-text color="primary" no-margin>20 years</h3>
+    </ion-col>
+  </ion-row>
+  <ion-row margin-vertical>
+    <ion-col col-2>
+      <div no-margin class="bullet"></div>
+    </ion-col>
+    <ion-col>
+      <p no-margin>End</p>
+      <h3 ion-text color="primary" no-margin>75 years old</h3>
+    </ion-col>
+  </ion-row>
 </ion-content>

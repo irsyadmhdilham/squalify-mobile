@@ -1,0 +1,47 @@
+<ion-header padding-bottom>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+  <section padding-horizontal>
+    <h6 no-margin>Interest rate</h6>
+    <ion-row id="interests-container">
+      <div (tap)="rateSelect(rate)" header-button [activeButton]="active(rate)" *ngFor="let rate of rates">
+        <p ion-text [color]="rateActive(rate)" no-margin>{{rate}}%</p>
+      </div>
+    </ion-row>
+  </section>
+</ion-header>
+
+<ion-content content-bg padding>
+  <ion-row margin-bottom>
+    <ion-col col-2>
+      <div no-margin class="bullet"></div>
+    </ion-col>
+    <ion-col padding class="container">
+      <div margin-top>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{presentValue | numCommas}}</h3>
+        <p class="descriptor" ion-text color="grey" no-margin>PRESENT VALUE</p>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ion-row padding-vertical>
+    <ion-col col-2></ion-col>
+    <ion-col padding>
+      <p no-margin>Duration</p>
+      <h3 ion-text color="primary" no-margin>{{duration}} years</h3>
+    </ion-col>
+  </ion-row>
+  <ion-row margin-top>
+    <ion-col col-2>
+      <div no-margin class="bullet"></div>
+    </ion-col>
+    <ion-col class="container" padding>
+      <div margin-top>
+        <h3 ion-text color="primary" no-margin num-style numFontSize="2.2em">RM{{futureValue() | numCommas}}</h3>
+        <p ion-text class="descriptor" color="grey" no-margin>FUTURE VALUE</p>
+      </div>
+    </ion-col>
+  </ion-row>
+</ion-content>

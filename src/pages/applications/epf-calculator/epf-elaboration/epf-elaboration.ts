@@ -63,7 +63,9 @@ export class EpfElaborationPage {
   }
 
   toRetirementPlan() {
-    this.navCtrl.push(EpfRetirementPlanPage);
+    this.navCtrl.push(EpfRetirementPlanPage, {
+      age: this.presentAge
+    });
   }
 
 }

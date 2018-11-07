@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <h5 title>Future value</h5>
+  <section>
+    <ion-list>
+      <ion-item no-lines no-padding>
+        <ion-label stacked>PRINCIPAL AMOUNT</ion-label>
+        <ion-input [(ngModel)]="principal" (keydown)="focusInputField('principal', $event)" type="number" #principalNgModel="ngModel" required placeholder="Insert amount"></ion-input>
+      </ion-item>
+      <ion-item no-lines no-padding>
+        <ion-label stacked>MONTHLY ADDITION</ion-label>
+        <ion-input [(ngModel)]="monthlyAddition" (keydown)="focusInputField('monthly addition', $event)" type="number" #_monthlyAddition placeholder="Insert amount"></ion-input>
+      </ion-item>
+      <ion-item no-lines no-padding>
+        <ion-label stacked>INTEREST RATE %</ion-label>
+        <ion-input [(ngModel)]="interestRate" (keydown)="focusInputField('interest rate', $event)" type="number" #interestRateNgModel="ngModel" #_interestRate required placeholder="Insert amount"></ion-input>
+      </ion-item>
+      <ion-item no-lines no-padding>
+        <ion-label stacked>DURATION (year)</ion-label>
+        <ion-input [(ngModel)]="duration" (keydown)="keyboardDown($event)" type="number" #durationNgModel="ngModel" #_duration required placeholder="Insert amount"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div id="total-amount" margin-top>
+      <h1 no-margin num-style ion-text color="primary">RM{{futureValueOutput() | numCommas}}</h1>
+      <p no-margin ion-text color="grey">FUTURE VALUE</p>
+    </div>
+  </section>
+  <ion-row margin-top justify-content-center>
+    <button (tap)="toElaborate(principalNgModel, interestRateNgModel, durationNgModel)" ion-button clear strong>View elaboration</button>
+  </ion-row>
+</ion-content>

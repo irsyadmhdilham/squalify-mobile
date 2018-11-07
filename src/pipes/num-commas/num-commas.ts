@@ -7,6 +7,9 @@ import { roundDecimal } from "../../functions/number-commas";
 export class NumCommasPipe implements PipeTransform {
 
   transform(value: number) {
+    if (isNaN(value)) {
+      return 0;
+    }
     return roundDecimal(value);
   }
 }
