@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the ProfilePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { SettingsPage } from "./settings/settings";
+import { PushNotificationsPage } from "./settings/push-notifications/push-notifications";
 
 @IonicPage()
 @Component({
@@ -15,11 +11,20 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ProfilePage {
 
+  name = 'Irsyad Mhd Ilham';
+  designation = 'Group Agency Manager';
+  agency = 'Vision Victory Empire';
+  company = 'CWA';
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
+  toSettings() {
+    this.navCtrl.push(SettingsPage);
+  }
+
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ProfilePage');
+    this.navCtrl.push(PushNotificationsPage);
   }
 
 }

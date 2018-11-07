@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list no-lines>
+    <ion-list-header>Push notifications</ion-list-header>
+    <ion-item>
+      <ion-label class="setting-label">Schedule reminder</ion-label>
+      <ion-toggle [(ngModel)]="schedule"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label class="setting-label">Agency sales</ion-label>
+      <ion-toggle [(ngModel)]="agencySales"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label class="setting-label">Mentions</ion-label>
+      <ion-toggle [(ngModel)]="mentions"></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

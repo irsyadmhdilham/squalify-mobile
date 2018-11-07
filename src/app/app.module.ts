@@ -16,6 +16,9 @@ import { EpfRetirementPlanPage } from "../pages/applications/epf-calculator/epf-
 import { CashCalculatorPage } from "../pages/applications/cash-calculator/cash-calculator";
 import { CashElaborationPage } from "../pages/applications/cash-calculator/cash-elaboration/cash-elaboration";
 
+import { SettingsPage } from "../pages/profile/settings/settings";
+import { PushNotificationsPage } from "../pages/profile/settings/push-notifications/push-notifications";
+
 import { DirectivesModule } from "../directives/directives.module";
 import { ComponentsModule } from "../components/components.module";
 import { PipesModule } from "../pipes/pipes.module";
@@ -27,6 +30,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     ProfilePage,
+    SettingsPage,
+    PushNotificationsPage,
     DashboardPage,
     HomePage,
     TabsPage,
@@ -49,6 +54,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     ProfilePage,
+    SettingsPage,
+    PushNotificationsPage,
     DashboardPage,
     HomePage,
     TabsPage,

@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <section padding class="content-container">
+    <h5 title>Settings</h5>
+    <ion-list-header no-padding>Account connected</ion-list-header>
+    <ion-list no-lines>
+      <ion-item no-padding>
+        <img src="../../../assets/imgs/google.png" alt="google" item-start>
+        <p no-margin ion-text color="dark">Google</p>
+        <button item-end ion-button clear>Connect</button>
+      </ion-item>
+      <ion-item no-padding>
+        <img src="../../../assets/imgs/facebook.png" alt="facebook" item-start>
+        <p no-margin ion-text color="dark">Facebook</p>
+        <button item-end ion-button clear>Connect</button>
+      </ion-item>
+      <ion-item no-padding>
+        <img src="../../../assets/imgs/dropbox.png" alt="dropbox" item-start>
+        <p no-margin ion-text color="dark">Dropbox</p>
+        <button item-end ion-button clear>Connect</button>
+      </ion-item>
+    </ion-list>
+  </section>
+  <section padding class="content-container bottom-container">
+    <ion-list-header no-padding>Notifications</ion-list-header>
+    <ion-list no-lines>
+      <ion-item no-padding>
+        <ion-label class="setting-label" color="dark">Email notification</ion-label>
+        <ion-toggle></ion-toggle>
+      </ion-item>
+      <ion-item (tap)="pushNotifications()" no-padding detail-push>
+        <ion-label class="setting-label" color="dark">Push notifications</ion-label>
+      </ion-item>
+    </ion-list>
+  </section>
+  <section padding class="content-container bottom-container">
+    <ion-list-header no-padding>General</ion-list-header>
+    <ion-list no-lines>
+      <ion-item no-padding>
+        <p ion-text color="dark">Request remove account</p>
+      </ion-item>
+      <ion-item no-padding>
+        <p ion-text color="dark">Terms and conditions</p>
+      </ion-item>
+      <ion-item no-padding>
+        <p item-start ion-text color="dark">App version</p>
+        <p item-end ion-text color="dark">1.1.0</p>
+      </ion-item>
+    </ion-list>
+  </section>
+</ion-content>

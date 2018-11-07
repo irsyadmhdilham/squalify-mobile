@@ -1,18 +1,48 @@
-<!--
-  Generated template for the ProfilePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>profile</ion-title>
+    <ion-title>
+      <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear=true color="grey">
+        <ion-icon name="notifications"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content>
+  <section padding>
+    <ion-row justify-content-end>
+      <button ion-button clear small no-margin no-padding>Edit profile</button>
+    </ion-row>
+    <section id="profile-container">
+      <div id="profile-image"></div>
+      <h5>{{name}}</h5>
+      <ion-chip color="primary">
+        <ion-label>{{designation}}</ion-label>
+      </ion-chip>
+      <h6>{{agency}}</h6>
+      <p no-margin ion-text color="grey">{{company}}</p>
+    </section>
+  </section>
+  <section class="bottom">
+    <ion-list no-lines>
+      <ion-item>
+        <button no-padding ion-button clear color="dark">Change email</button>
+      </ion-item>
+      <ion-item>
+        <button no-padding ion-button clear color="dark">Change password</button>
+      </ion-item>
+      <ion-item (tap)="toSettings()">
+        <button no-padding ion-button clear color="dark">Settings</button>
+      </ion-item>
+      <ion-item>
+        <button no-padding ion-button clear color="dark">Helps</button>
+      </ion-item>
+      <ion-item>
+        <button no-padding ion-button clear color="danger">Sign out</button>
+      </ion-item>
+    </ion-list>
+  </section>
 </ion-content>

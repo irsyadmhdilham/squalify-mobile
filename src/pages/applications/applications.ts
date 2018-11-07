@@ -30,8 +30,4 @@ export class ApplicationsPage {
     this.navCtrl.push(page.component);
   }
 
-  ionViewDidLoad() {
-    this.navCtrl.push(CashCalculatorPage);
-  }
-
 }
