@@ -1,5 +1,14 @@
 <ion-header>
-  <app-header></app-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear=true color="grey">
+        <ion-icon name="notifications"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
@@ -17,7 +26,7 @@
         <img src="../assets/imgs/dashboard/scoreboard.png">
         <p no-margin>Scoreboard</p>
       </ion-col>
-      <ion-col>
+      <ion-col (tap)="navigate('referrals')">
         <img src="../assets/imgs/dashboard/referrals.png">
         <p no-margin>Referrals</p>
       </ion-col>

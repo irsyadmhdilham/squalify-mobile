@@ -12,9 +12,8 @@ export class HeaderButtonDirective implements OnChanges {
   constructor(private el: ElementRef) {
     const elem = this.el.nativeElement.style;
     elem.padding = '0.4em';
-    elem.background = 'pink';
     elem.borderRadius = '5px';
-    elem.fontSize = '0.8em';
+    elem.fontSize = '1.3rem';
   }
 
   ngOnChanges() {

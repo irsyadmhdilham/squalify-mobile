@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { ReferralsPage } from "./referrals/referrals";
+
 import { schedule } from "../../interfaces/schedule";
 
 @IonicPage()
@@ -20,7 +22,12 @@ export class DashboardPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  navigate(event) {
+  navigate(section) {
+    switch (section) {
+      case 'referrals':
+        this.navCtrl.push(ReferralsPage);
+      break;
+    }
   }
 
 }
