@@ -7,21 +7,21 @@
 </ion-header>
 
 <ion-content>
-  <ion-list no-lines>
+  <ion-list no-lines padding-horizontal>
     <ion-list-header>Push notifications</ion-list-header>
-    <ion-item>
+    <ion-item no-padding>
       <ion-label class="setting-label">Schedule reminder</ion-label>
       <ion-toggle [(ngModel)]="schedule"></ion-toggle>
     </ion-item>
-    <ion-item>
+    <ion-item no-padding>
       <ion-label class="setting-label">Agency sales</ion-label>
       <ion-toggle [(ngModel)]="agencySales"></ion-toggle>
     </ion-item>
-    <ion-item>
+    <ion-item no-padding>
       <ion-label class="setting-label">Mentions</ion-label>
       <ion-toggle [(ngModel)]="mentions"></ion-toggle>
     </ion-item>
-    <ion-item>
+    <ion-item no-padding>
       <ion-label class="setting-label">Direct message</ion-label>
       <ion-toggle [(ngModel)]="directMessage"></ion-toggle>
     </ion-item>

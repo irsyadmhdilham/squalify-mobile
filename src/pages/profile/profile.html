@@ -1,14 +1,5 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
-    </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only clear=true color="grey">
-        <ion-icon name="notifications"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+  <app-header></app-header>
 </ion-header>
 
 <ion-content>
@@ -27,20 +18,20 @@
     </section>
   </section>
   <section class="bottom">
-    <ion-list no-lines>
-      <ion-item (tap)="changeEmail()">
+    <ion-list padding-horizontal>
+      <ion-item no-padding (tap)="changeEmail()">
         <button no-padding ion-button clear color="dark">Change email</button>
       </ion-item>
-      <ion-item (tap)="changePassword()">
+      <ion-item no-padding (tap)="changePassword()">
         <button no-padding ion-button clear color="dark">Change password</button>
       </ion-item>
-      <ion-item (tap)="toSettings()">
+      <ion-item no-padding (tap)="toSettings()">
         <button no-padding ion-button clear color="dark">Settings</button>
       </ion-item>
-      <ion-item>
+      <ion-item no-padding>
         <button no-padding ion-button clear color="dark">Helps</button>
       </ion-item>
-      <ion-item (tap)="signOut()">
+      <ion-item no-padding (tap)="signOut()">
         <button no-padding ion-button clear color="danger">Sign out</button>
       </ion-item>
     </ion-list>

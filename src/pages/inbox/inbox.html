@@ -1,5 +1,10 @@
 <ion-header>
   <ion-navbar>
+    <ion-buttons start>
+      <button (tap)="newChat()" ion-button icon-only clear=true color="dark">
+        <ion-icon ios="ios-create-outline" md="md-create"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
       <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
@@ -12,5 +17,24 @@
 </ion-header>
 
 <ion-content padding>
-
+  <h5 title>Inbox</h5>
+  <ng-container *ngIf="chats.length !== 0; then conversations; else empty"></ng-container>
+  <ng-template #conversations>
+    <ion-list>
+      <ion-item (tap)="toChatroom(chat.id, chat.senderName, chat.senderImage)" *ngFor="let chat of chats" no-padding>
+        <ion-avatar item-start>
+          <img src="{{chat.senderImage}}" alt="{{chat.name}}">
+        </ion-avatar>
+        <h6 [ngStyle]="chat.unread ? { fontWeight: 'bold' } : false">{{chat.senderName}}</h6>
+        <p>Hello world</p>
+        <ion-badge *ngIf="chat.unread" item-end>{{chat.unread}}</ion-badge>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+  <ng-template #empty>
+    <section id="empty-inbox">
+      <img src="../../assets/imgs/inbox.png" alt="inbox">
+      <h4 ion-text color="grey">Your inbox is empty</h4>
+    </section>
+  </ng-template>
 </ion-content>
