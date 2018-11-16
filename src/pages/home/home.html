@@ -11,60 +11,68 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content content-bg id="main">
-  <ion-grid padding id="top-container" class="container">
-    <ion-row>
-      <div id="agency-image"></div>
-      <div id="title">
-        <h2>Welcome to</h2>
-        <h3>Centurion Agency</h3>
-      </div>
-    </ion-row>
-    <div id="create-container" margin-top>
-      <h6>Create</h6>
-      <ion-row justify-content-around>
-        <div class="create-wrapper">
-          <button ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
-          </button>
-          <p>Sales</p>
-        </div>
-        <div class="create-wrapper">
-          <button ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
-          </button>
-          <p>Referral</p>
-        </div>
-        <div class="create-wrapper">
-          <button ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/appointment.png"></ion-img>
-          </button>
-          <p>Schedule</p>
-        </div>
-        <div class="create-wrapper">
-          <button ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/field-work.png"></ion-img>
-          </button>
-          <p>Field work</p>
+<ng-container *ngIf="connected; then connectedBlock; else disconnectedBlock"></ng-container>
+<ng-template #connectedBlock>
+  <ion-content content-bg id="main">
+    <ion-grid padding id="top-container" class="container">
+      <ion-row>
+        <div id="agency-image"></div>
+        <div id="title">
+          <h2>Welcome to</h2>
+          <h3>Centurion Agency</h3>
         </div>
       </ion-row>
-    </div>
-  </ion-grid>
-  <ion-grid padding id="points-container" class="container">
-    <h6 no-margin>Today points</h6>
-    <ion-row>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
-        <p text-center no-margin>Personal</p>
-      </ion-col>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
-        <p text-center no-margin>Agency</p>
-      </ion-col>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
-        <p text-center no-margin>Group</p>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+      <div id="create-container" margin-top>
+        <h6>Create</h6>
+        <ion-row justify-content-around>
+          <div class="create-wrapper">
+            <button ion-button icon-only clear small="true">
+              <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
+            </button>
+            <p>Sales</p>
+          </div>
+          <div class="create-wrapper">
+            <button ion-button icon-only clear small="true">
+              <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
+            </button>
+            <p>Referral</p>
+          </div>
+          <div class="create-wrapper">
+            <button ion-button icon-only clear small="true">
+              <ion-img width="28" height="28" src="../../assets/imgs/points/appointment.png"></ion-img>
+            </button>
+            <p>Schedule</p>
+          </div>
+          <div class="create-wrapper">
+            <button ion-button icon-only clear small="true">
+              <ion-img width="28" height="28" src="../../assets/imgs/points/field-work.png"></ion-img>
+            </button>
+            <p>Field work</p>
+          </div>
+        </ion-row>
+      </div>
+    </ion-grid>
+    <ion-grid padding id="points-container" class="container">
+      <h6 no-margin>Today points</h6>
+      <ion-row>
+        <ion-col class="points-wrapper">
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <p text-center no-margin>Personal</p>
+        </ion-col>
+        <ion-col class="points-wrapper">
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <p text-center no-margin>Agency</p>
+        </ion-col>
+        <ion-col class="points-wrapper">
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <p text-center no-margin>Group</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</ng-template>
+<ng-template #disconnectedBlock>
+  <ion-content>
+    <no-connection></no-connection>
+  </ion-content>
+</ng-template>
