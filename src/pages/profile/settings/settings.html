@@ -14,17 +14,17 @@
       <ion-item no-padding>
         <img src="../../../assets/imgs/google.png" alt="google" item-start>
         <p no-margin ion-text color="dark">Google</p>
-        <button [color]="socialNetwork.google === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.google === null ? 'Connect' : socialNetwork.google}}</button>
+        <button [color]="!socialNetwork.google ? 'primary' : 'dark'" item-end ion-button clear>{{!socialNetwork.google ? 'Connect' : socialNetwork.google}}</button>
       </ion-item>
       <ion-item no-padding>
         <img src="../../../assets/imgs/facebook.png" alt="facebook" item-start>
         <p no-margin ion-text color="dark">Facebook</p>
-        <button [color]="socialNetwork.facebook === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.facebook === null ? 'Connect' : socialNetwork.facebook}}</button>
+        <button [color]="!socialNetwork.facebook ? 'primary' : 'dark'" item-end ion-button clear>{{!socialNetwork.facebook ? 'Connect' : socialNetwork.facebook}}</button>
       </ion-item>
       <ion-item no-padding>
         <img src="../../../assets/imgs/dropbox.png" alt="dropbox" item-start>
         <p no-margin ion-text color="dark">Dropbox</p>
-        <button [color]="socialNetwork.dropbox === null ? 'primary' : 'dark'" item-end ion-button clear>{{socialNetwork.dropbox === null ? 'Connect' : socialNetwork.dropbox}}</button>
+        <button [color]="!socialNetwork.dropbox ? 'primary' : 'dark'" item-end ion-button clear>{{!socialNetwork.dropbox ? 'Connect' : socialNetwork.dropbox}}</button>
       </ion-item>
     </ion-list>
   </section>

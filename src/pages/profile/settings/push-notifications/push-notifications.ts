@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { pushNotification } from "../../../../interfaces/profile-settings";
+
 @IonicPage()
 @Component({
   selector: 'page-push-notifications',
@@ -8,16 +10,19 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class PushNotificationsPage {
 
-  schedule: boolean;
+  reminder: boolean;
   agencySales: boolean;
   mentions: boolean;
   directMessage: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.schedule = true;
-    this.agencySales = true;
-    this.mentions = true;
-    this.directMessage = true;
+  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+
+  ionViewDidLoad() {
+    const pushNotification: pushNotification = this.navParams.get('pushNotification');
+    this.directMessage = pushNotification.direct_message;
+    this.mentions = pushNotification.mentions;
+    this.agencySales = pushNotification.activities;
+    this.reminder = pushNotification.reminder;
   }
 
 }

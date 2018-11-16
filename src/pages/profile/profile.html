@@ -17,7 +17,7 @@
       <button (tap)="editProfile()" ion-button clear small no-margin no-padding>Edit profile</button>
     </ion-row>
     <section id="profile-container">
-      <div id="profile-image"></div>
+      <div [ngStyle]="profileImage ? profileImageDisplay() : false" id="profile-image"></div>
       <h5>{{name}}</h5>
       <ion-chip color="primary">
         <ion-label>{{designation}}</ion-label>

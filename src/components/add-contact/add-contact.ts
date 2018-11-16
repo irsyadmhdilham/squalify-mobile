@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Select, AlertController } from "ionic-angular";
-import { ImagePicker } from "@ionic-native/image-picker";
+import { ViewController, Select, AlertController, LoadingController } from "ionic-angular";
+
+import { ContactProvider } from "../../providers/contact/contact";
 
 @Component({
   selector: 'add-contact',
@@ -17,7 +18,8 @@ export class AddContactComponent {
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
-    private imagePicker: ImagePicker
+    private loadingCtrl: LoadingController,
+    private contactProvider: ContactProvider
   ) { }
 
   dismiss() {
@@ -28,12 +30,6 @@ export class AddContactComponent {
     if (event.key === 'Enter') {
       this._contactType.open();
     }
-  }
-
-  async getImage() {
-    const options = { maximumImagesCount: 1 };
-    const get = await this.imagePicker.getPictures(options);
-    console.log(get);
   }
 
   addContact(name, status, contactType, contactNo) {
@@ -50,6 +46,11 @@ export class AddContactComponent {
       if (!contactNo.valid) {
         throw 'Please insert contact no';
       }
+      const nameVal = name.value,
+            statusVal = status.value,
+            contactTypeVal = contactType.value,
+            contactNoVal = contactNo.value;
+      this.contactProvider.addContact
     } catch (err) {
       const alert = this.alertCtrl.create({
         title: 'Empty required field',

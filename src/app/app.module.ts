@@ -1,4 +1,5 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpClientModule } from "@angular/common/http";
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
@@ -17,14 +18,14 @@ import { DirectivesModule } from "../directives/directives.module";
 import { ComponentsModule } from "../components/components.module";
 import { PipesModule } from "../pipes/pipes.module";
 
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { Network } from "@ionic-native/network";
-import { ImagePicker } from "@ionic-native/image-picker";
+import { NativeModules } from "./native-modules";
 import { IonicStorageModule } from "@ionic/storage";
 
 //imported components
 import { Components } from "../components/components";
+
+//providers
+import { Providers } from "../providers/providers";
 
 @NgModule({
   declarations: [
@@ -42,10 +43,11 @@ import { Components } from "../components/components";
     DirectivesModule,
     ComponentsModule,
     PipesModule,
+    HttpClientModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({
       name: 'db',
-      driverOrder: ['indexeddb', 'sqlite'],
+      driverOrder: ['indexeddb', 'sqlite', 'localstorage', 'websql'],
       version: 1.0
     })
   ],
@@ -61,11 +63,9 @@ import { Components } from "../components/components";
     ...Components
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
-    Network,
-    ImagePicker,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    ...NativeModules,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    ...Providers
   ]
 })
 export class AppModule {}

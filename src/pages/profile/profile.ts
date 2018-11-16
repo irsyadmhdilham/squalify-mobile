@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
+import { Storage } from "@ionic/storage";
 
 import { ChangePasswordComponent } from "../../components/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/change-email/change-email";
 import { EditProfileComponent } from "../../components/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
+
+import { ProfileProvider } from "../../providers/profile/profile";
+import { settings } from "../../interfaces/profile-settings";
 
 @IonicPage()
 @Component({
@@ -13,20 +17,30 @@ import { SettingsPage } from "./settings/settings";
 })
 export class ProfilePage {
 
-  name = 'Irsyad Mhd Ilham';
-  designation = 'Group Agency Manager';
-  agency = 'Vision Victory Empire';
-  company = 'CWA';
+  name: string;
+  designation: string;
+  agency: string;
+  company: string;
+  profileImage: string;
+  settings: settings;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private profileProvider: ProfileProvider,
+    private storage: Storage
   ) { }
 
+  profileImageDisplay() {
+    return {
+      background: `url('${this.profileImage}') center center no-repeat / cover`
+    };
+  }
+
   toSettings() {
-    this.navCtrl.push(SettingsPage);
+    this.navCtrl.push(SettingsPage, { settings: this.settings });
   }
 
   changePassword() {
@@ -58,6 +72,17 @@ export class ProfilePage {
       ]
     });
     alert.present();
+  }
+
+  ionViewDidLoad() {
+    this.profileProvider.getProfile().subscribe(observe => {
+      this.name = observe.name;
+      this.designation = observe.designation;
+      this.agency = observe.agency.name;
+      this.company = observe.agency.company;
+      this.profileImage = observe.profile_image;
+      this.settings = observe.settings;
+    }, (err: Error) => console.log(err));
   }
 
 }
