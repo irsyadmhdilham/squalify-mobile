@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { ReferralsPage } from "./referrals/referrals";
+import { ContactsPage } from "./contacts/contacts";
 import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
@@ -32,8 +32,8 @@ export class DashboardPage {
 
   navigate(section) {
     switch (section) {
-      case 'referrals':
-        this.navCtrl.push(ReferralsPage);
+      case 'contacts':
+        this.navCtrl.push(ContactsPage);
       break;
     }
   }
@@ -50,6 +50,10 @@ export class DashboardPage {
   ionViewWillLeave() {
     this.onDisconnected.unsubscribe();
     this.onConnect.unsubscribe();
+  }
+
+  ionViewDidLoad() {
+    this.navCtrl.push(ContactsPage)
   }
 
 }

@@ -83,4 +83,9 @@
     <plugin name="cordova-plugin-ionic-webview" spec="^2.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
     <plugin name="cordova-plugin-network-information" spec="2.0.1" />
+    <plugin name="cordova-plugin-telerik-imagepicker" spec="2.2.2">
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="Access photos, media and files on your device" />
+    </plugin>
+    <plugin name="cordova-sqlite-storage" spec="2.5.1" />
+    <engine name="ios" spec="4.5.5" />
 </widget>

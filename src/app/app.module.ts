@@ -20,6 +20,8 @@ import { PipesModule } from "../pipes/pipes.module";
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from "@ionic-native/network";
+import { ImagePicker } from "@ionic-native/image-picker";
+import { IonicStorageModule } from "@ionic/storage";
 
 //imported components
 import { Components } from "../components/components";
@@ -40,7 +42,12 @@ import { Components } from "../components/components";
     DirectivesModule,
     ComponentsModule,
     PipesModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot({
+      name: 'db',
+      driverOrder: ['indexeddb', 'sqlite'],
+      version: 1.0
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -57,6 +64,7 @@ import { Components } from "../components/components";
     StatusBar,
     SplashScreen,
     Network,
+    ImagePicker,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

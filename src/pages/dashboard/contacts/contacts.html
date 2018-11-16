@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+  <section padding-horizontal>
+    <ion-row id="filter-container">
+      <div header-button>
+        <p ion-text>Contact type</p>
+      </div>
+    </ion-row>
+  </section>
+</ion-header>
+
+<ion-content padding>
+  <ion-row justify-content-between id="top-container">
+    <h5 title>Contacts</h5>
+    <ion-chip (tap)="addContact()" color="primary">
+      <ion-label color="white">Add contact</ion-label>
+    </ion-chip>
+  </ion-row>
+</ion-content>

@@ -1,7 +1,7 @@
 import { DashboardPage } from "../../pages/dashboard/dashboard";
-import { ReferralsPage } from "../../pages/dashboard/referrals/referrals";
+import { ContactsPage } from "../../pages/dashboard/contacts/contacts";
 
 export const Dashboard = [
   DashboardPage,
-  ReferralsPage
+  ContactsPage
 ];
