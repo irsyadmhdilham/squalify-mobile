@@ -19,4 +19,9 @@ export class ContactProvider {
     return this.http.post<any>(url, data);
   }
 
+  getContacts(): Observable<contact[]> {
+    const url = `${apiBaseUrl()}/profile/${this.userId}/contact`;
+    return this.http.get<contact[]>(url);
+  }
+
 }

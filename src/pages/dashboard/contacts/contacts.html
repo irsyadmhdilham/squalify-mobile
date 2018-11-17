@@ -20,4 +20,23 @@
       <ion-label color="white">Add contact</ion-label>
     </ion-chip>
   </ion-row>
+  <ion-list>
+    <ion-item no-padding *ngFor="let contact of contacts">
+      <ion-row justify-content-between>
+        <div class="contact-content">
+          <h6>{{contact.name}}</h6>
+          <p>{{contact.contact_type}}</p>
+          <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+        </div>
+        <div>
+          <button margin-right ion-button clear icon-only color="primary">
+            <ion-icon no-padding name="call"></ion-icon>
+          </button>
+          <button ion-button clear icon-only color="dark">
+            <ion-icon no-padding name="more"></ion-icon>
+          </button>
+        </div>
+      </ion-row>
+    </ion-item>
+  </ion-list>
 </ion-content>

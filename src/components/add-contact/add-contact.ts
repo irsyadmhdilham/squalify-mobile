@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Select, AlertController } from "ionic-angular";
+import { ViewController, Select, AlertController, LoadingController } from "ionic-angular";
 
 import { ContactProvider } from "../../providers/contact/contact";
 
@@ -18,7 +18,8 @@ export class AddContactComponent {
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
-    private contactProvider: ContactProvider
+    private contactProvider: ContactProvider,
+    private loadingCtrl: LoadingController
   ) { }
 
   dismiss() {
@@ -50,9 +51,22 @@ export class AddContactComponent {
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value;
       const data = { name, status, contact_type, contact_no };
+      const loading = this.loadingCtrl.create({ content: 'Please wait' });
+      loading.present();
       this.contactProvider.addContact(data).subscribe(observe => {
-        console.log(observe);
-      }, (err: Error) => console.log(err))
+        loading.dismiss();
+        this.viewCtrl.dismiss({
+          newContact: observe
+        });
+      }, (err: Error) => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: err.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
     } catch (err) {
       const alert = this.alertCtrl.create({
         title: 'Empty required field',

@@ -10,3 +10,12 @@ export class Colors {
   static purple = '#DF48E1';
   static white = '#FFF'
 }
+
+export class ContactStatus {
+  static called = '#7ED321';
+  static appointmentSecured = '#50E3C2';
+  static rejected = '#F940A4';
+  static client = '#63ACFF';
+  static other = '#F5A623';
+  static none = '#DF48E1';
+}
