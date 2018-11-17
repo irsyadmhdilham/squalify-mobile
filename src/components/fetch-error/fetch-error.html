@@ -1,4 +1,7 @@
-<!-- Generated template for the FetchErrorComponent component -->
-<div>
-  {{text}}
-</div>
+<main>
+  <img src="../../assets/imgs/error.png" alt="error">
+  <h3>Oopps...</h3>
+  <h5 no-margin>An error has occurred</h5>
+  <p>{{message}}</p>
+  <button ion-button clear strong (tap)="retry()">Retry</button>
+</main>

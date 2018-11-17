@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 
-import { ChangePasswordComponent } from "../../components/change-password/change-password";
-import { ChangeEmailComponent } from "../../components/change-email/change-email";
-import { EditProfileComponent } from "../../components/edit-profile/edit-profile";
+import { ChangePasswordComponent } from "../../components/profile/change-password/change-password";
+import { ChangeEmailComponent } from "../../components/profile/change-email/change-email";
+import { EditProfileComponent } from "../../components/profile/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
 
 import { ProfileProvider } from "../../providers/profile/profile";
@@ -22,7 +22,7 @@ export class ProfilePage {
   company: string;
   profileImage: string;
   settings: settings;
-  loading: boolean;
+  pageStatus: string;
 
   constructor(
     public navCtrl: NavController,
@@ -53,8 +53,15 @@ export class ProfilePage {
   }
 
   editProfile() {
-    const modal = this.modalCtrl.create(EditProfileComponent);
+    const modal = this.modalCtrl.create(EditProfileComponent, {
+      name: this.name,
+      profileImage: this.profileImage
+    });
     modal.present();
+    modal.onDidDismiss(data => {
+      this.name = data.name;
+      this.profileImage = data.profileImage;
+    })
   }
 
   _signOut() {
@@ -73,17 +80,24 @@ export class ProfilePage {
     alert.present();
   }
 
-  ionViewDidLoad() {
-    this.loading = true;
+  fetch() {
+    this.pageStatus = 'loading';
     this.profileProvider.getProfile().subscribe(observe => {
-      this.loading = false;
+      this.pageStatus = undefined;
       this.name = observe.name;
       this.designation = observe.designation;
       this.agency = observe.agency.name;
       this.company = observe.agency.company;
       this.profileImage = observe.profile_image;
       this.settings = observe.settings;
-    }, (err: Error) => console.log(err));
+    }, (err: Error) => {
+      // console.log(err);
+      this.pageStatus = 'error';
+    });
+  }
+
+  ionViewDidLoad() {
+    this.fetch();
   }
 
 }

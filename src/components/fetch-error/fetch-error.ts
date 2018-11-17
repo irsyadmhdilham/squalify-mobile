@@ -1,22 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-/**
- * Generated class for the FetchErrorComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'fetch-error',
   templateUrl: 'fetch-error.html'
 })
 export class FetchErrorComponent {
 
-  text: string;
+  @Input() message: string;
+  @Input() retry: any;
 
-  constructor() {
-    console.log('Hello FetchErrorComponent Component');
-    this.text = 'Hello World';
-  }
+  constructor() { }
 
 }

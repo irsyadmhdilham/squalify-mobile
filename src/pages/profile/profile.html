@@ -11,9 +11,10 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ng-container *ngIf="loading; then loadingContent; else mainContent"></ng-container>
-  <ng-template #mainContent>
+<ion-content [ngSwitch]="pageStatus">
+  <loading *ngSwitchCase="'loading'" type="profile"></loading>
+  <fetch-error [retry]="fetch.bind(this)" *ngSwitchCase="'error'" message="Failed to get profile data"></fetch-error>
+  <ng-container *ngSwitchDefault>
     <section padding>
       <ion-row justify-content-end>
         <button (tap)="editProfile()" ion-button clear small no-margin no-padding>Edit profile</button>
@@ -47,8 +48,5 @@
         </ion-item>
       </ion-list>
     </section>
-  </ng-template>
-  <ng-template #loadingContent>
-    <loading type="profile"></loading>
-  </ng-template>
+  </ng-container>
 </ion-content>

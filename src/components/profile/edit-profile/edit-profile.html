@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Edit profile</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div id="profile-image-container">
+    <div [ngStyle]="profileImageView()" id="profile-image"></div>
+    <button ion-button clear small color="dark">Change image</button>
+  </div>
+  <ion-list class="form-list" no-lines>
+    <ion-item>
+      <ion-label stacked>NAME</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Write your name here"
+        [(ngModel)]="name"
+        #_name="ngModel"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong (tap)="submitChanges(_name)">Submit changes</button>
+  </ion-row>
+</ion-content>
