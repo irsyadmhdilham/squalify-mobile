@@ -31,25 +31,28 @@ export class AddContactComponent {
     }
   }
 
-  addContact(name, status, contactType, contactNo) {
+  addContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel) {
     try {
-      if (!name.valid) {
+      if (!nameNgModel.valid) {
         throw 'Please insert name';
       }
-      if (!status.valid) {
+      if (!statusNgModel.valid) {
         throw 'Please select status';
       }
-      if (!contactType.valid) {
+      if (!contactTypeNgModel.valid) {
         throw 'Please select contact type';
       }
-      if (!contactNo.valid) {
+      if (!contactNoNgModel.valid) {
         throw 'Please insert contact no';
       }
-      const nameVal = name.value,
-            statusVal = status.value,
-            contactTypeVal = contactType.value,
-            contactNoVal = contactNo.value;
-      this.contactProvider.addContact
+      const name = nameNgModel.value,
+            status = statusNgModel.value,
+            contact_type = contactTypeNgModel.value,
+            contact_no = contactNoNgModel.value;
+      const data = { name, status, contact_type, contact_no };
+      this.contactProvider.addContact(data).subscribe(observe => {
+        console.log(observe);
+      }, (err: Error) => console.log(err))
     } catch (err) {
       const alert = this.alertCtrl.create({
         title: 'Empty required field',

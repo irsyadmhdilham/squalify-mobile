@@ -9,12 +9,13 @@ import { contact } from "../../interfaces/contact";
 @Injectable()
 export class ContactProvider {
 
-  userId = '15';
+  userId = 15;
 
   constructor(public http: HttpClient) { }
 
   addContact(data: contact): Observable<any> {
-    const url = `${apiBaseUrl()}/profile/${this.userId}/contact`;
+    const url = `${apiBaseUrl()}/profile/${this.userId}/contact/`;
+    data.user_pk = this.userId;
     return this.http.post<any>(url, data);
   }
 

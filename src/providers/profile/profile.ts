@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { apiBaseUrl } from "../../functions/config";
 import { settings } from "../../interfaces/profile-settings";
 
-interface getProfile {
+interface profile {
   pk: number;
   group: number;
   name: string;
@@ -27,9 +27,14 @@ export class ProfileProvider {
 
   constructor(public http: HttpClient) { }
 
-  getProfile(): Observable<getProfile> {
+  getProfile(): Observable<profile> {
     const url = `${apiBaseUrl()}/profile/${this.userId}`;
-    return this.http.get<getProfile>(url);
+    return this.http.get<profile>(url);
+  }
+
+  updateProfile(data): Observable<profile> {
+    const url = `${apiBaseUrl()}/profile/${this.userId}`;
+    return this.http.put<profile>(url, data);
   }
 
 }
