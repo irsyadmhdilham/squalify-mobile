@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from "ionic-angular";
+// import { NavController } from "ionic-angular";
 
 @Component({
   selector: 'no-connection',
@@ -8,7 +8,7 @@ import { NavController } from "ionic-angular";
 export class NoConnectionComponent {
 
   constructor(
-    private navCtrl: NavController
+    // private navCtrl: NavController
   ) { }
 
   retry() {

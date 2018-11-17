@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Select, AlertController, LoadingController } from "ionic-angular";
+import { ViewController, Select, AlertController } from "ionic-angular";
 
 import { ContactProvider } from "../../providers/contact/contact";
 
@@ -18,7 +18,6 @@ export class AddContactComponent {
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController,
     private contactProvider: ContactProvider
   ) { }
 

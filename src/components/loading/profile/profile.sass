@@ -1,0 +1,51 @@
+loading-profile
+  $light: color($colors, light)
+
+  main
+    height: 100%
+
+    #top-loading
+      display: flex
+      flex-direction: column
+      align-items: center
+      background: white
+    
+      #image
+        height: 6em
+        width: 6em
+        border-radius: 100%
+        animation: loading-animate 0.3s infinite alternate ease-in-out
+      
+      #name
+        height: 1em
+        width: 15em
+        animation: loading-animate 0.3s 0.2s infinite alternate ease-in-out
+
+      #designation
+        height: 1.7em
+        width: 10em
+        border-radius: 100em
+        animation: loading-animate 0.3s 0.3s infinite alternate ease-in-out
+      
+    #bottom-loading
+      border-top: solid 8px $light
+
+      ul
+        padding: 0
+        margin: 1.5em
+
+        $list: (0.3s, 0.4s, 0.5s, 0.6s, 0.7s)
+
+        @for $x from 1 through 5
+          li:nth-child(#{$x})
+            list-style: none
+            @if $x == 1
+              margin: 0 1em
+            @else
+              margin: 1em 1em 0
+              padding-top: 1em
+              border-top: solid 1px color($colors, lightGrey)
+
+            div
+              height: 1em
+              animation: loading-animate 0.3s nth($list, $x) infinite alternate ease-in-out

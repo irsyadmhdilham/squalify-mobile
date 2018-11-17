@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, AlertController, LoadingController, Keyboard } from "ionic-angular";
+import { ViewController, AlertController, Keyboard } from "ionic-angular";
 
 @Component({
   selector: 'change-email',
@@ -12,7 +12,6 @@ export class ChangeEmailComponent {
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController,
     private keyboard: Keyboard
   ) { }
 
@@ -56,9 +55,6 @@ export class ChangeEmailComponent {
       alert.present();
       return;
     }
-    const loading = this.loadingCtrl.create({
-      content: 'Please wait...'
-    });
     this.keyboard.close();
   }
 

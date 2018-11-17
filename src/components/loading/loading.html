@@ -1,0 +1,4 @@
+<ng-container [ngSwitch]="type">
+  <loading-profile *ngSwitchCase="'profile'"></loading-profile>
+  <loading-list *ngSwitchCase="'list'"></loading-list>
+</ng-container>

@@ -1,0 +1,41 @@
+loading-list
+  $light: color($colors, light)
+
+  main
+    height: 90%
+    margin: 0 2em
+
+    ul
+      padding: 0
+      padding-top: 2em
+
+      @for $i from 1 through 6
+        li:nth-child(#{$i})
+          list-style: none
+          display: grid
+          grid-template-columns: 4em auto
+          grid-column-gap: 1em
+          @if $i > 1
+            border-top: solid 1px color($colors, lightGrey)
+            margin-top: 1em
+            padding-top: 1em
+
+
+          .avatar
+            width: 3em
+            height: 3em
+            border-radius: 100%
+            animation: loading-animate 0.3s ($i * 0.1s) infinite alternate ease-in-out
+            grid-row: 1 / span 2
+          
+          .title
+            height: 0.9em
+            background: $light
+            animation: loading-animate 0.3s ($i * 0.1s) infinite alternate ease-in-out
+          
+          .description
+            height: 0.7em
+            background: $light
+            width: 80%
+            animation: loading-animate 0.3s ($i * 0.1s) infinite alternate ease-in-out
+          

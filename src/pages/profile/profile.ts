@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
-import { Storage } from "@ionic/storage";
 
 import { ChangePasswordComponent } from "../../components/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/change-email/change-email";
@@ -23,14 +22,14 @@ export class ProfilePage {
   company: string;
   profileImage: string;
   settings: settings;
+  loading: boolean;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private profileProvider: ProfileProvider,
-    private storage: Storage
+    private profileProvider: ProfileProvider
   ) { }
 
   profileImageDisplay() {
@@ -75,7 +74,9 @@ export class ProfilePage {
   }
 
   ionViewDidLoad() {
+    this.loading = true;
     this.profileProvider.getProfile().subscribe(observe => {
+      this.loading = false;
       this.name = observe.name;
       this.designation = observe.designation;
       this.agency = observe.agency.name;
