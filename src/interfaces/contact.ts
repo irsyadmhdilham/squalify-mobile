@@ -1,5 +1,5 @@
 export interface contact {
-  user_pk?: number;
+  pk?: number;
   name: string;
   status: string;
   contact_type: string;

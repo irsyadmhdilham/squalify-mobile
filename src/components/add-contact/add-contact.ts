@@ -53,19 +53,21 @@ export class AddContactComponent {
       const data = { name, status, contact_type, contact_no };
       const loading = this.loadingCtrl.create({ content: 'Please wait' });
       loading.present();
-      this.contactProvider.addContact(data).subscribe(observe => {
-        loading.dismiss();
-        this.viewCtrl.dismiss({
-          newContact: observe
+      this.contactProvider.userId().then(userId => {
+        this.contactProvider.addContact(userId, data).subscribe(observe => {
+          loading.dismiss();
+          this.viewCtrl.dismiss({
+            newContact: observe
+          });
+        }, (err: Error) => {
+          loading.dismiss();
+          const alert = this.alertCtrl.create({
+            title: 'Error',
+            subTitle: err.message,
+            buttons: ['Ok']
+          });
+          alert.present();
         });
-      }, (err: Error) => {
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Error',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
       });
     } catch (err) {
       const alert = this.alertCtrl.create({

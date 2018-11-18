@@ -13,7 +13,7 @@
 
 <ion-content [ngSwitch]="pageStatus">
   <loading *ngSwitchCase="'loading'" type="profile"></loading>
-  <fetch-error [retry]="fetch.bind(this)" *ngSwitchCase="'error'" message="Failed to get profile data"></fetch-error>
+  <fetch-error [retry]="fetch.bind(this)" *ngSwitchCase="'error'" message="Failed to retrieve profile infos"></fetch-error>
   <ng-container *ngSwitchDefault>
     <section padding>
       <ion-row justify-content-end>

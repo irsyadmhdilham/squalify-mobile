@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 
-import { apiBaseUrl } from "../../functions/config";
 import { settings } from "../../interfaces/profile-settings";
+import { ApiUrlModules } from "../../functions/config";
 
 interface profile {
   pk: number;
@@ -21,19 +22,19 @@ interface profile {
 }
 
 @Injectable()
-export class ProfileProvider {
+export class ProfileProvider extends ApiUrlModules {
 
-  userId = '15';
+  constructor(public http: HttpClient, public storage: Storage) {
+    super(storage)
+  }
 
-  constructor(public http: HttpClient) { }
-
-  getProfile(): Observable<profile> {
-    const url = `${apiBaseUrl()}/profile/${this.userId}`;
+  getProfile(userId): Observable<profile> {
+    const url = this.profileUrl(userId);
     return this.http.get<profile>(url);
   }
 
-  updateProfile(data): Observable<profile> {
-    const url = `${apiBaseUrl()}/profile/${this.userId}`;
+  updateProfile(userId, data): Observable<profile> {
+    const url = this.profileUrl(userId);
     return this.http.put<profile>(url, data);
   }
 

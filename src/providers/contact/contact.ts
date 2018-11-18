@@ -1,27 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 
-import { apiBaseUrl } from "../../functions/config";
-
 import { contact } from "../../interfaces/contact";
+import { ApiUrlModules } from "../../functions/config";
 
 @Injectable()
-export class ContactProvider {
+export class ContactProvider extends ApiUrlModules {
 
-  userId = 15;
+  constructor(public http: HttpClient, public storage: Storage) {
+    super(storage);
+  }
 
-  constructor(public http: HttpClient) { }
-
-  addContact(data: contact): Observable<any> {
-    const url = `${apiBaseUrl()}/profile/${this.userId}/contact/`;
-    data.user_pk = this.userId;
+  addContact(userId: number, data: contact): Observable<any> {
+    const url = this.profileUrl(userId, 'contact/');
     return this.http.post<any>(url, data);
   }
 
-  getContacts(): Observable<contact[]> {
-    const url = `${apiBaseUrl()}/profile/${this.userId}/contact`;
+  getContacts(userId): Observable<contact[]> {
+    const url = this.profileUrl(userId, 'contact');
     return this.http.get<contact[]>(url);
+  }
+
+  updateContact(userId, contactId, data): Observable<contact> {
+    const url = this.profileUrl(userId, `contact/${contactId}`);
+    return this.http.put<contact>(url, data);
   }
 
 }
