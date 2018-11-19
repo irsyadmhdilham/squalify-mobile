@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button clear icon-only color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Edit contact</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding-vertical>
+  <ion-list no-lines class="form-list">
+    <ion-item>
+      <ion-label stacked>NAME</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert contact name"
+        [(ngModel)]="name"
+        #nameNgModel="ngModel"
+        (keydown)="focus($event)"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Contact type</ion-label>
+      <ion-select
+        [(ngModel)]="contactType"
+        #contactTypeNgModel="ngModel"
+        #_contactType
+        [selectOptions]="contactTypeSelectOptions"
+        required
+      >
+        <ion-option>Referral</ion-option>
+        <ion-option>Face to face</ion-option>
+        <ion-option>Nesting</ion-option>
+        <ion-option>Booth</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Status</ion-label>
+      <ion-select
+        [(ngModel)]="status"
+        [selectOptions]="statusSelectOptions"
+        #statusNgModel="ngModel"
+        required
+      >
+        <ion-option>None</ion-option>
+        <ion-option>Called</ion-option>
+        <ion-option>Appointment secured</ion-option>
+        <ion-option>Rejected</ion-option>
+        <ion-option>Other</ion-option>
+        <ion-option>Client</ion-option>
+        <ion-option>Customer</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>CONTACT NO</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert contact no"
+        [(ngModel)]="contactNo"
+        #contactNoNgModel="ngModel"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>REMARK (OPTIONAL)</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert remark"
+        [(ngModel)]="remark"
+        #remarkNgModel
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong (tap)="updateContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel)">Update contact</button>
+  </ion-row>
+</ion-content>

@@ -27,7 +27,7 @@
       <ion-item no-padding *ngFor="let contact of contacts; index as i">
         <ion-row justify-content-between>
           <div class="contact-content">
-            <div (tap)="showDetail(contact)" class="contact-background"></div>
+            <div (tap)="showDetail(contact, i)" class="contact-background"></div>
             <h6>{{contact.name}}</h6>
             <p>{{contact.contact_type}}</p>
             <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>

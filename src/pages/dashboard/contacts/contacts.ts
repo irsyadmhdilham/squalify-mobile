@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
 import { ContactDetailPage } from "./contact-detail/contact-detail";
 
-import { AddContactComponent } from "../../../components/add-contact/add-contact";
+import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact } from "../../../interfaces/contact";
 import { ContactStatus } from "../../../functions/colors";
@@ -47,7 +47,7 @@ export class ContactsPage {
     modal.present();
     modal.onDidDismiss(data => {
       if (data) {
-        console.log(data);
+        this.contacts.push(data.newContact);
       }
     });
   }
@@ -88,12 +88,24 @@ export class ContactsPage {
     actionSheet.present();
   }
 
-  showDetail(contact: contact) {
-    this.navCtrl.push(ContactDetailPage, { contact });
+  showDetail(contact: contact, index) {
+    this.navCtrl.push(ContactDetailPage, { contact, index: index })
   }
 
   ionViewDidLoad() {
     this.fetch();
+  }
+
+  ionViewWillEnter() {
+    const contact = this.navParams.get('contact');
+    const index = this.navParams.get('index');
+    const removed = this.navParams.get('removed');
+    if (contact) {
+      this.contacts[index] = contact;
+    }
+    if (removed !== undefined) {
+      this.contacts.splice(removed, 1);
+    }
   }
 
 }

@@ -1,25 +1,32 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Select, AlertController, LoadingController } from "ionic-angular";
+import { ViewController, Select, AlertController, LoadingController, NavParams } from "ionic-angular";
 
-import { ContactProvider } from "../../providers/contact/contact";
+import { contact } from "../../../interfaces/contact";
+
+import { ContactProvider } from "../../../providers/contact/contact";
 
 @Component({
-  selector: 'add-contact',
-  templateUrl: 'add-contact.html'
+  selector: 'edit-contact',
+  templateUrl: 'edit-contact.html'
 })
-export class AddContactComponent {
+export class EditContactComponent {
 
-  status = 'None';
+  pk: number;
+  name: string;
+  status: string;
+  contactType: string;
+  contactNo: string;
+  remark: string;
   contactTypeSelectOptions = { title: 'Select contact type' };
   statusSelectOptions = { title: 'Select status' };
   @ViewChild('_contactType') _contactType: Select;
 
-
   constructor(
     private viewCtrl: ViewController,
+    private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private contactProvider: ContactProvider,
-    private loadingCtrl: LoadingController
+    private navParams: NavParams
   ) { }
 
   dismiss() {
@@ -32,7 +39,7 @@ export class AddContactComponent {
     }
   }
 
-  addContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel) {
+  updateContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel) {
     try {
       if (!nameNgModel.valid) {
         throw 'Please insert name';
@@ -49,15 +56,21 @@ export class AddContactComponent {
       const name = nameNgModel.value,
             status = statusNgModel.value,
             contact_type = contactTypeNgModel.value,
-            contact_no = contactNoNgModel.value;
-      const data = { name, status, contact_type, contact_no };
+            contact_no = contactNoNgModel.value,
+            remark = remarkNgModel.value;
+      const data = { name, status, contact_type, contact_no, remark };
       const loading = this.loadingCtrl.create({ content: 'Please wait' });
       loading.present();
       this.contactProvider.userId().then(userId => {
-        this.contactProvider.addContact(userId, data).subscribe(observe => {
+        this.contactProvider.updateContact(userId, this.pk, data).subscribe(observe => {
           loading.dismiss();
           this.viewCtrl.dismiss({
-            newContact: observe
+            name: observe.name,
+            status: observe.status,
+            contact_type: observe.contact_type,
+            contact_no: observe.contact_no,
+            remark: observe.remark,
+            edited: true
           });
         }, (err: Error) => {
           loading.dismiss();
@@ -77,6 +90,16 @@ export class AddContactComponent {
       });
       alert.present();
     }
+  }
+
+  ionViewDidLoad() {
+    const contact: contact = this.navParams.get('contact');
+    this.pk = contact.pk;
+    this.name = contact.name;
+    this.status = contact.status;
+    this.contactType = contact.contact_type;
+    this.contactNo = contact.contact_no;
+    this.remark = contact.remark;
   }
 
 }

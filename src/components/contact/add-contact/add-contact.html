@@ -70,10 +70,11 @@
         type="text"
         placeholder="Insert remark"
         ngModel
+        #remark="ngModel"
       ></ion-input>
     </ion-item>
   </ion-list>
   <ion-row justify-content-center>
-    <button ion-button clear strong (tap)="addContact(name, _status, contactType, contactNo)">Add contact</button>
+    <button ion-button clear strong (tap)="addContact(name, _status, contactType, contactNo, remark)">Add contact</button>
   </ion-row>
 </ion-content>

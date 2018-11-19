@@ -28,4 +28,9 @@ export class ContactProvider extends ApiUrlModules {
     return this.http.put<contact>(url, data);
   }
 
+  removeContact(userId, contactId): Observable<any> {
+    const url = this.profileUrl(userId, `contact/${contactId}`);
+    return this.http.delete<any>(url);
+  }
+
 }
