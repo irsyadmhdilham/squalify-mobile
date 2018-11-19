@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { ContactsPage } from "./contacts/contacts";
+import { SchedulesPage } from "./schedules/schedules";
+
 import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
@@ -35,6 +37,9 @@ export class DashboardPage {
       case 'contacts':
         this.navCtrl.push(ContactsPage);
       break;
+      case 'schedules':
+        this.navCtrl.push(SchedulesPage);
+      break;
     }
   }
 
@@ -53,7 +58,7 @@ export class DashboardPage {
   }
 
   ionViewDidLoad() {
-    this.navCtrl.push(ContactsPage)
+    this.navCtrl.push(SchedulesPage)
   }
 
 }

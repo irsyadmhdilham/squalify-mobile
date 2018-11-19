@@ -83,31 +83,14 @@ export class ContactDetailPage {
     });
   }
 
-  ionViewWillLeave() {
-    if (this.edited) {
-      this.navCtrl.getPrevious().data.index = this.index;
-      this.navCtrl.getPrevious().data.contact = {
-        pk: this.pk,
-        name: this.name,
-        status: this.status,
-        contact_type: this.contactType,
-        contact_no: this.contactNo,
-        remark: this.remark
-      };
-    } else {
-      this.navCtrl.getPrevious().data.contact = undefined;
-    }
-  }
-
   removeContact() {
     const loading = this.loadingCtrl.create({
       content: 'Please wait...'
     });
     loading.present();
     this.contactProvider.userId().then(userId => {
-      this.contactProvider.removeContact(userId, this.pk).subscribe(observe => {
+      this.contactProvider.removeContact(userId, this.pk).subscribe(() => {
         loading.dismiss();
-        this.navCtrl.getPrevious().data.removed = this.index;
         this.navCtrl.pop();
       }, (err: Error) => {
         loading.dismiss();

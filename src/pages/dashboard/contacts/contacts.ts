@@ -1,5 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+  ActionSheetController,
+  AlertController,
+  LoadingController
+} from 'ionic-angular';
 import { ContactDetailPage } from "./contact-detail/contact-detail";
 
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
@@ -14,7 +22,7 @@ import { ContactStatus } from "../../../functions/colors";
 })
 export class ContactsPage {
 
-  contacts: contact[];
+  contacts: contact[] = [];
   pageStatus: string;
   userId: number;
 
@@ -23,7 +31,9 @@ export class ContactsPage {
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private contactProvider: ContactProvider,
-    private actionSheet: ActionSheetController
+    private actionSheet: ActionSheetController,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) { }
 
   statusColor(status) {
@@ -47,6 +57,7 @@ export class ContactsPage {
     modal.present();
     modal.onDidDismiss(data => {
       if (data) {
+        this.pageStatus = undefined;
         this.contacts.push(data.newContact);
       }
     });
@@ -64,14 +75,34 @@ export class ContactsPage {
     });
   }
 
-  changeStatusHandler(contact: contact, index: number) {
-    console.log(contact, index);
+  changeStatusHandler(contact: contact, index: number, value: string) {
+    const loading = this.loadingCtrl.create({ content: 'Please wait...' });
+    loading.present();
+    this.contactProvider.userId().then(userId => {
+      contact.status = value;
+      this.contactProvider.updateContact(userId, contact.pk, contact).subscribe(observe => {
+        loading.dismiss();
+        this.contacts[index] = observe;
+      }, (err: Error) => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: err.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
+    });
   }
 
   changeStatus(contact: contact, index: number) {
     const actionSheet = this.actionSheet.create({
       buttons: [
-        { text: 'Called', handler: () => this.changeStatusHandler(contact, index) },
+        { text: 'Called', handler: () => this.changeStatusHandler(contact, index, 'Called') },
+        { text: 'Appointment secured', handler: () => this.changeStatusHandler(contact, index, 'Appointment secured') },
+        { text: 'Rejected', handler: () => this.changeStatusHandler(contact, index, 'Rejected') },
+        { text: 'Other', handler: () => this.changeStatusHandler(contact, index, 'Other') },
+        { text: 'Client', handler: () => this.changeStatusHandler(contact, index, 'Client') },
         { text: 'Cancel', role: 'cancel', cssClass: 'danger-alert' }
       ]
     });
@@ -92,20 +123,8 @@ export class ContactsPage {
     this.navCtrl.push(ContactDetailPage, { contact, index: index })
   }
 
-  ionViewDidLoad() {
-    this.fetch();
-  }
-
   ionViewWillEnter() {
-    const contact = this.navParams.get('contact');
-    const index = this.navParams.get('index');
-    const removed = this.navParams.get('removed');
-    if (contact) {
-      this.contacts[index] = contact;
-    }
-    if (removed !== undefined) {
-      this.contacts.splice(removed, 1);
-    }
+    this.fetch();
   }
 
 }

@@ -3,11 +3,13 @@ import { CommonModule } from "@angular/common";
 import { IonicModule } from "ionic-angular";
 import { loadingComponents } from './loading/loading-components'
 import { FetchErrorComponent } from './fetch-error/fetch-error';
+import { EmptyContentComponent } from './empty-content/empty-content';
 
 @NgModule({
 	declarations: [
 		...loadingComponents,
-    FetchErrorComponent
+    FetchErrorComponent,
+    EmptyContentComponent
 	],
 	imports: [
 		IonicModule,
@@ -15,7 +17,8 @@ import { FetchErrorComponent } from './fetch-error/fetch-error';
 	],
 	exports: [
 		...loadingComponents,
-    FetchErrorComponent
+    FetchErrorComponent,
+    EmptyContentComponent
 	]
 })
 export class ComponentsModule {}
