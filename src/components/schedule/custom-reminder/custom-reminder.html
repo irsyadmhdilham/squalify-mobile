@@ -1,4 +1,68 @@
-<!-- Generated template for the CustomReminderComponent component -->
-<div>
-  {{text}}
-</div>
+<main>
+  <section (tap)="dismiss()" id="bg"></section>
+  <section id="main-content">
+    <h6 text-center margin-bottom ion-text>Custom reminder</h6>
+    <ion-list>
+      <ion-item>
+        <ion-label>Period</ion-label>
+        <ion-select #periodNgModel="ngModel" required [(ngModel)]="period">
+          <ion-option>Daily</ion-option>
+          <ion-option>Week</ion-option>
+          <ion-option>Month</ion-option>
+          <ion-option>Year</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="period === 'Month' || period === 'Year'">
+        <ion-label>On every</ion-label>
+        <ion-select [(ngModel)]="interval">
+          <ion-option value="{{x}}" *ngFor="let x of frequencies">{{frequencyText(x)}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="period === 'Month'">
+        <ion-label>On which date</ion-label>
+        <ion-select [(ngModel)]="date">
+          <ion-option *ngFor="let d of dates">{{d}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="period === 'Year'">
+        <ion-label>On which date</ion-label>
+        <ion-select [(ngModel)]="date">
+          <ion-option *ngFor="let date of dates">{{date}}</ion-option>
+        </ion-select>
+        <ion-select [(ngModel)]="month">
+          <ion-option value="0">Jan</ion-option>
+          <ion-option value="1">Feb</ion-option>
+          <ion-option value="2">Mar</ion-option>
+          <ion-option value="3">Apr</ion-option>
+          <ion-option value="4">May</ion-option>
+          <ion-option value="5">Jun</ion-option>
+          <ion-option value="6">Jul</ion-option>
+          <ion-option value="7">Aug</ion-option>
+          <ion-option value="8">Sep</ion-option>
+          <ion-option value="9">Oct</ion-option>
+          <ion-option value="10">Nov</ion-option>
+          <ion-option value="11">Dec</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="period === 'Week'">
+        <ion-label>On every which day</ion-label>
+        <ion-select [(ngModel)]="day">
+          <ion-option value="0">Mon</ion-option>
+          <ion-option value="1">Tue</ion-option>
+          <ion-option value="2">Wed</ion-option>
+          <ion-option value="3">Thu</ion-option>
+          <ion-option value="4">Fri</ion-option>
+          <ion-option value="5">Sat</ion-option>
+          <ion-option value="6">Sun</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="period === 'Daily'">
+        <ion-label>On every what time</ion-label>
+        <ion-datetime [(ngModel)]="time" displayFormat="h:mma"></ion-datetime>
+      </ion-item>
+    </ion-list>
+    <ion-row justify-content-center>
+      <button ion-button clear strong (tap)="addReminder(periodNgModel)">Add reminder</button>
+    </ion-row>
+  </section>
+</main>

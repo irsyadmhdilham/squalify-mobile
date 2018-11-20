@@ -20,10 +20,10 @@ export class DashboardPage {
   onConnect: Subscription;
   onDisconnected: Subscription;
   schedules: schedule[] = [
-    {id: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {id: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {id: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {id: '1', title: 'Agency meeting', date: new Date(), location: 'KL'}
+    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
+    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
+    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
+    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'}
   ];
 
   constructor(

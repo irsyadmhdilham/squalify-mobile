@@ -18,13 +18,12 @@
         placeholder="Insert title"
         ngModel
         #title="ngModel"
-        (keydown)="focus($event)"
         required
       ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Date and time</ion-label>
-      <ion-datetime [(ngModel)]="date" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+      <ion-datetime ngModel #date="ngModel" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
     </ion-item>
     <ion-item>
       <ion-label stacked>LOCATION</ion-label>
@@ -32,7 +31,7 @@
         type="text"
         placeholder="Insert location"
         ngModel
-        #contactNo="ngModel"
+        #location="ngModel"
         required
       ></ion-input>
     </ion-item>
@@ -50,13 +49,14 @@
     <ion-item-divider>Reminder</ion-item-divider>
     <ion-item>
       <ion-label color="grey">Reminds every 3 months</ion-label>
-      <ion-toggle></ion-toggle>
+      <ion-toggle [(ngModel)]="reminderEvery3Month"></ion-toggle>
     </ion-item>
-    <ion-item>
-      <ion-label color="grey">Custom</ion-label>
-    </ion-item>
+    <!-- <ion-item (tap)="createCustomReminder()">
+      <p item-start class="custom" color="grey">Custom</p>
+      <p *ngIf="customReminder" item-end class="custom" ion-text color="dark">{{customReminderText()}}</p>
+    </ion-item> -->
   </ion-list>
   <ion-row justify-content-center>
-    <button ion-button clear strong>Add schedule</button>
+    <button ion-button clear strong (tap)="addSchedule(title, date, location, remark)">Add schedule</button>
   </ion-row>
 </ion-content>

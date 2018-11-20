@@ -1,7 +1,8 @@
 export interface schedule {
-  id: string;
-  date: Date;
+  pk?: string;
+  date: string;
   title: string;
   remark?: string;
   location: string;
+  reminder?: any;
 }
