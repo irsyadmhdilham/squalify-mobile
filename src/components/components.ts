@@ -1,13 +1,14 @@
 import { profileComponents } from "./profile/profile-components";
 import { InboxComposeComponent } from "./inbox-compose/inbox-compose";
 import { NoConnectionComponent } from "./no-connection/no-connection";
-import { AddContactComponent } from "./contact/add-contact/add-contact";
-import { EditContactComponent } from "./contact/edit-contact/edit-contact";
+
+import { ContactComponents } from "./contact/contact-components";
+import { ScheduleComponents } from "./schedule/schedule-components";
 
 export const Components = [
   profileComponents,
   InboxComposeComponent,
   NoConnectionComponent,
-  AddContactComponent,
-  EditContactComponent
+  ...ScheduleComponents,
+  ...ContactComponents
 ];

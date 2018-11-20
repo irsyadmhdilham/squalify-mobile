@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Add schedule</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding-vertical>
+  <ion-list no-lines class="form-list">
+    <ion-item>
+      <ion-label stacked>TITLE</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert title"
+        ngModel
+        #title="ngModel"
+        (keydown)="focus($event)"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Date and time</ion-label>
+      <ion-datetime [(ngModel)]="date" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>LOCATION</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert location"
+        ngModel
+        #contactNo="ngModel"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>REMARK (OPTIONAL)</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert remark"
+        ngModel
+        #remark="ngModel"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-item-divider>Reminder</ion-item-divider>
+    <ion-item>
+      <ion-label color="grey">Reminds every 3 months</ion-label>
+      <ion-toggle></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label color="grey">Custom</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong>Add schedule</button>
+  </ion-row>
+</ion-content>

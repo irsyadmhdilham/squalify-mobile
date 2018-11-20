@@ -14,7 +14,18 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    
-  </ion-list>
+  <ion-row justify-content-between id="top-container">
+    <h5 title>Schedules</h5>
+    <ion-chip (tap)="addSchedule()" color="primary">
+      <ion-label color="white">Add schedule</ion-label>
+    </ion-chip>
+  </ion-row>
+  <!-- <ion-list>
+    <ion-item no-padding *ngFor="let contact of contacts; index as i">
+      <div (tap)="showDetail(contact, i)" class="contact-background"></div>
+      <h6>{{contact.name}}</h6>
+      <p>{{contact.contact_type}}</p>
+      <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+    </ion-item>
+  </ion-list> -->
 </ion-content>
