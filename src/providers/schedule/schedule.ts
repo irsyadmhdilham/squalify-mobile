@@ -18,4 +18,9 @@ export class ScheduleProvider extends ApiUrlModules {
     return this.http.post<schedule>(url, data)
   }
 
+  getSchedules(userId: number): Observable<schedule[]> {
+    const url = this.profileUrl(userId, 'schedule');
+    return this.http.get<schedule[]>(url);
+  }
+
 }

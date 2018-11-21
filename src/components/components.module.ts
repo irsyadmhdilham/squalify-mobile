@@ -4,12 +4,14 @@ import { IonicModule } from "ionic-angular";
 import { loadingComponents } from './loading/loading-components'
 import { FetchErrorComponent } from './fetch-error/fetch-error';
 import { EmptyContentComponent } from './empty-content/empty-content';
+import { EditScheduleComponent } from './edit-schedule/edit-schedule';
 
 @NgModule({
 	declarations: [
 		...loadingComponents,
     FetchErrorComponent,
-    EmptyContentComponent
+    EmptyContentComponent,
+    EditScheduleComponent
 	],
 	imports: [
 		IonicModule,
@@ -18,7 +20,8 @@ import { EmptyContentComponent } from './empty-content/empty-content';
 	exports: [
 		...loadingComponents,
     FetchErrorComponent,
-    EmptyContentComponent
+    EmptyContentComponent,
+    EditScheduleComponent
 	]
 })
 export class ComponentsModule {}

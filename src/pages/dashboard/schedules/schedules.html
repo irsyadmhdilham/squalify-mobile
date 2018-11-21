@@ -20,12 +20,21 @@
       <ion-label color="white">Add schedule</ion-label>
     </ion-chip>
   </ion-row>
-  <!-- <ion-list>
-    <ion-item no-padding *ngFor="let contact of contacts; index as i">
-      <div (tap)="showDetail(contact, i)" class="contact-background"></div>
-      <h6>{{contact.name}}</h6>
-      <p>{{contact.contact_type}}</p>
-      <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+  <ion-list>
+    <ion-item no-padding (tap)="showDetail(schedule)" *ngFor="let schedule of schedules; index as i">
+      <ion-row>
+        <ion-col col-3>
+          <h2 ion-text color="primary">{{schedule.date | date:'dd MMM' | uppercase}}</h2>
+          <p ion-text color="grey">{{schedule.date | date:'h:mma'}}</p>
+        </ion-col>
+        <ion-col>
+          <h5>{{schedule.title}}</h5>
+          <div class="location-wrapper">
+            <ion-icon small color="grey" name="pin"></ion-icon>
+            <p>{{schedule.location}}</p>
+          </div>
+        </ion-col>
+      </ion-row>
     </ion-item>
-  </ion-list> -->
+  </ion-list>
 </ion-content>

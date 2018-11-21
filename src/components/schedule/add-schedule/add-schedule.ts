@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewController, ModalController, AlertController, LoadingController } from "ionic-angular";
+import * as moment from "moment";
 
 import { CustomReminderComponent } from "../custom-reminder/custom-reminder";
 import { ScheduleProvider } from "../../../providers/schedule/schedule";
@@ -80,18 +81,17 @@ export class AddScheduleComponent {
       }
       loading.present();
       this.scheduleProvider.userId().then(userId => {
-        const d = date.value.match(/\d{4}-\d{2}-\d{2}/).toString().split('-').map(val => parseInt(val)),
-              t = date.value.match(/\d{2}:\d{2}:\d{2}/).toString().split(':').map(val => parseInt(val));
-        const parsedDate = new Date(d[0], d[1] - 1, d[2], t[0], t[1], t[2]).toISOString();
         const data = {
           title: title.value,
-          date: parsedDate,
+          date: moment(date.value, 'YYYY-MM-DD HH:mm:ss').toISOString(),
           location: location.value,
-          remark: remark.value
+          remark: !remark.touched || remark.value === '' ? null : remark.value
         };
         this.scheduleProvider.addSchedule(userId, data).subscribe(observe => {
           loading.dismiss();
-          console.log(observe);
+          this.viewCtrl.dismiss({
+            schedule: observe
+          })
         }, (err: Error) => {
           loading.dismiss();
           const alert = this.alertCtrl.create({

@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+import { ScheduleDetailPage } from "./schedule-detail/schedule-detail";
+import { ScheduleProvider } from "../../../providers/schedule/schedule";
+
+import { schedule } from "../../../interfaces/schedule";
 
 @IonicPage()
 @Component({
@@ -10,10 +14,15 @@ import { AddScheduleComponent } from "../../../components/schedule/add-schedule/
 })
 export class SchedulesPage {
 
-  schedules = [];
+  schedules: schedule[] = [];
   pageStatus: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private modalCtrl: ModalController) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private modalCtrl: ModalController,
+    private scheduleProvider: ScheduleProvider
+  ) { }
 
   addSchedule() {
     const modal = this.modalCtrl.create(AddScheduleComponent);
@@ -21,13 +30,32 @@ export class SchedulesPage {
     modal.onDidDismiss(data => {
       if (data) {
         this.pageStatus = undefined;
-        this.schedules.push(data.newSchedule);
+        this.schedules.push(data.schedule);
       }
     });
   }
 
-  ionViewDidLoad() {
-    this.addSchedule();
+  fetch() {
+    this.scheduleProvider.userId().then(userId => {
+      this.scheduleProvider.getSchedules(userId).subscribe(observe => {
+        this.schedules = observe.map(val => {
+          return {
+            ...val,
+            date: new Date(val.date)
+          }
+        });
+      }, (err: Error) => {
+        console.log(err);
+      });
+    });
+  }
+
+  ionViewWillEnter() {
+    this.fetch();
+  }
+
+  showDetail(schedule) {
+    this.navCtrl.push(ScheduleDetailPage, { schedule });
   }
 
 }

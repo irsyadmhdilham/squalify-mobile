@@ -19,12 +19,7 @@ export class DashboardPage {
   connected: boolean = true;
   onConnect: Subscription;
   onDisconnected: Subscription;
-  schedules: schedule[] = [
-    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'},
-    {pk: '1', title: 'Agency meeting', date: new Date(), location: 'KL'}
-  ];
+  schedules: schedule[];
 
   constructor(
     public navCtrl: NavController,

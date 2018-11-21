@@ -1,6 +1,6 @@
 export interface schedule {
-  pk?: string;
-  date: string;
+  pk?: number;
+  date: any;
   title: string;
   remark?: string;
   location: string;
