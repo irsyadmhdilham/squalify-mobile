@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Edit schedule</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="form-list" no-lines>
+    <ion-item>
+      <ion-label stacked>TITLE</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert title"
+        [(ngModel)]="title"
+        #titleNgModel="ngModel"
+        required
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Date and time</ion-label>
+      <ion-datetime required [(ngModel)]="date" #dateNgModel="ngModel" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>LOCATION</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert location"
+        [(ngModel)]="location"
+        required
+        #locationNgModel="ngModel"
+      ></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label stacked>REMARK (OPTIONAL)</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Insert remark"
+        [(ngModel)]="remark"
+        #remarkNgModel="ngModel"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong (tap)="updateSchedule(titleNgModel, locationNgModel, remarkNgModel, dateNgModel)">Update schedule</button>
+  </ion-row>
+</ion-content>

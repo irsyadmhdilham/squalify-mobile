@@ -4,11 +4,24 @@
       <img style="width: 5em" src="../../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
     <ion-buttons end>
-      <button ion-button clear color="dark">Edit</button>
+      <button ion-button (tap)="editSchedule()" clear color="dark">Edit</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-
+  <div id="timestamp-wrapper">
+    <h1 no-margin ion-text color="primary">{{date | date:'dd MMM' | uppercase}}</h1>
+    <h4 no-margin ion-text color="grey">{{date | date:'HH:mma'}}</h4>
+  </div>
+  <h4>{{title}}</h4>
+  <div id="location-wrapper">
+    <ion-icon item-start name="pin" color="grey" small></ion-icon>
+    <p item-start>{{location}}</p>
+  </div>
+  <ion-item *ngIf="remark" no-lines no-padding>
+    <h5>Remark</h5>
+    <p>{{remark}}</p>
+  </ion-item>
+  <button (tap)="remove()" no-padding ion-button clear color="danger">Remove schedule</button>
 </ion-content>

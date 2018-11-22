@@ -85,7 +85,7 @@ export class AddScheduleComponent {
           title: title.value,
           date: moment(date.value, 'YYYY-MM-DD HH:mm:ss').toISOString(),
           location: location.value,
-          remark: !remark.touched || remark.value === '' ? null : remark.value
+          remark: remark.value === '' ? null : remark.value
         };
         this.scheduleProvider.addSchedule(userId, data).subscribe(observe => {
           loading.dismiss();

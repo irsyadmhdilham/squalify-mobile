@@ -52,8 +52,4 @@ export class DashboardPage {
     this.onConnect.unsubscribe();
   }
 
-  ionViewDidLoad() {
-    this.navCtrl.push(SchedulesPage)
-  }
-
 }

@@ -23,4 +23,14 @@ export class ScheduleProvider extends ApiUrlModules {
     return this.http.get<schedule[]>(url);
   }
 
+  removeSchedule(userId: number, scheduleId: number): Observable<null> {
+    const url = this.profileUrl(userId, `schedule/${scheduleId}`);
+    return this.http.delete<null>(url);
+  }
+
+  updateSchedule(userId: number, scheduleId: number, data: schedule): Observable<schedule> {
+    const url = this.profileUrl(userId, `schedule/${scheduleId}`);
+    return this.http.put<schedule>(url, data);
+  }
+
 }

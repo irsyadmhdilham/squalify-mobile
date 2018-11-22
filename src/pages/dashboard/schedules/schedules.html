@@ -13,28 +13,43 @@
   </section>
 </ion-header>
 
-<ion-content padding>
-  <ion-row justify-content-between id="top-container">
-    <h5 title>Schedules</h5>
-    <ion-chip (tap)="addSchedule()" color="primary">
-      <ion-label color="white">Add schedule</ion-label>
-    </ion-chip>
-  </ion-row>
-  <ion-list>
-    <ion-item no-padding (tap)="showDetail(schedule)" *ngFor="let schedule of schedules; index as i">
-      <ion-row>
-        <ion-col col-3>
-          <h2 ion-text color="primary">{{schedule.date | date:'dd MMM' | uppercase}}</h2>
-          <p ion-text color="grey">{{schedule.date | date:'h:mma'}}</p>
-        </ion-col>
-        <ion-col>
-          <h5>{{schedule.title}}</h5>
-          <div class="location-wrapper">
-            <ion-icon small color="grey" name="pin"></ion-icon>
-            <p>{{schedule.location}}</p>
-          </div>
-        </ion-col>
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to retrieve schedules" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngIf="schedules.length > 0; then schedulesContent; else schedulesNoContent"></ng-container>
+    <ng-template #schedulesContent>
+      <ion-row justify-content-between id="top-container">
+        <h5 title>Schedules</h5>
+        <ion-chip (tap)="addSchedule()" color="primary">
+          <ion-label color="white">Add schedule</ion-label>
+        </ion-chip>
       </ion-row>
-    </ion-item>
-  </ion-list>
+      <ion-list>
+        <ion-item no-padding (tap)="showDetail(schedule)" *ngFor="let schedule of schedules; index as i">
+          <ion-row>
+            <ion-col col-3>
+              <h2 ion-text color="primary">{{schedule.date | date:'dd MMM' | uppercase}}</h2>
+              <p ion-text color="grey">{{schedule.date | date:'h:mma'}}</p>
+            </ion-col>
+            <ion-col>
+              <h5>{{schedule.title}}</h5>
+              <div class="location-wrapper">
+                <ion-icon small color="grey" name="pin"></ion-icon>
+                <p>{{schedule.location}}</p>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+    <ng-template #schedulesNoContent>
+      <empty-content
+        title="Empty schedule"
+        message="Currently you got no schedule"
+        [submit]="addSchedule.bind(this)"
+        buttonText="Add schedule"
+      ></empty-content>
+    </ng-template>
+  </ng-container>
 </ion-content>
