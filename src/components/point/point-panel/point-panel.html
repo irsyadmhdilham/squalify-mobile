@@ -1,0 +1,35 @@
+<ion-grid padding>
+  <h6 no-margin ion-text>Point</h6>
+  <ion-row>
+    <ion-col>
+      <h2 class="point" no-margin ion-text color="primary">40</h2>
+      <p no-margin>Total</p>
+    </ion-col>
+    <ion-col>
+      <h2 class="point" no-margin ion-text color="orange">50</h2>
+      <p no-margin>Productive points</p>
+    </ion-col>
+    <ion-col>
+      <h2 class="point" no-margin ion-text color="purple">50</h2>
+      <p no-margin>Career points</p>
+    </ion-col>
+  </ion-row>
+  <h6 margin-top ion-text>Productive points</h6>
+  <section class="points-container">
+    <div class="point-attribute-container" *ngFor="let point of productivePoints">
+      <h2 ion-text color="grey" no-margin>{{point.point}}</h2>
+      <img (tap)="point.add()" src="{{point.img}}" alt="{{point.text}}">
+      <p ion-text no-margin text-center>{{point.text}}</p>
+      <p ion-text color="grey" no-margin text-center>0 x {{point.each}}</p>
+    </div>
+  </section>
+  <h6 margin-top ion-text>Career points</h6>
+  <section class="points-container">
+    <div class="point-attribute-container" *ngFor="let point of careerPoints">
+      <h2 ion-text color="grey" no-margin>{{point.point}}</h2>
+      <img (tap)="point.add()" src="{{point.img}}" alt="{{point.text}}">
+      <p ion-text no-margin text-center>{{point.text}}</p>
+      <p ion-text color="grey" no-margin text-center>0 x {{point.each}}</p>
+    </div>
+  </section>
+</ion-grid>

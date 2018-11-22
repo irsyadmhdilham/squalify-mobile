@@ -5,10 +5,13 @@ import { ContactDetailPage } from "../../pages/dashboard/contacts/contact-detail
 import { SchedulesPage } from "../../pages/dashboard/schedules/schedules";
 import { ScheduleDetailPage } from "../../pages/dashboard/schedules/schedule-detail/schedule-detail";
 
+import { PointsPage } from "../../pages/dashboard/points/points";
+
 export const Dashboard = [
   DashboardPage,
   ContactsPage,
   ContactDetailPage,
   SchedulesPage,
-  ScheduleDetailPage
+  ScheduleDetailPage,
+  PointsPage
 ];

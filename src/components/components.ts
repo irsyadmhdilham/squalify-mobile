@@ -4,11 +4,13 @@ import { NoConnectionComponent } from "./no-connection/no-connection";
 
 import { ContactComponents } from "./contact/contact-components";
 import { ScheduleComponents } from "./schedule/schedule-components";
+import { PointComponents } from "./point/point-components";
 
 export const Components = [
   profileComponents,
   InboxComposeComponent,
   NoConnectionComponent,
   ...ScheduleComponents,
-  ...ContactComponents
+  ...ContactComponents,
+  ...PointComponents
 ];

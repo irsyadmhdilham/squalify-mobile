@@ -16,7 +16,7 @@
   <ion-content content-bg>
     <ion-grid padding-vertical>
       <ion-row>
-        <ion-col>
+        <ion-col (tap)="navigate('points')">
           <img src="../assets/imgs/dashboard/points.png">
           <p no-margin>Points</p>
         </ion-col>
@@ -48,7 +48,8 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-grid comp-margin padding>
+    <point-panel></point-panel>
+    <!-- <ion-grid comp-margin padding>
       <ion-row align-items-center>
         <img class="point-image" src="../../assets/imgs/dashboard/points.png" alt="points">
         <h6>Today points</h6>
@@ -115,7 +116,7 @@
       <ion-buttons start>
         <button ion-button no-padding clear small strong>Show more</button>
       </ion-buttons>
-    </ion-grid>
+    </ion-grid> -->
   </ion-content>
 </ng-template>
 <ng-template #disconnectedBlock>
