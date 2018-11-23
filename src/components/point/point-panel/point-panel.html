@@ -14,22 +14,18 @@
       <p no-margin>Career points</p>
     </ion-col>
   </ion-row>
-  <h6 margin-top ion-text>Productive points</h6>
-  <section class="points-container">
-    <div class="point-attribute-container" *ngFor="let point of productivePoints">
-      <h2 ion-text color="grey" no-margin>{{point.point}}</h2>
-      <img (tap)="point.add()" src="{{point.img}}" alt="{{point.text}}">
-      <p ion-text no-margin text-center>{{point.text}}</p>
-      <p ion-text color="grey" no-margin text-center>0 x {{point.each}}</p>
-    </div>
+  <ion-row>
+    <button ion-button clear strong small (tap)="showLog()">Show logs</button>
+  </ion-row>
+  <ion-row justify-content-between [ngStyle]="productiveTopLine">
+    <h6 margin-top ion-text>Productive points</h6>
+    <button ion-button clear small no-padding (tap)="edit()">Edit</button>
+  </ion-row>
+  <section class="points-container" [ngStyle]="productiveBottomLine">
+    <point-attribute></point-attribute>
   </section>
   <h6 margin-top ion-text>Career points</h6>
   <section class="points-container">
-    <div class="point-attribute-container" *ngFor="let point of careerPoints">
-      <h2 ion-text color="grey" no-margin>{{point.point}}</h2>
-      <img (tap)="point.add()" src="{{point.img}}" alt="{{point.text}}">
-      <p ion-text no-margin text-center>{{point.text}}</p>
-      <p ion-text color="grey" no-margin text-center>0 x {{point.each}}</p>
-    </div>
+    <point-attribute></point-attribute>
   </section>
 </ion-grid>

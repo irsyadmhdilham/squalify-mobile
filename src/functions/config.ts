@@ -14,8 +14,7 @@ export class ApiUrlModules {
 
   apiBaseUrl() {
     if (isDevMode()) {
-      // return 'http://localhost:8030/api/v1';
-      return 'http://192.168.0.4:8030/api/v1';
+      return 'http://localhost:8030/api/v1';
     }
     else {
       return 'https://squalify.com/api/v1';

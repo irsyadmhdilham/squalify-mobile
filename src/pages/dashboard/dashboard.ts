@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Subscription } from "rxjs/Subscription";
+import { Network } from "@ionic-native/network";
 
 import { ContactsPage } from "./contacts/contacts";
 import { SchedulesPage } from "./schedules/schedules";
 import { PointsPage } from "./points/points";
 
-import { Subscription } from "rxjs/Subscription";
-import { Network } from "@ionic-native/network";
-
-import { schedule } from "../../interfaces/schedule";
+import { PointProvider } from "../../providers/point/point";
 
 @IonicPage()
 @Component({
@@ -20,12 +19,14 @@ export class DashboardPage {
   connected: boolean = true;
   onConnect: Subscription;
   onDisconnected: Subscription;
-  schedules: schedule[];
+  point;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private network: Network
+    private network: Network,
+    private pointProvider: PointProvider,
+    private alertCtrl: AlertController
   ) { }
 
   navigate(section) {
@@ -49,11 +50,27 @@ export class DashboardPage {
     this.onDisconnected = this.network.onDisconnect().subscribe(() => {
       this.connected = false;
     });
+    this.fetchTodayPoint();
   }
 
   ionViewWillLeave() {
     this.onDisconnected.unsubscribe();
     this.onConnect.unsubscribe();
+  }
+
+  fetchTodayPoint() {
+    this.pointProvider.userId().then(userId => {
+      this.pointProvider.getTodayPoint(userId).subscribe(observe => {
+        this.point = observe[0];
+      }, (err: Error) => {
+        const alert = this.alertCtrl.create({
+          title: 'Error has occured',
+          subTitle: err.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
+    });
   }
 
 }
