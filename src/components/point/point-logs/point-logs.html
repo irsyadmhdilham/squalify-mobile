@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button ion-button clear icon-only color="dark" (tap)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Point log</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding [ngSwitch]="screenStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <ng-container *ngSwitchDefault>
+    <ion-list>
+      <ion-item no-padding *ngFor="let log of logs">
+        <ion-row justify-content-between>
+          <div>
+            <h3 class="time" ion-text color="primary">{{log.time | date:'h:mma'}}</h3>
+            <p ion-text color="dark" class="attribute">{{log.attribute}}</p>
+          </div>
+          <div>
+            <h3 no-margin text-center class="point" ion-text color="dark" item-end>{{log.point}}</h3>
+            <p ion-text color="grey" text-center no-margin>Point</p>
+          </div>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ion-content>

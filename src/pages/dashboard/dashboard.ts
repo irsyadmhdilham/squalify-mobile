@@ -9,6 +9,8 @@ import { PointsPage } from "./points/points";
 
 import { PointProvider } from "../../providers/point/point";
 
+import { point } from "../../interfaces/point";
+
 @IonicPage()
 @Component({
   selector: 'page-dashboard',
@@ -19,7 +21,7 @@ export class DashboardPage {
   connected: boolean = true;
   onConnect: Subscription;
   onDisconnected: Subscription;
-  point;
+  todayPoint: point;
 
   constructor(
     public navCtrl: NavController,
@@ -61,7 +63,7 @@ export class DashboardPage {
   fetchTodayPoint() {
     this.pointProvider.userId().then(userId => {
       this.pointProvider.getTodayPoint(userId).subscribe(observe => {
-        this.point = observe[0];
+        this.todayPoint = observe[0];
       }, (err: Error) => {
         const alert = this.alertCtrl.create({
           title: 'Error has occured',

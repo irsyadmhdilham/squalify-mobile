@@ -1,7 +1,7 @@
 <main>
-  <h2 ion-text color="grey" no-margin>{{point.point}}</h2>
-  <img (tap)="!editMode ? point.add() : false" src="{{point.img}}" alt="{{point.text}}">
-  <p ion-text no-margin text-center>{{point.attribute}}</p>
+  <h2 ion-text color="grey" no-margin>{{point}}</h2>
+  <img (tap)="!editMode ? add() : false" src="{{baseUrl + img}}" alt="{{img}}">
+  <p ion-text no-margin text-center>{{attribute}}</p>
   <ion-row *ngIf="editMode">
     <ion-col>
       <button ion-button clear icon-only color="secondary">
@@ -9,10 +9,10 @@
       </button>
     </ion-col>
     <ion-col>
-      <button ion-button clear icon-only color="danger">
+      <button (tap)="minus()" ion-button clear icon-only color="danger">
         <ion-icon no-padding ios="ios-remove-circle-outline" md="md-remove-circle"></ion-icon>
       </button>
     </ion-col>
   </ion-row>
-  <p ion-text color="grey" no-margin text-center>{{point.point / point.each}} x {{point.each}}pt</p>
+  <p ion-text color="grey" no-margin text-center>{{point / each}} x {{each}}pt</p>
 </main>

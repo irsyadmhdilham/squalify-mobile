@@ -14,9 +14,9 @@ export class PointProvider extends ApiUrlModules {
     super(storage);
   }
 
-  createPoint(userId: number, data: any): Observable<any> {
+  createPoint(userId: number, data: any): Observable<point> {
     const url = this.profileUrl(userId, 'point/');
-    return this.http.post<any>(url, data);
+    return this.http.post<point>(url, data);
   }
 
   updatePoint(userId: number, pointId: number, data: any): Observable<point> {
@@ -32,6 +32,11 @@ export class PointProvider extends ApiUrlModules {
   getTodayPoint(userId: number): Observable<point[]> {
     const url = this.profileUrl(userId, 'point');
     return this.http.get<point[]>(`${url}?mode=today`);
+  }
+
+  getPointLogs(userId: number, pointId: number): Observable<point> {
+    const url = this.profileUrl(userId, `point/${pointId}?type=logs`);
+    return this.http.get<point>(url);
   }
 
 }

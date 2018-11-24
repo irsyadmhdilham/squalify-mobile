@@ -1,9 +1,9 @@
 import { PointPanelComponent } from "./point-panel/point-panel";
-import { PointLogComponent } from "./point-log/point-log";
+import { PointLogsComponent } from "./point-logs/point-logs";
 import { PointAttributeComponent } from "./point-attribute/point-attribute";
 
 export const PointComponents = [
   PointPanelComponent,
-  PointLogComponent,
+  PointLogsComponent,
   PointAttributeComponent
 ]

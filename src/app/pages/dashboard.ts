@@ -6,6 +6,7 @@ import { SchedulesPage } from "../../pages/dashboard/schedules/schedules";
 import { ScheduleDetailPage } from "../../pages/dashboard/schedules/schedule-detail/schedule-detail";
 
 import { PointsPage } from "../../pages/dashboard/points/points";
+import { PointDetailPage } from "../../pages/dashboard/points/point-detail/point-detail";
 
 export const Dashboard = [
   DashboardPage,
@@ -13,5 +14,6 @@ export const Dashboard = [
   ContactDetailPage,
   SchedulesPage,
   ScheduleDetailPage,
-  PointsPage
+  PointsPage,
+  PointDetailPage
 ];

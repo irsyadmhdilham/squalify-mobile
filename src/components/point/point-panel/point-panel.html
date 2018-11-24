@@ -2,15 +2,15 @@
   <h6 no-margin ion-text>Point</h6>
   <ion-row>
     <ion-col>
-      <h2 class="point" no-margin ion-text color="primary">40</h2>
+      <h2 class="point" no-margin ion-text color="primary">{{totalPoints}}</h2>
       <p no-margin>Total</p>
     </ion-col>
     <ion-col>
-      <h2 class="point" no-margin ion-text color="orange">50</h2>
+      <h2 class="point" no-margin ion-text color="orange">{{totalProductivePoints}}</h2>
       <p no-margin>Productive points</p>
     </ion-col>
     <ion-col>
-      <h2 class="point" no-margin ion-text color="purple">50</h2>
+      <h2 class="point" no-margin ion-text color="purple">{{totalCareerPoints}}</h2>
       <p no-margin>Career points</p>
     </ion-col>
   </ion-row>
@@ -22,10 +22,28 @@
     <button ion-button clear small no-padding (tap)="edit()">Edit</button>
   </ion-row>
   <section class="points-container" [ngStyle]="productiveBottomLine">
-    <point-attribute></point-attribute>
+    <point-attribute
+      *ngFor="let point of productivePoints"
+      [img]="point.img"
+      [attribute]="point.attribute"
+      [each]="point.each"
+      [editMode]="editMode"
+      [todayPoint]="todayPoint"
+      pointType="productive"
+      (updatePoint)="updatePoint($event)"
+    ></point-attribute>
   </section>
   <h6 margin-top ion-text>Career points</h6>
   <section class="points-container">
-    <point-attribute></point-attribute>
+    <point-attribute
+      *ngFor="let point of careerPoints"
+      [img]="point.img"
+      [attribute]="point.attribute"
+      [each]="point.each"
+      [editMode]="editMode"
+      [todayPoint]="todayPoint"
+      pointType="career"
+      (updatePoint)="updatePoint($event)"
+    ></point-attribute>
   </section>
 </ion-grid>

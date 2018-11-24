@@ -4,6 +4,14 @@
       <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
   </ion-navbar>
+  <ion-segment padding [(ngModel)]="page">
+    <ion-segment-button value="personal">
+      Personal
+    </ion-segment-button>
+    <ion-segment-button value="group">
+      Group
+    </ion-segment-button>
+  </ion-segment>
   <section padding-horizontal>
     <ion-row id="filter-container">
       <div header-button>
@@ -17,6 +25,14 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <!-- <error-fetch message="Failed to retrieve points" [retry]="console.log('retry')" *ngSwitchCase="'error'"></error-fetch> -->
   <ng-container *ngSwitchDefault>
-    hello world
+    <h5 title>points</h5>
+    <ion-list>
+      <ion-item (tap)="navigate(point)" no-padding *ngFor="let point of points">
+        <ion-row justify-content-between>
+          <p>{{date(point.date) | date:'d MMM yyyy'}}</p>
+          <h5 ion-text color="primary">{{totalPoint(point)}}</h5>
+        </ion-row>
+      </ion-item>
+    </ion-list>
   </ng-container>
 </ion-content>
