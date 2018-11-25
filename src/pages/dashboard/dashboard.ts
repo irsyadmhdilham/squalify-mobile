@@ -6,6 +6,7 @@ import { Network } from "@ionic-native/network";
 import { ContactsPage } from "./contacts/contacts";
 import { SchedulesPage } from "./schedules/schedules";
 import { PointsPage } from "./points/points";
+import { SalesPage } from "./sales/sales";
 
 import { PointProvider } from "../../providers/point/point";
 
@@ -42,7 +43,14 @@ export class DashboardPage {
       case 'points':
         this.navCtrl.push(PointsPage);
       break;
+      case 'sales':
+        this.navCtrl.push(SalesPage);
+      break;
     }
+  }
+
+  ionViewDidLoad() {
+    this.navigate('sales');
   }
 
   ionViewDidEnter() {

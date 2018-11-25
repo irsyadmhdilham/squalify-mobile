@@ -1,0 +1,17 @@
+loading-form
+  main
+    display: grid
+    grid-row-gap: 3em
+
+    @for $i from 1 through 7
+      section:nth-child(#{$i})
+        .label
+          height: 0.9em
+          width: 30%
+          animation: loading-animate 0.3s ($i * 0.1s) infinite alternate ease-in-out
+        
+        .input
+          height: 0.9em
+          width: 100%
+          margin-top: 1em
+          animation: loading-animate 0.3s ($i * 0.1s) infinite alternate ease-in-out

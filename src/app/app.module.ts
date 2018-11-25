@@ -26,6 +26,7 @@ import { Components } from "../components/components";
 
 //providers
 import { Providers } from "../providers/providers";
+import { AgencyProvider } from '../providers/agency/agency';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { Providers } from "../providers/providers";
   providers: [
     ...NativeModules,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ...Providers
+    ...Providers,
+    AgencyProvider
   ]
 })
 export class AppModule {}

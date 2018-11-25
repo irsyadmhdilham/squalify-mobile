@@ -1,7 +1,7 @@
-import { AddSalesComponent } from "./add-sales/add-sales";
 import { SalesSummaryComponent } from "./sales-summary/sales-summary";
+import { AddSalesComponent } from "./add-sales/add-sales";
 
 export const SalesComponents = [
-  AddSalesComponent,
-  SalesSummaryComponent
+  SalesSummaryComponent,
+  AddSalesComponent
 ];
