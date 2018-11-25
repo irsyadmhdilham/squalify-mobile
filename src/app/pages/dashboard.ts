@@ -8,6 +8,8 @@ import { ScheduleDetailPage } from "../../pages/dashboard/schedules/schedule-det
 import { PointsPage } from "../../pages/dashboard/points/points";
 import { PointDetailPage } from "../../pages/dashboard/points/point-detail/point-detail";
 
+import { SalesPage } from "../../pages/dashboard/sales/sales";
+
 export const Dashboard = [
   DashboardPage,
   ContactsPage,
@@ -15,5 +17,6 @@ export const Dashboard = [
   SchedulesPage,
   ScheduleDetailPage,
   PointsPage,
-  PointDetailPage
+  PointDetailPage,
+  SalesPage
 ];

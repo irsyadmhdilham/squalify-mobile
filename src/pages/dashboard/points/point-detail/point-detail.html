@@ -8,17 +8,42 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <h2 class="point" no-margin ion-text text-center color="primary">0</h2>
+        <h2 class="point" no-margin ion-text text-center color="primary">{{totalPoints}}</h2>
         <p class="point-label" text-center no-margin>Total</p>
       </ion-col>
       <ion-col>
-        <h2 class="point" text-center no-margin ion-text color="orange">0</h2>
+        <h2 class="point" text-center no-margin ion-text color="orange">{{totalProductivePoints}}</h2>
         <p class="point-label" no-margin text-center>Productive points</p>
       </ion-col>
       <ion-col>
-        <h2 text-center class="point" no-margin ion-text color="purple">0</h2>
+        <h2 text-center class="point" no-margin ion-text color="purple">{{totalCareerPoints}}</h2>
         <p class="point-label" text-center no-margin>Career points</p>
       </ion-col>
     </ion-row>
+    <ion-buttons start>
+      <button ion-button clear strong small (tap)="showLogs()">Show logs</button>
+    </ion-buttons>
+  </ion-grid>
+  <ion-grid class="points-group-container" padding>
+    <h6 no-margin>Productive points</h6>
+    <section class="points-container">
+      <div *ngFor="let point of productivePoints">
+        <h2>{{point.point}}</h2>
+        <img src="{{point.img}}" alt="{{point.attribute}}">
+        <p ion-text no-margin text-center>{{point.attribute}}</p>
+        <p ion-text color="grey" no-margin text-center>{{0 / point.each}} x {{point.each}}pt</p>
+      </div>
+    </section>
+  </ion-grid>
+  <ion-grid class="points-group-container" padding>
+    <h6 no-margin>Career points</h6>
+    <section class="points-container">
+      <div *ngFor="let point of careerPoints">
+        <h2>{{point.point}}</h2>
+        <img src="{{point.img}}" alt="{{point.attribute}}">
+        <p ion-text no-margin text-center>{{point.attribute}}</p>
+        <p ion-text color="grey" no-margin text-center>{{0 / point.each}} x {{point.each}}pt</p>
+      </div>
+    </section>
   </ion-grid>
 </ion-content>

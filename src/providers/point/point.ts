@@ -14,13 +14,13 @@ export class PointProvider extends ApiUrlModules {
     super(storage);
   }
 
-  createPoint(userId: number, data: any): Observable<point> {
+  createPoint(userId: number, add: boolean, data: any): Observable<point> {
     const url = this.profileUrl(userId, 'point/');
-    return this.http.post<point>(url, data);
+    return this.http.post<point>(url, { ...data, add });
   }
 
-  updatePoint(userId: number, pointId: number, data: any): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}`);
+  updatePoint(userId: number, pointId: number, add: boolean, data: any): Observable<point> {
+    const url = this.profileUrl(userId, `point/${pointId}?add=${add}`);
     return this.http.put<point>(url, data);
   }
 

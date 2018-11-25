@@ -38,7 +38,7 @@ export class PointAttributeComponent implements OnChanges {
       };
       loading.present();
       if (this.pk) {
-        this.pointProvider.updatePoint(userId, this.pk, data).subscribe(observe => {
+        this.pointProvider.updatePoint(userId, this.pk, true, data).subscribe(observe => {
           loading.dismiss();
           const attr = observe.attributes.filter(val => val.attribute === this.attribute)[0];
           this.attrPk = attr.pk;
@@ -52,7 +52,7 @@ export class PointAttributeComponent implements OnChanges {
           alert.present();
         });
       } else {
-        this.pointProvider.createPoint(userId, data).subscribe(observe => {
+        this.pointProvider.createPoint(userId, true, data).subscribe(observe => {
           loading.dismiss();
           this.pk = observe.pk;
           const attribute = observe.attributes.filter(val => val.attribute === this.attribute)[0];

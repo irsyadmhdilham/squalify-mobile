@@ -20,7 +20,7 @@
             <p ion-text color="dark" class="attribute">{{log.attribute}}</p>
           </div>
           <div>
-            <h3 no-margin text-center class="point" ion-text color="dark" item-end>{{log.point}}</h3>
+            <h3 no-margin text-center class="point" ion-text color="dark" item-end [ngStyle]="pointColor(log)">{{log.point}}</h3>
             <p ion-text color="grey" text-center no-margin>Point</p>
           </div>
         </ion-row>

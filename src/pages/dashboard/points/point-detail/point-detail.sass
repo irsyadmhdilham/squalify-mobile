@@ -3,15 +3,24 @@ page-point-detail
     font-weight: 300
     font-size: 3.5rem
   
-  .point-label
-    font-size: 1.3rem
-  
-  .point-container
-    img
-      max-height: 1.8em
+  .points-group-container
+    border-top: solid 8px color($colors, light)
   
   .points-container
     display: grid
     grid-template-columns: 1fr 1fr 1fr
     grid-gap: 0.7em
     justify-items: center
+    margin-top: 1em
+
+    div
+      display: grid
+      justify-items: center
+      grid-row-gap: .5em
+
+      img
+        max-width: auto
+        max-height: 3em
+      
+      p
+        font-size: 1.3rem

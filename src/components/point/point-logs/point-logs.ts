@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams } from "ionic-angular";
 
 import { PointProvider } from "../../../providers/point/point";
+import { Colors } from "../../../functions/colors";
+import { log } from "../../../interfaces/point";
 
 @Component({
   selector: 'point-logs',
@@ -39,6 +41,13 @@ export class PointLogsComponent {
 
   ionViewDidLoad() {
     this.fetch();
+  }
+
+  pointColor(log: log) {
+    if (log.type === 'add') {
+      return { color: Colors.secondary };
+    }
+    return { color: Colors.danger };
   }
 
 }
