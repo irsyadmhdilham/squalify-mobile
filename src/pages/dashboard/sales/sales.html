@@ -1,10 +1,10 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-navbar>
     <ion-title>
       <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
   </ion-navbar>
-  <ion-segment padding [(ngModel)]="segment">
+  <ion-segment padding [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
     <ion-segment-button value="personal">
       Personal
     </ion-segment-button>
@@ -14,6 +14,50 @@
   </ion-segment>
 </ion-header>
 
-<ion-content padding>
-  <button ion-button (tap)="addSales()">Add sales</button>
+<ion-content [ngSwitch]="segment" padding>
+  <ion-row justify-content-between align-items-start>
+    <section>
+      <h5 title no-margin>Sales report</h5>
+      <button *ngIf="showSummary()" ion-button clear strong small no-padding no-margin>Show summary</button>
+    </section>
+    <ion-chip (tap)="addSales()" *ngIf="segment === 'personal' && personalSales.length !== 0" color="primary">
+      <ion-label color="white">Add sales</ion-label>
+    </ion-chip>
+  </ion-row>
+  <ng-container *ngSwitchCase="'personal'">
+    <ng-container [ngSwitch]="pageStatus">
+      <loading type="list" *ngSwitchCase="'loading'"></loading>
+      <fetch-error *ngSwitchCase="'error'" message="Failed to retrieve sales" [retry]="fetchPersonalSales.bind(this)"></fetch-error>
+      <ng-container *ngSwitchDefault>
+        <ng-container *ngIf="personalSales.length === 0; then emptyPersonalSales; else personalSalesContent"></ng-container>
+        <ng-template #emptyPersonalSales>
+          <empty-content
+            title="Sales empty"
+            message="Currently you got no sales"
+            buttonText="Add sales"
+            [submit]="addSales.bind(this)"
+          ></empty-content>
+        </ng-template>
+        <ng-template #personalSalesContent>
+          <ion-list>
+            <ion-item (tap)="showDetail(sales, i)" no-padding *ngFor="let sales of personalSales; index as i">
+              <section class="personal-sales-item">
+                <div>
+                  <h3 ion-text color="primary">{{sales.timestamp | date:'d MMM yyyy'}}</h3>
+                  <p>{{sales.timestamp | date:'HH:mma'}}</p>
+                </div>
+                <div>
+                  <h3 ion-text color="dark">RM{{sales.amount | numCommas}}</h3>
+                </div>
+              </section>
+            </ion-item>
+          </ion-list>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'group'">
+    group
+  </ng-container>
 </ion-content>

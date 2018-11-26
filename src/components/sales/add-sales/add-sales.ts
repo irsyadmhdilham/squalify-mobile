@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { NgModel } from "@angular/forms";
-import { ViewController, AlertController } from "ionic-angular";
+import { ViewController, AlertController, LoadingController } from "ionic-angular";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
+import { SalesProvider } from "../../../providers/sales/sales";
+
+import { sales } from "../../../interfaces/sales";
 
 @Component({
   selector: 'add-sales',
@@ -18,7 +21,9 @@ export class AddSalesComponent {
   constructor(
     private viewCtrl: ViewController,
     private agencyProvider: AgencyProvider,
-    private alertCtrl: AlertController
+    private salesProvider: SalesProvider,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) { }
 
   dismiss() {
@@ -61,24 +66,45 @@ export class AddSalesComponent {
     this.getCompany();
   }
 
-  addSales(amount: NgModel, salesType: NgModel, surcharge: NgModel) {
+  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, surchargeNgModel: NgModel, locationNgModel: NgModel) {
+    const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
-      if (!amount.valid) {
+      if (!amountNgModel.valid) {
         throw 'Please insert sales amount';
       }
-      if (!salesType.valid) {
+      if (!salesTypeNgModel.valid) {
         throw 'Please select sales type';
       }
-      if (this.company === 'CWA' && amount.value === 'EPF' || amount.value === 'Cash') {
-        if (!surcharge.valid) {
+      if (this.company === 'CWA' && amountNgModel.value === 'EPF' || amountNgModel.value === 'Cash') {
+        if (!surchargeNgModel.valid) {
           throw 'Please select surcharge';
         }
       }
-      console.log({
-        amount: amount.value,
-        salesType: salesType.value,
-        newSales: this.newSales,
-        repeatSales: this.repeatSales
+      let data: sales = {
+        amount: parseFloat(amountNgModel.value),
+        sales_type: salesTypeNgModel.value
+      };
+      if (locationNgModel.value !== '') {
+        data.location = locationNgModel.value;
+      }
+      if (this.repeatSales) {
+        data.repeat_sales = true;
+      }
+      loading.present();
+      const userId = await this.salesProvider.userId();
+      this.salesProvider.createSales(userId, data).subscribe(observe => {
+        loading.dismiss();
+        this.viewCtrl.dismiss({
+          sales: observe
+        });
+      }, () => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error has occured',
+          subTitle: 'Failed to add sales, please try again later',
+          buttons: ['Ok']
+        });
+        alert.present();
       });
     } catch (err) {
       const alert = this.alertCtrl.create({

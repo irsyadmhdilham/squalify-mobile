@@ -18,6 +18,10 @@
         <ion-input ngModel #amountNgModel="ngModel" required type="number" placeholder="Insert amount here"></ion-input>
       </ion-item>
       <ion-item>
+        <ion-label stacked>LOCATION (OPTIONAL)</ion-label>
+        <ion-input type="text" ngModel #locationNgModel="ngModel" placeholder="Insert location"></ion-input>
+      </ion-item>
+      <ion-item>
         <ion-label>Sales type</ion-label>
         <ion-select ngModel #typeNgModel="ngModel" required>
           <ion-option *ngFor="let type of salesTypes()">{{type}}</ion-option>
@@ -39,7 +43,7 @@
       </ion-item>
     </ion-list>
     <ion-row justify-content-center>
-      <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, surchargeNgModel)">Add sales</button>
+      <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, surchargeNgModel, locationNgModel)">Add sales</button>
     </ion-row>
   </ng-container>
 </ion-content>
