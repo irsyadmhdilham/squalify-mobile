@@ -16,10 +16,10 @@
   <ion-content content-bg id="main">
     <ion-grid padding id="top-container" class="container">
       <ion-row>
-        <div id="agency-image"></div>
+        <div [ngStyle]="agencyImageView()" id="agency-image"></div>
         <div id="title">
-          <h2>Welcome to</h2>
-          <h3>Centurion Agency</h3>
+          <h4>Welcome to</h4>
+          <h5>{{agencyName}}</h5>
         </div>
       </ion-row>
       <div id="create-container" margin-top>

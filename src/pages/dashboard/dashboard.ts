@@ -49,10 +49,6 @@ export class DashboardPage {
     }
   }
 
-  ionViewDidLoad() {
-    this.navigate('sales');
-  }
-
   ionViewDidEnter() {
     this.onConnect = this.network.onConnect().subscribe(() => {
       this.connected = true;
