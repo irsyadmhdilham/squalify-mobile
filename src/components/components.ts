@@ -6,6 +6,7 @@ import { ContactComponents } from "./contact/contact-components";
 import { ScheduleComponents } from "./schedule/schedule-components";
 import { PointComponents } from "./point/point-components";
 import { SalesComponents } from "./sales/sales-components";
+import { HomeComponents } from "./home/home-components";
 
 export const Components = [
   profileComponents,
@@ -14,5 +15,6 @@ export const Components = [
   ...ScheduleComponents,
   ...ContactComponents,
   ...PointComponents,
-  ...SalesComponents
+  ...SalesComponents,
+  ...HomeComponents
 ];

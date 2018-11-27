@@ -4,6 +4,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
 import { AgencyProvider } from "../../providers/agency/agency";
+import { PointProvider } from "../../providers/point/point";
 
 @IonicPage()
 @Component({
@@ -17,11 +18,17 @@ export class HomePage {
   connected: boolean = true;
   agencyImage: string;
   agencyName: string;
+  points = {
+    personal: 0,
+    group: 0,
+    agency: 0
+  };
 
   constructor(
     public navCtrl: NavController,
     private network: Network,
-    private agencyProvider: AgencyProvider
+    private agencyProvider: AgencyProvider,
+    private pointProvider: PointProvider
   ) { }
 
   agencyImageView() {
@@ -43,6 +50,7 @@ export class HomePage {
     });
 
     this.fetchAgencyDetail();
+    this.fetchPoint();
   }
 
   ionViewWillLeave() {
@@ -51,11 +59,19 @@ export class HomePage {
   }
 
   async fetchAgencyDetail() {
-    const agencyId = await this.agencyProvider.agencyId()
+    const agencyId = await this.agencyProvider.agencyId();
     this.agencyProvider.getAgencyDetail(agencyId, 'agency_image,name,posts').subscribe(observe => {
       this.agencyImage = observe.agency_image;
       this.agencyName = observe.name;
-      console.log(observe);
+    });
+  }
+
+  async fetchPoint() {
+    const userId = await this.pointProvider.userId();
+    this.pointProvider.getAllPoints(userId).subscribe(observe => {
+      this.points.agency = observe.agency;
+      this.points.personal = observe.personal;
+      this.points.group = observe.group;
     });
   }
 

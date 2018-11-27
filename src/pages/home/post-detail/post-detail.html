@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <section padding class="title-container">
+      <div class="profile-image"></div>
+      <div class="title-wrapper">
+        <ng-container item-end [ngSwitch]="postType">
+          <h6 no-margin ion-text color="dark" *ngSwitchCase="'sales closed'"><span>{{name}}</span> closed sales at <span>{{location}}</span></h6>
+          <h6 no-margin ion-text color="dark" *ngSwitchCase="'joining field work'"><span>{{name}}</span> went field work at <span>{{location}}</span> with <span>{{taggedUsers[0]}} and {{taggedUsers.length}} others</span></h6>
+        </ng-container>
+        <p class="timestamp">{{dateDisplay().text ? dateDisplay().text : ''}}, {{this.date | date:'HH:mma' | lowercase}}</p>
+      </div>
+    </section>
+    <section padding-horizontal class="content">
+      <ng-container [ngSwitch]="postType">
+        <div class="sales-closed-content" *ngSwitchCase="'sales closed'">
+          <ion-row justify-content-between align-items-center>
+            <p no-margin class="total-label">Total sales</p>
+            <div>
+              <h3 ion-text color="primary" no-margin>RM{{totalSales | numCommas}}</h3>
+              <p class="sales-type" ion-text color="grey" no-margin>EPF</p>
+            </div>
+          </ion-row>
+          <ion-row>
+            <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
+          </ion-row>
+        </div>
+      </ng-container>
+    </section>
+    <ion-row margin-horizontal>
+      <p ion-text color="grey">{{likes}} likes</p>
+    </ion-row>
+    <ion-row class="like-comment-share">
+      <ion-col>
+        <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
+          <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
+          Like
+        </button>
+      </ion-col>
+      <ion-col>
+        <button no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="chatbubbles"></ion-icon>
+          Comments
+        </button>
+      </ion-col>
+      <ion-col>
+        <button no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="share-alt"></ion-icon>
+          Share
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <section>
+    <div id="chatroom-input-wrapper">
+      <ion-textarea no-margin type="text" placeholder="write something here"></ion-textarea>
+    </div>
+    <ion-buttons end>
+      <button id="send-button" ion-button color="primary" clear icon-only>
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-buttons>
+  </section>
+</ion-footer>
+  

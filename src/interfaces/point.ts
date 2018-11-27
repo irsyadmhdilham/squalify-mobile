@@ -19,3 +19,9 @@ export interface point {
     logs: log[]
   };
 }
+
+export interface allPoints {
+  agency: number;
+  personal: number;
+  group: number;
+}

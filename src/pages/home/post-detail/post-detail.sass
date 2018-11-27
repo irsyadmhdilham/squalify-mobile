@@ -1,0 +1,81 @@
+page-post-detail
+
+  ion-grid
+    background: white
+
+  ion-col button
+    height: 2em !important
+  
+  .like-comment-share
+    border-top: solid 0.55px rgba(black, 0.3)
+    border-bottom: solid 0.55px rgba(black, 0.3)
+  
+  .title-container
+    display: grid
+    grid-template-columns: 3em auto
+    grid-column-gap: 0.8em
+
+    .profile-image
+      height: 3em
+      width: 3em
+      background: color($colors, lightGrey)
+      border-radius: 100%
+
+    .title-wrapper
+
+      .timestamp
+        margin: .3em 0 0
+
+      h6 
+        font-weight: normal
+        font-size: 1.5rem
+
+        span
+          font-weight: bold
+
+  .sales-closed-content
+    
+    .total-label
+      font-size: 1.8rem
+      font-weight: 300
+    
+    .monthly-sales
+      margin: .5em 0 0 0
+
+      span
+        font-weight: bold
+    
+    .sales-type
+      font-size: 1.3rem
+  
+  .like-button
+    animation: like-animate 0.5s ease-in-out
+  
+  ion-footer
+    border-top: solid 0.55px color($colors, lightGrey)
+
+    section
+      display: grid
+      grid-template-columns: auto 10%
+      align-items: center
+      padding: 0 0.6em
+
+      #chatroom-input-wrapper
+        padding: 0.5em 1em
+        border: solid 1px color($colors, lightGrey)
+        border-radius: 100em
+        height: 2.6em
+        overflow: auto
+      
+      #send-button
+        width: 100%
+  
+  @keyframes like-animate
+    0%, 100%
+      transform: scale(1)
+
+    50%
+      transform: scale(1.3)
+    
+    70%
+      transform: scale(0.8)

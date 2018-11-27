@@ -17,13 +17,19 @@ export class PointAttributeComponent implements OnChanges {
   @Input() editMode: boolean;
   @Input() todayPoint: point;
   @Input() pointType: string;
+  @Input() pointPk: number;
   @Output() updatePoint = new EventEmitter();
+  @Output() updatePointPk = new EventEmitter();
   point = 0;
   pk: number;
   attrPk: number;
   baseUrl = '../../../assets/imgs/points/';
 
-  constructor(private pointProvider: PointProvider, private alertCtrl: AlertController, private loadingCtrl: LoadingController) { }
+  constructor(
+    private pointProvider: PointProvider,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
+  ) { }
 
   add() {
     this.point += this.each;
@@ -54,7 +60,7 @@ export class PointAttributeComponent implements OnChanges {
       } else {
         this.pointProvider.createPoint(userId, true, data).subscribe(observe => {
           loading.dismiss();
-          this.pk = observe.pk;
+          this.updatePointPk.emit(observe.pk);
           const attribute = observe.attributes.filter(val => val.attribute === this.attribute)[0];
           if (attribute) {
             this.attrPk = attribute.pk;
@@ -88,10 +94,12 @@ export class PointAttributeComponent implements OnChanges {
         this.point = attribute.point;
       }
     }
+    if (this.pointPk) {
+      this.pk = this.pointPk;
+    }
   }
 
   addMinus(type) {
     this.updatePoint.emit({ type, pointType: this.pointType, point: this.each });
   }
-
 }

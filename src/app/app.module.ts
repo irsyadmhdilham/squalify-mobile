@@ -12,6 +12,7 @@ import { Applications } from "./pages/applications";
 import { Profile } from "./pages/profile";
 import { Inbox } from "./pages/inbox";
 import { Dashboard } from "./pages/dashboard";
+import { HomePages } from "./pages/home";
 
 //imported modules
 import { DirectivesModule } from "../directives/directives.module";
@@ -37,7 +38,8 @@ import { AgencyProvider } from '../providers/agency/agency';
     ...Inbox,
     ...Profile,
     ...Applications,
-    ...Components
+    ...Components,
+    ...HomePages
   ],
   imports: [
     BrowserModule,
@@ -61,7 +63,8 @@ import { AgencyProvider } from '../providers/agency/agency';
     ...Inbox,
     ...Profile,
     ...Applications,
-    ...Components
+    ...Components,
+    ...HomePages
   ],
   providers: [
     ...NativeModules,

@@ -56,19 +56,22 @@
       <h6 no-margin>Today points</h6>
       <ion-row>
         <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal}}</button>
           <p text-center no-margin>Personal</p>
         </ion-col>
         <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency}}</button>
           <p text-center no-margin>Agency</p>
         </ion-col>
         <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>29</button>
+          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group}}</button>
           <p text-center no-margin>Group</p>
         </ion-col>
       </ion-row>
     </ion-grid>
+    <ion-list>
+      <post></post>
+    </ion-list>
   </ion-content>
 </ng-template>
 <ng-template #disconnectedBlock>

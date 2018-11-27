@@ -30,7 +30,9 @@
       [editMode]="editMode"
       [todayPoint]="todayPoint"
       pointType="productive"
+      [pointPk]="pointPk"
       (updatePoint)="updatePoint($event)"
+      (updatePointPk)="getPointPk($event)"
     ></point-attribute>
   </section>
   <h6 margin-top ion-text>Career points</h6>
@@ -43,7 +45,9 @@
       [editMode]="editMode"
       [todayPoint]="todayPoint"
       pointType="career"
+      [pointPk]="pointPk"
       (updatePoint)="updatePoint($event)"
+      (updatePointPk)="getPointPk($event)"
     ></point-attribute>
   </section>
 </ion-grid>
