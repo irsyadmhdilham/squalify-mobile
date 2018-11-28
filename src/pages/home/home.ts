@@ -6,6 +6,8 @@ import { Network } from "@ionic-native/network";
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PointProvider } from "../../providers/point/point";
 
+import { PostDetailPage } from "./post-detail/post-detail";
+
 @IonicPage()
 @Component({
   selector: 'page-home',
@@ -48,8 +50,6 @@ export class HomePage {
     this.onConnect = this.network.onConnect().subscribe(() => {
       this.connected = true;
     });
-
-    this.fetchAgencyDetail();
     this.fetchPoint();
   }
 
@@ -73,6 +73,11 @@ export class HomePage {
       this.points.personal = observe.personal;
       this.points.group = observe.group;
     });
+  }
+
+  ionViewDidLoad() {
+    this.fetchAgencyDetail();
+    this.navCtrl.push(PostDetailPage);
   }
 
 }

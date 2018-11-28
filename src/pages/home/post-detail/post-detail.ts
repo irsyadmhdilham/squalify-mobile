@@ -1,6 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
+import { Comment } from "./comment";
+
 @IonicPage()
 @Component({
   selector: 'page-post-detail',
@@ -17,7 +19,11 @@ export class PostDetailPage {
   location: string = 'Petaling Jaya';
   taggedUsers: string[] = ['Amir Hasnan', 'Zafizi Zain', 'Yulam'];
   liked = false;
-  comments: number = 10;
+  comments = [
+    new Comment(new Date(), 'Hello worl', { name: 'Irsyad Mhd Ilham', pk: 15 }),
+    new Comment(new Date(), 'Syabas la geng', { name: 'Akmal', pk: 15 }),
+    new Comment(new Date(), 'Congratulations la champion', { name: 'Razif Shikari', pk: 15 })
+  ];
   likes: number = 20;
 
   constructor(

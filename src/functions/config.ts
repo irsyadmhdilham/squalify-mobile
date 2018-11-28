@@ -20,11 +20,9 @@ export class ApiUrlModules {
 
   apiBaseUrl() {
     if (isDevMode()) {
-      return 'http://localhost:8030/api/v1';
+      return 'http://localhost:8030/v1';
     }
-    else {
-      return 'https://squalify.com/api/v1';
-    }
+    return 'https://squalify.com/api/v1';
   }
 
   profileUrl(userId: number, url?: string) {
