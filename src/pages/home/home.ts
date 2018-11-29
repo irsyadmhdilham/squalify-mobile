@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
@@ -22,6 +22,7 @@ export class HomePage {
   agencyImage: string;
   agencyName: string;
   posts = [];
+  like;
   points = {
     personal: 0,
     group: 0,
@@ -33,7 +34,8 @@ export class HomePage {
     private network: Network,
     private agencyProvider: AgencyProvider,
     private pointProvider: PointProvider,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private navParams: NavParams
   ) { }
 
   agencyImageView() {
@@ -54,6 +56,13 @@ export class HomePage {
       this.connected = true;
     });
     this.fetchPoint();
+  }
+
+  ionViewWillEnter() {
+    const like = this.navParams.get('like');
+    if (like) {
+      this.like = like;
+    }
   }
 
   ionViewWillLeave() {

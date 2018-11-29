@@ -13,6 +13,7 @@ export class PostDetailPage {
 
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @ViewChild('textMessageArea') textarea: TextInput;
+  index: number;
   pk: number;
   postType: string;
   name: string;
@@ -22,9 +23,10 @@ export class PostDetailPage {
   date: Date = new Date();
   location: string;
   taggedUsers = [];
+  likes = [];
   liked = false;
+  likeId: number;
   comments = [];
-  likes: number;
   message = '';
   commentsLoaded = false;
 
@@ -63,18 +65,46 @@ export class PostDetailPage {
     }
   }
 
-  like() {
+  async like() {
     this.likeIcon.nativeElement.classList.add('like-button');
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    setTimeout(() => {
-      if (this.liked) {
-        this.liked = false;
-      } else {
+    const agencyId = await this.postProvider.agencyId(),
+          userId = await this.postProvider.userId();
+    const loading = this.loadingCtrl.create({content: 'Please wait...'});
+    loading.present();
+    if (!this.liked) {
+      this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
+        loading.dismiss();
+        this.likeId = observe.pk;
         this.liked = true;
+        const like = {
+          ...observe,
+          liker: observe.liker.pk
+        };
+        this.likes.push(like);
+      });
+    } else {
+      if (this.likeId) {
+        const i = this.likes.findIndex(val => val.liker === userId);
+        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(observe => {
+          loading.dismiss();
+          this.likeId = undefined;
+          this.liked = false;
+          this.likes.splice(i, 1);
+        });
       }
-    }, 250);
+    }
+  }
+
+  async checkLiked() {
+    const userId = await this.postProvider.userId();
+    const likes = this.likes.filter(val => val.liker === userId);
+    if (likes.length > 0) {
+      this.likeId = likes[0].pk;
+      this.liked = true;
+    }
   }
 
   async getComments() {
@@ -100,6 +130,8 @@ export class PostDetailPage {
 
   ionViewDidLoad() {
     const post: post = this.navParams.get('post');
+    const index = this.navParams.get('index');
+    this.index = index;
     this.pk = post.pk;
     this.name = post.posted_by.name;
     this.profileImage = post.posted_by.profile_image;
@@ -109,7 +141,16 @@ export class PostDetailPage {
     this.date = new Date(post.timestamp);
     this.location = post.sales_rel.location;
     this.likes = post.likes;
+    this.checkLiked();
     this.getComments();
+  }
+
+  ionViewWillLeave() {
+    this.navCtrl.getPrevious().data.like = {
+      postId: this.pk,
+      liked: this.liked,
+      likeId: this.likeId
+    };
   }
 
   async postComment() {

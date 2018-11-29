@@ -13,6 +13,7 @@ export class PostComponent {
 
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @Input() data: post;
+  @Input() likeAfterDetail;
   pk: number;
   postType: string;
   name: string;
@@ -74,7 +75,11 @@ export class PostComponent {
         loading.dismiss();
         this.likeId = observe.pk;
         this.liked = true;
-        this.likes.push(observe);
+        const like = {
+          ...observe,
+          liker: observe.liker.pk
+        };
+        this.likes.push(like);
       });
     } else {
       if (this.likeId) {
@@ -115,6 +120,12 @@ export class PostComponent {
     this.likes = this.data.likes;
     this.pk = this.data.pk;
     this.checkLiked();
+    if (this.likeAfterDetail) {
+      if (this.pk === this.likeAfterDetail.postId) {
+        this.liked = this.likeAfterDetail.liked;
+        this.likeId = this.likeAfterDetail.likeId;
+      }
+    }
   }
 
 }

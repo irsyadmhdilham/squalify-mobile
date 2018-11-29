@@ -10,7 +10,7 @@ export interface comment {
 
 export interface like {
   pk: number;
-  liker: owner;
+  liker: any;
 }
 
 export interface post {
