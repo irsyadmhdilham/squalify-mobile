@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 
-import { Comment } from "./comment";
+import { post } from "../../../interfaces/post";
+import { PostProvider } from "../../../providers/post/post";
 
 @IonicPage()
 @Component({
@@ -10,26 +11,37 @@ import { Comment } from "./comment";
 })
 export class PostDetailPage {
 
-  postType: string = 'sales closed';
   @ViewChild('likeIcon') likeIcon: ElementRef;
-  name: string = 'Irsyad Mhd Ilham';
-  totalSales: number = 340000;
-  monthlySales: number = 1200000;
+  @ViewChild('textMessageArea') textarea: TextInput;
+  pk: number;
+  postType: string;
+  name: string;
+  profileImage: string;
+  totalSales: number;
+  monthlySales: number;
   date: Date = new Date();
-  location: string = 'Petaling Jaya';
-  taggedUsers: string[] = ['Amir Hasnan', 'Zafizi Zain', 'Yulam'];
+  location: string;
+  taggedUsers = [];
   liked = false;
-  comments = [
-    new Comment(new Date(), 'Hello worl', { name: 'Irsyad Mhd Ilham', pk: 15 }),
-    new Comment(new Date(), 'Syabas la geng', { name: 'Akmal', pk: 15 }),
-    new Comment(new Date(), 'Congratulations la champion', { name: 'Razif Shikari', pk: 15 })
-  ];
-  likes: number = 20;
+  comments = [];
+  likes: number;
+  message = '';
+  commentsLoaded = false;
 
   constructor(
     public navCtrl: NavController,
-    public navParams: NavParams
+    public navParams: NavParams,
+    private postProvider: PostProvider,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) { }
+
+  profileImageView() {
+    if (this.profileImage) {
+      return { background: `url('${this.profileImage}') no-repeat center center / cover` };
+    }
+    return false;
+  }
   
   dateDisplay() {
     const year = this.date.getFullYear(),
@@ -63,6 +75,73 @@ export class PostDetailPage {
         this.liked = true;
       }
     }, 250);
+  }
+
+  async getComments() {
+    const agencyId = await this.postProvider.agencyId();
+    this.postProvider.getComments(agencyId, this.pk).subscribe(observe => {
+      this.commentsLoaded = true;
+      const comments = observe.map(val => {
+        return {
+          ...val,
+          timestamp: new Date(val.timestamp)
+        };
+      });
+      this.comments = comments;
+    });
+  }
+
+  commentProfileImage(image) {
+    if (image) {
+      return { background: `url('${image}') center center no-repeat / cover` };
+    }
+    return false;
+  }
+
+  ionViewDidLoad() {
+    const post: post = this.navParams.get('post');
+    this.pk = post.pk;
+    this.name = post.posted_by.name;
+    this.profileImage = post.posted_by.profile_image;
+    this.postType = post.post_type;
+    this.totalSales = parseFloat(post.sales_rel.amount);
+    this.monthlySales = 0;
+    this.date = new Date(post.timestamp);
+    this.location = post.sales_rel.location;
+    this.likes = post.likes;
+    this.getComments();
+  }
+
+  async postComment() {
+    const userId = await this.postProvider.userId();
+    const agencyId = await this.postProvider.agencyId();
+    if (this.message !== '') {
+      const data = {
+        userId,
+        text: this.message
+      };
+      const loading = this.loadingCtrl.create({content: 'Please wait...'});
+      loading.present();
+      this.postProvider.postComment(agencyId, this.pk, data).subscribe(observe => {
+        loading.dismiss();
+        const comment = {
+          ...observe,
+          timestamp: new Date(observe.timestamp)
+        };
+        this.message = '';
+        this.comments.push(comment);
+      }, (err: Error) => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error has occured',
+          subTitle: err.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
+    } else {
+      this.textarea.setFocus();
+    }
   }
 
 }

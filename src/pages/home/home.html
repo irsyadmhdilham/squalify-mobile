@@ -26,7 +26,7 @@
         <h6>Create</h6>
         <ion-row justify-content-around>
           <div class="create-wrapper">
-            <button ion-button icon-only clear small="true">
+            <button (tap)="createPost('sales')" ion-button icon-only clear small="true">
               <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
             </button>
             <p>Sales</p>
@@ -35,7 +35,7 @@
             <button ion-button icon-only clear small="true">
               <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
             </button>
-            <p>Referral</p>
+            <p>Contact</p>
           </div>
           <div class="create-wrapper">
             <button ion-button icon-only clear small="true">
@@ -69,8 +69,8 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <ion-list>
-      <post></post>
+    <ion-list *ngIf="posts.length > 0">
+      <post *ngFor="let post of posts" [data]="post"></post>
     </ion-list>
   </ion-content>
 </ng-template>

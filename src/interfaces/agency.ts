@@ -1,3 +1,5 @@
+import { post } from "./post";
+
 export interface owner {
   pk: number;
   name: string;
@@ -10,4 +12,5 @@ export interface agency {
   industry: string;
   company: string;
   agency_image: string;
+  posts?: post[];
 }

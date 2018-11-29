@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, ModalController } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
@@ -7,6 +7,7 @@ import { AgencyProvider } from "../../providers/agency/agency";
 import { PointProvider } from "../../providers/point/point";
 
 import { PostDetailPage } from "./post-detail/post-detail";
+import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 
 @IonicPage()
 @Component({
@@ -20,6 +21,7 @@ export class HomePage {
   connected: boolean = true;
   agencyImage: string;
   agencyName: string;
+  posts = [];
   points = {
     personal: 0,
     group: 0,
@@ -30,7 +32,8 @@ export class HomePage {
     public navCtrl: NavController,
     private network: Network,
     private agencyProvider: AgencyProvider,
-    private pointProvider: PointProvider
+    private pointProvider: PointProvider,
+    private modalCtrl: ModalController
   ) { }
 
   agencyImageView() {
@@ -63,6 +66,7 @@ export class HomePage {
     this.agencyProvider.getAgencyDetail(agencyId, 'agency_image,name,posts').subscribe(observe => {
       this.agencyImage = observe.agency_image;
       this.agencyName = observe.name;
+      this.posts = observe.posts;
     });
   }
 
@@ -75,9 +79,17 @@ export class HomePage {
     });
   }
 
+  createPost(attribute) {
+    switch (attribute) {
+      case 'sales':
+        const modal = this.modalCtrl.create(AddSalesComponent);
+        modal.present();
+      break;
+    }
+  }
+
   ionViewDidLoad() {
     this.fetchAgencyDetail();
-    this.navCtrl.push(PostDetailPage);
   }
 
 }

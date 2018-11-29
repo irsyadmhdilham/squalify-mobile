@@ -9,13 +9,13 @@
 <ion-content>
   <ion-grid>
     <section padding class="title-container">
-      <div class="profile-image"></div>
+      <div [ngStyle]="profileImageView()" class="profile-image"></div>
       <div class="title-wrapper">
         <ng-container item-end [ngSwitch]="postType">
           <h6 no-margin ion-text color="dark" *ngSwitchCase="'sales closed'"><span>{{name}}</span> closed sales at <span>{{location}}</span></h6>
           <h6 no-margin ion-text color="dark" *ngSwitchCase="'joining field work'"><span>{{name}}</span> went field work at <span>{{location}}</span> with <span>{{taggedUsers[0]}} and {{taggedUsers.length}} others</span></h6>
         </ng-container>
-        <p class="timestamp">{{dateDisplay().text ? dateDisplay().text : ''}}, {{this.date | date:'HH:mma' | lowercase}}</p>
+        <p class="timestamp">{{this.date | date:'d MMM yyyy, HH:mma' | lowercase}}</p>
       </div>
     </section>
     <section padding-horizontal class="content">
@@ -35,7 +35,7 @@
       </ng-container>
     </section>
     <ion-row margin-horizontal>
-      <p ion-text color="grey">{{likes}} likes</p>
+      <p ion-text *ngIf="likes > 0" color="grey">{{likes}} likes</p>
     </ion-row>
     <ion-row class="like-comment-share">
       <ion-col>
@@ -58,27 +58,35 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-list no-lines>
-    <ion-item class="comment-container" *ngFor="let comment of comments">
-      <div item-start class="commenter-image"></div>
-      <ion-row>
-        <div class="comment-wrapper">
-          <h6 ion-text color="dark">{{comment.commenter.name}}</h6>
-          <p ion-text color="dark">{{comment.message}}</p>
-        </div>
-      </ion-row>
-      <p class="comment-date">{{comment.date | date:'d MMM, h:mma' | lowercase}}</p>
-    </ion-item>
-  </ion-list>
+  <ng-container *ngIf="commentsLoaded; then commentsContent; else loadingComments"></ng-container>
+  <ng-template #loadingComments>
+    <section id="loading-comments-container">
+      <ion-spinner></ion-spinner>
+    </section>
+  </ng-template>
+  <ng-template #commentsContent>
+    <ion-list no-lines>
+      <ion-item class="comment-container" *ngFor="let comment of comments">
+        <div item-start [ngStyle]="commentProfileImage(comment.commented_by.profile_image)" class="commenter-image"></div>
+        <ion-row>
+          <div class="comment-wrapper">
+            <h6 ion-text color="dark">{{comment.commented_by.name}}</h6>
+            <p ion-text color="dark">{{comment.text}}</p>
+          </div>
+        </ion-row>
+        <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+      </ion-item>
+    </ion-list>
+  </ng-template>
 </ion-content>
 
 <ion-footer>
   <section>
     <div id="chatroom-input-wrapper">
-      <ion-textarea no-margin type="text" placeholder="write something here"></ion-textarea>
+      <ion-textarea #textMessageArea no-margin type="text" [(ngModel)]="message" placeholder="write something here"></ion-textarea>
     </div>
     <ion-buttons end>
-      <button id="send-button" ion-button color="primary" clear icon-only>
+      <button (tap)="postComment()" id="send-button" ion-button color="primary" clear icon-only>
         <ion-icon name="send"></ion-icon>
       </button>
     </ion-buttons>

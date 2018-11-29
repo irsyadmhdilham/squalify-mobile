@@ -8,4 +8,5 @@ export interface sales {
   sales_status?: string;
   document_id?: string;
   location?: string;
+  commission?: number;
 }
