@@ -31,10 +31,11 @@
         [selectOptions]="contactTypeSelectOptions"
         required
       >
-        <ion-option>Referral</ion-option>
-        <ion-option>Face to face</ion-option>
-        <ion-option>Nesting</ion-option>
-        <ion-option>Booth</ion-option>
+        <ion-option [disabled]="previousContactType === 'Referral'">Referral</ion-option>
+        <ion-option [disabled]="previousContactType === 'Face to face'">Face to face</ion-option>
+        <ion-option [disabled]="previousContactType === 'Nesting'">Nesting</ion-option>
+        <ion-option [disabled]="previousContactType === 'Booth'">Booth</ion-option>
+        <ion-option [disabled]="previousContactType === 'Table to table'">Table to table</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -45,13 +46,13 @@
         #statusNgModel="ngModel"
         required
       >
-        <ion-option>None</ion-option>
-        <ion-option>Called</ion-option>
-        <ion-option>Appointment secured</ion-option>
-        <ion-option>Rejected</ion-option>
-        <ion-option>Other</ion-option>
-        <ion-option>Client</ion-option>
-        <ion-option>Customer</ion-option>
+        <ion-option [disabled]="previousStatus === 'None'">None</ion-option>
+        <ion-option [disabled]="previousStatus === 'Called'">Called</ion-option>
+        <ion-option [disabled]="previousStatus === 'Appointment secured'">Appointment secured</ion-option>
+        <ion-option [disabled]="previousStatus === 'Rejected'">Rejected</ion-option>
+        <ion-option [disabled]="previousStatus === 'Other'">Other</ion-option>
+        <ion-option [disabled]="previousStatus === 'Client'">Client</ion-option>
+        <ion-option [disabled]="previousStatus === 'Customer'">Customer</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>

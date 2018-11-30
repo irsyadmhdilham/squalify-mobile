@@ -86,9 +86,11 @@ export class ContactsPage {
       const modal = this.modalCtrl.create(AddScheduleComponent);
       modal.present();
       modal.onDidDismiss(data => {
-        contact.status = value;
-        contact.scheduleId = data.schedule.pk;
-        this.updateContact(contact, index);
+        if (data) {
+          contact.status = value;
+          contact.scheduleId = data.schedule.pk;
+          this.updateContact(contact, index);
+        }
       });
     } else {
       contact.status = value;

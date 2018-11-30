@@ -25,3 +25,23 @@ export interface allPoints {
   personal: number;
   group: number;
 }
+
+export interface contactPoints {
+  pk?: number;
+  referrals: {
+    pk?: number;
+    point: number;
+  },
+  ftf: {
+    pk?: number;
+    point: number;
+  },
+  app_sec: {
+    pk?: number;
+    point: number;
+  },
+  calls: {
+    pk?: number;
+    point: number;
+  }
+}
