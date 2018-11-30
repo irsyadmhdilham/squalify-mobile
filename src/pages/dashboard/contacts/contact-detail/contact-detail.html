@@ -9,28 +9,46 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-row justify-content-between>
-    <div id="top">
-      <h5 no-margin>{{name}}</h5>
-      <p ion-text color="grey">{{contactType}}</p>
-    </div>
-    <button ion-button clear icon-only>
-      <ion-icon name="call"></ion-icon>
-    </button>
-  </ion-row>
-  <ion-chip [color]="statusColor(status)">
-    <ion-label>{{status}}</ion-label>
-  </ion-chip>
-  <ion-list margin-top no-lines>
-    <ion-item no-padding>
-      <h5>Contact no</h5>
-      <p>{{contactNo}}</p>
-    </ion-item>
-    <ion-item no-padding>
-      <h5>Remark</h5>
-      <p>{{remark === '' || remark === null ? 'No remark' : remark }}</p>
-    </ion-item>
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="form" *ngSwitchCase="'loading'"></loading>
+  <fetch-error *ngSwitchCase="'error'" message="Failed to retrieve data" [retry]="getContact.bind(this)"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ion-row justify-content-between>
+      <div id="top">
+        <h5 no-margin>{{name}}</h5>
+        <p ion-text color="grey">{{contactType}}</p>
+      </div>
+      <button ion-button clear icon-only>
+        <ion-icon name="call"></ion-icon>
+      </button>
+    </ion-row>
+    <ion-chip [color]="statusColor(status)">
+      <ion-label>{{status}}</ion-label>
+    </ion-chip>
+    <ion-list margin-top no-lines>
+      <ion-item no-padding>
+        <h5>Contact no</h5>
+        <p>{{contactNo}}</p>
+      </ion-item>
+      <ion-item no-padding>
+        <h5>Remark</h5>
+        <p>{{remark === '' || remark === null ? 'No remark' : remark }}</p>
+      </ion-item>
+    </ion-list>
+    <ng-container *ngIf="from === 'contact' && schedules.length > 0">
+      <h5 no-margin ion-text color="dark">Schedules</h5>
+      <ion-list>
+        <ion-item (tap)="showSchedule(schedule.pk)" no-padding *ngFor="let schedule of schedules">
+          <ion-row justify-content-between align-items-center>
+            <div>
+              <h6>{{schedule.title}}</h6>
+              <p>{{schedule.date | date:'d MMM yyyy, h:mma' | lowercase}}</p>
+            </div>
+            <button no-padding ion-button clear strong>Open</button>
+          </ion-row>
+        </ion-item>
+      </ion-list>
+    </ng-container>
     <button (tap)="removeContact()" no-padding ion-button clear color="danger">Remove contact</button>
-  </ion-list>
+  </ng-container>
 </ion-content>

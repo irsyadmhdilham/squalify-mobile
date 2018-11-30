@@ -124,6 +124,7 @@ export class PostComponent {
       if (this.pk === this.likeAfterDetail.postId) {
         this.liked = this.likeAfterDetail.liked;
         this.likeId = this.likeAfterDetail.likeId;
+        this.likes = this.likeAfterDetail.likes;
       }
     }
   }

@@ -1,9 +1,17 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController, LoadingController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+  AlertController,
+  LoadingController
+} from 'ionic-angular';
 
-import { contact } from "../../../../interfaces/contact";
 import { EditContactComponent } from "../../../../components/contact/edit-contact/edit-contact";
+import { ScheduleDetailPage } from "../../schedules/schedule-detail/schedule-detail";
 import { ContactProvider } from "../../../../providers/contact/contact";
+import { schedule } from "../../../../interfaces/schedule";
 
 @IonicPage()
 @Component({
@@ -12,7 +20,6 @@ import { ContactProvider } from "../../../../providers/contact/contact";
 })
 export class ContactDetailPage {
 
-  index: number;
   pk: number;
   name: string;
   status: string;
@@ -20,6 +27,9 @@ export class ContactDetailPage {
   contactNo: string;
   remark: string;
   edited = false;
+  pageStatus: string;
+  schedules: schedule[] = [];
+  from = 'contact';
 
   constructor(
     public navCtrl: NavController,
@@ -47,16 +57,37 @@ export class ContactDetailPage {
     }
   }
 
+  async getContact() {
+    const userId = await this.contactProvider.userId();
+    this.pageStatus = 'loading';
+    this.contactProvider.getContactDetail(userId, this.pk).subscribe(observe => {
+      this.pageStatus = undefined;
+      this.name = observe.name;
+      this.status = observe.status;
+      this.contactType = observe.contact_type;
+      this.contactNo = observe.contact_no;
+      this.remark = observe.remark;
+      if (observe.schedules) {
+        this.schedules = observe.schedules.map(val => {
+          return {
+            ...val,
+            date: new Date(val.date)
+          };
+        });
+      }
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
   ionViewDidLoad() {
-    const contact: contact = this.navParams.get('contact');
-    const index: number = this.navParams.get('index');
-    this.index = index;
-    this.pk = contact.pk;
-    this.name = contact.name;
-    this.status = contact.status;
-    this.contactType = contact.contact_type;
-    this.contactNo = contact.contact_no;
-    this.remark = contact.remark;
+    const contactId = this.navParams.get('contactId'),
+          from = this.navParams.get('from');
+    if (from === 'schedule') {
+      this.from = from;
+    }
+    this.pk = contactId;
+    this.getContact();
   }
 
   editContact() {
@@ -101,6 +132,13 @@ export class ContactDetailPage {
         });
         alert.present();
       });
+    });
+  }
+
+  showSchedule(id: number) {
+    this.navCtrl.push(ScheduleDetailPage, {
+      scheduleId: id,
+      from: 'contact'
     });
   }
 

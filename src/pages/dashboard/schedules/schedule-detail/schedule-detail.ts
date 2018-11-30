@@ -9,8 +9,10 @@ import {
 } from 'ionic-angular';
 
 import { schedule } from "../../../../interfaces/schedule";
+import { contact } from "../../../../interfaces/contact";
 import { ScheduleProvider } from "../../../../providers/schedule/schedule";
 import { EditScheduleComponent } from "../../../../components/schedule/edit-schedule/edit-schedule";
+import { ContactDetailPage } from "../../contacts/contact-detail/contact-detail";
 
 @IonicPage()
 @Component({
@@ -20,11 +22,14 @@ import { EditScheduleComponent } from "../../../../components/schedule/edit-sche
 export class ScheduleDetailPage {
 
   pk: number;
-  date: any;
+  date: Date;
   title: string;
   location: string;
   remark?: string;
   reminder: any;
+  pageStatus: string;
+  contact: contact;
+  from = 'schedule';
 
   constructor(
     public navCtrl: NavController,
@@ -56,14 +61,32 @@ export class ScheduleDetailPage {
     });
   }
 
+  async getDetail() {
+    const userId = await this.scheduleProvider.userId();
+    this.pageStatus = 'loading';
+    this.scheduleProvider.getScheduleDetail(userId, this.pk).subscribe(observe => {
+      this.pageStatus = undefined;
+      this.date = new Date(observe.date);
+      this.title = observe.title;
+      this.location = observe.location;
+      this.remark = observe.remark;
+      this.reminder = observe.reminder;
+      if (observe.contact) {
+        this.contact = observe.contact;
+      }
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
   ionViewDidLoad() {
-    const schedule: schedule = this.navParams.get('schedule');
-    this.pk = schedule.pk;
-    this.date = schedule.date;
-    this.title = schedule.title;
-    this.location = schedule.location;
-    this.remark = schedule.remark;
-    this.reminder = schedule.reminder;
+    const scheduleId = this.navParams.get('scheduleId'),
+          from = this.navParams.get('from');
+    if (from === 'contact') {
+      this.from = 'contact';
+    }
+    this.pk = scheduleId;
+    this.getDetail();
   }
 
   remove() {
@@ -82,6 +105,13 @@ export class ScheduleDetailPage {
         });
         alert.present();
       })
+    });
+  }
+
+  openContact(id: number) {
+    this.navCtrl.push(ContactDetailPage, {
+      contactId: id,
+      from: 'schedule'
     });
   }
 

@@ -8,9 +8,12 @@ import {
   AlertController,
   LoadingController
 } from 'ionic-angular';
+
 import { ContactDetailPage } from "./contact-detail/contact-detail";
 
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
+import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact } from "../../../interfaces/contact";
 import { ContactStatus } from "../../../functions/colors";
@@ -31,7 +34,7 @@ export class ContactsPage {
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private contactProvider: ContactProvider,
-    private actionSheet: ActionSheetController,
+    private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController
   ) { }
@@ -76,10 +79,27 @@ export class ContactsPage {
   }
 
   changeStatusHandler(contact: contact, index: number, value: string) {
+    if (contact.status === value) {
+      return;
+    }
+    if (value === 'Appointment secured') {
+      const modal = this.modalCtrl.create(AddScheduleComponent);
+      modal.present();
+      modal.onDidDismiss(data => {
+        contact.status = value;
+        contact.scheduleId = data.schedule.pk;
+        this.updateContact(contact, index);
+      });
+    } else {
+      contact.status = value;
+      this.updateContact(contact, index);
+    }
+  }
+
+  updateContact(contact: contact, index: number) {
     const loading = this.loadingCtrl.create({ content: 'Please wait...' });
     loading.present();
     this.contactProvider.userId().then(userId => {
-      contact.status = value;
       this.contactProvider.updateContact(userId, contact.pk, contact).subscribe(observe => {
         loading.dismiss();
         this.contacts[index] = observe;
@@ -96,7 +116,7 @@ export class ContactsPage {
   }
 
   changeStatus(contact: contact, index: number) {
-    const actionSheet = this.actionSheet.create({
+    const actionSheet = this.actionSheetCtrl.create({
       buttons: [
         { text: 'Called', handler: () => this.changeStatusHandler(contact, index, 'Called') },
         { text: 'Appointment secured', handler: () => this.changeStatusHandler(contact, index, 'Appointment secured') },
@@ -110,7 +130,7 @@ export class ContactsPage {
   }
 
   viewMore(contact, index) {
-    const actionSheet = this.actionSheet.create({
+    const actionSheet = this.actionSheetCtrl.create({
       buttons: [
         { text: 'Change status', handler: () => this.changeStatus(contact, index) },
         { text: 'Cancel', cssClass: 'danger-alert', role: 'cancel' }
@@ -119,8 +139,8 @@ export class ContactsPage {
     actionSheet.present();
   }
 
-  showDetail(contact: contact, index) {
-    this.navCtrl.push(ContactDetailPage, { contact, index: index })
+  showDetail(contact: contact) {
+    this.navCtrl.push(ContactDetailPage, { contactId: contact.pk })
   }
 
   ionViewWillEnter() {

@@ -6,7 +6,6 @@ import { Network } from "@ionic-native/network";
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PointProvider } from "../../providers/point/point";
 
-import { PostDetailPage } from "./post-detail/post-detail";
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 
 @IonicPage()

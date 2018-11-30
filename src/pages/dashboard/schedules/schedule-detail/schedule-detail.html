@@ -9,19 +9,35 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <div id="timestamp-wrapper">
-    <h1 no-margin ion-text color="primary">{{date | date:'dd MMM' | uppercase}}</h1>
-    <h4 no-margin ion-text color="grey">{{date | date:'hh:mma'}}</h4>
-  </div>
-  <h4>{{title}}</h4>
-  <div id="location-wrapper">
-    <ion-icon item-start name="pin" color="grey" small></ion-icon>
-    <p item-start>{{location}}</p>
-  </div>
-  <ion-item *ngIf="remark" no-lines no-padding>
-    <h5>Remark</h5>
-    <p>{{remark}}</p>
-  </ion-item>
-  <button (tap)="remove()" no-padding ion-button clear color="danger">Remove schedule</button>
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="form" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to retrieve data" [retry]="getDetail.bind(this)" *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <div id="timestamp-wrapper">
+      <h1 no-margin ion-text color="primary">{{date | date:'dd MMM' | uppercase}}</h1>
+      <h4 no-margin ion-text color="grey">{{date | date:'hh:mma'}}</h4>
+    </div>
+    <h4>{{title}}</h4>
+    <div id="location-wrapper">
+      <ion-icon item-start name="pin" color="grey" small></ion-icon>
+      <p item-start>{{location}}</p>
+    </div>
+    <section margin-top *ngIf="contact && from === 'schedule'" id="contact-section">
+      <ion-row justify-content-between>
+        <div>
+          <p no-margin ion-text color="dark">{{contact.name}}</p>
+          <p no-margin ion-text color="grey">{{contact.contact_no}}</p>
+          <button class="contact-open-button" no-padding (tap)="openContact(contact.pk)" ion-button clear strong>Open contact</button>
+        </div>
+        <button ion-button icon-only clear>
+          <ion-icon no-padding name="call"></ion-icon>
+        </button>
+      </ion-row>
+    </section>
+    <ion-item *ngIf="remark" no-lines no-padding>
+      <h5>Remark</h5>
+      <p>{{remark}}</p>
+    </ion-item>
+    <button (tap)="remove()" no-padding ion-button clear color="danger">Remove schedule</button>
+  </ng-container>
 </ion-content>

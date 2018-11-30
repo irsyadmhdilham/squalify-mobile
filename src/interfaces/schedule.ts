@@ -1,3 +1,5 @@
+import { contact } from "./contact";
+
 export interface schedule {
   pk?: number;
   date: any;
@@ -5,4 +7,5 @@ export interface schedule {
   remark?: string;
   location: string;
   reminder?: any;
+  contact?: contact;
 }

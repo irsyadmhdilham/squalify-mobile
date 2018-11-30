@@ -46,8 +46,7 @@ export class SchedulesPage {
             date: new Date(val.date)
           }
         });
-      }, (err: Error) => {
-        console.log(err);
+      }, () => {
         this.pageStatus = 'error';
       });
     });
@@ -58,7 +57,7 @@ export class SchedulesPage {
   }
 
   showDetail(schedule) {
-    this.navCtrl.push(ScheduleDetailPage, { schedule });
+    this.navCtrl.push(ScheduleDetailPage, { scheduleId: schedule.pk });
   }
 
 }

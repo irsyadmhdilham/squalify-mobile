@@ -19,7 +19,7 @@
             <p class="sales-type" ion-text color="grey" no-margin>EPF</p>
           </div>
         </ion-row>
-        <ion-row>
+        <ion-row [ngStyle]="likes.length > 0 || comments > 0 ? { marginBottom: '1em' } : false">
           <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
         </ion-row>
       </div>

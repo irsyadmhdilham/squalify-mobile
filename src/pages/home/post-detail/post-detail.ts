@@ -149,7 +149,8 @@ export class PostDetailPage {
     this.navCtrl.getPrevious().data.like = {
       postId: this.pk,
       liked: this.liked,
-      likeId: this.likeId
+      likeId: this.likeId,
+      likes: this.likes
     };
   }
 
