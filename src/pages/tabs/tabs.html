@@ -1,7 +1,13 @@
-<ion-tabs selectedIndex="1">
-  <ion-tab tabsHideOnSubPages [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-  <ion-tab tabsHideOnSubPages [root]="tab2Root" tabTitle="Dashboard" tabIcon="stats"></ion-tab>
-  <ion-tab tabsHideOnSubPages [root]="tab3Root" tabTitle="Apps" tabIcon="apps"></ion-tab>
-  <ion-tab tabsHideOnSubPages [root]="tab4Root" tabTitle="Inbox" tabIcon="mail"></ion-tab>
-  <ion-tab tabsHideOnSubPages [root]="tab5Root" tabTitle="Profile" tabIcon="contact"></ion-tab>
-</ion-tabs>
+<ng-container *ngIf="signedIn; then mainPage; else signInPage"></ng-container>
+<ng-template #signInPage>
+  <page-sign-in></page-sign-in>
+</ng-template>
+<ng-template #mainPage>
+  <ion-tabs selectedIndex="1">
+    <ion-tab tabsHideOnSubPages [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+    <ion-tab tabsHideOnSubPages [root]="tab2Root" tabTitle="Dashboard" tabIcon="stats"></ion-tab>
+    <ion-tab tabsHideOnSubPages [root]="tab3Root" tabTitle="Apps" tabIcon="apps"></ion-tab>
+    <ion-tab tabsHideOnSubPages [root]="tab4Root" tabTitle="Inbox" tabIcon="mail"></ion-tab>
+    <ion-tab tabsHideOnSubPages [root]="tab5Root" tabTitle="Profile" tabIcon="contact"></ion-tab>
+  </ion-tabs>
+</ng-template>

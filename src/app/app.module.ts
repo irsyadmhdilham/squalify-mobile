@@ -4,8 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
+import { SignInPage } from "../pages/sign-in/sign-in";
 
 //imported pages
 import { Applications } from "./pages/applications";
@@ -32,8 +32,8 @@ import { AgencyProvider } from '../providers/agency/agency';
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
     TabsPage,
+    SignInPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,
@@ -57,8 +57,8 @@ import { AgencyProvider } from '../providers/agency/agency';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     TabsPage,
+    SignInPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,

@@ -1,0 +1,20 @@
+<ion-content padding>
+  <main>
+    <section id="welcome-wrapper">
+      <h1>Welcome</h1>
+      <img src="../../assets/imgs/squalify-white.png" alt="squalify">
+    </section>
+    <form (ngSubmit)="signIn()">
+      <ion-item no-padding class="input-wrapper">
+        <ion-label color="white" stacked>EMAIL</ion-label>
+        <ion-input [(ngModel)]="signInForm.email" name="email" type="email" placeholder="Insert your email here"></ion-input>
+      </ion-item>
+      <ion-item margin-top no-padding class="input-wrapper">
+        <ion-label color="white" stacked>PASSWORD</ion-label>
+        <ion-input [(ngModel)]="signInForm.password" name="password" type="password" placeholder="Insert your password here"></ion-input>
+      </ion-item>
+      <button no-padding clear ion-button color="white">Forgot password</button>
+      <button class="submit-button" (tap)="signIn(email, password)" margin-top ion-button outline round color="white">Sign in</button>
+    </form>
+  </main>
+</ion-content>

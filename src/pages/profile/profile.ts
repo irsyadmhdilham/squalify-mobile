@@ -1,11 +1,20 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ModalController,
+  AlertController,
+  LoadingController
+} from 'ionic-angular';
+import { Storage } from "@ionic/storage";
 
 import { ChangePasswordComponent } from "../../components/profile/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/profile/change-email/change-email";
 import { EditProfileComponent } from "../../components/profile/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
 
+import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
 import { settings } from "../../interfaces/profile-settings";
 
@@ -14,7 +23,7 @@ import { settings } from "../../interfaces/profile-settings";
   selector: 'page-profile',
   templateUrl: 'profile.html',
 })
-export class ProfilePage {
+export class ProfilePage extends Ids {
 
   name: string;
   designation: string;
@@ -29,8 +38,12 @@ export class ProfilePage {
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
-    private profileProvider: ProfileProvider
-  ) { }
+    private profileProvider: ProfileProvider,
+    public storage: Storage,
+    private loadingCtrl: LoadingController
+  ) {
+    super(storage);
+  }
 
   profileImageDisplay() {
     return {
@@ -65,7 +78,14 @@ export class ProfilePage {
   }
 
   _signOut() {
-    
+    const loading = this.loadingCtrl.create({content: 'Please wait...'});
+    loading.present();
+    this.removeAllId().then(value => {
+      if (value) {
+        loading.dismiss();
+        console.log('signed out');
+      }
+    });
   }
 
   signOut() {
@@ -74,7 +94,7 @@ export class ProfilePage {
       subTitle: 'Are you sure to sign out?',
       buttons: [
         { text: 'Cancel' },
-        { text: 'Sign out', cssClass: 'danger-alert', handler: this._signOut }
+        { text: 'Sign out', cssClass: 'danger-alert', handler: this._signOut.bind(this) }
       ]
     });
     alert.present();

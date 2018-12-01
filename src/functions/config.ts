@@ -2,20 +2,45 @@ import { isDevMode } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { AES, enc } from "crypto-js";
 
-export class ApiUrlModules {
-
+export class Ids {
   constructor(public storage: Storage) { }
 
   async agencyId() {
     const getId = await this.storage.get('agencyId');
+    if (!getId) {
+      return false;
+    }
     const bytes = AES.decrypt(getId, 'secret agency pk');
     return parseInt(bytes.toString(enc.Utf8));
   }
 
   async userId() {
-    const data = await this.storage.get('userId')
+    const data = await this.storage.get('userId');
+    if (!data) {
+      return false;
+    }
     const bytes =  AES.decrypt(data, 'secret user pk');
     return parseInt(bytes.toString(enc.Utf8));
+  }
+
+  removeAllId(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const userId = this.storage.remove('userId'),
+            agencyId = this.storage.remove('agencyId');
+      Promise.all([userId, agencyId]).then(() => {
+        resolve(true);
+      }).catch(() => {
+        reject(false);
+      });
+    });
+  }
+
+}
+
+export class ApiUrlModules extends Ids {
+
+  constructor(public storage: Storage) {
+    super(storage);
   }
 
   apiBaseUrl() {
@@ -37,13 +62,6 @@ export class ApiUrlModules {
       return `${this.apiBaseUrl()}/agency/${agencyId}`;
     }
     return `${this.apiBaseUrl()}/agency/${agencyId}/${url}`;
-  }
-
-  profileUrlWithQuery(userId: number, url?: string) {
-    if (!url) {
-      return `${this.apiBaseUrl()}/profile/${userId}?`;
-    }
-    return `${this.apiBaseUrl()}/profile/${userId}/${url}?`;
   }
 
   otherUrl(url) {

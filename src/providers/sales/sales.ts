@@ -13,17 +13,17 @@ export class SalesProvider extends ApiUrlModules {
     super(storage);
   }
 
-  createSales(userId: number, data: sales): Observable<sales> {
+  createSales(userId, data: sales): Observable<sales> {
     const url = this.profileUrl(userId, 'sales/');
     return this.http.post<sales>(url, data);
   }
 
-  getSales(userId: number): Observable<sales[]> {
+  getSales(userId): Observable<sales[]> {
     const url = this.profileUrl(userId, 'sales');
     return this.http.get<sales[]>(url);
   }
 
-  removeSales(userId: number, salesId): Observable<any> {
+  removeSales(userId, salesId): Observable<any> {
     const url = this.profileUrl(userId, `sales/${salesId}`);
     return this.http.delete<any>(url);
   }
