@@ -35,6 +35,18 @@ export class Ids {
     });
   }
 
+  setIds(userId: number, agencyId: number) {
+    const encryptedUserId = AES.encrypt(userId.toString(), 'secret user pk').toString(),
+          encryptedAgencyId = AES.encrypt(agencyId.toString(), 'secret agency pk').toString();
+    const setUserId = this.storage.set('userId', encryptedUserId),
+          setAgencyId = this.storage.set('agencyId', encryptedAgencyId);
+    return new Promise(resolve => {
+      Promise.all([setUserId, setAgencyId]).then(() => {
+        resolve(true);
+      });
+    });
+  }
+
 }
 
 export class ApiUrlModules extends Ids {

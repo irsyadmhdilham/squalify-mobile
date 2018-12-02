@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Events } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 
 import { DashboardPage } from "../dashboard/dashboard";
@@ -21,7 +22,7 @@ export class TabsPage extends Ids {
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
 
-  constructor(public storage: Storage) {
+  constructor(public storage: Storage, private events: Events ) {
     super(storage);
   }
 
@@ -30,6 +31,16 @@ export class TabsPage extends Ids {
     if (userId) {
       this.signedIn = true;
     }
+  }
+
+  signIn(value) {
+    this.signedIn = value;
+  }
+
+  ionViewDidLoad() {
+    this.events.subscribe('sign out', data => {
+      this.signedIn = data;
+    });
   }
 
 }

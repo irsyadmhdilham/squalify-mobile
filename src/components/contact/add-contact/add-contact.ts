@@ -36,13 +36,10 @@ export class AddContactComponent {
     }
   }
 
-  addContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel) {
+  addContact(nameNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel) {
     try {
       if (!nameNgModel.valid) {
         throw 'Please insert name';
-      }
-      if (!statusNgModel.valid) {
-        throw 'Please select status';
       }
       if (!contactTypeNgModel.valid) {
         throw 'Please select contact type';
@@ -51,11 +48,10 @@ export class AddContactComponent {
         throw 'Please insert contact no';
       }
       const name = nameNgModel.value,
-            status = statusNgModel.value,
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value,
             remark = remarkNgModel.value;
-      const data = { name, status, contact_type, contact_no, remark };
+      const data = { name, contact_type, contact_no, remark };
       const loading = this.loadingCtrl.create({ content: 'Please wait' });
       loading.present();
       if (this.point) {

@@ -39,23 +39,6 @@
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label>Status</ion-label>
-      <ion-select
-        [(ngModel)]="status"
-        [selectOptions]="statusSelectOptions"
-        #_status="ngModel"
-        required
-      >
-        <ion-option>None</ion-option>
-        <ion-option>Called</ion-option>
-        <ion-option>Appointment secured</ion-option>
-        <ion-option>Rejected</ion-option>
-        <ion-option>Other</ion-option>
-        <ion-option>Client</ion-option>
-        <ion-option>Customer</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-item>
       <ion-label stacked>CONTACT NO</ion-label>
       <ion-input
         type="text"
@@ -76,6 +59,6 @@
     </ion-item>
   </ion-list>
   <ion-row justify-content-center>
-    <button ion-button clear strong (tap)="addContact(name, _status, contactType, contactNo, remark)">Add contact</button>
+    <button ion-button clear strong (tap)="addContact(name, contactType, contactNo, remark)">Add contact</button>
   </ion-row>
 </ion-content>

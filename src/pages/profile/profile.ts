@@ -5,7 +5,8 @@ import {
   NavParams,
   ModalController,
   AlertController,
-  LoadingController
+  LoadingController,
+  Events
 } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 
@@ -40,7 +41,8 @@ export class ProfilePage extends Ids {
     private alertCtrl: AlertController,
     private profileProvider: ProfileProvider,
     public storage: Storage,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private events: Events
   ) {
     super(storage);
   }
@@ -83,7 +85,7 @@ export class ProfilePage extends Ids {
     this.removeAllId().then(value => {
       if (value) {
         loading.dismiss();
-        console.log('signed out');
+        this.events.publish('sign out', false);
       }
     });
   }
