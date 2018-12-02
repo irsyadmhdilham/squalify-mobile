@@ -9,4 +9,5 @@ export interface contact {
   remark?: string;
   scheduleId?: number;
   schedules?: schedule[];
+  referrerId?: number;
 }

@@ -56,13 +56,24 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
         });
       break;
       case 'Referrals':
-      case 'FTF/Nesting/Booth':
-        this.addContact().then(data => {
+        this.addReferral().then(data => {
           if (data) {
             addPoint();
             this.addAction();
           }
         });
+      break;
+      case 'FTF/Nesting/Booth':
+        this.addFTF().then(data => {
+          if (data) {
+            addPoint();
+            this.addAction();
+          }
+        });
+      break;
+      default:
+        addPoint();
+        this.addAction();
       break;
     }
   }

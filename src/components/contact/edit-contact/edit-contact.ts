@@ -14,6 +14,7 @@ import { contactPoints } from "../../../interfaces/point";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { PointProvider } from "../../../providers/point/point";
+import { UpdatePoint } from "../../../providers/point/update-point";
 
 import { AddScheduleComponent } from "../../schedule/add-schedule/add-schedule";
 
@@ -57,40 +58,17 @@ export class EditContactComponent {
     }
   }
 
-  updatePoint(pk: number, point: number, attr_pk: number) {
-    return new Promise(async (resolve, reject) => {
-      const data = { pk, point, attribute: 'Appointment secured', attr_pk };
-      const toast = this.toastCtrl.create({
-        message: `Point added, Total Appointment secured point: ${point}`,
-        position: 'top',
-        showCloseButton: true
+  updatePoint(userId): Promise<any> {
+    let point = this.point.app_sec.point,
+        pk = this.point.pk,
+        attrPk = this.point.app_sec.pk;
+    const update = new UpdatePoint(this.pointProvider, userId, pk, point, 'Appointment secured', attrPk, 2);
+    return new Promise<any>((resolve, reject) => {
+      update.add().then(data => {
+        resolve(data);
+      }).catch(err => {
+        reject(err);
       });
-      const loading = this.loadingCtrl.create({content: 'Please wait...'});
-      loading.present();
-      const userId = await this.pointProvider.userId();
-      if (pk) {
-        this.pointProvider.updatePoint(userId, pk, true, data).subscribe(() => {
-          loading.dismiss();
-          toast.present();
-          toast.onDidDismiss(() => {
-            resolve(true);
-          });
-        }, (err: Error) => {
-          loading.dismiss();
-          reject(false);
-        });
-      } else {
-        this.pointProvider.createPoint(userId, true, data).subscribe(() => {
-          loading.dismiss();
-          toast.present();
-          toast.onDidDismiss(() => {
-            resolve(true);
-          });
-        }, (err: Error) => {
-          loading.dismiss();
-          reject(false);
-        });
-      }
     });
   }
 
@@ -113,21 +91,28 @@ export class EditContactComponent {
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value,
             remark = remarkNgModel.value;
-      const data = { name, status, contact_type, contact_no, remark };
+      const data: contact = {
+        name,
+        status,
+        contact_type,
+        contact_no,
+        remark: remark === '' ? null : remark
+      };
+      const loading = this.loadingCtrl.create({content: 'Please wait...'});
       if (statusNgModel.value === 'Appointment secured' && statusNgModel.dirty && this.point) {
         const modal = this.modalCtrl.create(AddScheduleComponent);
         modal.present();
-        modal.onDidDismiss(async data => {
-          if (data) {
-            const point = this.point;
-            const pointAdded = await this.updatePoint(point.pk, point.app_sec.point + 2, point.app_sec.pk);
-            if (pointAdded) {
-              this.updateContactSubmit(data);
-            }
+        modal.onDidDismiss(async cb => {
+          if (cb) {
+            data.scheduleId = cb.schedule.pk;
+            const userId = await this.contactProvider.userId();
+            this.updatePoint(userId).then(() => {
+              this.updateContactSubmit(data, 'add point', loading);
+            });
           }
         });
       } else {
-        this.updateContactSubmit(data);
+        this.updateContactSubmit(data, null, loading);
       }
     } catch (err) {
       const alert = this.alertCtrl.create({
@@ -139,21 +124,34 @@ export class EditContactComponent {
     }
   }
 
-  updateContactSubmit(data) {
-    const loading = this.loadingCtrl.create({ content: 'Please wait' });
-    loading.present();
+  updateContactSubmit(data, type, loading) {
+    if (!type) {
+      loading.present();
+    }
     this.contactProvider.userId().then(userId => {
       this.contactProvider.updateContact(userId, this.pk, data).subscribe(observe => {
         loading.dismiss();
-        this.viewCtrl.dismiss({
+        const toast = this.toastCtrl.create({
+          message: `Point added, Total Appointment secured point: ${this.point.app_sec.point + 2}`,
+          position: 'top',
+          duration: 1500
+        });
+        const data = {
           name: observe.name,
           status: observe.status,
           contact_type: observe.contact_type,
           contact_no: observe.contact_no,
           remark: observe.remark,
-          edited: true,
-          point: this.point
-        });
+          edited: true
+        }
+        if (type) {
+          toast.present();
+          toast.onDidDismiss(() => {
+            this.viewCtrl.dismiss({...data});
+          });
+        } else {
+          this.viewCtrl.dismiss({...data});
+        }
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({

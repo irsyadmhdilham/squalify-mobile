@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Contact list</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngIf="contacts; then thenBlock; else elseBlock"></ng-container>
+    <ng-template #thenBlock>
+      <h6 title>Select contact below</h6>
+      <ion-list>
+        <ion-item (tap)="select(contact)" *ngFor="let contact of contacts" no-padding>
+          <p ion-text color="dark">{{contact.name}}</p>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+    <ng-template #elseBlock>
+      <section id="empty-contacts-container">
+        <img src="../../../assets/imgs/error.png" alt="error">
+        <h6>You got no contact</h6>
+        <p no-margin ion-text color="grey">Sorry cannot proceed</p>
+        <button ion-button clear strong (tap)="dismiss()">Back</button>
+      </section>
+    </ng-template>
+  </ng-container>
+</ion-content>

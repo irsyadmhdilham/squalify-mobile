@@ -7,7 +7,10 @@ export class AttributeFeatures {
 
   constructor(public modalCtrl: ModalController) { }
 
-  modal(component) {
+  modal(component, data?) {
+    if (data) {
+      return this.modalCtrl.create(component, data);
+    }
     return this.modalCtrl.create(component);
   }
 
@@ -21,9 +24,19 @@ export class AttributeFeatures {
     });
   }
 
-  addContact() {
+  addFTF() {
     return new Promise(resolve => {
       const modal = this.modal(AddContactComponent);
+      modal.present();
+      modal.onDidDismiss(data => {
+        resolve(data);
+      });
+    });
+  }
+
+  addReferral() {
+    return new Promise(resolve => {
+      const modal = this.modal(AddContactComponent, { contactType: 'Referral' });
       modal.present();
       modal.onDidDismiss(data => {
         resolve(data);

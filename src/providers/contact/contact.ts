@@ -18,8 +18,8 @@ export class ContactProvider extends ApiUrlModules {
     return this.http.post<any>(url, data);
   }
 
-  getContacts(userId): Observable<contact[]> {
-    const url = this.profileUrl(userId, `contact?fields=pk,name,status,contact_type,contact_no`);
+  getContacts(userId, fields: string): Observable<contact[]> {
+    const url = this.profileUrl(userId, `contact?fields=${fields}`);
     return this.http.get<contact[]>(url);
   }
   getContactDetail(userId, contactId: number): Observable<contact> {

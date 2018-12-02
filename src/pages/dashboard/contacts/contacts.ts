@@ -69,7 +69,7 @@ export class ContactsPage {
   fetch() {
     this.pageStatus = 'loading';
     this.contactProvider.userId().then(userId => {
-      this.contactProvider.getContacts(userId).subscribe(observe => {
+      this.contactProvider.getContacts(userId, 'pk,name,status,contact_type,contact_no').subscribe(observe => {
         this.pageStatus = undefined;
         this.contacts = observe;
       }, () => {

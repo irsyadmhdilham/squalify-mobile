@@ -1,9 +1,23 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, Select, AlertController, LoadingController } from "ionic-angular";
+import { NavParams } from "ionic-angular";
+import { take } from "rxjs/operators";
+import {
+  ViewController,
+  Select,
+  AlertController,
+  LoadingController,
+  ToastController,
+  ModalController
+} from "ionic-angular";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { PointProvider } from "../../../providers/point/point";
+import { UpdatePoint } from "../../../providers/point/update-point";
+
+import { ContactListComponent } from "../../../components/contact/contact-list/contact-list";
 import { contactPoints } from "../../../interfaces/point";
+import { contact } from "../../../interfaces/contact";
+
 
 @Component({
   selector: 'add-contact',
@@ -11,19 +25,21 @@ import { contactPoints } from "../../../interfaces/point";
 })
 export class AddContactComponent {
 
-  status = 'None';
   contactTypeSelectOptions = { title: 'Select contact type' };
   statusSelectOptions = { title: 'Select status' };
   @ViewChild('_contactType') _contactType: Select;
   point: contactPoints;
-
+  contactTypeVal: string;
 
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
     private contactProvider: ContactProvider,
     private loadingCtrl: LoadingController,
-    private pointProvider: PointProvider
+    private pointProvider: PointProvider,
+    private toastCtrl: ToastController,
+    private modalCtrl: ModalController,
+    private navParams: NavParams
   ) { }
 
   dismiss() {
@@ -51,26 +67,23 @@ export class AddContactComponent {
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value,
             remark = remarkNgModel.value;
-      const data = { name, contact_type, contact_no, remark };
-      const loading = this.loadingCtrl.create({ content: 'Please wait' });
-      loading.present();
+      const data: contact = {
+        name,
+        contact_type,
+        contact_no,
+        remark: remark === '' ? null : remark
+      };
       if (this.point) {
-        this.contactProvider.userId().then(userId => {
-          this.contactProvider.addContact(userId, data).subscribe(observe => {
-            loading.dismiss();
-            this.viewCtrl.dismiss({
-              newContact: observe
-            });
-          }, (err: Error) => {
-            loading.dismiss();
-            const alert = this.alertCtrl.create({
-              title: 'Error',
-              subTitle: err.message,
-              buttons: ['Ok']
-            });
-            alert.present();
+        if (contact_type === 'Referral') {
+          const addReferrer = this.modalCtrl.create(ContactListComponent);
+          addReferrer.present();
+          addReferrer.onDidDismiss((response: contact) => {
+            data.referrerId = response.pk;
+            this.addContactAction(data);
           });
-        });
+        } else {
+          this.addContactAction(data);
+        }
       }
     } catch (err) {
       const alert = this.alertCtrl.create({
@@ -82,6 +95,44 @@ export class AddContactComponent {
     }
   }
 
+  async addContactAction(data: contact) {
+    const loading = this.loadingCtrl.create({ content: 'Please wait' });
+    const userId = await this.contactProvider.userId();
+    loading.present();
+    this.contactProvider.addContact(userId, data).pipe(take(1)).subscribe(observe => {
+      this.updatePoint(data.contact_type, userId).then(res => {
+        loading.dismiss();
+        const toast = this.toastCtrl.create({
+          message: `Point added, Total ${res.attribute} point: ${res.data.point}`,
+          position: 'top',
+          duration: 1500
+        });
+        toast.present();
+        toast.onDidDismiss(() => {
+          this.viewCtrl.dismiss({
+            newContact: observe
+          });
+        })
+      }).catch(() => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: 'Failed to update point',
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
+    }, (err: Error) => {
+      loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        subTitle: err.message,
+        buttons: ['Ok']
+      });
+      alert.present();
+    });
+  }
+
   async getContactPoints() {
     const userId = await this.pointProvider.userId();
     this.pointProvider.getContactPoints(userId).subscribe(observe => {
@@ -91,6 +142,35 @@ export class AddContactComponent {
 
   ionViewDidLoad() {
     this.getContactPoints();
+    const contactType = this.navParams.get('contactType');
+    if (contactType) {
+      this.contactTypeVal = contactType;
+    }
+  }
+
+  updatePoint(contactType: string, userId): Promise<{attribute: string; data: any}> {
+    let point, pk, attrPk, attribute, each;
+    if (contactType === 'Referrals') {
+      pk = this.point.pk;
+      point = this.point.referrals.point;
+      attrPk = this.point.referrals.pk;
+      each = 1;
+      attribute = 'Referrals';
+    } else {
+      pk = this.point.pk;
+      point = this.point.ftf.point;
+      attrPk = this.point.ftf.pk;
+      each = 2;
+      attribute = 'FTF/Nesting/Booth';
+    }
+    const update = new UpdatePoint(this.pointProvider, userId, pk, point, attribute, attrPk, each);
+    return new Promise<{attribute: string; data: any}>((resolve, reject) => {
+      update.add().then(data => {
+        resolve({attribute, data});
+      }).catch(err => {
+        reject({attribute, err});
+      });
+    });
   }
 
 }

@@ -7,6 +7,8 @@ import { AgencyProvider } from "../../providers/agency/agency";
 import { PointProvider } from "../../providers/point/point";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
+import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
+import { AddScheduleComponent } from "../../components/schedule/add-schedule/add-schedule";
 
 @IonicPage()
 @Component({
@@ -88,10 +90,21 @@ export class HomePage {
   }
 
   createPost(attribute) {
+    const createModal = (component) => {
+      return this.modalCtrl.create(component)
+    };
     switch (attribute) {
       case 'sales':
-        const modal = this.modalCtrl.create(AddSalesComponent);
-        modal.present();
+        const sales = createModal(AddSalesComponent);
+        sales.present();
+      break;
+      case 'contact':
+        const contact = createModal(AddContactComponent);
+        contact.present();
+      break;
+      case 'schedule':
+        const schedule = createModal(AddScheduleComponent);
+        schedule.present();
       break;
     }
   }

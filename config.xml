@@ -88,4 +88,6 @@
     </plugin>
     <plugin name="cordova-sqlite-storage" spec="2.5.1" />
     <engine name="ios" spec="4.5.5" />
+    <plugin name="cordova-plugin-badge" spec="0.8.8" />
+    <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
 </widget>
