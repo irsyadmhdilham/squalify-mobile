@@ -33,6 +33,8 @@ export class ProfilePage extends Ids {
   profileImage: string;
   settings: settings;
   pageStatus: string;
+  navToSettings = false;
+
 
   constructor(
     public navCtrl: NavController,
@@ -54,6 +56,7 @@ export class ProfilePage extends Ids {
   }
 
   toSettings() {
+    this.navToSettings = true;
     this.navCtrl.push(SettingsPage, { settings: this.settings });
   }
 
@@ -121,6 +124,23 @@ export class ProfilePage extends Ids {
 
   ionViewDidLoad() {
     this.fetch();
+  }
+
+  ionViewWillEnter() {
+    this.navToSettings = false;
+    this.events.subscribe('settings:email-notification', observe => {
+      this.settings.notifications.email_notification = observe;
+    });
+    this.events.subscribe('settings:push-notification', observe => {
+      this.settings.notifications.push_notification = observe;
+    });
+  }
+
+  ionViewWillLeave() {
+    if (!this.navToSettings) {
+      this.events.unsubscribe('settings:email-notification');
+      this.events.unsubscribe('settings:push-notification');
+    }
   }
 
 }

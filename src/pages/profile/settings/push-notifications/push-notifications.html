@@ -11,19 +11,19 @@
     <ion-list-header>Push notifications</ion-list-header>
     <ion-item no-padding>
       <ion-label class="setting-label">Reminder</ion-label>
-      <ion-toggle [(ngModel)]="reminder"></ion-toggle>
+      <ion-toggle [(ngModel)]="reminder" (ionChange)="changeConf($event, 'reminder')"></ion-toggle>
     </ion-item>
     <ion-item no-padding>
       <ion-label class="setting-label">Agency sales</ion-label>
-      <ion-toggle [(ngModel)]="agencySales"></ion-toggle>
+      <ion-toggle (ionChange)="changeConf($event, 'activities')" [(ngModel)]="agencySales"></ion-toggle>
     </ion-item>
     <ion-item no-padding>
       <ion-label class="setting-label">Mentions</ion-label>
-      <ion-toggle [(ngModel)]="mentions"></ion-toggle>
+      <ion-toggle (ionChange)="changeConf($event, 'mentions')" [(ngModel)]="mentions"></ion-toggle>
     </ion-item>
     <ion-item no-padding>
       <ion-label class="setting-label">Direct message</ion-label>
-      <ion-toggle [(ngModel)]="directMessage"></ion-toggle>
+      <ion-toggle (ionChange)="changeConf($event, 'direct_message')" [(ngModel)]="directMessage"></ion-toggle>
     </ion-item>
   </ion-list>
 </ion-content>

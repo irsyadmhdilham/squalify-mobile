@@ -38,4 +38,14 @@ export class ProfileProvider extends ApiUrlModules {
     return this.http.put<profile>(url, data);
   }
 
+  updatePushNotification(userId, data): Observable<any> {
+    const url = this.profileUrl(userId, 'settings/push-notifications/');
+    return this.http.put<any>(url, data)
+  }
+
+  updateEmailNotification(userId, value): Observable<{Succeed: boolean}> {
+    const url = this.profileUrl(userId, 'settings/email-notification/');
+    return this.http.put<{Succeed: boolean}>(url, value);
+  }
+
 }

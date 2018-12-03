@@ -33,7 +33,7 @@
     <ion-list no-lines>
       <ion-item no-padding>
         <ion-label class="setting-label" color="dark">Email notification</ion-label>
-        <ion-toggle [(ngModel)]="emailNotification"></ion-toggle>
+        <ion-toggle (ionChange)="updateEmailNotification($event)" [(ngModel)]="emailNotification"></ion-toggle>
       </ion-item>
       <ion-item (tap)="pushNotifications()" no-padding detail-push>
         <ion-label class="setting-label" color="dark">Push notifications</ion-label>

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 
 import { pushNotification } from "../../../../interfaces/profile-settings";
+import { ProfileProvider } from "../../../../providers/profile/profile";
 
 @IonicPage()
 @Component({
@@ -15,7 +16,27 @@ export class PushNotificationsPage {
   mentions: boolean;
   directMessage: boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private profileProvider: ProfileProvider,
+    private events: Events
+  ) { }
+
+  changeConf(event, subject) {
+    const data = {
+      subject: subject,
+      value: event.value
+    }
+    this.update(data);
+  }
+
+  async update(data) {
+    const userId = await this.profileProvider.userId();
+    this.profileProvider.updatePushNotification(userId, data).subscribe(observe => {
+      this.events.publish('settings:push-notification', observe.data);
+    });
+  }
 
   ionViewDidLoad() {
     const pushNotification: pushNotification = this.navParams.get('pushNotification');
