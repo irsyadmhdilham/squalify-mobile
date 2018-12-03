@@ -18,7 +18,7 @@
   <ion-row justify-content-between align-items-start>
     <section>
       <h5 title no-margin>Sales report</h5>
-      <button *ngIf="showSummary()" ion-button clear strong small no-padding no-margin>Show summary</button>
+      <button *ngIf="showSummaryCondition()" (tap)="showSummary()" ion-button clear strong small no-padding no-margin>Show summary</button>
     </section>
     <ion-chip (tap)="addSales()" *ngIf="segment === 'personal' && personalSales.length !== 0" color="primary">
       <ion-label color="white">Add sales</ion-label>

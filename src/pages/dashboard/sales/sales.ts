@@ -7,6 +7,7 @@ import { sales } from "../../../interfaces/sales";
 
 import { AddSalesComponent } from "../../../components/sales/add-sales/add-sales";
 import { SalesDetailComponent } from "../../../components/sales/sales-detail/sales-detail";
+import { SalesSummaryComponent } from "../../../components/sales/sales-summary/sales-summary";
 
 @IonicPage()
 @Component({
@@ -28,12 +29,17 @@ export class SalesPage {
     private salesProvider: SalesProvider
   ) { }
 
-  showSummary() {
+  showSummaryCondition() {
     if (this.personalSales.length !== 0 && this.segment === 'personal') {
       return true;
     } else if (this.groupSales.length !== 0 && this.segment === 'group') {
       return true;
     }
+  }
+
+  showSummary() {
+    const modal = this.modalCtrl.create(SalesSummaryComponent);
+    modal.present();
   }
 
   segmentChanged(event) {

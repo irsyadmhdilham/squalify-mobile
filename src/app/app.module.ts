@@ -44,8 +44,8 @@ import { AgencyProvider } from '../providers/agency/agency';
   imports: [
     BrowserModule,
     DirectivesModule,
-    ComponentsModule,
     PipesModule,
+    ComponentsModule,
     HttpClientModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({

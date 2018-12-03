@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales } from "../../interfaces/sales";
+import { sales, summary } from "../../interfaces/sales";
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {
@@ -23,9 +23,14 @@ export class SalesProvider extends ApiUrlModules {
     return this.http.get<sales[]>(url);
   }
 
-  removeSales(userId, salesId): Observable<any> {
+  removeSales(userId, salesId): Observable<null> {
     const url = this.profileUrl(userId, `sales/${salesId}`);
-    return this.http.delete<any>(url);
+    return this.http.delete<null>(url);
+  }
+
+  getPersonalSummary(userId): Observable<summary> {
+    const url = this.profileUrl(userId, 'sales/summary/personal');
+    return this.http.get<summary>(url);
   }
 
 }

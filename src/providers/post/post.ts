@@ -14,7 +14,7 @@ export class PostProvider extends ApiUrlModules {
   }
 
   postComment(agencyId, postId: number, data: any): Observable<comment> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/comment`);
+    const url = this.agencyUrl(agencyId, `post/${postId}/comment/`);
     return this.http.post<comment>(url, data);
   }
 
@@ -24,7 +24,7 @@ export class PostProvider extends ApiUrlModules {
   }
 
   likePost(agencyId, postId: number, data: { userId: any }): Observable<like> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/like`);
+    const url = this.agencyUrl(agencyId, `post/${postId}/like/`);
     return this.http.post<like>(url, data);
   }
 

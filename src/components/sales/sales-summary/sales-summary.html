@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons>
-      <button ion-button icon-only clear color="dark">
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -9,56 +9,58 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-list>
+<ion-content padding [ngSwitch]="screenStatus">
+  <loading type="form" *ngSwitchCase="'loading'"></loading>
+  <fetch-error *ngSwitchCase="'error'" message="Failed to retrive sales summary" [retry]="fetch()"></fetch-error>
+  <ion-list *ngSwitchDefault>
     <ion-item no-padding>
-      <h3>Today</h3>
+      <h3 title>Today</h3>
       <section>
         <div>
-          <h3>RM{{today.sales}}</h3>
+          <h2 ion-text color="primary">RM{{today ? today.sales : 0}}</h2>
           <p>Sales</p>
         </div>
         <div>
-          <h3>RM{{today.income}}</h3>
+          <h2 ion-text color="primary">RM{{today ? today.income : 0}}</h2>
           <p>Income</p>
         </div>
       </section>
     </ion-item>
     <ion-item no-padding>
-      <h3>This week</h3>
+      <h3 title>This week</h3>
       <section>
         <div>
-          <h3>RM{{week.sales}}</h3>
+          <h2 ion-text color="primary">RM{{week ? week.sales : 0}}</h2>
           <p>Sales</p>
         </div>
         <div>
-          <h3>RM{{week.income}}</h3>
+          <h2 ion-text color="primary">RM{{week ? week.income : 0}}</h2>
           <p>Income</p>
         </div>
       </section>
     </ion-item>
     <ion-item no-padding>
-      <h3>This month</h3>
+      <h3 title>This month</h3>
       <section>
         <div>
-          <h3>RM{{month.sales}}</h3>
+          <h2 ion-text color="primary">RM{{month ? month.sales : 0}}</h2>
           <p>Sales</p>
         </div>
         <div>
-          <h3>RM{{month.income}}</h3>
+          <h2 ion-text color="primary">RM{{month ? month.income : 0}}</h2>
           <p>Income</p>
         </div>
       </section>
     </ion-item>
     <ion-item no-padding>
-      <h3>This year</h3>
+      <h3 title>This year</h3>
       <section>
         <div>
-          <h3>RM{{year.sales}}</h3>
+          <h2 ion-text color="primary">RM{{year ? year.sales : 0}}</h2>
           <p>Sales</p>
         </div>
         <div>
-          <h3>RM{{year.income}}</h3>
+          <h2 ion-text color="primary">RM{{year ? year.income : 0}}</h2>
           <p>Income</p>
         </div>
       </section>
