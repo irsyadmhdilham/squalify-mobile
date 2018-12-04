@@ -11,6 +11,7 @@ import { Colors } from "../../../functions/colors";
 export class PointPanelComponent implements OnChanges {
 
   @Input() todayPoint;
+  @Input() dontShowToast;
   pointPk: number;
   productiveTopLine = {
     borderTop: `solid 0.55px ${Colors.lightGrey}`,

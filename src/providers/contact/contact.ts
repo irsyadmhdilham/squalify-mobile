@@ -28,9 +28,9 @@ export class ContactProvider extends ApiUrlModules {
   }
 
   updateContact(userId, contactId: number, data: contact): Observable<contact> {
-    let url = this.profileUrl(userId, `contact/${contactId}`);
+    let url = this.profileUrl(userId, `contact/${contactId}/`);
     if (data.scheduleId && data.status === 'Appointment secured') {
-      url = this.profileUrl(userId, `contact/${contactId}?xtra=add-schedule`);
+      url = this.profileUrl(userId, `contact/${contactId}/?xtra=add-schedule`);
     }
     return this.http.put<contact>(url, data);
   }

@@ -2,6 +2,7 @@ import { ModalController } from "ionic-angular";
 
 import { AddSalesComponent } from "../../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
+import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
 
 export class AttributeFeatures {
 
@@ -37,6 +38,16 @@ export class AttributeFeatures {
   addReferral() {
     return new Promise(resolve => {
       const modal = this.modal(AddContactComponent, { contactType: 'Referral' });
+      modal.present();
+      modal.onDidDismiss(data => {
+        resolve(data);
+      });
+    });
+  }
+
+  addSchedule() {
+    return new Promise(resolve => {
+      const modal = this.modal(AddScheduleComponent, { appointmentSecured: true });
       modal.present();
       modal.onDidDismiss(data => {
         resolve(data);

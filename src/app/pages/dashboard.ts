@@ -10,6 +10,12 @@ import { PointDetailPage } from "../../pages/dashboard/points/point-detail/point
 
 import { SalesPage } from "../../pages/dashboard/sales/sales";
 
+import { GroupPage } from "../../pages/dashboard/group/group";
+import { GroupMemberPage } from "../../pages/dashboard/group/group-member/group-member";
+
+import { AgencyPage } from "../../pages/dashboard/agency/agency";
+import { AgencyMemberPage } from "../../pages/dashboard/agency/agency-member/agency-member";
+
 export const Dashboard = [
   DashboardPage,
   ContactsPage,
@@ -18,5 +24,9 @@ export const Dashboard = [
   ScheduleDetailPage,
   PointsPage,
   PointDetailPage,
-  SalesPage
+  SalesPage,
+  GroupPage,
+  GroupMemberPage,
+  AgencyPage,
+  AgencyMemberPage
 ];

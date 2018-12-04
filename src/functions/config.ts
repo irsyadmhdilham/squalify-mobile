@@ -64,7 +64,7 @@ export class ApiUrlModules extends Ids {
 
   profileUrl(userId: number, url?: string) {
     if (!url) {
-      return `${this.apiBaseUrl()}/profile/${userId}`;
+      return `${this.apiBaseUrl()}/profile/${userId}/`;
     }
     return `${this.apiBaseUrl()}/profile/${userId}/${url}`;
   }

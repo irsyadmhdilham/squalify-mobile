@@ -26,6 +26,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
   @Input() pointPk: number;
   @Output() updatePoint = new EventEmitter();
   @Output() updatePointPk = new EventEmitter();
+  @Input() dontShowToast
   point = 0;
   pk: number;
   attrPk: number;
@@ -71,6 +72,13 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
           }
         });
       break;
+      case 'Appointment secured':
+        this.addSchedule().then(data => {
+          if (data) {
+            addPoint();
+          }
+        })
+      break;
       default:
         addPoint();
         this.addAction();
@@ -98,7 +106,9 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
         loading.dismiss();
         const attr = observe.attributes.filter(val => val.attribute === this.attribute)[0];
         this.attrPk = attr.pk;
-        toast.present();
+        if (!this.dontShowToast) {
+          toast.present();
+        }
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({
@@ -115,7 +125,9 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
         const attribute = observe.attributes.filter(val => val.attribute === this.attribute)[0];
         if (attribute) {
           this.attrPk = attribute.pk;
-          toast.present();
+          if (!this.dontShowToast) {
+            toast.present();
+          }
         }
       }, (err: Error) => {
         loading.dismiss();

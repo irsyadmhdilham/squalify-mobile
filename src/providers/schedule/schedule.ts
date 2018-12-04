@@ -34,7 +34,7 @@ export class ScheduleProvider extends ApiUrlModules {
   }
 
   updateSchedule(userId, scheduleId: number, data: schedule): Observable<schedule> {
-    const url = this.profileUrl(userId, `schedule/${scheduleId}`);
+    const url = this.profileUrl(userId, `schedule/${scheduleId}/`);
     return this.http.put<schedule>(url, data);
   }
 

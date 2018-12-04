@@ -48,75 +48,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <point-panel [todayPoint]="todayPoint"></point-panel>
-    <!-- <ion-grid comp-margin padding>
-      <ion-row align-items-center>
-        <img class="point-image" src="../../assets/imgs/dashboard/points.png" alt="points">
-        <h6>Today points</h6>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <h1 num-style no-margin ion-text color="primary">29</h1>
-          <p no-margin>Total</p>
-        </ion-col>
-        <ion-col>
-          <h1 num-style no-margin ion-text color="orange">29</h1>
-          <p no-margin>Productive points</p>
-        </ion-col>
-        <ion-col>
-          <h1 num-style no-margin ion-text color="purple">29</h1>
-          <p no-margin>Career points</p>
-        </ion-col>
-      </ion-row>
-      <ion-buttons start>
-        <button ion-button clear no-padding small strong>Show details</button>
-      </ion-buttons>
-    </ion-grid>
-    <ion-grid comp-margin padding>
-      <ion-row align-items-center>
-        <img class="point-image" src="../../assets/imgs/dashboard/sales-report.png" alt="points">
-        <h6>Sales report</h6>
-      </ion-row>
-      <ion-row style="margin-top: 0.5em">
-        <ion-col>
-          <h3 text-left num-style numFontSize="1.6em" no-margin ion-text color="primary">RM50,000</h3>
-          <p text-left no-margin>This month sales</p>
-        </ion-col>
-        <ion-col>
-          <h3 text-left num-style numFontSize="1.6em" no-margin ion-text color="orange">RM50,000</h3>
-          <p no-margin text-left>This month sales</p>
-        </ion-col>
-      </ion-row>
-      <ion-buttons start>
-        <button ion-button clear small no-padding strong>Show more</button>
-      </ion-buttons>
-    </ion-grid>
-    <ion-grid comp-margin padding>
-      <ion-row align-items-center>
-        <img class="point-image" src="../../assets/imgs/dashboard/schedules.png" alt="points">
-        <h6>Schedules</h6>
-      </ion-row>
-      <section>
-        <ion-row *ngFor="let schedule of schedules">
-          <div class="schedule">
-            <div>
-              <h1 no-margin text-left ion-text color="primary" num-style numFontSize="1.3em">{{schedule.date | date:'dd MMM' | uppercase}}</h1>
-              <p ion-text color="grey" no-margin text-left>{{schedule.date | date:'H:maa'}}</p>
-            </div>
-            <div>
-              <p no-margin class="schedule-title">{{schedule.title}}</p>
-              <ion-row>
-                <ion-icon name="pin" color="grey"></ion-icon>
-                <p ion-text color="grey" no-margin>{{schedule.location}}</p>
-              </ion-row>
-            </div>
-          </div>
-        </ion-row>
-      </section>
-      <ion-buttons start>
-        <button ion-button no-padding clear small strong>Show more</button>
-      </ion-buttons>
-    </ion-grid> -->
+    <point-panel [todayPoint]="todayPoint" [dontShowToast]="dontShowToast"></point-panel>
   </ion-content>
 </ng-template>
 <ng-template #disconnectedBlock>

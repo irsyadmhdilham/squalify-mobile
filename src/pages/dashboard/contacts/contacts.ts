@@ -83,7 +83,9 @@ export class ContactsPage {
       return;
     }
     if (value === 'Appointment secured') {
-      const modal = this.modalCtrl.create(AddScheduleComponent);
+      const modal = this.modalCtrl.create(AddScheduleComponent, {
+        appointmentSecured: true
+      });
       modal.present();
       modal.onDidDismiss(data => {
         if (data) {

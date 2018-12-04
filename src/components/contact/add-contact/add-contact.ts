@@ -150,7 +150,7 @@ export class AddContactComponent {
 
   updatePoint(contactType: string, userId): Promise<{attribute: string; data: any}> {
     let point, pk, attrPk, attribute, each;
-    if (contactType === 'Referrals') {
+    if (contactType === 'Referral') {
       pk = this.point.pk;
       point = this.point.referrals.point;
       attrPk = this.point.referrals.pk;

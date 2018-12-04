@@ -23,6 +23,7 @@ export class DashboardPage {
   onConnect: Subscription;
   onDisconnected: Subscription;
   todayPoint: point;
+  dontShowToast = true;
 
   constructor(
     public navCtrl: NavController,

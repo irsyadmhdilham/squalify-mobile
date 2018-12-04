@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img img-title src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to retrieve data" [retry]="fetch" *ngSwitchCase="'error'"></fetch-error>
+  <ion-list *ngSwitchDefault>
+    <ion-item *ngFor="let member of members">
+      <div item-start class="profile-image"></div>
+      <h5>{{member.name}}</h5>
+      <p>{{member.designation}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

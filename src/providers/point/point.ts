@@ -20,7 +20,7 @@ export class PointProvider extends ApiUrlModules {
   }
 
   updatePoint(userId, pointId: number, add: boolean, data: any): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}?add=${add}`);
+    const url = this.profileUrl(userId, `point/${pointId}/?add=${add}`);
     return this.http.put<point>(url, data);
   }
 

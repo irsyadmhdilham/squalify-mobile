@@ -126,7 +126,14 @@ export class ProfilePage extends Ids {
     this.fetch();
   }
 
-  ionViewWillEnter() {
+  unsubscribeSettingsEvent() {
+    if (!this.navToSettings) {
+      this.events.unsubscribe('settings:email-notification');
+      this.events.unsubscribe('settings:push-notification');
+    }
+  }
+
+  subscribeSettingsEvent() {
     this.navToSettings = false;
     this.events.subscribe('settings:email-notification', observe => {
       this.settings.notifications.email_notification = observe;
@@ -136,11 +143,12 @@ export class ProfilePage extends Ids {
     });
   }
 
+  ionViewWillEnter() {
+    this.subscribeSettingsEvent();
+  }
+
   ionViewWillLeave() {
-    if (!this.navToSettings) {
-      this.events.unsubscribe('settings:email-notification');
-      this.events.unsubscribe('settings:push-notification');
-    }
+    this.unsubscribeSettingsEvent();
   }
 
 }
