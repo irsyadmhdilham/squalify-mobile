@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-/**
- * Generated class for the AgencyPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { member } from "../../../interfaces/agency";
+import { AgencyProvider } from "../../../providers/agency/agency";
 
 @IonicPage()
 @Component({
@@ -15,11 +11,34 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class AgencyPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  pageStatus: string;
+  members: member[] = [];
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, private agencyProvider: AgencyProvider) {
+  }
+
+  profileImage(img) {
+    if (!img) {
+      return false;
+    }
+    return {
+      background: `url('${img}') center center no-repeat / cover`
+    }
+  }
+
+  async fetch() {
+    const agencyId = await this.agencyProvider.agencyId();
+    this.pageStatus = 'loading';
+    this.agencyProvider.getAgencyDetail(agencyId, 'members').subscribe(observe => {
+      this.pageStatus = undefined;
+      this.members = observe.members;
+    }, () => {
+      this.pageStatus = 'error';
+    });
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad AgencyPage');
+    this.fetch();
   }
 
 }

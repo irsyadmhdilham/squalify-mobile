@@ -14,7 +14,6 @@ import { GroupPage } from "../../pages/dashboard/group/group";
 import { GroupMemberPage } from "../../pages/dashboard/group/group-member/group-member";
 
 import { AgencyPage } from "../../pages/dashboard/agency/agency";
-import { AgencyMemberPage } from "../../pages/dashboard/agency/agency-member/agency-member";
 
 export const Dashboard = [
   DashboardPage,
@@ -27,6 +26,5 @@ export const Dashboard = [
   SalesPage,
   GroupPage,
   GroupMemberPage,
-  AgencyPage,
-  AgencyMemberPage
+  AgencyPage
 ];

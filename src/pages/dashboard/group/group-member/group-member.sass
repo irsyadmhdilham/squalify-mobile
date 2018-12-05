@@ -1,1 +1,32 @@
 page-group-member
+
+  #profile-container
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    #profile-image
+      width: 6em
+      height: 6em
+      background: color($colors, lightGrey)
+      border-radius: 100%
+    
+    h5
+      margin: 0.5em 0 0.3em
+    
+    p
+      margin: 0
+  
+  #downline-container
+    border-top: solid 8px color($colors, light)
+  
+    ion-list
+      .item-block
+        align-items: flex-start
+        
+      ion-item
+        .member-image
+          width: 2.5em
+          height: 2.5em
+          background: color($colors, lightGrey)
+          border-radius: 100%

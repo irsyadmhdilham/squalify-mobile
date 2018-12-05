@@ -9,11 +9,17 @@
 <ion-content padding [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve data" [retry]="fetch" *ngSwitchCase="'error'"></fetch-error>
-  <ion-list *ngSwitchDefault>
-    <ion-item *ngFor="let member of members">
-      <div item-start class="profile-image"></div>
-      <h5>{{member.name}}</h5>
-      <p>{{member.designation}}</p>
-    </ion-item>
-  </ion-list>
+  <ng-container *ngSwitchDefault>
+    <h5 title>Group</h5>
+    <ion-list>
+      <ion-item no-padding *ngFor="let member of members" (tap)="navigateDetail(member)">
+        <div [ngStyle]="profileImage(member.profile_image)" item-start class="profile-image"></div>
+        <h5>{{member.name}}</h5>
+        <p>{{member.designation}}</p>
+        <p *ngIf="member.downline > 0" ion-text class="downline-label" color="primary">
+          {{member.downline}} downline{{member.downline > 1 ? 's' : ''}}
+        </p>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>

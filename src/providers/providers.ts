@@ -5,6 +5,8 @@ import { PointProvider } from "./point/point";
 import { SalesProvider } from "./sales/sales";
 import { PostProvider } from "./post/post";
 import { AuthProvider } from './auth/auth';
+import { AgencyProvider } from "./agency/agency";
+import { GroupProvider } from "./group/group";
 
 export const Providers = [
   ContactProvider,
@@ -13,5 +15,7 @@ export const Providers = [
   PointProvider,
   SalesProvider,
   PostProvider,
-  AuthProvider
+  AuthProvider,
+  AgencyProvider,
+  GroupProvider
 ];

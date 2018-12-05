@@ -7,6 +7,8 @@ import { ContactsPage } from "./contacts/contacts";
 import { SchedulesPage } from "./schedules/schedules";
 import { PointsPage } from "./points/points";
 import { SalesPage } from "./sales/sales";
+import { GroupPage } from "./group/group";
+import { AgencyPage } from "./agency/agency";
 
 import { PointProvider } from "../../providers/point/point";
 
@@ -46,6 +48,12 @@ export class DashboardPage {
       break;
       case 'sales':
         this.navCtrl.push(SalesPage);
+      break;
+      case 'group':
+        this.navCtrl.push(GroupPage);
+      break;
+      case 'agency':
+        this.navCtrl.push(AgencyPage);
       break;
     }
   }

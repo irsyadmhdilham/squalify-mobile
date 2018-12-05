@@ -6,6 +6,14 @@ export interface owner {
   profile_image: string;
 }
 
+export interface member {
+  pk?: number;
+  name: string;
+  designation: string;
+  profile_image: string;
+  downline?: number;
+}
+
 export interface agency {
   name: string;
   owner?: owner;
@@ -13,4 +21,5 @@ export interface agency {
   company: string;
   agency_image: string;
   posts?: post[];
+  members: member[];
 }

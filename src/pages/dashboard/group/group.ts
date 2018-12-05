@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { member } from "../../../interfaces/group";
+import { GroupProvider } from "../../../providers/group/group";
+import { GroupMemberPage } from "./group-member/group-member";
 
 @IonicPage()
 @Component({
@@ -11,8 +13,40 @@ import { member } from "../../../interfaces/group";
 export class GroupPage {
 
   pageStatus: string;
-  members: member[];
+  members: member[] = [];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private groupProvider: GroupProvider
+  ) { }
+
+  profileImage(img) {
+    if (!img) {
+      return false;
+    }
+    return {
+      background: `url('${img}') center center no-repeat / cover`
+    }
+  }
+
+  async fetch() {
+    const userId = await this.groupProvider.userId();
+    this.pageStatus = 'loading';
+    this.groupProvider.getGroupDetail(userId).subscribe(observe => {
+      this.pageStatus = undefined;
+      this.members = observe.members;
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
+  ionViewDidLoad() {
+    this.fetch();
+  }
+
+  navigateDetail(member: member) {
+    this.navCtrl.push(GroupMemberPage, { member });
+  }
 
 }

@@ -1,18 +1,25 @@
-<!--
-  Generated template for the AgencyPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>agency</ion-title>
+    <ion-title>
+      <img img-title src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to retrieve data" [retry]="fetch" *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <h5 title>Agency</h5>
+    <ion-list>
+      <ion-item no-padding *ngFor="let member of members">
+        <div [ngStyle]="profileImage(member.profile_image)" item-start class="profile-image"></div>
+        <h5>{{member.name}}</h5>
+        <p>{{member.designation}}</p>
+        <p *ngIf="member.downline > 0" ion-text class="downline-label" color="primary">
+          {{member.downline}} downline{{member.downline > 1 ? 's' : ''}}
+        </p>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>
