@@ -9,6 +9,7 @@ import { PointsPage } from "./points/points";
 import { SalesPage } from "./sales/sales";
 import { GroupPage } from "./group/group";
 import { AgencyPage } from "./agency/agency";
+import { ScoreboardPage } from "./scoreboard/scoreboard";
 
 import { PointProvider } from "../../providers/point/point";
 
@@ -54,6 +55,9 @@ export class DashboardPage {
       break;
       case 'agency':
         this.navCtrl.push(AgencyPage);
+      break;
+      case 'scoreboard':
+        this.navCtrl.push(ScoreboardPage);
       break;
     }
   }

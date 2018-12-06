@@ -1,0 +1,60 @@
+<ion-header class="header-bottom-line">
+  <ion-navbar>
+    <ion-title>
+      <img img-title src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+  <ion-segment padding [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="sales">
+      Sales
+    </ion-segment-button>
+    <ion-segment-button value="point">
+      Point
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content padding [ngSwitch]="segment">
+  <h5 title>Scoreboard</h5>
+  <ng-container *ngSwitchCase="'sales'">
+    <ng-container [ngSwitch]="pageStatus">
+      <loading type="list" *ngSwitchCase="'loading'"></loading>
+      <fetch-error message="Failed to retrieve data" [retry]="fetchSalesScore()" *ngSwitchCase="'error'"></fetch-error>
+      <ion-list *ngSwitchDefault>
+        <ion-item no-padding *ngFor="let member of salesScorer; index as i">
+          <ion-avatar item-start>
+            <div [ngStyle]="profileImage(member.profile_image)" class="member-image"></div>
+          </ion-avatar>
+          <h5>{{member.name}}</h5>
+          <p>{{member.designation}}</p>
+          <h3 class="amount-point" ion-text color="primary">RM{{member.amount | numCommas}}</h3>
+          <div class="rank-wrapper" item-end>
+            <h3 text-center ion-text color="primary">{{i + 1}}</h3>
+            <p text-center ion-text color="grey">Rank</p>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'point'">
+    <ng-container [ngSwitch]="pageStatus">
+      <loading type="list" *ngSwitchCase="'loading'"></loading>
+      <fetch-error message="Failed to retrieve data" [retry]="fetchPointScore()" *ngSwitchCase="'error'"></fetch-error>
+      <ion-list *ngSwitchDefault>
+        <ion-item no-padding *ngFor="let member of pointScorer; index as i">
+          <ion-avatar item-start>
+            <div [ngStyle]="profileImage(member.profile_image)" class="member-image"></div>
+          </ion-avatar>
+          <h5>{{member.name}}</h5>
+          <p>{{member.designation}}</p>
+          <h3 class="amount-point" ion-text color="primary">{{member.point | numCommas}} pt</h3>
+          <div class="rank-wrapper" item-end>
+            <h3 text-center ion-text color="primary">{{i + 1}}</h3>
+            <p text-center ion-text color="grey">Rank</p>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ng-container>
+</ion-content>

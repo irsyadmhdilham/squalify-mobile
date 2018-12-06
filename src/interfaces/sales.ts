@@ -51,3 +51,11 @@ export interface summary {
   month: month;
   today: today;
 }
+
+export interface groupSales {
+  pk: number;
+  name: string;
+  profile_image: string;
+  amount: string;
+  downline?: string;
+}

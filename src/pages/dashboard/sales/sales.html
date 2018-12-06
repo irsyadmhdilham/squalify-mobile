@@ -58,6 +58,19 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'group'">
-    group
+    <ng-container [ngSwitch]="pageStatus">
+      <loading type="list" *ngSwitchCase="'loading'"></loading>
+      <fetch-error message="Failed to retrieve data" [retry]="fetchGroupSales()" *ngSwitchCase="'error'"></fetch-error>      
+      <ion-list *ngSwitchDefault>
+        <ion-item no-padding *ngFor="let group of groupSales">
+          <ion-avatar item-start>
+            <div [ngStyle]="groupMemberImage(group.profile_image)" class="group-member-image"></div>
+          </ion-avatar>
+          <h5>{{group.name}}</h5>
+          <p>{{group.designation}}</p>
+          <h4 item-end>RM{{group.amount | numCommas}}</h4>
+        </ion-item>
+      </ion-list>
+    </ng-container>
   </ng-container>
 </ion-content>

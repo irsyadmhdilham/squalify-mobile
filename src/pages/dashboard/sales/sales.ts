@@ -45,12 +45,12 @@ export class SalesPage {
   segmentChanged(event) {
     const value = event.value;
     if (value === 'personal') {
-      if (!this.personalSales && this.pageStatus !== 'loading') {
+      if (this.personalSales.length === 0 && this.pageStatus !== 'loading') {
         this.fetchPersonalSales();
       }
     } else {
-      if (!this.groupSales && this.pageStatus !== 'loading') {
-        console.log('fetch group');
+      if (this.groupSales.length === 0 && this.pageStatus !== 'loading') {
+        this.fetchGroupSales();
       }
     }
   }
@@ -87,6 +87,23 @@ export class SalesPage {
     });
   }
 
+  async fetchGroupSales() {
+    const userId = await this.salesProvider.userId();
+    this.pageStatus = 'loading';
+    this.salesProvider.getGroupSales(userId, 'year').subscribe(observe => {
+      this.pageStatus = undefined;
+      const sales = observe.map(val => {
+        return {
+          ...val,
+          amount: parseFloat(val.amount)
+        };
+      });
+      this.groupSales = sales;
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
   ionViewDidLoad() {
     this.fetchPersonalSales();
   }
@@ -101,6 +118,15 @@ export class SalesPage {
         }
       }
     });
+  }
+
+  groupMemberImage(img) {
+    if (!img) {
+      return false;
+    }
+    return {
+      background: `url('${img}') no-repeat center center / cover`
+    };
   }
 
 }
