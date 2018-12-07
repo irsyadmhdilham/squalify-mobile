@@ -11,7 +11,7 @@ export class HeaderButtonDirective implements OnChanges {
 
   constructor(private el: ElementRef) {
     const elem = this.el.nativeElement.style;
-    elem.padding = '0.4em';
+    elem.padding = '0.6em';
     elem.borderRadius = '5px';
     elem.fontSize = '1.3rem';
   }
@@ -19,10 +19,10 @@ export class HeaderButtonDirective implements OnChanges {
   ngOnChanges() {
     const elem = this.el.nativeElement.style;
     if (this.activeButton) {
-      elem.border = 'solid 0.7px transparent';
+      elem.border = 'solid 0.55px transparent';
       elem.background = Colors.primary;
     } else {
-      elem.border = `solid 0.7px ${Colors.dark}`;
+      elem.border = `solid 0.55px ${Colors.grey}`;
       elem.background = 'transparent';
     }
   }

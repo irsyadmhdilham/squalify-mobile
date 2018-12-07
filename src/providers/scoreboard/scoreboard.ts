@@ -14,8 +14,8 @@ export class ScoreboardProvider extends ApiUrlModules {
     super(storage);
   }
 
-  getSalesScore(userId, period: string): Observable<salesScore[]> {
-    const url = this.profileUrl(userId, `sales/agency/${period}`);
+  getSalesScore(userId, period: string, salesType: string): Observable<salesScore[]> {
+    let url = this.profileUrl(userId, `sales/agency/${period}/?q=${salesType}`);
     return this.http.get<salesScore[]>(url);
   }
 

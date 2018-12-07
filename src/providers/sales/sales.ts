@@ -28,14 +28,19 @@ export class SalesProvider extends ApiUrlModules {
     return this.http.delete<null>(url);
   }
 
-  getPersonalSummary(userId): Observable<summary> {
-    const url = this.profileUrl(userId, 'sales/summary/personal');
+  getPersonalSummary(userId, type: string): Observable<summary> {
+    const url = this.profileUrl(userId, `sales/personal-summary?q=${type}`);
     return this.http.get<summary>(url);
   }
 
   getGroupSales(userId, period: string, type?: string): Observable<groupSales[]> {
     const url = this.profileUrl(userId, `sales/group/${period}/${type ? `?q=${type}` : ''}`);
     return this.http.get<groupSales[]>(url);
+  }
+
+  getGroupSummary(userId, type: string): Observable<any> {
+    const url = this.profileUrl(userId, `sales/group/summary?q=${type}`);
+    return this.http.get<any>(url);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
 
 import { SalesProvider } from "../../../providers/sales/sales";
 import { agency } from "../../../interfaces/agency";
@@ -17,6 +17,10 @@ import { SalesSummaryComponent } from "../../../components/sales/sales-summary/s
 export class SalesPage {
 
   segment = 'personal';
+  period = 'period';
+  periodActive = false;
+  salesType = 'sales type';
+  salesTypeActive = false;
   agency: agency;
   pageStatus: string;
   personalSales: sales[] = [];
@@ -26,8 +30,68 @@ export class SalesPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
-    private salesProvider: SalesProvider
+    private salesProvider: SalesProvider,
+    private actionSheetCtrl: ActionSheetController
   ) { }
+
+  selectPeriod() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select period',
+      buttons: [
+        { text: 'Year', handler: () => { this.period = 'year'; this.periodActive = true; }},
+        { text: 'Month', handler: () => { this.period = 'month'; this.periodActive = true; }},
+        { text: 'Week', handler: () => { this.period = 'week'; this.periodActive = true; }},
+        { text: 'Today', handler: () => { this.period = 'today'; this.periodActive = true; }},
+        { text: 'Cancel', role: 'cancel' }
+      ]
+    });
+    actionSheet.present();
+    actionSheet.onDidDismiss(() => {
+      let period = this.period,
+          salesType = this.salesType;
+      if (period === 'period') {
+        period = 'year';
+      }
+      if (salesType === 'sales type') {
+        period = 'total';
+      }
+      if (this.segment === 'personal') {
+        this.fetchPersonalSales();
+      } else {
+        this.fetchGroupSales(period, salesType);
+      }
+    });
+  }
+
+  selectSalesType() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select sales type',
+      buttons: [
+        { text: 'Total', handler: () => { this.salesType = 'total'; this.salesTypeActive = true; } },
+        { text: 'EPF', handler: () => { this.salesType = 'epf'; this.salesTypeActive = true; } },
+        { text: 'Cash', handler: () => { this.salesType = 'cash'; this.salesTypeActive = true; } },
+        { text: 'ASB', handler: () => { this.salesType = 'asb'; this.salesTypeActive = true; } },
+        { text: 'PRS', handler: () => { this.salesType = 'prs'; this.salesTypeActive = true; } },
+        { text: 'Cancel', role: 'cancel' }
+      ]
+    });
+    actionSheet.present();
+    actionSheet.onDidDismiss(() => {
+      let period = this.period,
+          salesType = this.salesType;
+      if (period === 'period') {
+        period = 'year';
+      }
+      if (salesType === 'sales type') {
+        period = 'total';
+      }
+      if (this.segment === 'personal') {
+        this.fetchPersonalSales();
+      } else {
+        this.fetchGroupSales(period, salesType);
+      }
+    });
+  }
 
   showSummaryCondition() {
     if (this.personalSales.length !== 0 && this.segment === 'personal') {
@@ -38,20 +102,28 @@ export class SalesPage {
   }
 
   showSummary() {
-    const modal = this.modalCtrl.create(SalesSummaryComponent);
+    let salesType = this.salesType;
+    const modal = this.modalCtrl.create(SalesSummaryComponent, {
+      type: salesType,
+      segment: this.segment
+    });
     modal.present();
   }
 
   segmentChanged(event) {
     const value = event.value;
+    let period = this.period,
+        salesType = this.salesType;
+    if (period === 'period') {
+      period = 'year';
+    }
+    if (salesType === 'sales type') {
+      salesType = 'total';
+    }
     if (value === 'personal') {
-      if (this.personalSales.length === 0 && this.pageStatus !== 'loading') {
-        this.fetchPersonalSales();
-      }
+      this.fetchPersonalSales();
     } else {
-      if (this.groupSales.length === 0 && this.pageStatus !== 'loading') {
-        this.fetchGroupSales();
-      }
+      this.fetchGroupSales(period, salesType);
     }
   }
 
@@ -87,10 +159,10 @@ export class SalesPage {
     });
   }
 
-  async fetchGroupSales() {
+  async fetchGroupSales(period, salesType) {
     const userId = await this.salesProvider.userId();
     this.pageStatus = 'loading';
-    this.salesProvider.getGroupSales(userId, 'year').subscribe(observe => {
+    this.salesProvider.getGroupSales(userId, period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       const sales = observe.map(val => {
         return {

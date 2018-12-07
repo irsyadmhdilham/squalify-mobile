@@ -11,17 +11,21 @@
 
 <ion-content padding [ngSwitch]="screenStatus">
   <loading type="form" *ngSwitchCase="'loading'"></loading>
-  <fetch-error *ngSwitchCase="'error'" message="Failed to retrive sales summary" [retry]="fetch()"></fetch-error>
+  <fetch-error
+    *ngSwitchCase="'error'"
+    message="Failed to retrive sales summary"
+    [retry]="segment === 'personal' ? fetch() : fetchGroup()"
+  ></fetch-error>
   <ion-list *ngSwitchDefault>
     <ion-item no-padding>
       <h3 title>Today</h3>
       <section>
         <div>
-          <h2 ion-text color="primary">RM{{today ? today.sales : 0}}</h2>
+          <h2 ion-text color="primary">RM{{today.sales | numCommas}}</h2>
           <p>Sales</p>
         </div>
-        <div>
-          <h2 ion-text color="primary">RM{{today ? today.income : 0}}</h2>
+        <div *ngIf="segment === 'personal'">
+          <h2 ion-text color="primary">RM{{today.income | numCommas}}</h2>
           <p>Income</p>
         </div>
       </section>
@@ -30,11 +34,11 @@
       <h3 title>This week</h3>
       <section>
         <div>
-          <h2 ion-text color="primary">RM{{week ? week.sales : 0}}</h2>
+          <h2 ion-text color="primary">RM{{week.sales | numCommas}}</h2>
           <p>Sales</p>
         </div>
-        <div>
-          <h2 ion-text color="primary">RM{{week ? week.income : 0}}</h2>
+        <div *ngIf="segment === 'personal'">
+          <h2 ion-text color="primary">RM{{week.income | numCommas}}</h2>
           <p>Income</p>
         </div>
       </section>
@@ -43,11 +47,11 @@
       <h3 title>This month</h3>
       <section>
         <div>
-          <h2 ion-text color="primary">RM{{month ? month.sales : 0}}</h2>
+          <h2 ion-text color="primary">RM{{month.sales | numCommas}}</h2>
           <p>Sales</p>
         </div>
-        <div>
-          <h2 ion-text color="primary">RM{{month ? month.income : 0}}</h2>
+        <div *ngIf="segment === 'personal'">
+          <h2 ion-text color="primary">RM{{month.income | numCommas}}</h2>
           <p>Income</p>
         </div>
       </section>
@@ -56,11 +60,11 @@
       <h3 title>This year</h3>
       <section>
         <div>
-          <h2 ion-text color="primary">RM{{year ? year.sales : 0}}</h2>
+          <h2 ion-text color="primary">RM{{year.sales | numCommas}}</h2>
           <p>Sales</p>
         </div>
-        <div>
-          <h2 ion-text color="primary">RM{{year ? year.income : 0}}</h2>
+        <div *ngIf="segment === 'personal'">
+          <h2 ion-text color="primary">RM{{year.income | numCommas}}</h2>
           <p>Income</p>
         </div>
       </section>
