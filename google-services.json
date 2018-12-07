@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "468925231584",
+    "firebase_url": "https://squalify-119ee.firebaseio.com",
+    "project_id": "squalify-119ee",
+    "storage_bucket": "squalify-119ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468925231584:android:eb9048f3995d7cfd",
+        "android_client_info": {
+          "package_name": "com.squalify.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468925231584-2qqmeij8fq5srh5o2tmh0gvft7grursm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8861HHkkBpu_0GSUxpHW5IK9GnCK1EAA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
