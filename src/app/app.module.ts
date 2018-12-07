@@ -13,6 +13,7 @@ import { Profile } from "./pages/profile";
 import { Inbox } from "./pages/inbox";
 import { Dashboard } from "./pages/dashboard";
 import { HomePages } from "./pages/home";
+import { NotificationsPage } from "../pages/notifications/notifications";
 
 //imported modules
 import { DirectivesModule } from "../directives/directives.module";
@@ -33,6 +34,7 @@ import { Providers } from "../providers/providers";
     MyApp,
     TabsPage,
     SignInPage,
+    NotificationsPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,
@@ -58,6 +60,7 @@ import { Providers } from "../providers/providers";
     MyApp,
     TabsPage,
     SignInPage,
+    NotificationsPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,
