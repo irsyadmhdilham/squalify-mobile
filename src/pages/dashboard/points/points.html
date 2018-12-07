@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-navbar>
     <ion-title>
       <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
@@ -12,13 +12,11 @@
       Group
     </ion-segment-button>
   </ion-segment>
-  <section padding-horizontal>
-    <ion-row id="filter-container">
-      <div header-button>
-        <p ion-text>Period</p>
-      </div>
-    </ion-row>
-  </section>
+  <ion-row padding-horizontal padding-bottom>
+    <div header-button [activeButton]="false">
+      <p ion-text no-margin color="dark" class="header-button-bold">Period</p>
+    </div>
+  </ion-row>
 </ion-header>
 
 <ion-content padding [ngSwitch]="pageStatus">

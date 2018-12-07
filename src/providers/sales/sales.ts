@@ -18,8 +18,8 @@ export class SalesProvider extends ApiUrlModules {
     return this.http.post<sales>(url, data);
   }
 
-  getSales(userId): Observable<sales[]> {
-    const url = this.profileUrl(userId, 'sales');
+  getSales(userId, period: string, salesType: string): Observable<sales[]> {
+    const url = this.profileUrl(userId, `sales/?p=${period}&t=${salesType}`);
     return this.http.get<sales[]>(url);
   }
 

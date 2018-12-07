@@ -24,6 +24,7 @@ export class SalesPage {
   agency: agency;
   pageStatus: string;
   personalSales: sales[] = [];
+  cancel = false;
   groupSales = [];
 
   constructor(
@@ -42,7 +43,12 @@ export class SalesPage {
         { text: 'Month', handler: () => { this.period = 'month'; this.periodActive = true; }},
         { text: 'Week', handler: () => { this.period = 'week'; this.periodActive = true; }},
         { text: 'Today', handler: () => { this.period = 'today'; this.periodActive = true; }},
-        { text: 'Cancel', role: 'cancel' }
+        { text: 'Cancel', role: 'cancel', handler: () => {
+          this.cancel = true;
+          setTimeout(() => {
+            this.cancel = false;
+          }, 2000);
+        }}
       ]
     });
     actionSheet.present();
@@ -55,10 +61,12 @@ export class SalesPage {
       if (salesType === 'sales type') {
         period = 'total';
       }
-      if (this.segment === 'personal') {
-        this.fetchPersonalSales();
-      } else {
-        this.fetchGroupSales(period, salesType);
+      if (!this.cancel) {
+        if (this.segment === 'personal') {
+          this.fetchPersonalSales(period, salesType);
+        } else {
+          this.fetchGroupSales(period, salesType);
+        }
       }
     });
   }
@@ -72,7 +80,12 @@ export class SalesPage {
         { text: 'Cash', handler: () => { this.salesType = 'cash'; this.salesTypeActive = true; } },
         { text: 'ASB', handler: () => { this.salesType = 'asb'; this.salesTypeActive = true; } },
         { text: 'PRS', handler: () => { this.salesType = 'prs'; this.salesTypeActive = true; } },
-        { text: 'Cancel', role: 'cancel' }
+        { text: 'Cancel', role: 'cancel', handler: () => {
+          this.cancel = true;
+          setTimeout(() => {
+            this.cancel = false;
+          }, 2000);
+        }}
       ]
     });
     actionSheet.present();
@@ -85,10 +98,12 @@ export class SalesPage {
       if (salesType === 'sales type') {
         period = 'total';
       }
-      if (this.segment === 'personal') {
-        this.fetchPersonalSales();
-      } else {
-        this.fetchGroupSales(period, salesType);
+      if (!this.cancel) {
+        if (this.segment === 'personal') {
+          this.fetchPersonalSales(period, salesType);
+        } else {
+          this.fetchGroupSales(period, salesType);
+        }
       }
     });
   }
@@ -121,7 +136,7 @@ export class SalesPage {
       salesType = 'total';
     }
     if (value === 'personal') {
-      this.fetchPersonalSales();
+      this.fetchPersonalSales(period, salesType);
     } else {
       this.fetchGroupSales(period, salesType);
     }
@@ -142,10 +157,10 @@ export class SalesPage {
     });
   }
 
-  async fetchPersonalSales() {
+  async fetchPersonalSales(period, salesType) {
     const userId = await this.salesProvider.userId();
     this.pageStatus = 'loading';
-    this.salesProvider.getSales(userId).subscribe(observe => {
+    this.salesProvider.getSales(userId, period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       this.personalSales = observe.map(val => {
         return {
@@ -177,7 +192,7 @@ export class SalesPage {
   }
 
   ionViewDidLoad() {
-    this.fetchPersonalSales();
+    this.fetchPersonalSales('year', 'total');
   }
 
   showDetail(sales, index) {
