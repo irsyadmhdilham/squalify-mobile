@@ -14,6 +14,12 @@ export interface member {
   downline?: number;
 }
 
+export interface points {
+  agency: number;
+  personal: number;
+  group: number;
+}
+
 export interface agency {
   name: string;
   owner?: owner;
@@ -22,4 +28,5 @@ export interface agency {
   agency_image: string;
   posts?: post[];
   members: member[];
+  points?: points
 }

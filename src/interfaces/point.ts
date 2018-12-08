@@ -20,12 +20,6 @@ export interface point {
   };
 }
 
-export interface allPoints {
-  agency: number;
-  personal: number;
-  group: number;
-}
-
 export interface contactPoints {
   pk?: number;
   referrals: {

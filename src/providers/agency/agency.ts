@@ -14,10 +14,10 @@ export class AgencyProvider extends ApiUrlModules {
     super(storage);
   }
 
-  getAgencyDetail(agencyId, fields?: string): Observable<agency> {
-    let url = this.agencyUrl(agencyId);
+  getAgencyDetail(userId, agencyId, fields?: string): Observable<agency> {
+    let url = this.agencyUrl(agencyId, `?u=${userId}`);
     if (fields) {
-      url = this.agencyUrl(agencyId, `?fields=${fields}`);
+      url = this.agencyUrl(agencyId, `?u=${userId}&fields=${fields}`);
     }
     return this.http.get<agency>(url);
   }

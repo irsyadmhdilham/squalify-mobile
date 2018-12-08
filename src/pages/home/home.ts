@@ -4,7 +4,6 @@ import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
 
 import { AgencyProvider } from "../../providers/agency/agency";
-import { PointProvider } from "../../providers/point/point";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
@@ -35,7 +34,6 @@ export class HomePage {
     public navCtrl: NavController,
     private network: Network,
     private agencyProvider: AgencyProvider,
-    private pointProvider: PointProvider,
     private modalCtrl: ModalController,
     private navParams: NavParams
   ) { }
@@ -61,7 +59,6 @@ export class HomePage {
     this.onConnect = this.network.onConnect().subscribe(() => {
       this.connected = true;
     });
-    this.fetchPoint();
   }
 
   ionViewWillEnter() {
@@ -76,21 +73,14 @@ export class HomePage {
     this.onDisconnect.unsubscribe();
   }
 
-  async fetchAgencyDetail() {
-    const agencyId = await this.agencyProvider.agencyId();
-    this.agencyProvider.getAgencyDetail(agencyId, 'agency_image,name,posts').subscribe(observe => {
+  async fetch() {
+    const agencyId = await this.agencyProvider.agencyId(),
+          userId = await this.agencyProvider.userId();
+    this.agencyProvider.getAgencyDetail(userId, agencyId, 'agency_image,name,posts,points').subscribe(observe => {
       this.agencyImage = observe.agency_image;
       this.agencyName = observe.name;
       this.posts = observe.posts;
-    });
-  }
-
-  async fetchPoint() {
-    const userId = await this.pointProvider.userId();
-    this.pointProvider.getAllPoints(userId).subscribe(observe => {
-      this.points.agency = observe.agency;
-      this.points.personal = observe.personal;
-      this.points.group = observe.group;
+      this.points = observe.points;
     });
   }
 
@@ -115,7 +105,7 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.fetchAgencyDetail();
+    this.fetch();
   }
 
 }
