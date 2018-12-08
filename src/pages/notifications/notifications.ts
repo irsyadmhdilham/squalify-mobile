@@ -8,6 +8,22 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class NotificationsPage {
 
+  notifications = [];
+  pageStatus: string;
+
   constructor(public navCtrl: NavController, public navParams: NavParams) { }
+
+  profileImage(img) {
+    if (!img) {
+      return false;
+    }
+    return {
+      background: `url('${img}') center center no-repeat / cover`
+    };
+  }
+
+  async fetch() {
+    this.pageStatus = 'loading';
+  }
 
 }

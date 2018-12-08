@@ -14,6 +14,7 @@ import { ChangePasswordComponent } from "../../components/profile/change-passwor
 import { ChangeEmailComponent } from "../../components/profile/change-email/change-email";
 import { EditProfileComponent } from "../../components/profile/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
+import { NotificationsPage } from "../notifications/notifications";
 
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
@@ -35,7 +36,6 @@ export class ProfilePage extends Ids {
   pageStatus: string;
   navToSettings = false;
 
-
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -47,6 +47,10 @@ export class ProfilePage extends Ids {
     private events: Events
   ) {
     super(storage);
+  }
+
+  navToNotifications() {
+    this.navCtrl.push(NotificationsPage);
   }
 
   profileImageDisplay() {

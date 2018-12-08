@@ -3,23 +3,8 @@ import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 
-import { settings } from "../../interfaces/profile-settings";
 import { ApiUrlModules } from "../../functions/config";
-
-interface profile {
-  pk: number;
-  group: number;
-  name: string;
-  designation: string;
-  profile_image: string;
-  agency: {
-    pk: number;
-    agency_image: string;
-    name: string;
-    company: string;
-  },
-  settings: settings;
-}
+import { profile } from "../../interfaces/profile";
 
 @Injectable()
 export class ProfileProvider extends ApiUrlModules {

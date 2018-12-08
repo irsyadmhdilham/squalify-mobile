@@ -9,6 +9,7 @@ import { PointProvider } from "../../providers/point/point";
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../components/schedule/add-schedule/add-schedule";
+import { NotificationsPage } from '../notifications/notifications';
 
 @IonicPage()
 @Component({
@@ -38,6 +39,10 @@ export class HomePage {
     private modalCtrl: ModalController,
     private navParams: NavParams
   ) { }
+
+  navToNotifications() {
+    this.navCtrl.push(NotificationsPage);
+  }
 
   agencyImageView() {
     if (this.agencyImage) {

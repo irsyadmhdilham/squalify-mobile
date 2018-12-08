@@ -1,12 +1,25 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>notifications</ion-title>
+    <ion-title>
+      <img img-title src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
-<ion-content padding>
-
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to retrieve notifications" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <ion-list *ngSwitchDefault>
+    <ion-item no-padding *ngFor="let notif in notifications">
+      <ion-avatar item-start>
+        <div [ngStyle]="profileImage(notif.notified_by.profile_image)" class="profile-image"></div>
+      </ion-avatar>
+      <ng-container [ngSwitch]="notif.notification_type">
+        <h6 *ngSwitchCase="'Like'"><span>{{notif.notified_by.name}}</span> liked your post</h6>
+        <h6 *ngSwitchCase="'Comment'"><span>{{notif.notified_by.name}}</span> commented your post</h6>
+        <h6 *ngSwitchCase="'Sales closed'"><span>{{notif.notified_by.name}}</span> closed sales</h6>
+      </ng-container>
+      <p>{{notif.timestamp}}</p>
+    </ion-item>
+  </ion-list>
 </ion-content>

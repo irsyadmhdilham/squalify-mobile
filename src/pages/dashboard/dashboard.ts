@@ -10,6 +10,7 @@ import { SalesPage } from "./sales/sales";
 import { GroupPage } from "./group/group";
 import { AgencyPage } from "./agency/agency";
 import { ScoreboardPage } from "./scoreboard/scoreboard";
+import { NotificationsPage } from "../notifications/notifications";
 
 import { PointProvider } from "../../providers/point/point";
 
@@ -35,6 +36,10 @@ export class DashboardPage {
     private pointProvider: PointProvider,
     private alertCtrl: AlertController
   ) { }
+
+  navToNotifications() {
+    this.navCtrl.push(NotificationsPage);
+  }
 
   navigate(section) {
     switch (section) {
