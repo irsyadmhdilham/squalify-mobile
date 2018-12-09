@@ -33,7 +33,7 @@
               <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
             </div>
             <div>
-              <button margin-right ion-button clear icon-only color="primary">
+              <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact.contact_no)">
                 <ion-icon no-padding name="call"></ion-icon>
               </button>
               <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">

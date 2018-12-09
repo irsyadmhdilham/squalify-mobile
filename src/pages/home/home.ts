@@ -76,7 +76,7 @@ export class HomePage {
   async fetch() {
     const agencyId = await this.agencyProvider.agencyId(),
           userId = await this.agencyProvider.userId();
-    this.agencyProvider.getAgencyDetail(userId, agencyId, 'agency_image,name,posts,points').subscribe(observe => {
+    this.agencyProvider.getAgencyDetail(agencyId, 'agency_image,name,posts,points', userId).subscribe(observe => {
       this.agencyImage = observe.agency_image;
       this.agencyName = observe.name;
       this.posts = observe.posts;

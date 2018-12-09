@@ -21,7 +21,7 @@ export class PostComponent {
   totalSales: number;
   monthlySales = 0;
   date: Date = new Date();
-  location: string;
+  location: string = 'Mangkuk';
   taggedUsers = [];
   liked = false;
   comments: number;
@@ -113,9 +113,9 @@ export class PostComponent {
     this.postType = this.data.post_type;
     this.name = this.data.posted_by.name;
     this.profileImage = this.data.posted_by.profile_image;
-    this.totalSales = parseFloat(this.data.sales_rel.amount);
+    this.totalSales = this.data.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
     this.date = new Date(this.data.timestamp);
-    this.location = this.data.sales_rel.location;
+    // this.location = this.data.sales_rel.location;
     this.comments = this.data.comments;
     this.likes = this.data.likes;
     this.pk = this.data.pk;

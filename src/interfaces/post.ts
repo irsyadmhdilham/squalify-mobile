@@ -17,7 +17,7 @@ export interface post {
   pk: number,
   posted_by: owner;
   post_type: string;
-  sales_rel: sales;
+  sales_rel: sales[];
   timestamp: string;
   comments: number;
   likes: like[];

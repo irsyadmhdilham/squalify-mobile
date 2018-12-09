@@ -57,7 +57,7 @@ export class ApiUrlModules extends Ids {
 
   apiBaseUrl() {
     if (isDevMode()) {
-      return 'http://localhost:8030/v1';
+      return 'http://192.168.0.5:8030/v1';
     }
     return 'https://squalify.com/api/v1';
   }

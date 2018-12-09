@@ -47,7 +47,8 @@ export class SignInPage {
           this.signingIn.emit(true);
         });
       }
-    }, () => {
+    }, err => {
+      console.log(err.message);
       loading.dismiss();
       const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
       alert.present();

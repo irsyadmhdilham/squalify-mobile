@@ -136,10 +136,10 @@ export class PostDetailPage {
     this.name = post.posted_by.name;
     this.profileImage = post.posted_by.profile_image;
     this.postType = post.post_type;
-    this.totalSales = parseFloat(post.sales_rel.amount);
+    this.totalSales = post.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
     this.monthlySales = 0;
     this.date = new Date(post.timestamp);
-    this.location = post.sales_rel.location;
+    // this.location = post.sales_rel.location;
     this.likes = post.likes;
     this.checkLiked();
     this.getComments();

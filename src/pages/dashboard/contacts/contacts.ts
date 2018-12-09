@@ -8,6 +8,7 @@ import {
   AlertController,
   LoadingController
 } from 'ionic-angular';
+import { CallNumber } from "@ionic-native/call-number";
 
 import { ContactDetailPage } from "./contact-detail/contact-detail";
 
@@ -36,7 +37,8 @@ export class ContactsPage {
     private contactProvider: ContactProvider,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private callNumber: CallNumber
   ) { }
 
   statusColor(status) {
@@ -53,6 +55,10 @@ export class ContactsPage {
     } else {
       return { color: ContactStatus.other, fontWeight: 'bold' };
     }
+  }
+
+  async call(number) {
+    await this.callNumber.callNumber(number, true);
   }
 
   addContact() {
