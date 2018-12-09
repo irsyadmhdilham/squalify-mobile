@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Events } from "ionic-angular";
+import { Events, Platform } from "ionic-angular";
 import { Storage } from "@ionic/storage";
+import { Firebase } from "@ionic-native/firebase";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -22,7 +23,12 @@ export class TabsPage extends Ids {
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
 
-  constructor(public storage: Storage, private events: Events ) {
+  constructor(
+    public storage: Storage,
+    private events: Events,
+    private platform: Platform,
+    private firebase: Firebase
+  ) {
     super(storage);
   }
 
@@ -37,10 +43,28 @@ export class TabsPage extends Ids {
     this.signedIn = value;
   }
 
+  async grantNotificationPermission() {
+    const isIOS = this.platform.is('ios');
+    const checkPerm = await this.firebase.hasPermission();
+    if (!checkPerm.isEnabled) {
+      if (isIOS) {
+        this.firebase.grantPermission();
+      }
+    }
+  }
+
+  onOpenNotification() {
+    this.firebase.onNotificationOpen().subscribe(observe => {
+      console.log(JSON.stringify(observe));
+    });
+  }
+
   ionViewDidLoad() {
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
     });
+    this.grantNotificationPermission();
+    this.onOpenNotification();
   }
 
 }

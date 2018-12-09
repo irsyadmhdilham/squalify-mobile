@@ -5,6 +5,7 @@ import {
   ModalController,
   ToastController
 } from "ionic-angular";
+import { CallNumber } from "@ionic-native/call-number";
 
 import { PointProvider } from "../../../providers/point/point";
 import { AttributeFeatures } from "./attribute-features";
@@ -37,7 +38,8 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private callNumber: CallNumber
   ) {
     super(modalCtrl);
   }
@@ -78,6 +80,16 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
             addPoint();
           }
         })
+      break;
+      case 'Calls/Email/Socmed':
+        this.addCalls().then(data => {
+          if (data) {
+            this.callNumber.callNumber(data.contact_no, true).then(() => {
+              addPoint();
+              this.addAction();
+            });
+          }
+        });
       break;
       default:
         addPoint();

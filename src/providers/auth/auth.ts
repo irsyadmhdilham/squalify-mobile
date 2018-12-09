@@ -20,8 +20,8 @@ export class AuthProvider extends ApiUrlModules {
     super(storage);
   }
 
-  authenticate(email: string, password: string): Observable<auth> {
-    const url = this.otherUrl(`auth?email=${email}&password=${password}`);
+  authenticate(email: string, password: string, fcmToken: string): Observable<auth> {
+    const url = this.otherUrl(`auth?email=${email}&password=${password}&fcmToken=${fcmToken}`);
     return this.http.get<auth>(url);
   }
 

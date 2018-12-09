@@ -26,7 +26,7 @@ export class ContactListComponent {
   async fetch() {
     const userId = await this.contactProvider.userId();
     this.pageStatus = 'loading';
-    this.contactProvider.getContacts(userId, 'pk,name').subscribe(observe => {
+    this.contactProvider.getContacts(userId, 'pk,name,contact_no').subscribe(observe => {
       this.pageStatus = undefined;
       this.contacts = observe;
     }, () => {

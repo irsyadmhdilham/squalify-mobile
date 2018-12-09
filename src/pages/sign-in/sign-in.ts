@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import { Firebase } from "@ionic-native/firebase";
 
 import { AuthProvider } from "../../providers/auth/auth";
 
@@ -17,7 +18,8 @@ export class SignInPage {
     public navParams: NavParams,
     private alertCtrl: AlertController,
     private AuthProvider: AuthProvider,
-    private LoadingCtrl: LoadingController
+    private LoadingCtrl: LoadingController,
+    private firebase: Firebase
   ) { }
 
   alert(title, message) {
@@ -25,7 +27,13 @@ export class SignInPage {
     return alert;
   }
 
-  signIn(email, password) {
+  getFCMToken() {
+    this.firebase.getToken().then(token => {
+      console.log(token);
+    });
+  }
+
+  async signIn(email, password) {
     if (!email.valid || email.value === '') {
       const alert = this.alert('Email is required', 'Please insert email');
       alert.present();
@@ -38,7 +46,8 @@ export class SignInPage {
     }
     const loading = this.LoadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    this.AuthProvider.authenticate(email.value, password.value).subscribe(observe => {
+    const fcmToken = await this.firebase.getToken();
+    this.AuthProvider.authenticate(email.value, password.value, fcmToken).subscribe(observe => {
       if (observe.auth) {
         const userId = observe.data.user_id,
               agencyId = observe.data.agency_id;
@@ -47,8 +56,7 @@ export class SignInPage {
           this.signingIn.emit(true);
         });
       }
-    }, err => {
-      console.log(err.message);
+    }, () => {
       loading.dismiss();
       const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
       alert.present();

@@ -3,6 +3,9 @@ import { ModalController } from "ionic-angular";
 import { AddSalesComponent } from "../../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+import { ContactListComponent } from "../../../components/contact/contact-list/contact-list";
+
+import { contact } from "../../../interfaces/contact";
 
 export class AttributeFeatures {
 
@@ -48,6 +51,16 @@ export class AttributeFeatures {
   addSchedule() {
     return new Promise(resolve => {
       const modal = this.modal(AddScheduleComponent, { appointmentSecured: true });
+      modal.present();
+      modal.onDidDismiss(data => {
+        resolve(data);
+      });
+    });
+  }
+
+  addCalls() {
+    return new Promise<contact>(resolve => {
+      const modal = this.modal(ContactListComponent);
       modal.present();
       modal.onDidDismiss(data => {
         resolve(data);

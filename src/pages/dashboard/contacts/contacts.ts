@@ -6,7 +6,8 @@ import {
   ModalController,
   ActionSheetController,
   AlertController,
-  LoadingController
+  LoadingController,
+  ToastController
 } from 'ionic-angular';
 import { CallNumber } from "@ionic-native/call-number";
 
@@ -16,6 +17,8 @@ import { AddContactComponent } from "../../../components/contact/add-contact/add
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
 
 import { ContactProvider } from "../../../providers/contact/contact";
+import { PointProvider } from "../../../providers/point/point";
+import { UpdatePoint } from "../../../providers/point/update-point";
 import { contact } from "../../../interfaces/contact";
 import { ContactStatus } from "../../../functions/colors";
 
@@ -38,7 +41,9 @@ export class ContactsPage {
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
-    private callNumber: CallNumber
+    private callNumber: CallNumber,
+    private pointProvider: PointProvider,
+    private toastCtrl: ToastController
   ) { }
 
   statusColor(status) {
@@ -57,8 +62,70 @@ export class ContactsPage {
     }
   }
 
-  async call(number) {
-    await this.callNumber.callNumber(number, true);
+  callAnsweredHandler(userId, pointId, callPoint, contact: contact, index: number) {
+    const update = new UpdatePoint(
+      this.pointProvider,
+      userId,
+      pointId,
+      callPoint.point,
+      'Calls/Email/Socmed',
+      callPoint.pk,
+      1
+    );
+    update.add().then(response => {
+      const toast = this.toastCtrl.create({
+        message: `Call point added, total: ${response.point}`,
+        duration: 1500,
+        position: 'top'
+      });
+      toast.present();
+      toast.onDidDismiss(() => {
+        const actionSheet = this.actionSheetCtrl.create({
+          title: 'Get an appointment?',
+          buttons: [
+            { text: 'Yes, I got', handler: () => {
+              const modal = this.modalCtrl.create(AddScheduleComponent, {
+                appointmentSecured: true
+              });
+              modal.present();
+              modal.onDidDismiss(data => {
+                if (data) {
+                  contact.status = 'Appointment secured';
+                  contact.scheduleId = data.schedule.pk;
+                  this.updateContact(contact, index);
+                }
+              });
+            }},
+            { text: "No, I don't get" }
+          ]
+        });
+        actionSheet.present();
+      });
+    });
+  }
+
+  call(contact: contact, index) {
+    this.callNumber.callNumber(contact.contact_no, true).then(async () => {
+      const userId = await this.pointProvider.userId();
+      this.pointProvider.getContactPoints(userId).subscribe(observe => {
+        const pointId = observe.pk,
+              callPoint = observe.calls;       
+        const actionSheet = this.actionSheetCtrl.create({
+          title: 'Call answered',
+          buttons: [
+            { text: 'Answered', handler: () => this.callAnsweredHandler(userId, pointId, callPoint, contact, index)},
+            { text: 'Not answer' }
+          ]
+        });
+        actionSheet.present();
+      }, () => {
+        const alert = this.alertCtrl.create({
+          title: 'Error has occured',
+          subTitle: 'Please try again later'
+        });
+        alert.present();
+      });
+    });
   }
 
   addContact() {
