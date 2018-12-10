@@ -21,4 +21,5 @@ export interface post {
   timestamp: string;
   comments: number;
   likes: like[];
+  monthly_sales: string;
 }

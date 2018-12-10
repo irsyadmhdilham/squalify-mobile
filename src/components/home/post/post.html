@@ -3,7 +3,7 @@
     <div [ngStyle]="profileImageView()" class="profile-image"></div>
     <div class="title-wrapper">
       <ng-container item-end [ngSwitch]="postType">
-        <h6 no-margin ion-text color="dark" *ngSwitchCase="'sales closed'"><span>{{name}}</span> closed sales at <span>{{location}}</span></h6>
+        <h6 no-margin ion-text color="dark" *ngSwitchCase="'sales closed'"><span>{{name}}</span> closed sales</h6>
         <h6 no-margin ion-text color="dark" *ngSwitchCase="'joining field work'"><span>{{name}}</span> went field work at <span>{{location}}</span> with <span>{{taggedUsers[0]}} and {{taggedUsers.length}} others</span></h6>
       </ng-container>
       <p class="timestamp">{{this.date | date:'d MMM yyyy, h:mma' | lowercase}}</p>

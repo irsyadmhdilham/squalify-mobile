@@ -63,8 +63,11 @@ export class TabsPage extends Ids {
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
     });
-    this.grantNotificationPermission();
-    this.onOpenNotification();
+    const cordova = this.platform.is('cordova');
+    if (cordova) {
+      this.grantNotificationPermission();
+      this.onOpenNotification();
+    }
   }
 
 }

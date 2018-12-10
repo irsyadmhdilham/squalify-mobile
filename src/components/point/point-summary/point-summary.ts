@@ -1,24 +1,15 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import * as moment from "moment";
+import { ViewController, NavParams } from "ionic-angular";
 
-import { point } from "../../../../interfaces/point";
-import { Colors } from "../../../../functions/colors";
-import { log } from "../../../../interfaces/point";
+import { Attribute } from "../../../pages/dashboard/points/point-detail/attribute";
 
-import { Attribute } from "./attribute";
-import { PointSummaryComponent } from "../../../../components/point/point-summary/point-summary";
-
-@IonicPage()
 @Component({
-  selector: 'page-point-detail',
-  templateUrl: 'point-detail.html',
+  selector: 'point-summary',
+  templateUrl: 'point-summary.html'
 })
-export class PointDetailPage {
+export class PointSummaryComponent {
 
-  point: point = this.navParams.get('point');
-  date = moment(this.point.date, 'YYYY-MM-DD');
-  logs = this.point.logs
+  point = this.navParams.get('point');
   productivePoints = [
     new Attribute(this.point, 'ftf.png', 'FTF/Nesting/Booth', 2),
     new Attribute(this.point, 'field-work.png', 'Joining field work', 1),
@@ -42,18 +33,10 @@ export class PointDetailPage {
   totalProductivePoints = this.sumProductivePoints();
   totalCareerPoints = this.sumCareerPoints();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private modalCtrl: ModalController) { }
+  constructor(private viewCtrl: ViewController, private navParams: NavParams) { }
 
-  pointColor(log: log) {
-    if (log.type === 'add') {
-      return { color: Colors.secondary };
-    }
-    return { color: Colors.danger };
-  }
-
-  showSummary() {
-    const modal = this.modalCtrl.create(PointSummaryComponent, { point: this.point });
-    modal.present();
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
 
   sumTotalPoints() {
