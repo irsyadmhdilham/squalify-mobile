@@ -1,5 +1,12 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  AlertController,
+  LoadingController,
+  Platform
+} from 'ionic-angular';
 import { Firebase } from "@ionic-native/firebase";
 
 import { AuthProvider } from "../../providers/auth/auth";
@@ -19,18 +26,13 @@ export class SignInPage {
     private alertCtrl: AlertController,
     private AuthProvider: AuthProvider,
     private LoadingCtrl: LoadingController,
-    private firebase: Firebase
+    private firebase: Firebase,
+    private platform: Platform
   ) { }
 
   alert(title, message) {
     const alert = this.alertCtrl.create({ title, subTitle: message, buttons: ['Ok']});
     return alert;
-  }
-
-  getFCMToken() {
-    this.firebase.getToken().then(token => {
-      console.log(token);
-    });
   }
 
   async signIn(email, password) {
@@ -46,7 +48,11 @@ export class SignInPage {
     }
     const loading = this.LoadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    const fcmToken = await this.firebase.getToken();
+    const isCordova = this.platform.is('cordova');
+    let fcmToken;
+    if (isCordova) {
+      fcmToken = await this.firebase.getToken();
+    }
     this.AuthProvider.authenticate(email.value, password.value, fcmToken).subscribe(observe => {
       if (observe.auth) {
         const userId = observe.data.user_id,

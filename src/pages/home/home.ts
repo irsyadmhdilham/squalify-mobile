@@ -66,6 +66,7 @@ export class HomePage {
     if (like) {
       this.like = like;
     }
+    this.fetch();
   }
 
   ionViewWillLeave() {
@@ -104,8 +105,8 @@ export class HomePage {
     }
   }
 
-  ionViewDidLoad() {
-    this.fetch();
-  }
+  // ionViewDidLoad() {
+  //   this.fetch();
+  // }
 
 }
