@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../providers/point/point";
 import { point } from "../../../interfaces/point";
 import * as moment from "moment";
 
 import { PointDetailPage } from "./point-detail/point-detail";
+import { PointGroupMemberPage } from "./point-group-member/point-group-member";
 
 @IonicPage()
 @Component({
@@ -15,15 +16,23 @@ import { PointDetailPage } from "./point-detail/point-detail";
 export class PointsPage {
 
   pageStatus: string;
-  page = 'personal';
+  segment = 'personal';
   points: point[] = [];
+  groupMembers = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private pointProvider: PointProvider,
-    private alertCtrl: AlertController
+    private pointProvider: PointProvider
   ) { }
+
+  changeSegment(value) {
+    if (value === 'personal') {
+      this.fetch();
+    } else {
+      this.fetchGroup();
+    }
+  }
 
   async fetch() {
     const userId = await this.pointProvider.userId();
@@ -32,13 +41,28 @@ export class PointsPage {
       this.pageStatus = undefined;
       this.points = observe;
     }, () => {
-      const alert = this.alertCtrl.create({
-        title: 'Error has occured',
-        subTitle: 'Failed to retrieve points',
-        buttons: ['Ok']
-      });
-      alert.present();
+      this.pageStatus = 'error';
     });
+  }
+
+  async fetchGroup() {
+    const userId = await this.pointProvider.userId();
+    this.pageStatus = 'loading';
+    this.pointProvider.getGroupPoints(userId).subscribe(observe => {
+      this.pageStatus = undefined;
+      this.groupMembers = observe;
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
+  profileImage(img) {
+    if (!img) {
+      return false;
+    }
+    return {
+      background: `url('${img}') center center no-repeat / cover`
+    };
   }
 
   totalPoint(point: point) {
@@ -56,5 +80,9 @@ export class PointsPage {
 
   navigate(point: point) {
     this.navCtrl.push(PointDetailPage, { point });
+  }
+
+  navToMember(data) {
+    this.navCtrl.push(PointGroupMemberPage, { data });
   }
 }

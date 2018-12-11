@@ -1,0 +1,32 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>
+        <img img-title src="../../../../assets/imgs/squalify.png" alt="squalify">
+      </ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content [ngSwitch]="pageStatus">
+    <loading type="list" *ngSwitchCase="'loading'"></loading>
+    <fetch-error message="Failed to get members point" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+    <ng-container *ngSwitchDefault>
+      <ion-row padding-horizontal justify-content-between>
+        <ion-col>
+          <ion-item no-lines no-padding>
+            <div [ngStyle]="viewProfileImage()" id="profile-image" item-start></div>
+            <h5>{{name}}</h5>
+            <p>{{designation}}</p>
+          </ion-item>
+        </ion-col>
+        <ion-chip color="primary" *ngIf="downline && downline > 0">
+          <ion-label color="white">View downline{{downline > 1 ? 's' : ''}}</ion-label>
+        </ion-chip>
+      </ion-row>
+      <ion-list padding>
+        <ion-item no-padding *ngFor="let point of points">
+          <h5>{{point.date | date:'d MMM yyyy'}}</h5>
+          <p item-end ion-text color="primary">{{point.point}}</p>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </ion-content>

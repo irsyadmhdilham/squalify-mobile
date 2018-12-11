@@ -7,6 +7,7 @@ import { ScheduleDetailPage } from "../../pages/dashboard/schedules/schedule-det
 
 import { PointsPage } from "../../pages/dashboard/points/points";
 import { PointDetailPage } from "../../pages/dashboard/points/point-detail/point-detail";
+import { PointGroupMemberPage } from "../../pages/dashboard/points/point-group-member/point-group-member";
 
 import { SalesPage } from "../../pages/dashboard/sales/sales";
 
@@ -25,6 +26,7 @@ export const Dashboard = [
   ScheduleDetailPage,
   PointsPage,
   PointDetailPage,
+  PointGroupMemberPage,
   SalesPage,
   GroupPage,
   GroupMemberPage,

@@ -5,7 +5,12 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { point, contactPoints } from "../../interfaces/point";
+import { point, contactPoints, groupPoint } from "../../interfaces/point";
+
+interface memberPoints {
+  date: string;
+  point: number
+};
 
 @Injectable()
 export class PointProvider extends ApiUrlModules {
@@ -42,6 +47,16 @@ export class PointProvider extends ApiUrlModules {
   getContactPoints(userId): Observable<contactPoints> {
     const url = this.profileUrl(userId, 'point/contact');
     return this.http.get<contactPoints>(url);
+  }
+
+  getGroupPoints(userId): Observable<groupPoint[]> {
+    const url = this.profileUrl(userId, 'point/group');
+    return this.http.get<groupPoint[]>(url);
+  }
+
+  getGroupMemberPoints(userId, memberId: number): Observable<memberPoints[]> {
+    const url = this.profileUrl(userId, `point/group/${memberId}`);
+    return this.http.get<memberPoints[]>(url);
   }
 
 }

@@ -39,3 +39,13 @@ export interface contactPoints {
     point: number;
   }
 }
+
+export interface groupPoint {
+  pk: number;
+  name: string;
+  designation: string;
+  profile_image: string;
+  today: number;
+  downline?: number;
+}
+
