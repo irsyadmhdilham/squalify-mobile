@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../../providers/point/point";
+import { PointDownlinesPage } from "../point-downlines/point-downlines";
+import { PointDetailPage } from "../point-detail/point-detail";
 
 @IonicPage()
 @Component({
@@ -55,6 +57,14 @@ export class PointGroupMemberPage {
     this.downline = data.downline;
     this.pk = data.pk;
     this.fetch();
+  }
+
+  viewDownlines() {
+    this.navCtrl.push(PointDownlinesPage, { user: this.pk });
+  }
+
+  viewPointDetail(point) {
+    this.navCtrl.push(PointDetailPage, { pointId: point.pk });
   }
 
 }

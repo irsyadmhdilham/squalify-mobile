@@ -31,7 +31,7 @@ export class PointProvider extends ApiUrlModules {
 
   getPoints(userId): Observable<point[]> {
     const url = this.profileUrl(userId, 'point');
-    return this.http.get<point[]>(`${url}?mode=all`);
+    return this.http.get<point[]>(`${url}?fields=pk,date,total`);
   }
 
   getTodayPoint(userId): Observable<point[]> {
@@ -40,7 +40,12 @@ export class PointProvider extends ApiUrlModules {
   }
 
   getPointLogs(userId, pointId: number): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}?type=logs`);
+    const url = this.profileUrl(userId, `point/${pointId}?type=point_logs`);
+    return this.http.get<point>(url);
+  }
+
+  getPointDetail(userId, pointId: number): Observable<point> {
+    const url = this.profileUrl(userId, `point/${pointId}`);
     return this.http.get<point>(url);
   }
 
@@ -57,6 +62,11 @@ export class PointProvider extends ApiUrlModules {
   getGroupMemberPoints(userId, memberId: number): Observable<memberPoints[]> {
     const url = this.profileUrl(userId, `point/group/${memberId}`);
     return this.http.get<memberPoints[]>(url);
+  }
+
+  getDownline(userId, memberId: number): Observable<groupPoint[]> {
+    const url = this.profileUrl(userId, `point/group/${memberId}/downline`);
+    return this.http.get<groupPoint[]>(url);
   }
 
 }

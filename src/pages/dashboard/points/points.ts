@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../providers/point/point";
 import { point } from "../../../interfaces/point";
-import * as moment from "moment";
 
 import { PointDetailPage } from "./point-detail/point-detail";
 import { PointGroupMemberPage } from "./point-group-member/point-group-member";
@@ -39,7 +38,13 @@ export class PointsPage {
     this.pageStatus = 'loading';
     this.pointProvider.getPoints(userId).subscribe(observe => {
       this.pageStatus = undefined;
-      this.points = observe;
+      const points = observe.map(val => {
+        return {
+          ...val,
+          date: new Date(val.date)
+        };
+      });
+      this.points = points;
     }, () => {
       this.pageStatus = 'error';
     });
@@ -65,21 +70,12 @@ export class PointsPage {
     };
   }
 
-  totalPoint(point: point) {
-    const total = point.attributes.map(val => val.point).reduce((a, b) => a + b);
-    return total;
-  }
-
-  date(value: string) {
-    return moment(value, 'YYYY-MM-DD');
-  }
-
   ionViewDidLoad() {
     this.fetch();
   }
 
-  navigate(point: point) {
-    this.navCtrl.push(PointDetailPage, { point });
+  navigate(point) {
+    this.navCtrl.push(PointDetailPage, { pointId: point.pk });
   }
 
   navToMember(data) {

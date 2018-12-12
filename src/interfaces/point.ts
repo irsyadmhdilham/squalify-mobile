@@ -15,9 +15,10 @@ export interface point {
   pk?: number;
   attributes: attribute[]
   date: any;
-  logs: {
-    logs: log[]
-  };
+  point_logs: log[];
+  productive_point: number;
+  career_point: number;
+  total: number;
 }
 
 export interface contactPoints {

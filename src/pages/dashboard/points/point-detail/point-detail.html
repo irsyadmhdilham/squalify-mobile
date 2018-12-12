@@ -4,38 +4,42 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <h2 class="point-total" no-margin ion-text text-center color="primary">{{totalPoints}}</h2>
-        <p class="point-label" text-center no-margin>Total</p>
-      </ion-col>
-      <ion-col>
-        <h2 class="point-total" text-center no-margin ion-text color="orange">{{totalProductivePoints}}</h2>
-        <p class="point-label" no-margin text-center>Productive points</p>
-      </ion-col>
-      <ion-col>
-        <h2 text-center class="point-total" no-margin ion-text color="purple">{{totalCareerPoints}}</h2>
-        <p class="point-label" text-center no-margin>Career points</p>
-      </ion-col>
-    </ion-row>
-    <ion-buttons start>
-      <button ion-button clear strong small (tap)="showSummary()">Show summary</button>
-    </ion-buttons>
-  </ion-grid>
-  <ion-list padding>
-    <ion-item no-padding *ngFor="let log of logs.logs">
-      <ion-row justify-content-between>
-        <div>
-          <h3 class="time" ion-text color="primary">{{log.time | date:'h:mma'}}</h3>
-          <p ion-text color="dark" class="attribute">{{log.attribute}}</p>
-        </div>
-        <div>
-          <h3 text-center class="point" ion-text color="dark" item-end [ngStyle]="pointColor(log)">{{log.point}}</h3>
-          <p ion-text color="grey" text-center no-margin>Point</p>
-        </div>
+<ion-content [ngSwitch]="pageStatus">
+  <loading type="form" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to get point logs" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h2 class="point-total" no-margin ion-text text-center color="primary">{{total}}</h2>
+          <p class="point-label" text-center no-margin>Total</p>
+        </ion-col>
+        <ion-col>
+          <h2 class="point-total" text-center no-margin ion-text color="orange">{{productivePoints}}</h2>
+          <p class="point-label" no-margin text-center>Productive points</p>
+        </ion-col>
+        <ion-col>
+          <h2 text-center class="point-total" no-margin ion-text color="purple">{{careerPoints}}</h2>
+          <p class="point-label" text-center no-margin>Career points</p>
+        </ion-col>
       </ion-row>
-    </ion-item>
-  </ion-list>
+      <ion-buttons start>
+        <button ion-button clear strong small (tap)="showSummary()">Show summary</button>
+      </ion-buttons>
+    </ion-grid>
+    <ion-list padding>
+      <ion-item no-padding *ngFor="let log of logs">
+        <ion-row justify-content-between>
+          <div>
+            <h3 class="time" ion-text color="primary">{{log.time | date:'h:mma'}}</h3>
+            <p ion-text color="dark" class="attribute">{{log.attribute}}</p>
+          </div>
+          <div>
+            <h3 text-center class="point" ion-text color="dark" item-end [ngStyle]="pointColor(log)">{{log.point}}</h3>
+            <p ion-text color="grey" text-center no-margin>Point</p>
+          </div>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </ng-container>
 </ion-content>

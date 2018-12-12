@@ -23,8 +23,8 @@
       <ion-list *ngSwitchCase="'personal'">
         <ion-item (tap)="navigate(point)" no-padding *ngFor="let point of points">
           <ion-row justify-content-between>
-            <p>{{date(point.date) | date:'d MMM yyyy'}}</p>
-            <h5 ion-text color="primary" class="point" text-center>{{totalPoint(point)}}</h5>
+            <p>{{point.date | date:'d MMM yyyy'}}</p>
+            <h5 ion-text color="primary" class="point" text-center>{{point.total}}</h5>
           </ion-row>
         </ion-item>
       </ion-list>

@@ -30,7 +30,7 @@ export class PointLogsComponent {
     const pk = this.navParams.get('pk');
     this.pointProvider.getPointLogs(userId, pk).subscribe(observe => {
       this.screenStatus = undefined;
-      this.logs = observe.logs.logs.map(val => {
+      this.logs = observe.point_logs.map(val => {
         return {
           ...val,
           time: new Date(val.time)

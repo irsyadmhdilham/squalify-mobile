@@ -10,6 +10,9 @@ import { Attribute } from "../../../pages/dashboard/points/point-detail/attribut
 export class PointSummaryComponent {
 
   point = this.navParams.get('point');
+  productivePoint = this.point.productive_point;
+  careerPoint = this.point.career_point;
+  total = this.point.total;
   productivePoints = [
     new Attribute(this.point, 'ftf.png', 'FTF/Nesting/Booth', 2),
     new Attribute(this.point, 'field-work.png', 'Joining field work', 1),
@@ -29,48 +32,11 @@ export class PointSummaryComponent {
     new Attribute(this.point, 'early.png', 'Be early training', 3 ),
     new Attribute(this.point, 'agency-program.png', 'Agency program', 5)
   ];
-  totalPoints = this.sumTotalPoints();
-  totalProductivePoints = this.sumProductivePoints();
-  totalCareerPoints = this.sumCareerPoints();
 
   constructor(private viewCtrl: ViewController, private navParams: NavParams) { }
 
   dismiss() {
     this.viewCtrl.dismiss();
-  }
-
-  sumTotalPoints() {
-    return this.point.attributes.map(val => val.point).reduce((a, b) => a + b);
-  }
-
-  sumProductivePoints() {
-    const productivePoints = this.productivePoints.map(val => val.attribute);
-    const attributes = this.point.attributes.filter(val => {
-      const getAttr = productivePoints.filter(attr => attr === val.attribute);
-      if (getAttr.length > 0) {
-        return true;
-      }
-      return false;
-    });
-    if (attributes.length > 0) {
-      return attributes.map(val => val.point).reduce((a, b) => a + b);
-    }
-    return 0;
-  }
-
-  sumCareerPoints() {
-    const careerPoints = this.careerPoints.map(val => val.attribute);
-    const attributes = this.point.attributes.filter(val => {
-      const getAttr = careerPoints.filter(attr => attr === val.attribute);
-      if (getAttr.length > 0) {
-        return true;
-      }
-      return false;
-    });
-    if (attributes.length > 0) {
-      return attributes.map(val => val.point).reduce((a, b) => a + b);
-    } 
-    return 0;
   }
 
 }
