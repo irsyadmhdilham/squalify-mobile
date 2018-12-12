@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img img-title src="../../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+  <ion-row padding-horizontal padding-bottom>
+    <div (tap)="selectPeriod()" header-button [activeButton]="periodActive">
+      <p class="header-button-bold" ion-text [color]="periodActive ? 'white': 'dark'" no-margin>{{period | titlecase}}</p>
+    </div>
+    <div class="header-button-left-margin" (tap)="selectSalesType()" header-button [activeButton]="salesTypeActive">
+      <p class="header-button-bold" ion-text [color]="salesTypeActive ? 'white': 'dark'" no-margin>{{salesType | titlecase}}</p>
+    </div>
+  </ion-row>
+</ion-header>
+
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to fetch downline" [retry]="fetch()"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ion-item no-lines no-padding>
+      <ion-avatar class="avatar-margin-top" item-start>
+        <div class="profile-image"></div>
+      </ion-avatar>
+      <h5>{{name}}</h5>
+      <p>{{designation}}</p>
+      <ion-chip color="primary" item-end *ngIf="downline && downline > 0">
+        <ion-label color="white">View downline{{downline > 1 ? 's' : ''}}</ion-label>
+      </ion-chip>
+    </ion-item>
+    <ion-list>
+      <ion-item no-padding *ngFor="let member of downlines">
+        <ion-avatar class="avatar-margin-top" item-start>
+          <div class="profile-image"></div>
+        </ion-avatar>
+        <h5>{{member.name}}</h5>
+        <p>{{member.designation}}</p>
+        <p>{{member.downline}} downline{{member.downline > 1 ? 's' : ''}}</p>
+        <h4 item-end>RM{{member.amount | numCommas}}</h4>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ion-content>

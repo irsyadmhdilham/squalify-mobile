@@ -28,5 +28,5 @@ export interface groupSales {
   name: string;
   profile_image: string;
   amount: string;
-  downline?: string;
+  downline?: number;
 }

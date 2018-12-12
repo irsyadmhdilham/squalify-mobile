@@ -11,6 +11,7 @@ import { PointGroupMemberPage } from "../../pages/dashboard/points/point-group-m
 import { PointDownlinesPage } from "../../pages/dashboard/points/point-downlines/point-downlines";
 
 import { SalesPage } from "../../pages/dashboard/sales/sales";
+import { SalesDownlinesPage } from "../../pages/dashboard/sales/sales-downlines/sales-downlines";
 
 import { GroupPage } from "../../pages/dashboard/group/group";
 import { GroupMemberPage } from "../../pages/dashboard/group/group-member/group-member";
@@ -30,6 +31,7 @@ export const Dashboard = [
   PointGroupMemberPage,
   PointDownlinesPage,
   SalesPage,
+  SalesDownlinesPage,
   GroupPage,
   GroupMemberPage,
   AgencyPage,
