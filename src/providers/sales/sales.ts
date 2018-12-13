@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales, summary, groupSales } from "../../interfaces/sales";
+import { sales, summary, groupSales, downlineSales } from "../../interfaces/sales";
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {
@@ -41,6 +41,11 @@ export class SalesProvider extends ApiUrlModules {
   getGroupSummary(userId, type: string): Observable<any> {
     const url = this.profileUrl(userId, `sales/group/summary?q=${type}`);
     return this.http.get<any>(url);
+  }
+
+  getGroupDownlineSales(userId, memberId: number, period: string, type?: string): Observable<downlineSales> {
+    const url = this.profileUrl(userId, `sales/group/${memberId}/year/?q=total`);
+    return this.http.get<downlineSales>(url);
   }
 
 }

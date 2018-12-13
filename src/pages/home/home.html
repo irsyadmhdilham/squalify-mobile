@@ -14,6 +14,9 @@
 <ng-container *ngIf="connected; then connectedBlock; else disconnectedBlock"></ng-container>
 <ng-template #connectedBlock>
   <ion-content content-bg id="main">
+    <ion-row (tap)="fetchPosts()" *ngIf="newPost > 0" justify-content-center id="new-post-button">
+      <button ion-button clear>You got {{newPost}} new posts</button>
+    </ion-row>
     <ion-grid padding id="top-container" class="container">
       <ion-row>
         <div [ngStyle]="agencyImageView()" id="agency-image"></div>

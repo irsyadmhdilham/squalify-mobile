@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { Network } from "@ionic-native/network";
+import * as io from "socket.io-client";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 
@@ -22,6 +23,9 @@ export class HomePage {
   connected: boolean = true;
   agencyImage: string;
   agencyName: string;
+  pk: number;
+  company: string;
+  newPost = 0;
   posts = [];
   like;
   points = {
@@ -66,7 +70,6 @@ export class HomePage {
     if (like) {
       this.like = like;
     }
-    this.fetch();
   }
 
   ionViewWillLeave() {
@@ -77,11 +80,22 @@ export class HomePage {
   async fetch() {
     const agencyId = await this.agencyProvider.agencyId(),
           userId = await this.agencyProvider.userId();
-    this.agencyProvider.getAgencyDetail(agencyId, 'agency_image,name,posts,points', userId).subscribe(observe => {
+    this.agencyProvider.getAgencyDetail(agencyId, 'pk,company,agency_image,name,posts,points', userId).subscribe(observe => {
+      this.pk = observe.pk;
+      this.company = observe.company;
       this.agencyImage = observe.agency_image;
       this.agencyName = observe.name;
       this.posts = observe.posts;
       this.points = observe.points;
+      this.receiveNewPost();
+    });
+  }
+
+  async fetchPosts() {
+    const agencyId = await this.agencyProvider.agencyId();
+    this.agencyProvider.getPosts(agencyId).subscribe(observe => {
+      this.newPost = 0;
+      this.posts = observe;
     });
   }
 
@@ -105,8 +119,15 @@ export class HomePage {
     }
   }
 
-  // ionViewDidLoad() {
-  //   this.fetch();
-  // }
+  receiveNewPost() {
+    const posts = io('http://localhost:8040/posts');
+    posts.on(`${this.company}:${this.pk}`, () => {
+      this.newPost += 1;
+    });
+  }
+
+  ionViewDidLoad() {
+    this.fetch();
+  }
 
 }

@@ -27,6 +27,16 @@ export interface groupSales {
   pk: number;
   name: string;
   profile_image: string;
+  designation: string;
   amount: string;
   downline?: number;
+}
+
+export interface downlineSales {
+  pk: number;
+  name: string;
+  profile_image: string;
+  designation: string;
+  amount: string;
+  downlines: groupSales[];
 }

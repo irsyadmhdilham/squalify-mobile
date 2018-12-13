@@ -8,6 +8,7 @@ import { sales } from "../../../interfaces/sales";
 import { AddSalesComponent } from "../../../components/sales/add-sales/add-sales";
 import { SalesDetailComponent } from "../../../components/sales/sales-detail/sales-detail";
 import { SalesSummaryComponent } from "../../../components/sales/sales-summary/sales-summary";
+import { SalesDownlinesPage } from "./sales-downlines/sales-downlines";
 
 @IonicPage()
 @Component({
@@ -214,6 +215,12 @@ export class SalesPage {
     return {
       background: `url('${img}') no-repeat center center / cover`
     };
+  }
+
+  navDownline(member) {
+    if (member.downline && member.downline > 0) {
+      this.navCtrl.push(SalesDownlinesPage, { memberId: member.pk });
+    }
   }
 
 }

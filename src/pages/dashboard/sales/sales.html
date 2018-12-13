@@ -70,7 +70,7 @@
       <loading type="list" *ngSwitchCase="'loading'"></loading>
       <fetch-error message="Failed to retrieve data" [retry]="fetchGroupSales()" *ngSwitchCase="'error'"></fetch-error>      
       <ion-list *ngSwitchDefault>
-        <ion-item no-padding *ngFor="let group of groupSales">
+        <ion-item no-padding *ngFor="let group of groupSales" (tap)="navDownline(group)">
           <ion-avatar item-start>
             <div [ngStyle]="groupMemberImage(group.profile_image)" class="group-member-image"></div>
           </ion-avatar>

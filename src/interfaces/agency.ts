@@ -21,6 +21,7 @@ export interface points {
 }
 
 export interface agency {
+  pk: number;
   name: string;
   owner?: owner;
   industry: string;

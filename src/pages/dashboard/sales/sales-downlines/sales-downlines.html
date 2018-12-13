@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-navbar>
     <ion-title>
       <img img-title src="../../../../assets/imgs/squalify.png" alt="squalify">
@@ -14,30 +14,34 @@
   </ion-row>
 </ion-header>
 
-<ion-content padding [ngSwitch]="pageStatus">
+<ion-content [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to fetch downline" [retry]="fetch()"></fetch-error>
+  <fetch-error message="Failed to fetch downline" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <ion-item no-lines no-padding>
-      <ion-avatar class="avatar-margin-top" item-start>
-        <div class="profile-image"></div>
-      </ion-avatar>
-      <h5>{{name}}</h5>
-      <p>{{designation}}</p>
-      <ion-chip color="primary" item-end *ngIf="downline && downline > 0">
-        <ion-label color="white">View downline{{downline > 1 ? 's' : ''}}</ion-label>
-      </ion-chip>
-    </ion-item>
-    <ion-list>
-      <ion-item no-padding *ngFor="let member of downlines">
-        <ion-avatar class="avatar-margin-top" item-start>
-          <div class="profile-image"></div>
+    <ion-row class="partition" padding>
+      <ion-item no-lines no-padding>
+        <ion-avatar item-start>
+          <div [ngStyle]="viewProfileImage(profileImage)" class="profile-image"></div>
         </ion-avatar>
-        <h5>{{member.name}}</h5>
-        <p>{{member.designation}}</p>
-        <p>{{member.downline}} downline{{member.downline > 1 ? 's' : ''}}</p>
-        <h4 item-end>RM{{member.amount | numCommas}}</h4>
+        <h5>{{name}}</h5>
+        <p>{{designation}}</p>
       </ion-item>
-    </ion-list>
+    </ion-row>
+    <section padding-horizontal>
+      <h4 title>Downlines</h4>
+      <ion-list>
+        <ion-item no-padding *ngFor="let member of downlines" (tap)="navDownline(member)">
+          <ion-avatar class="avatar-margin-top" item-start>
+            <div class="profile-image" [ngStyle]="viewProfileImage(member.profile_image)"></div>
+          </ion-avatar>
+          <h5>{{member.name}}</h5>
+          <p>{{member.designation}}</p>
+          <p *ngIf="member.downline && member.downline > 0" ion-text color="primary">
+            <strong>{{member.downline}} downline{{member.downline > 1 ? 's' : ''}}</strong>
+          </p>
+          <h4 item-end>RM{{member.amount | numCommas}}</h4>
+        </ion-item>
+      </ion-list>
+    </section>
   </ng-container>
 </ion-content>
