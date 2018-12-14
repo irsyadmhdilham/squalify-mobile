@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import * as socketio from 'socket.io-client';
 
 import { post } from "../../../interfaces/post";
 import { PostProvider } from "../../../providers/post/post";
@@ -29,6 +30,8 @@ export class PostDetailPage {
   comments = [];
   message = '';
   commentsLoaded = false;
+  company: string;
+  io = socketio(this.postProvider.wsBaseUrl('comment'));
 
   constructor(
     public navCtrl: NavController,
@@ -128,10 +131,19 @@ export class PostDetailPage {
     return false;
   }
 
+  async incomingComment() {
+    const agencyId = await this.postProvider.agencyId(),
+          userId = await this.postProvider.userId();
+    this.io.on(`${this.company}:${agencyId}`, data => {
+      if (data.comment.commented_by.pk !== userId && data.index !== this.index) {
+        this.comments.push(data.comment);
+      }
+    });
+  }
+
   ionViewDidLoad() {
     const post: post = this.navParams.get('post');
-    const index = this.navParams.get('index');
-    this.index = index;
+    this.index = this.navParams.get('index');
     this.pk = post.pk;
     this.name = post.posted_by.name;
     this.profileImage = post.posted_by.profile_image;
@@ -140,8 +152,10 @@ export class PostDetailPage {
     this.monthlySales = parseFloat(post.monthly_sales);
     this.date = new Date(post.timestamp);
     this.likes = post.likes;
+    this.company = this.navParams.get('company');
     this.checkLiked();
     this.getComments();
+    this.incomingComment();
   }
 
   ionViewWillLeave() {
@@ -171,6 +185,11 @@ export class PostDetailPage {
         };
         this.message = '';
         this.comments.push(comment);
+        this.io.emit('new comment', {
+          namespace: `${this.company}:${agencyId}`,
+          index: this.index,
+          comment
+        });
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({

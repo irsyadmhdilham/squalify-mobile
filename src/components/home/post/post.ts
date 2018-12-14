@@ -1,5 +1,6 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { NavController, LoadingController } from "ionic-angular";
+import * as socketio from 'socket.io-client';
 
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
 import { PostProvider } from "../../../providers/post/post";
@@ -9,11 +10,13 @@ import { post } from "../../../interfaces/post";
   selector: 'post',
   templateUrl: 'post.html'
 })
-export class PostComponent {
+export class PostComponent implements OnChanges {
 
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @Input() data: post;
   @Input() likeAfterDetail;
+  @Input() company: string;
+  @Input() index: number;
   pk: number;
   postType: string;
   name: string;
@@ -27,6 +30,7 @@ export class PostComponent {
   comments: number;
   likes = [];
   likeId: number;
+  io = socketio(this.postProvider.wsBaseUrl('like'));
 
   constructor(
     private navCtrl: NavController,
@@ -80,6 +84,11 @@ export class PostComponent {
           liker: observe.liker.pk
         };
         this.likes.push(like);
+        this.io.emit('like', {
+          namespace: `${this.company}:${agencyId}`,
+          index: this.index,
+          like: true
+        });
       });
     } else {
       if (this.likeId) {
@@ -89,6 +98,11 @@ export class PostComponent {
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
+          this.io.emit('like', {
+            namespace: `${this.company}:${agencyId}`,
+            index: this.index,
+            like: false
+          });
         });
       }
     }
@@ -105,7 +119,9 @@ export class PostComponent {
 
   comment() {
     this.navCtrl.push(PostDetailPage, {
-      post: this.data
+      index: this.index,
+      post: this.data,
+      company: this.company
     });
   }
 

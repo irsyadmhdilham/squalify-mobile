@@ -55,11 +55,18 @@ export class ApiUrlModules extends Ids {
     super(storage);
   }
 
+  wsBaseUrl(namespace: string) {
+    if (isDevMode()) {
+      return `http://localhost:8040/${namespace}`;
+    }
+    return `https://ws.squalify.com/${namespace}`;
+  }
+
   apiBaseUrl() {
     if (isDevMode()) {
       return 'http://localhost:8030/v1';
     }
-    return 'http://api.squalify.com/v1';
+    return 'https://api.squalify.com/v1';
   }
 
   profileUrl(userId: number, url?: string) {
