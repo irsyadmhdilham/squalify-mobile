@@ -31,7 +31,8 @@ export class PostDetailPage {
   message = '';
   commentsLoaded = false;
   company: string;
-  io = socketio(this.postProvider.wsBaseUrl('comment'));
+  commentio = socketio(this.postProvider.wsBaseUrl('comment'));
+  likeio = socketio(this.postProvider.wsBaseUrl('like'));
 
   constructor(
     public navCtrl: NavController,
@@ -91,7 +92,7 @@ export class PostDetailPage {
     } else {
       if (this.likeId) {
         const i = this.likes.findIndex(val => val.liker === userId);
-        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(observe => {
+        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(() => {
           loading.dismiss();
           this.likeId = undefined;
           this.liked = false;
@@ -134,9 +135,24 @@ export class PostDetailPage {
   async incomingComment() {
     const agencyId = await this.postProvider.agencyId(),
           userId = await this.postProvider.userId();
-    this.io.on(`${this.company}:${agencyId}`, data => {
+    this.commentio.on(`${this.company}:${agencyId}`, data => {
       if (data.comment.commented_by.pk !== userId && data.index !== this.index) {
         this.comments.push(data.comment);
+      }
+    });
+  }
+
+  async incomingLike() {
+    const agencyId = await this.postProvider.agencyId(),
+          userId = await this.postProvider.userId();
+    this.likeio.on(`${this.company}:${agencyId}`, data => {
+      if (data.liker !== userId) {
+        if (data.like) {
+          this.likes.push(data.likeObj);
+        } else {
+          const i = this.likes.findIndex(val => val.liker === data.liker);
+          this.likes.splice(i, 1);
+        }
       }
     });
   }
@@ -156,6 +172,7 @@ export class PostDetailPage {
     this.checkLiked();
     this.getComments();
     this.incomingComment();
+    this.incomingLike();
   }
 
   ionViewWillLeave() {
@@ -185,7 +202,7 @@ export class PostDetailPage {
         };
         this.message = '';
         this.comments.push(comment);
-        this.io.emit('new comment', {
+        this.commentio.emit('new comment', {
           namespace: `${this.company}:${agencyId}`,
           index: this.index,
           comment

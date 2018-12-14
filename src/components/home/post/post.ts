@@ -86,14 +86,16 @@ export class PostComponent implements OnChanges {
         this.likes.push(like);
         this.io.emit('like', {
           namespace: `${this.company}:${agencyId}`,
+          liker: userId,
           index: this.index,
-          like: true
+          like: true,
+          likeObj: like
         });
       });
     } else {
       if (this.likeId) {
         const i = this.likes.findIndex(val => val.liker === userId);
-        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(observe => {
+        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(() => {
           loading.dismiss();
           this.likeId = undefined;
           this.liked = false;
@@ -101,7 +103,8 @@ export class PostComponent implements OnChanges {
           this.io.emit('like', {
             namespace: `${this.company}:${agencyId}`,
             index: this.index,
-            like: false
+            like: false,
+            liker: userId
           });
         });
       }

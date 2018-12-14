@@ -90,6 +90,7 @@ export class HomePage {
       this.points = observe.points;
       this.receiveNewPost();
       this.incomingComment();
+      this.incomingLike();
     });
   }
 
@@ -144,6 +145,23 @@ export class HomePage {
     io.on(`${this.company}:${this.pk}`, data => {
       const i = data.index;
       this.posts[i].comments++;
+    });
+  }
+
+  incomingLike() {
+    const io = socketio(this.agencyProvider.wsBaseUrl('like'));
+    io.on(`${this.company}:${this.pk}`, async data => {
+      const i = data.index;
+      const userId = await this.agencyProvider.userId();
+      if (userId === data.liker) {
+        if (data.like) {
+          this.posts[i].likes.push(data.likeObj);
+        } else {
+          const likes = this.posts[i].likes;
+          const x = likes.findIndex(val => val.liker === data.liker);
+          likes.splice(x, 1);
+        }
+      }
     });
   }
 
