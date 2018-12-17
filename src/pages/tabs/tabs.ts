@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Events, Platform } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
+import { Deeplinks } from "@ionic-native/deeplinks";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -27,7 +28,8 @@ export class TabsPage extends Ids {
     public storage: Storage,
     private events: Events,
     private platform: Platform,
-    private firebase: Firebase
+    private firebase: Firebase,
+    private deepLinks: Deeplinks
   ) {
     super(storage);
   }
@@ -37,37 +39,41 @@ export class TabsPage extends Ids {
     if (userId) {
       this.signedIn = true;
     }
+    this.onOpenNotification();
   }
 
   signIn(value) {
     this.signedIn = value;
   }
 
-  async grantNotificationPermission() {
-    const isIOS = this.platform.is('ios');
-    const checkPerm = await this.firebase.hasPermission();
-    if (!checkPerm.isEnabled) {
-      if (isIOS) {
-        this.firebase.grantPermission();
-      }
-    }
-  }
-
-  onOpenNotification() {
-    this.firebase.onNotificationOpen().subscribe(observe => {
-      console.log(JSON.stringify(observe));
-    });
-  }
-
   ionViewDidLoad() {
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
     });
-    const cordova = this.platform.is('cordova');
-    if (cordova) {
-      this.grantNotificationPermission();
-      this.onOpenNotification();
-    }
+  }
+
+  deepLinkHandler() {
+    this.platform.ready().then(async () => {
+      const isCordova = await this.platform.is('cordova');
+      if (isCordova) {
+        this.deepLinks.route({
+          '/profile': ProfilePage
+        }).subscribe(match => {
+          console.log(match);
+        });
+      }
+    });
+  }
+
+  onOpenNotification() {
+    this.platform.ready().then(async () => {
+      const isCordova = await this.platform.is('cordova');
+      if (isCordova) {
+        this.firebase.onNotificationOpen().subscribe(observe => {
+          console.log(JSON.stringify(observe));
+        });
+      }
+    });
   }
 
 }

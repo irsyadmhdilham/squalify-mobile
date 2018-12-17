@@ -31,8 +31,7 @@ export class PostDetailPage {
   message = '';
   commentsLoaded = false;
   company: string;
-  commentio = socketio(this.postProvider.wsBaseUrl('comment'));
-  likeio = socketio(this.postProvider.wsBaseUrl('like'));
+  io = socketio(this.postProvider.wsBaseUrl('home'));
 
   constructor(
     public navCtrl: NavController,
@@ -75,12 +74,10 @@ export class PostDetailPage {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
     const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId();
-    const loading = this.loadingCtrl.create({content: 'Please wait...'});
-    loading.present();
+          userId = await this.postProvider.userId(),
+          namespace = `${this.company}:${agencyId}`;
     if (!this.liked) {
       this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
-        loading.dismiss();
         this.likeId = observe.pk;
         this.liked = true;
         const like = {
@@ -88,15 +85,16 @@ export class PostDetailPage {
           liker: observe.liker.pk
         };
         this.likes.push(like);
+        this.io.emit('like post', { namespace: namespace, index: this.index, like});
       });
     } else {
       if (this.likeId) {
         const i = this.likes.findIndex(val => val.liker === userId);
         this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(() => {
-          loading.dismiss();
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
+          this.io.emit('unlike post', { namespace: namespace, index: this.index, unliker: userId });
         });
       }
     }
@@ -132,27 +130,27 @@ export class PostDetailPage {
     return false;
   }
 
-  async incomingComment() {
+  async websocket() {
     const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId();
-    this.commentio.on(`${this.company}:${agencyId}`, data => {
+          userId = await this.postProvider.userId(),
+          namespace = `${this.company}:${agencyId}`;
+
+    this.io.on(`${namespace}:comment post`, data => {
       if (data.comment.commented_by.pk !== userId && data.index !== this.index) {
         this.comments.push(data.comment);
       }
     });
-  }
 
-  async incomingLike() {
-    const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId();
-    this.likeio.on(`${this.company}:${agencyId}`, data => {
-      if (data.liker !== userId) {
-        if (data.like) {
-          this.likes.push(data.likeObj);
-        } else {
-          const i = this.likes.findIndex(val => val.liker === data.liker);
-          this.likes.splice(i, 1);
-        }
+    this.io.on(`${namespace}:like post`, async data => {
+      if (data.like.liker !== userId) {
+        this.likes.push(data.like);
+      }
+    });
+
+    this.io.on(`${namespace}:unlike post`, async data => {
+      if (userId !== data.unliker) {
+        const i = this.likes.findIndex(val => val.liker === data.unliker);
+        this.likes.splice(i, 1);
       }
     });
   }
@@ -171,17 +169,7 @@ export class PostDetailPage {
     this.company = this.navParams.get('company');
     this.checkLiked();
     this.getComments();
-    this.incomingComment();
-    this.incomingLike();
-  }
-
-  ionViewWillLeave() {
-    this.navCtrl.getPrevious().data.like = {
-      postId: this.pk,
-      liked: this.liked,
-      likeId: this.likeId,
-      likes: this.likes
-    };
+    this.websocket();
   }
 
   async postComment() {
@@ -202,11 +190,7 @@ export class PostDetailPage {
         };
         this.message = '';
         this.comments.push(comment);
-        this.commentio.emit('new comment', {
-          namespace: `${this.company}:${agencyId}`,
-          index: this.index,
-          comment
-        });
+        this.io.emit('comment post', { namespace: `${this.company}:${agencyId}`, index: this.index, comment });
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({
@@ -218,6 +202,13 @@ export class PostDetailPage {
       });
     } else {
       this.textarea.setFocus();
+    }
+  }
+
+  ionViewWillLeave() {
+    this.navCtrl.getPrevious().data.likeStatus = {
+      index: this.index,
+      status: this.liked
     }
   }
 

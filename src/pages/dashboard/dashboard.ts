@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { Subscription } from "rxjs/Subscription";
-import { Network } from "@ionic-native/network";
 
 import { ContactsPage } from "./contacts/contacts";
 import { SchedulesPage } from "./schedules/schedules";
@@ -24,15 +22,12 @@ import { point } from "../../interfaces/point";
 export class DashboardPage {
 
   connected: boolean = true;
-  onConnect: Subscription;
-  onDisconnected: Subscription;
   todayPoint: point;
   dontShowToast = true;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private network: Network,
     private pointProvider: PointProvider,
     private alertCtrl: AlertController
   ) { }
@@ -68,18 +63,7 @@ export class DashboardPage {
   }
 
   ionViewDidEnter() {
-    this.onConnect = this.network.onConnect().subscribe(() => {
-      this.connected = true;
-    });
-    this.onDisconnected = this.network.onDisconnect().subscribe(() => {
-      this.connected = false;
-    });
     this.fetchTodayPoint();
-  }
-
-  ionViewWillLeave() {
-    this.onDisconnected.unsubscribe();
-    this.onConnect.unsubscribe();
   }
 
   fetchTodayPoint() {

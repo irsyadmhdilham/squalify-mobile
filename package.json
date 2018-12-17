@@ -23,6 +23,7 @@
     "@ionic-native/badge": "^4.18.0",
     "@ionic-native/call-number": "^4.18.0",
     "@ionic-native/core": "~4.15.0",
+    "@ionic-native/deeplinks": "^4.18.0",
     "@ionic-native/firebase": "^4.18.0",
     "@ionic-native/image-picker": "^4.17.0",
     "@ionic-native/network": "^4.17.0",
@@ -49,6 +50,7 @@
     "cordova-sqlite-storage": "^2.5.1",
     "crypto-js": "^3.1.9-1",
     "ionic-angular": "3.9.2",
+    "ionic-plugin-deeplinks": "1.0.17",
     "ionicons": "3.0.0",
     "moment": "^2.22.2",
     "mx.ferreyra.callnumber": "0.0.2",
@@ -79,7 +81,25 @@
       "cordova-plugin-badge": {},
       "mx.ferreyra.callnumber": {},
       "cordova-plugin-firebase": {},
-      "call-number": {}
+      "call-number": {},
+      "ionic-plugin-deeplinks": {
+        "URL_SCHEME": "squalify",
+        "DEEPLINK_SCHEME": "https",
+        "DEEPLINK_HOST": "squalify.com",
+        "ANDROID_PATH_PREFIX": "/",
+        "ANDROID_2_PATH_PREFIX": "/",
+        "ANDROID_3_PATH_PREFIX": "/",
+        "ANDROID_4_PATH_PREFIX": "/",
+        "ANDROID_5_PATH_PREFIX": "/",
+        "DEEPLINK_2_SCHEME": " ",
+        "DEEPLINK_2_HOST": " ",
+        "DEEPLINK_3_SCHEME": " ",
+        "DEEPLINK_3_HOST": " ",
+        "DEEPLINK_4_SCHEME": " ",
+        "DEEPLINK_4_HOST": " ",
+        "DEEPLINK_5_SCHEME": " ",
+        "DEEPLINK_5_HOST": " "
+      }
     },
     "platforms": [
       "ios",

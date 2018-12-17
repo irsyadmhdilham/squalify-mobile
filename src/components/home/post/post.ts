@@ -1,9 +1,8 @@
 import { Component, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
-import { NavController, LoadingController } from "ionic-angular";
-import * as socketio from 'socket.io-client';
+import { NavController } from "ionic-angular";
 
-import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
 import { PostProvider } from "../../../providers/post/post";
+import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
 import { post } from "../../../interfaces/post";
 
 @Component({
@@ -14,9 +13,12 @@ export class PostComponent implements OnChanges {
 
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @Input() data: post;
-  @Input() likeAfterDetail;
-  @Input() company: string;
   @Input() index: number;
+  @Input() likePost: any;
+  @Input() unlikePost: any;
+  @Input() commentPost: any;
+  @Input() company: string;
+  @Input() likeStatus: { index: number; status: boolean; }
   pk: number;
   postType: string;
   name: string;
@@ -26,16 +28,14 @@ export class PostComponent implements OnChanges {
   date: Date = new Date();
   location: string;
   taggedUsers = [];
-  liked = false;
   comments: number;
   likes = [];
+  liked = false;
   likeId: number;
-  io = socketio(this.postProvider.wsBaseUrl('like'));
 
   constructor(
-    private navCtrl: NavController,
     private postProvider: PostProvider,
-    private loadingCtrl: LoadingController
+    private navCtrl: NavController
   ) { }
 
   profileImageView() {
@@ -70,42 +70,24 @@ export class PostComponent implements OnChanges {
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId();
-    const loading = this.loadingCtrl.create({content: 'Please wait...'});
-    loading.present();
+    const userId = await this.postProvider.userId();
     if (!this.liked) {
-      this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
-        loading.dismiss();
-        this.likeId = observe.pk;
+      this.likePost().then(data => {
+        this.likeId = data.pk;
         this.liked = true;
         const like = {
-          ...observe,
-          liker: observe.liker.pk
+          ...data,
+          liker: data.liker.pk
         };
         this.likes.push(like);
-        this.io.emit('like', {
-          namespace: `${this.company}:${agencyId}`,
-          liker: userId,
-          index: this.index,
-          like: true,
-          likeObj: like
-        });
       });
     } else {
       if (this.likeId) {
-        const i = this.likes.findIndex(val => val.liker === userId);
-        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(() => {
-          loading.dismiss();
+        this.unlikePost(this.pk, this.likeId).then(() => {
+          const i = this.likes.findIndex(val => val.liker === userId);
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
-          this.io.emit('like', {
-            namespace: `${this.company}:${agencyId}`,
-            index: this.index,
-            like: false,
-            liker: userId
-          });
         });
       }
     }
@@ -122,13 +104,13 @@ export class PostComponent implements OnChanges {
 
   comment() {
     this.navCtrl.push(PostDetailPage, {
-      index: this.index,
+      company: this.company,
       post: this.data,
-      company: this.company
+      index: this.index
     });
   }
 
-  ngOnChanges() {
+  async ngOnChanges() {
     this.postType = this.data.post_type;
     this.name = this.data.posted_by.name;
     this.profileImage = this.data.posted_by.profile_image;
@@ -139,11 +121,10 @@ export class PostComponent implements OnChanges {
     this.likes = this.data.likes;
     this.pk = this.data.pk;
     this.checkLiked();
-    if (this.likeAfterDetail) {
-      if (this.pk === this.likeAfterDetail.postId) {
-        this.liked = this.likeAfterDetail.liked;
-        this.likeId = this.likeAfterDetail.likeId;
-        this.likes = this.likeAfterDetail.likes;
+    const likeStats = this.likeStatus;
+    if (likeStats) {
+      if (likeStats.index === this.index) {
+        this.liked = likeStats.status;
       }
     }
   }

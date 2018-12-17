@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
-import { Subscription } from "rxjs/Subscription";
-import { Network } from "@ionic-native/network";
 import * as socketio from "socket.io-client";
 
 import { AgencyProvider } from "../../providers/agency/agency";
+import { PostProvider } from "../../providers/post/post";
 import { post } from "../../interfaces/post";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
@@ -19,8 +18,6 @@ import { NotificationsPage } from '../notifications/notifications';
 })
 export class HomePage {
 
-  onConnect: Subscription;
-  onDisconnect: Subscription;
   connected: boolean = true;
   agencyImage: string;
   agencyName: string;
@@ -28,18 +25,19 @@ export class HomePage {
   company: string;
   newPost = 0;
   posts: post[] = [];
-  like;
+  likeStatus: { index: number, status: boolean; };
   points = {
     personal: 0,
     group: 0,
     agency: 0
   };
+  io = socketio(this.agencyProvider.wsBaseUrl('home'));
 
   constructor(
     public navCtrl: NavController,
-    private network: Network,
     private agencyProvider: AgencyProvider,
     private modalCtrl: ModalController,
+    private postProvider: PostProvider,
     private navParams: NavParams
   ) { }
 
@@ -56,26 +54,9 @@ export class HomePage {
     return false;
   }
 
-  ionViewDidEnter() {
-    this.onDisconnect = this.network.onDisconnect().subscribe(() => {
-      this.connected = false;
-    });
-
-    this.onConnect = this.network.onConnect().subscribe(() => {
-      this.connected = true;
-    });
-  }
-
   ionViewWillEnter() {
-    const like = this.navParams.get('like');
-    if (like) {
-      this.like = like;
-    }
-  }
-
-  ionViewWillLeave() {
-    this.onConnect.unsubscribe();
-    this.onDisconnect.unsubscribe();
+    const likeStatus = this.navParams.get('likeStatus');
+    this.likeStatus = likeStatus;
   }
 
   async fetch() {
@@ -88,9 +69,7 @@ export class HomePage {
       this.agencyName = observe.name;
       this.posts = observe.posts;
       this.points = observe.points;
-      this.receiveNewPost();
-      this.incomingComment();
-      this.incomingLike();
+      this.homeWs();
     });
   }
 
@@ -107,9 +86,8 @@ export class HomePage {
       return this.modalCtrl.create(component);
     };
     const newPost = () => {
-      const post = io('http://localhost:8040/post');
-      post.emit('new post', {
-        from: `${this.company}:${this.pk}`
+      this.io.emit('new post', {
+        namespace: `${this.company}:${this.pk}`
       });
     }
     switch (attribute) {
@@ -133,35 +111,30 @@ export class HomePage {
     }
   }
 
-  receiveNewPost() {
-    const io = socketio(this.agencyProvider.wsBaseUrl('post'));
-    io.on(`${this.company}:${this.pk}`, () => {
-      this.newPost += 1;
+  homeWs() {
+    const namespace = `${this.company}:${this.pk}`;
+    this.io.on(`${namespace}:new post`, () => {
+      this.newPost++;
     });
-  }
-
-  incomingComment() {
-    const io = socketio(this.agencyProvider.wsBaseUrl('comment'));
-    io.on(`${this.company}:${this.pk}`, data => {
+    
+    this.io.on(`${namespace}:comment post`, data => {
       const i = data.index;
-      this.posts[i].comments++;
+      const post = this.posts[i];
+      post.comments++;
     });
-  }
 
-  incomingLike() {
-    const io = socketio(this.agencyProvider.wsBaseUrl('like'));
-    io.on(`${this.company}:${this.pk}`, async data => {
-      const i = data.index;
-      const userId = await this.agencyProvider.userId();
-      if (userId === data.liker) {
-        if (data.like) {
-          this.posts[i].likes.push(data.likeObj);
-        } else {
-          const likes = this.posts[i].likes;
-          const x = likes.findIndex(val => val.liker === data.liker);
-          likes.splice(x, 1);
-        }
-      }
+    this.io.on(`${namespace}:like post`, data => {
+      const i = data.index,
+            like = data.like;
+      this.posts[i].likes.push(like);
+    });
+
+    this.io.on(`${namespace}:unlike post`, data => {
+      const i = data.index,
+            unliker = data.unliker;
+      const post = this.posts[i],
+            x = post.likes.findIndex(val => val.liker === unliker);
+      post.likes.splice(x, 1);
     });
   }
 
@@ -169,4 +142,22 @@ export class HomePage {
     this.fetch();
   }
 
+  likePost() {
+    return new Promise(async resolve => {
+      const agencyId = await this.postProvider.agencyId(),
+            userId = await this.postProvider.userId();
+      this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
+        resolve(observe);
+      });
+    });
+  }
+
+  unlikePost(postId, likeId) {
+    return new Promise(async resolve => {
+      const agencyId = await this.postProvider.agencyId();
+      this.postProvider.unlikePost(agencyId, postId, likeId).subscribe(() => {
+        resolve();
+      });
+    })
+  }
 }

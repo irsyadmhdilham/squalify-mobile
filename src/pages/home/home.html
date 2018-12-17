@@ -11,80 +11,74 @@
   </ion-navbar>
 </ion-header>
 
-<ng-container *ngIf="connected; then connectedBlock; else disconnectedBlock"></ng-container>
-<ng-template #connectedBlock>
-  <ion-content content-bg id="main">
-    <ion-row (tap)="fetchPosts()" *ngIf="newPost > 0" justify-content-center id="new-post-button">
-      <button ion-button clear>You got {{newPost}} new posts</button>
+<ion-content content-bg id="main">
+  <ion-row (tap)="fetchPosts()" *ngIf="newPost > 0" justify-content-center id="new-post-button">
+    <button ion-button clear>You got {{newPost}} new posts</button>
+  </ion-row>
+  <ion-grid padding id="top-container" class="container">
+    <ion-row>
+      <div [ngStyle]="agencyImageView()" id="agency-image"></div>
+      <div id="title">
+        <h4>Welcome to</h4>
+        <h5>{{agencyName}}</h5>
+      </div>
     </ion-row>
-    <ion-grid padding id="top-container" class="container">
-      <ion-row>
-        <div [ngStyle]="agencyImageView()" id="agency-image"></div>
-        <div id="title">
-          <h4>Welcome to</h4>
-          <h5>{{agencyName}}</h5>
+    <div id="create-container" margin-top>
+      <h6>Create</h6>
+      <ion-row justify-content-around>
+        <div class="create-wrapper">
+          <button (tap)="createPost('sales')" ion-button icon-only clear small="true">
+            <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
+          </button>
+          <p>Sales</p>
+        </div>
+        <div class="create-wrapper">
+          <button (tap)="createPost('contact')" ion-button icon-only clear small="true">
+            <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
+          </button>
+          <p>Contact</p>
+        </div>
+        <div class="create-wrapper">
+          <button (tap)="createPost('schedule')" ion-button icon-only clear small="true">
+            <ion-img width="28" height="28" src="../../assets/imgs/points/appointment.png"></ion-img>
+          </button>
+          <p>Schedule</p>
+        </div>
+        <div class="create-wrapper">
+          <button ion-button icon-only clear small="true">
+            <ion-img width="28" height="28" src="../../assets/imgs/points/field-work.png"></ion-img>
+          </button>
+          <p>Field work</p>
         </div>
       </ion-row>
-      <div id="create-container" margin-top>
-        <h6>Create</h6>
-        <ion-row justify-content-around>
-          <div class="create-wrapper">
-            <button (tap)="createPost('sales')" ion-button icon-only clear small="true">
-              <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
-            </button>
-            <p>Sales</p>
-          </div>
-          <div class="create-wrapper">
-            <button (tap)="createPost('contact')" ion-button icon-only clear small="true">
-              <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
-            </button>
-            <p>Contact</p>
-          </div>
-          <div class="create-wrapper">
-            <button (tap)="createPost('schedule')" ion-button icon-only clear small="true">
-              <ion-img width="28" height="28" src="../../assets/imgs/points/appointment.png"></ion-img>
-            </button>
-            <p>Schedule</p>
-          </div>
-          <div class="create-wrapper">
-            <button ion-button icon-only clear small="true">
-              <ion-img width="28" height="28" src="../../assets/imgs/points/field-work.png"></ion-img>
-            </button>
-            <p>Field work</p>
-          </div>
-        </ion-row>
-      </div>
-    </ion-grid>
-    <ion-grid padding id="points-container" class="container">
-      <h6 no-margin>Today points</h6>
-      <ion-row>
-        <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal}}</button>
-          <p text-center no-margin>Personal</p>
-        </ion-col>
-        <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency}}</button>
-          <p text-center no-margin>Agency</p>
-        </ion-col>
-        <ion-col class="points-wrapper">
-          <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group}}</button>
-          <p text-center no-margin>Group</p>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <ion-list *ngIf="posts.length > 0">
-      <post
-        *ngFor="let post of posts; index as i"
-        [company]="company"
-        [data]="post"
-        [index]="i"
-        [likeAfterDetail]="like"
-      ></post>
-    </ion-list>
-  </ion-content>
-</ng-template>
-<ng-template #disconnectedBlock>
-  <ion-content>
-    <no-connection></no-connection>
-  </ion-content>
-</ng-template>
+    </div>
+  </ion-grid>
+  <ion-grid padding id="points-container" class="container">
+    <h6 no-margin>Today points</h6>
+    <ion-row>
+      <ion-col class="points-wrapper">
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal}}</button>
+        <p text-center no-margin>Personal</p>
+      </ion-col>
+      <ion-col class="points-wrapper">
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency}}</button>
+        <p text-center no-margin>Agency</p>
+      </ion-col>
+      <ion-col class="points-wrapper">
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group}}</button>
+        <p text-center no-margin>Group</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list *ngIf="posts.length > 0">
+    <post
+      *ngFor="let post of posts; index as i"
+      [data]="post"
+      [index]="i"
+      [company]="company"
+      [likePost]="likePost"
+      [unlikePost]="unlikePost"
+      [likeStatus]="likeStatus"
+    ></post>
+  </ion-list>
+</ion-content>

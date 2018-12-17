@@ -51,20 +51,22 @@ export class Ids {
 
 export class ApiUrlModules extends Ids {
 
+  devIpAddress = 'http://192.168.0.5';
+
   constructor(public storage: Storage) {
     super(storage);
   }
 
   wsBaseUrl(namespace: string) {
     if (isDevMode()) {
-      return `http://localhost:8040/${namespace}`;
+      return `${this.devIpAddress}:8040/${namespace}`;
     }
     return `https://ws.squalify.com/${namespace}`;
   }
 
   apiBaseUrl() {
     if (isDevMode()) {
-      return 'http://localhost:8030/v1';
+      return `${this.devIpAddress}:8030/v1`;
     }
     return 'https://api.squalify.com/v1';
   }

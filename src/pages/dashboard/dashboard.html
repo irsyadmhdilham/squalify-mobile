@@ -11,48 +11,40 @@
   </ion-navbar>
 </ion-header>
 
-<ng-container *ngIf="connected; then connectedBlock; else disconnectedBlock"></ng-container>
-<ng-template #connectedBlock>
-  <ion-content content-bg>
-    <ion-grid padding-vertical>
-      <ion-row>
-        <ion-col (tap)="navigate('points')">
-          <img src="../assets/imgs/dashboard/points.png">
-          <p no-margin>Points</p>
-        </ion-col>
-        <ion-col (tap)="navigate('sales')">
-          <img src="../assets/imgs/dashboard/sales-report.png">
-          <p no-margin>Sales report</p>
-        </ion-col>
-        <ion-col (tap)="navigate('scoreboard')">
-          <img src="../assets/imgs/dashboard/scoreboard.png">
-          <p no-margin>Scoreboard</p>
-        </ion-col>
-        <ion-col (tap)="navigate('contacts')">
-          <img src="../assets/imgs/dashboard/referrals.png">
-          <p no-margin>Contacts</p>
-        </ion-col>
-      </ion-row>
-      <ion-row margin-top>
-        <ion-col (tap)="navigate('schedules')">
-          <img src="../assets/imgs/dashboard/schedules.png">
-          <p no-margin>Schedules</p>
-        </ion-col>
-        <ion-col (tap)="navigate('agency')">
-          <img src="../assets/imgs/dashboard/agency.png">
-          <p no-margin>Agency</p>
-        </ion-col>
-        <ion-col (tap)="navigate('group')">
-          <img src="../assets/imgs/dashboard/groups.png">
-          <p no-margin>Group</p>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    <point-panel [todayPoint]="todayPoint" [dontShowToast]="dontShowToast"></point-panel>
-  </ion-content>
-</ng-template>
-<ng-template #disconnectedBlock>
-  <ion-content>
-    <no-connection></no-connection>
-  </ion-content>
-</ng-template>
+<ion-content content-bg>
+  <ion-grid padding-vertical>
+    <ion-row>
+      <ion-col (tap)="navigate('points')">
+        <img src="../assets/imgs/dashboard/points.png">
+        <p no-margin>Points</p>
+      </ion-col>
+      <ion-col (tap)="navigate('sales')">
+        <img src="../assets/imgs/dashboard/sales-report.png">
+        <p no-margin>Sales report</p>
+      </ion-col>
+      <ion-col (tap)="navigate('scoreboard')">
+        <img src="../assets/imgs/dashboard/scoreboard.png">
+        <p no-margin>Scoreboard</p>
+      </ion-col>
+      <ion-col (tap)="navigate('contacts')">
+        <img src="../assets/imgs/dashboard/referrals.png">
+        <p no-margin>Contacts</p>
+      </ion-col>
+    </ion-row>
+    <ion-row margin-top>
+      <ion-col (tap)="navigate('schedules')">
+        <img src="../assets/imgs/dashboard/schedules.png">
+        <p no-margin>Schedules</p>
+      </ion-col>
+      <ion-col (tap)="navigate('agency')">
+        <img src="../assets/imgs/dashboard/agency.png">
+        <p no-margin>Agency</p>
+      </ion-col>
+      <ion-col (tap)="navigate('group')">
+        <img src="../assets/imgs/dashboard/groups.png">
+        <p no-margin>Group</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <point-panel [todayPoint]="todayPoint" [dontShowToast]="dontShowToast"></point-panel>
+</ion-content>
