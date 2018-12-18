@@ -6,6 +6,8 @@ export interface profile {
   name: string;
   designation: string;
   profile_image: string;
+  upline?: string; 
+  group_upline: number;
   agency: {
     pk: number;
     agency_image: string;

@@ -11,8 +11,10 @@ import { ScoreboardPage } from "./scoreboard/scoreboard";
 import { NotificationsPage } from "../notifications/notifications";
 
 import { PointProvider } from "../../providers/point/point";
+import { ProfileProvider } from "../../providers/profile/profile";
 
 import { point } from "../../interfaces/point";
+import { profile } from "../../interfaces/profile";
 
 @IonicPage()
 @Component({
@@ -23,12 +25,14 @@ export class DashboardPage {
 
   connected: boolean = true;
   todayPoint: point;
+  groupAgencyDetail: profile;
   dontShowToast = true;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private pointProvider: PointProvider,
+    private profileProvider: ProfileProvider,
     private alertCtrl: AlertController
   ) { }
 
@@ -62,8 +66,9 @@ export class DashboardPage {
     }
   }
 
-  ionViewDidEnter() {
+  ionViewDidLoad() {
     this.fetchTodayPoint();
+    this.getUplineGroup();
   }
 
   fetchTodayPoint() {
@@ -78,6 +83,13 @@ export class DashboardPage {
         });
         alert.present();
       });
+    });
+  }
+
+  async getUplineGroup() {
+    const userId = await this.profileProvider.userId();
+    this.profileProvider.getUplineGroup(userId).subscribe(observe => {
+      this.groupAgencyDetail = observe;
     });
   }
 

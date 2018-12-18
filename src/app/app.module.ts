@@ -29,6 +29,9 @@ import { Components } from "../components/components";
 //providers
 import { Providers } from "../providers/providers";
 
+//ngrx storemodule
+import { storeModule } from "./ngrx/store-module";
+
 @NgModule({
   declarations: [
     MyApp,
@@ -44,6 +47,7 @@ import { Providers } from "../providers/providers";
   ],
   imports: [
     BrowserModule,
+    storeModule,
     DirectivesModule,
     PipesModule,
     ComponentsModule,

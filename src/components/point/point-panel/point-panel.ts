@@ -1,8 +1,11 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ModalController, AlertController } from "ionic-angular";
+import * as socketio from "socket.io-client";
 
 import { PointLogsComponent } from "../point-logs/point-logs";
 import { Colors } from "../../../functions/colors";
+import { PointProvider } from "../../../providers/point/point";
+import { profile } from "../../../interfaces/profile";
 
 @Component({
   selector: 'point-panel',
@@ -12,6 +15,7 @@ export class PointPanelComponent implements OnChanges {
 
   @Input() todayPoint;
   @Input() dontShowToast;
+  @Input() groupAgencyDetail: profile;
   pointPk: number;
   productiveTopLine = {
     borderTop: `solid 0.55px ${Colors.lightGrey}`,
@@ -44,8 +48,13 @@ export class PointPanelComponent implements OnChanges {
     totalPoints = 0;
     totalProductivePoints = 0;
     totalCareerPoints = 0;
+    io = socketio(this.pointProvider.wsBaseUrl('home'));
   
-  constructor(private modalCtrl: ModalController, public alertCtrl: AlertController) { }
+  constructor(
+    private modalCtrl: ModalController,
+    public alertCtrl: AlertController,
+    private pointProvider: PointProvider
+  ) { }
 
   edit() {
     if (!this.editMode) {
@@ -102,6 +111,7 @@ export class PointPanelComponent implements OnChanges {
   updatePoint(value) {
     if (value.type === 'add') {
       this.totalPoints += value.point;
+      this.addAgencyGroupPoint(value.point);
       if (value.pointType === 'career') {
         this.totalCareerPoints += value.point;
       } else {
@@ -109,6 +119,7 @@ export class PointPanelComponent implements OnChanges {
       }
     } else {
       this.totalPoints -= value.point;
+      this.subtractAgencyGroupPoint(value.point);
       if (value.pointType === 'career') {
         this.totalCareerPoints -= value.point;
       } else {
@@ -119,6 +130,28 @@ export class PointPanelComponent implements OnChanges {
 
   getPointPk(value) {
     this.pointPk = value;
+  }
+
+  addAgencyGroupPoint(point: number) {
+    const agency = this.groupAgencyDetail.agency,
+          uplineGroup = this.groupAgencyDetail.group_upline;
+    const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
+          agencyNamespace = `${agency.company}:${agency.pk}`;
+    this.io.emit('add agency point', { point, namespace: agencyNamespace });
+    if (uplineGroup) {
+      this.io.emit('add group point', { point, namespace: groupNamespace });
+    }
+  }
+
+  subtractAgencyGroupPoint(point: number) {
+    const agency = this.groupAgencyDetail.agency,
+          uplineGroup = this.groupAgencyDetail.group_upline;
+    const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
+          agencyNamespace = `${agency.company}:${agency.pk}`;
+    this.io.emit('subtract agency point', { point, namespace: agencyNamespace });
+    if (uplineGroup) {
+      this.io.emit('subtract group point', { point, namespace: groupNamespace });
+    }
   }
 
 }

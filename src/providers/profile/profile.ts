@@ -33,4 +33,9 @@ export class ProfileProvider extends ApiUrlModules {
     return this.http.put<{Succeed: boolean}>(url, value);
   }
 
+  getUplineGroup(userId): Observable<profile> {
+    const url = this.profileUrl(userId, '?fields=upline_group,agency');
+    return this.http.get<profile>(url);
+  }
+
 }
