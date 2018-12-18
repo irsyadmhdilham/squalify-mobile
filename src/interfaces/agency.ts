@@ -24,10 +24,10 @@ export interface agency {
   pk: number;
   name: string;
   owner?: owner;
-  industry: string;
+  industry?: string;
   company: string;
   agency_image: string;
   posts?: post[];
-  members: member[];
+  members?: member[];
   points?: points
 }

@@ -32,6 +32,7 @@
     "@ionic/pro": "2.0.3",
     "@ionic/storage": "^2.2.0",
     "@ngrx/core": "^1.2.0",
+    "@ngrx/effects": "^5.2.0",
     "@ngrx/store": "^5.2.0",
     "@types/crypto-js": "^3.1.43",
     "@types/moment": "^2.13.0",

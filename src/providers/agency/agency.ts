@@ -11,7 +11,10 @@ import { post } from "../../interfaces/post";
 @Injectable()
 export class AgencyProvider extends ApiUrlModules {
 
-  constructor(public http: HttpClient, public storage: Storage) {
+  constructor(
+    public http: HttpClient,
+    public storage: Storage
+  ) {
     super(storage);
   }
 

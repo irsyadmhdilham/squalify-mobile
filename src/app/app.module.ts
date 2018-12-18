@@ -29,8 +29,9 @@ import { Components } from "../components/components";
 //providers
 import { Providers } from "../providers/providers";
 
-//ngrx storemodule
-import { storeModule } from "./ngrx/store-module";
+//ngrx modules
+import { storeModule } from "./store-module";
+import { effectsModule } from "./effects-module";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { storeModule } from "./ngrx/store-module";
   imports: [
     BrowserModule,
     storeModule,
+    effectsModule,
     DirectivesModule,
     PipesModule,
     ComponentsModule,
