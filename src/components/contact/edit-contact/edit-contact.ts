@@ -58,11 +58,11 @@ export class EditContactComponent {
     }
   }
 
-  updatePoint(userId): Promise<any> {
+  updatePoint(): Promise<any> {
     let point = this.point.app_sec.point,
         pk = this.point.pk,
         attrPk = this.point.app_sec.pk;
-    const update = new UpdatePoint(this.pointProvider, userId, pk, point, 'Appointment secured', attrPk, 2);
+    const update = new UpdatePoint(this.pointProvider, pk, point, 'Appointment secured', attrPk, 2);
     return new Promise<any>((resolve, reject) => {
       update.add().then(data => {
         resolve(data);
@@ -105,8 +105,7 @@ export class EditContactComponent {
         modal.onDidDismiss(cb => {
           if (cb) {
             data.scheduleId = cb.schedule.pk;
-            const userId = this.contactProvider.userId;
-            this.updatePoint(userId).then(() => {
+            this.updatePoint().then(() => {
               this.updateContactSubmit(data, 'add point', loading);
             });
           }

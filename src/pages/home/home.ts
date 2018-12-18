@@ -5,12 +5,12 @@ import { Store, select } from "@ngrx/store";
 import { Fetch } from "../../store/actions/profile.action";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
-import { map, catchError } from "rxjs/operators";
+import { map, catchError, take } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
 import { post } from "../../interfaces/post";
-import { agency } from "../../interfaces/agency";
+import { profile } from "../../interfaces/profile";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
@@ -24,7 +24,7 @@ import { NotificationsPage } from '../notifications/notifications';
 })
 export class HomePage {
 
-  agency: Observable<agency> = this.store.pipe(select('agency'));
+  agency: Observable<profile> = this.store.pipe(select('profile'));
   agencySubscription: Subscription;
   agencyName: string;
   pk: number;
@@ -45,7 +45,7 @@ export class HomePage {
     private modalCtrl: ModalController,
     private postProvider: PostProvider,
     private navParams: NavParams,
-    private store: Store<agency>
+    private store: Store<profile>
   ) { }
 
   navToNotifications() {
@@ -55,7 +55,7 @@ export class HomePage {
   agencyImageView(): Observable<any> {
     return this.agency.pipe(map(value => {
       return {
-        background: `url('${value.agency_image}') center center no-repeat / cover`
+        background: `url('${value.agency.agency_image}') center center no-repeat / cover`
       };
     }), catchError(err => err));
   }
@@ -129,13 +129,13 @@ export class HomePage {
     });
   }
 
-  async ionViewDidLoad() {
+  ionViewDidLoad() {
     this.store.dispatch(new Fetch())
     this.fetchPosts();
     this.agencySubscription = this.agency.subscribe(value => {
-      this.company = value.company;
-      this.pk = value.pk;
-      this.agencyName = value.name;
+      this.pk = value.agency.pk;
+      this.agencyName = value.agency.name;
+      this.company = value.agency.company;
       this.homeWs();
     });
   }

@@ -1,48 +1,32 @@
 import { isDevMode } from '@angular/core';
+import { Observable } from "rxjs";
+import { take } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 import { AES, enc } from "crypto-js";
 
 export class Ids {
-  userId: number | boolean;
-  agencyId: number | boolean;
+  userId$: Observable<number> = Observable.fromPromise(this.userPromise()).pipe(take(1));
+  agencyId$: Observable<number> = Observable.fromPromise(this.agencyPromise()).pipe(take(1));
 
-  constructor(public storage: Storage) {
-    this.storage.get('userId').then(value => {
-      if (!value) {
-        this.userId = false;
-      } else {
+  constructor(public storage: Storage) { }
+
+  userPromise(): Promise<number> {
+    return new Promise<number>(resolve => {
+      this.storage.get('userId').then(value => {
         const bytes =  AES.decrypt(value, 'secret user pk');
-        this.userId = parseInt(bytes.toString(enc.Utf8));
-      }
-    });
-
-    this.storage.get('agencyId').then(value => {
-      if (!value) {
-        this.agencyId = false;
-      } else {
-        const bytes =  AES.decrypt(value, 'secret agency pk');
-        this.agencyId = parseInt(bytes.toString(enc.Utf8));
-      }
+        resolve(parseInt(bytes.toString(enc.Utf8)));
+      });
     });
   }
 
-  // async agencyId() {
-  //   const getId = await this.storage.get('agencyId');
-  //   if (!getId) {
-  //     return false;
-  //   }
-  //   const bytes = AES.decrypt(getId, 'secret agency pk');
-  //   return parseInt(bytes.toString(enc.Utf8));
-  // }
-
-  // async userId() {
-  //   const data = await this.storage.get('userId');
-  //   if (!data) {
-  //     return false;
-  //   }
-  //   const bytes =  AES.decrypt(data, 'secret user pk');
-  //   return parseInt(bytes.toString(enc.Utf8));
-  // }
+  agencyPromise(): Promise<number> {
+    return new Promise<number>(resolve => {
+      this.storage.get('agencyId').then(value => {
+        const bytes =  AES.decrypt(value, 'secret agency pk');
+        resolve(parseInt(bytes.toString(enc.Utf8)));
+      });
+    })
+  }
 
   removeAllId(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
@@ -73,9 +57,13 @@ export class Ids {
 export class ApiUrlModules extends Ids {
 
   devIpAddress = 'http://192.168.0.5';
+  userId: number;
+  agencyId: number;
 
   constructor(public storage: Storage) {
     super(storage);
+    this.userId$.subscribe(userId => (this.userId = userId));
+    this.agencyId$.subscribe(agencyId => (this.agencyId = agencyId));
   }
 
   wsBaseUrl(namespace: string) {
@@ -104,10 +92,11 @@ export class ApiUrlModules extends Ids {
   }
 
   agencyUrl(url?: string) {
+    let agencyId = this.agencyId;
     if (!url) {
-      return `${this.apiBaseUrl()}/agency/${this.agencyId}`;
+      return `${this.apiBaseUrl()}/agency/${agencyId}`;
     }
-    return `${this.apiBaseUrl()}/agency/${this.agencyId}/${url}`;
+    return `${this.apiBaseUrl()}/agency/${agencyId}/${url}`;
   }
 
   otherUrl(url) {

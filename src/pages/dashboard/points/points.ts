@@ -33,10 +33,9 @@ export class PointsPage {
     }
   }
 
-  async fetch() {
-    const userId = await this.pointProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.pointProvider.getPoints(userId).subscribe(observe => {
+    this.pointProvider.getPoints().subscribe(observe => {
       this.pageStatus = undefined;
       const points = observe.map(val => {
         return {
@@ -50,10 +49,9 @@ export class PointsPage {
     });
   }
 
-  async fetchGroup() {
-    const userId = await this.pointProvider.userId();
+  fetchGroup() {
     this.pageStatus = 'loading';
-    this.pointProvider.getGroupPoints(userId).subscribe(observe => {
+    this.pointProvider.getGroupPoints().subscribe(observe => {
       this.pageStatus = undefined;
       this.groupMembers = observe;
     }, () => {

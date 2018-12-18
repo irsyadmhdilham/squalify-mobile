@@ -162,7 +162,7 @@ export class AddContactComponent {
       each = 2;
       attribute = 'FTF/Nesting/Booth';
     }
-    const update = new UpdatePoint(this.pointProvider, userId, pk, point, attribute, attrPk, each);
+    const update = new UpdatePoint(this.pointProvider, pk, point, attribute, attrPk, each);
     return new Promise<{attribute: string; data: any}>((resolve, reject) => {
       update.add().then(data => {
         resolve({attribute, data});

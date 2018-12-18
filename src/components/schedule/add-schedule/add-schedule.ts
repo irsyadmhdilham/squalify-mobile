@@ -105,7 +105,7 @@ export class AddScheduleComponent {
       };
       const userId = this.scheduleProvider.userId;
       if (this.appointmentSecured) {
-        this.updatePoint(userId).then(() => {
+        this.updatePoint().then(() => {
           this.addScheduleAction(data, loading, true);
         });
       } else {
@@ -152,11 +152,11 @@ export class AddScheduleComponent {
     });
   }
 
-  updatePoint(userId) {
+  updatePoint() {
     const points = this.points;
     const update = new UpdatePoint(
       this.pointProvider,
-      userId, points.pk,
+      points.pk,
       points.app_sec.point,
       'Appointment secured',
       points.app_sec.pk, 2);

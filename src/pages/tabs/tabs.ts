@@ -35,10 +35,11 @@ export class TabsPage extends Ids {
   }
 
   ionViewWillLoad() {
-    const userId = this.userId;
-    if (userId) {
-      this.signedIn = true;
-    }
+    this.userId$.subscribe(userId => {
+      if (userId) {
+        this.signedIn = true;
+      }
+    });
     this.onOpenNotification();
   }
 

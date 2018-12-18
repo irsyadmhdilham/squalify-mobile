@@ -62,10 +62,9 @@ export class ContactsPage {
     }
   }
 
-  callAnsweredHandler(userId, pointId, callPoint, contact: contact, index: number) {
+  callAnsweredHandler(pointId, callPoint, contact: contact, index: number) {
     const update = new UpdatePoint(
       this.pointProvider,
-      userId,
       pointId,
       callPoint.point,
       'Calls/Email/Socmed',
@@ -106,14 +105,13 @@ export class ContactsPage {
 
   call(contact: contact, index) {
     this.callNumber.callNumber(contact.contact_no, true).then(() => {
-      const userId = this.pointProvider.userId;
       this.pointProvider.getContactPoints().subscribe(observe => {
         const pointId = observe.pk,
               callPoint = observe.calls;       
         const actionSheet = this.actionSheetCtrl.create({
           title: 'Call answered',
           buttons: [
-            { text: 'Answered', handler: () => this.callAnsweredHandler(userId, pointId, callPoint, contact, index)},
+            { text: 'Answered', handler: () => this.callAnsweredHandler(pointId, callPoint, contact, index)},
             { text: 'Not answer' }
           ]
         });
