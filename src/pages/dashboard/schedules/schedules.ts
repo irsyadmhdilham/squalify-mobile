@@ -37,18 +37,16 @@ export class SchedulesPage {
 
   fetch() {
     this.pageStatus = 'loading';
-    this.scheduleProvider.userId().then(userId => {
-      this.scheduleProvider.getSchedules(userId).subscribe(observe => {
-        this.pageStatus = undefined;
-        this.schedules = observe.map(val => {
-          return {
-            ...val,
-            date: new Date(val.date)
-          }
-        });
-      }, () => {
-        this.pageStatus = 'error';
+    this.scheduleProvider.getSchedules().subscribe(observe => {
+      this.pageStatus = undefined;
+      this.schedules = observe.map(val => {
+        return {
+          ...val,
+          date: new Date(val.date)
+        }
       });
+    }, () => {
+      this.pageStatus = 'error';
     });
   }
 

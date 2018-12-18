@@ -13,30 +13,30 @@ export class ContactProvider extends ApiUrlModules {
     super(storage);
   }
 
-  addContact(userId, data: contact): Observable<any> {
-    const url = this.profileUrl(userId, 'contact/');
+  addContact(data: contact): Observable<any> {
+    const url = this.profileUrl('contact/');
     return this.http.post<any>(url, data);
   }
 
-  getContacts(userId, fields: string): Observable<contact[]> {
-    const url = this.profileUrl(userId, `contact?fields=${fields}`);
+  getContacts(fields: string): Observable<contact[]> {
+    const url = this.profileUrl(`contact?fields=${fields}`);
     return this.http.get<contact[]>(url);
   }
-  getContactDetail(userId, contactId: number): Observable<contact> {
-    const url = this.profileUrl(userId, `contact/${contactId}`);
+  getContactDetail(contactId: number): Observable<contact> {
+    const url = this.profileUrl(`contact/${contactId}`);
     return this.http.get<contact>(url);
   }
 
-  updateContact(userId, contactId: number, data: contact): Observable<contact> {
-    let url = this.profileUrl(userId, `contact/${contactId}/`);
+  updateContact(contactId: number, data: contact): Observable<contact> {
+    let url = this.profileUrl(`contact/${contactId}/`);
     if (data.scheduleId && data.status === 'Appointment secured') {
-      url = this.profileUrl(userId, `contact/${contactId}/?xtra=add-schedule`);
+      url = this.profileUrl(`contact/${contactId}/?xtra=add-schedule`);
     }
     return this.http.put<contact>(url, data);
   }
 
-  removeContact(userId, contactId: number): Observable<any> {
-    const url = this.profileUrl(userId, `contact/${contactId}`);
+  removeContact(contactId: number): Observable<any> {
+    const url = this.profileUrl(`contact/${contactId}`);
     return this.http.delete<any>(url);
   }
 

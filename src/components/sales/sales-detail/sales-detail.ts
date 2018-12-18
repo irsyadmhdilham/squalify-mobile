@@ -52,11 +52,10 @@ export class SalesDetailComponent {
     this.salesType = sales.sales_type;
   }
 
-  async removeSales() {
+  removeSales() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
-    const userId = await this.salesProvider.userId();
     loading.present();
-    this.salesProvider.removeSales(userId, this.pk).subscribe(() => {
+    this.salesProvider.removeSales(this.pk).subscribe(() => {
       loading.dismiss();
       this.viewCtrl.dismiss({
         removed: true,

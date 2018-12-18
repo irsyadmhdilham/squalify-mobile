@@ -105,10 +105,9 @@ export class ScoreboardPage {
     };
   }
 
-  async fetchSalesScore(period, salesType) {
-    const userId = await this.scoreboardProvider.userId();
+  fetchSalesScore(period, salesType) {
     this.pageStatus = 'loading';
-    this.scoreboardProvider.getSalesScore(userId, period, salesType).subscribe(observe => {
+    this.scoreboardProvider.getSalesScore(period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       const sales = observe.map(val => {
         return {
@@ -122,10 +121,9 @@ export class ScoreboardPage {
     });
   }
 
-  async fetchPointScore(period) {
-    const userId = await this.scoreboardProvider.userId();
+  fetchPointScore(period) {
     this.pageStatus = 'loading';
-    this.scoreboardProvider.getPointScore(userId, period).subscribe(observe => {
+    this.scoreboardProvider.getPointScore(period).subscribe(observe => {
       this.pageStatus = undefined;
       this.pointScorer = observe;
     }, () => {

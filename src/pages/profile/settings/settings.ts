@@ -48,9 +48,8 @@ export class SettingsPage {
     this.pushNotification = settings.notifications.push_notification;
   }
 
-  async updateEmailNotification(event) {
-    const userId = await this.profileProvider.userId();
-    this.profileProvider.updateEmailNotification(userId, { value: event.value }).subscribe(() => {
+  updateEmailNotification(event) {
+    this.profileProvider.updateEmailNotification({ value: event.value }).subscribe(() => {
       this.events.publish('settings:email-notification', event.value);
     });
   }

@@ -57,10 +57,9 @@ export class ContactDetailPage {
     }
   }
 
-  async getContact() {
-    const userId = await this.contactProvider.userId();
+  getContact() {
     this.pageStatus = 'loading';
-    this.contactProvider.getContactDetail(userId, this.pk).subscribe(observe => {
+    this.contactProvider.getContactDetail(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
       this.name = observe.name;
       this.status = observe.status;
@@ -119,19 +118,17 @@ export class ContactDetailPage {
       content: 'Please wait...'
     });
     loading.present();
-    this.contactProvider.userId().then(userId => {
-      this.contactProvider.removeContact(userId, this.pk).subscribe(() => {
-        loading.dismiss();
-        this.navCtrl.pop();
-      }, (err: Error) => {
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Error',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
+    this.contactProvider.removeContact(this.pk).subscribe(() => {
+      loading.dismiss();
+      this.navCtrl.pop();
+    }, (err: Error) => {
+      loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        subTitle: err.message,
+        buttons: ['Ok']
       });
+      alert.present();
     });
   }
 

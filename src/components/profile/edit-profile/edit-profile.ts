@@ -37,16 +37,14 @@ export class EditProfileComponent {
         content: 'Please wait...'
       });
       loading.present();
-      this.profileProvider.userId().then(userId => {
-        this.profileProvider.updateProfile(userId, {name: this.name}).subscribe(observe => {
-          loading.dismiss();
-          this.viewCtrl.dismiss({
-            name: observe.name,
-            profileImage: this.profileImage
-          });
-        }, () => {
-          loading.dismiss();
+      this.profileProvider.updateProfile({name: this.name}).subscribe(observe => {
+        loading.dismiss();
+        this.viewCtrl.dismiss({
+          name: observe.name,
+          profileImage: this.profileImage
         });
+      }, () => {
+        loading.dismiss();
       });
     } catch (err) {
       const alert = this.alertCtrl.create({

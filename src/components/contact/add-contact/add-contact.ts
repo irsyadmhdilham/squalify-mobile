@@ -95,11 +95,11 @@ export class AddContactComponent {
     }
   }
 
-  async addContactAction(data: contact) {
+  addContactAction(data: contact) {
     const loading = this.loadingCtrl.create({ content: 'Please wait' });
-    const userId = await this.contactProvider.userId();
     loading.present();
-    this.contactProvider.addContact(userId, data).pipe(take(1)).subscribe(observe => {
+    const userId = this.pointProvider.userId
+    this.contactProvider.addContact(data).pipe(take(1)).subscribe(observe => {
       this.updatePoint(data.contact_type, userId).then(res => {
         loading.dismiss();
         const toast = this.toastCtrl.create({
@@ -133,9 +133,8 @@ export class AddContactComponent {
     });
   }
 
-  async getContactPoints() {
-    const userId = await this.pointProvider.userId();
-    this.pointProvider.getContactPoints(userId).subscribe(observe => {
+  getContactPoints() {
+    this.pointProvider.getContactPoints().subscribe(observe => {
       this.point = observe;
     });
   }

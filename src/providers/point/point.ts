@@ -19,53 +19,53 @@ export class PointProvider extends ApiUrlModules {
     super(storage);
   }
 
-  createPoint(userId, add: boolean, data: any): Observable<point> {
-    const url = this.profileUrl(userId, 'point/');
+  createPoint(add: boolean, data: any): Observable<point> {
+    const url = this.profileUrl('point/');
     return this.http.post<point>(url, { ...data, add });
   }
 
-  updatePoint(userId, pointId: number, add: boolean, data: any): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}/?add=${add}`);
+  updatePoint(pointId: number, add: boolean, data: any): Observable<point> {
+    const url = this.profileUrl(`point/${pointId}/?add=${add}`);
     return this.http.put<point>(url, data);
   }
 
-  getPoints(userId): Observable<point[]> {
-    const url = this.profileUrl(userId, 'point');
+  getPoints(): Observable<point[]> {
+    const url = this.profileUrl('point');
     return this.http.get<point[]>(`${url}?fields=pk,date,total`);
   }
 
-  getTodayPoint(userId): Observable<point[]> {
-    const url = this.profileUrl(userId, 'point');
+  getTodayPoint(): Observable<point[]> {
+    const url = this.profileUrl('point');
     return this.http.get<point[]>(`${url}?mode=today`);
   }
 
-  getPointLogs(userId, pointId: number): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}?type=point_logs`);
+  getPointLogs(pointId: number): Observable<point> {
+    const url = this.profileUrl(`point/${pointId}?type=point_logs`);
     return this.http.get<point>(url);
   }
 
-  getPointDetail(userId, pointId: number): Observable<point> {
-    const url = this.profileUrl(userId, `point/${pointId}`);
+  getPointDetail(pointId: number): Observable<point> {
+    const url = this.profileUrl(`point/${pointId}`);
     return this.http.get<point>(url);
   }
 
-  getContactPoints(userId): Observable<contactPoints> {
-    const url = this.profileUrl(userId, 'point/contact');
+  getContactPoints(): Observable<contactPoints> {
+    const url = this.profileUrl('point/contact');
     return this.http.get<contactPoints>(url);
   }
 
-  getGroupPoints(userId): Observable<groupPoint[]> {
-    const url = this.profileUrl(userId, 'point/group');
+  getGroupPoints(): Observable<groupPoint[]> {
+    const url = this.profileUrl('point/group');
     return this.http.get<groupPoint[]>(url);
   }
 
-  getGroupMemberPoints(userId, memberId: number): Observable<memberPoints[]> {
-    const url = this.profileUrl(userId, `point/group/${memberId}`);
+  getGroupMemberPoints(memberId: number): Observable<memberPoints[]> {
+    const url = this.profileUrl(`point/group/${memberId}`);
     return this.http.get<memberPoints[]>(url);
   }
 
-  getDownline(userId, memberId: number): Observable<groupPoint[]> {
-    const url = this.profileUrl(userId, `point/group/${memberId}/downline`);
+  getDownline(memberId: number): Observable<groupPoint[]> {
+    const url = this.profileUrl(`point/group/${memberId}/downline`);
     return this.http.get<groupPoint[]>(url);
   }
 

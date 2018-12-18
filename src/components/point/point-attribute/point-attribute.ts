@@ -98,7 +98,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     }
   }
 
-  async addAction() {
+  addAction() {
     const data = {
       pk: this.pk,
       point: this.point,
@@ -112,9 +112,8 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     });
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    const userId = await this.pointProvider.userId();
     if (this.pk) {
-      this.pointProvider.updatePoint(userId, this.pk, true, data).subscribe(observe => {
+      this.pointProvider.updatePoint(this.pk, true, data).subscribe(observe => {
         loading.dismiss();
         const attr = observe.attributes.filter(val => val.attribute === this.attribute)[0];
         this.attrPk = attr.pk;
@@ -131,7 +130,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
         alert.present();
       });
     } else {
-      this.pointProvider.createPoint(userId, true, data).subscribe(observe => {
+      this.pointProvider.createPoint(true, data).subscribe(observe => {
         loading.dismiss();
         this.updatePointPk.emit(observe.pk);
         const attribute = observe.attributes.filter(val => val.attribute === this.attribute)[0];

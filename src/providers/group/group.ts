@@ -13,8 +13,8 @@ export class GroupProvider extends ApiUrlModules {
     super(storage);
   }
 
-  getGroupDetail(userId): Observable<group> {
-    const url = this.profileUrl(userId, 'group');
+  getGroupDetail(userId: number): Observable<group> {
+    const url = this.profileUrl('group', userId);
     return this.http.get<group>(url);
   }
 }

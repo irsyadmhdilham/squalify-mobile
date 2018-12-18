@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
 import * as socketio from "socket.io-client";
 import { Store, select } from "@ngrx/store";
-import { FetchAgency } from "../../ngrx/actions/agency.action";
-import { map } from "rxjs/operators";
+import { Fetch } from "../../store/actions/profile.action";
 import { Observable } from "rxjs";
+import { Subscription } from "rxjs/Subscription";
+import { map, catchError } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
@@ -23,9 +24,9 @@ import { NotificationsPage } from '../notifications/notifications';
 })
 export class HomePage {
 
-  agency: Observable<agency> = this.store.pipe(select('agency'))
-  agencyImage: Observable<string> = this.agency.pipe(map(value => value.agency_image));
-  agencyName: Observable<string> = this.agency.pipe(map(value => value.name));
+  agency: Observable<agency> = this.store.pipe(select('agency'));
+  agencySubscription: Subscription;
+  agencyName: string;
   pk: number;
   company: string;
   newPost = 0;
@@ -51,12 +52,12 @@ export class HomePage {
     this.navCtrl.push(NotificationsPage);
   }
 
-  agencyImageView() {
+  agencyImageView(): Observable<any> {
     return this.agency.pipe(map(value => {
       return {
         background: `url('${value.agency_image}') center center no-repeat / cover`
       };
-    }));
+    }), catchError(err => err));
   }
 
   ionViewWillEnter() {
@@ -64,18 +65,8 @@ export class HomePage {
     this.likeStatus = likeStatus;
   }
 
-  async fetchBasicInfo() {
-    const agencyId = await this.agencyProvider.agencyId(),
-          userId = await this.agencyProvider.userId();
-    this.agencyProvider.getAgencyDetail(agencyId, 'pk,company,agency_image,name,points', userId).subscribe(observe => {
-      this.points = observe.points;
-      this.homeWs();
-    });
-  }
-
-  async fetchPosts() {
-    const agencyId = await this.agencyProvider.agencyId();
-    this.agencyProvider.getPosts(agencyId).subscribe(observe => {
+  fetchPosts() {
+    this.agencyProvider.getPosts().subscribe(observe => {
       this.newPost = 0;
       this.posts = observe;
     });
@@ -138,28 +129,35 @@ export class HomePage {
     });
   }
 
-  ionViewDidLoad() {
-    // this.fetchBasicInfo();
-    this.store.dispatch(new FetchAgency())
+  async ionViewDidLoad() {
+    this.store.dispatch(new Fetch())
     this.fetchPosts();
+    this.agencySubscription = this.agency.subscribe(value => {
+      this.company = value.company;
+      this.pk = value.pk;
+      this.agencyName = value.name;
+      this.homeWs();
+    });
   }
 
   likePost() {
-    return new Promise(async resolve => {
-      const agencyId = await this.postProvider.agencyId(),
-            userId = await this.postProvider.userId();
-      this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
+    return new Promise(resolve => {
+      const userId = this.postProvider.userId;
+      this.postProvider.likePost(this.pk, { userId }).subscribe(observe => {
         resolve(observe);
       });
     });
   }
 
   unlikePost(postId, likeId) {
-    return new Promise(async resolve => {
-      const agencyId = await this.postProvider.agencyId();
-      this.postProvider.unlikePost(agencyId, postId, likeId).subscribe(() => {
+    return new Promise(resolve => {
+      this.postProvider.unlikePost(postId, likeId).subscribe(() => {
         resolve();
       });
     })
+  }
+
+  ionViewDidLeave() {
+    this.agencySubscription.unsubscribe();
   }
 }

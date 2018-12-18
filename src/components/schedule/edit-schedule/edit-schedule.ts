@@ -73,11 +73,9 @@ export class EditScheduleComponent {
         remark: remark.value === '' ? null : remark.value
       };
       loading.present();
-      this.scheduleProvider.userId().then(userId => {
-        this.scheduleProvider.updateSchedule(userId, this.pk, data).subscribe(observe => {
-          loading.dismiss();
-          this.viewCtrl.dismiss(observe);
-        });
+      this.scheduleProvider.updateSchedule(this.pk, data).subscribe(observe => {
+        loading.dismiss();
+        this.viewCtrl.dismiss(observe);
       });
     } catch (err) {
       loading.dismiss();

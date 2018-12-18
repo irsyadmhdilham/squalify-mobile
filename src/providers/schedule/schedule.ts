@@ -13,28 +13,28 @@ export class ScheduleProvider extends ApiUrlModules {
     super(storage);
   }
 
-  addSchedule(userId, data: schedule): Observable<schedule> {
-    const url = this.profileUrl(userId, 'schedule/');
+  addSchedule(data: schedule): Observable<schedule> {
+    const url = this.profileUrl('schedule/');
     return this.http.post<schedule>(url, data)
   }
 
-  getSchedules(userId): Observable<schedule[]> {
-    const url = this.profileUrl(userId, 'schedule?fields=pk,title,date,location');
+  getSchedules(): Observable<schedule[]> {
+    const url = this.profileUrl('schedule?fields=pk,title,date,location');
     return this.http.get<schedule[]>(url);
   }
 
-  getScheduleDetail(userId, scheduleId: number): Observable<schedule> {
-    const url = this.profileUrl(userId, `schedule/${scheduleId}`);
+  getScheduleDetail(scheduleId: number): Observable<schedule> {
+    const url = this.profileUrl(`schedule/${scheduleId}`);
     return this.http.get<schedule>(url);
   }
 
-  removeSchedule(userId, scheduleId: number): Observable<null> {
-    const url = this.profileUrl(userId, `schedule/${scheduleId}`);
+  removeSchedule(scheduleId: number): Observable<null> {
+    const url = this.profileUrl(`schedule/${scheduleId}`);
     return this.http.delete<null>(url);
   }
 
-  updateSchedule(userId, scheduleId: number, data: schedule): Observable<schedule> {
-    const url = this.profileUrl(userId, `schedule/${scheduleId}/`);
+  updateSchedule(scheduleId: number, data: schedule): Observable<schedule> {
+    const url = this.profileUrl(`schedule/${scheduleId}/`);
     return this.http.put<schedule>(url, data);
   }
 

@@ -18,16 +18,16 @@ export class AgencyProvider extends ApiUrlModules {
     super(storage);
   }
 
-  getAgencyDetail(agencyId, fields?: string, userId?): Observable<agency> {
-    let url = this.agencyUrl(agencyId);
+  getAgencyDetail(fields?: string, userId?): Observable<agency> {
+    let url = this.agencyUrl();
     if (fields) {
-      url = this.agencyUrl(agencyId, `?u=${userId}&fields=${fields}`);
+      url = this.agencyUrl(`?u=${userId}&fields=${fields}`);
     }
     return this.http.get<agency>(url);
   }
 
-  getPosts(agencyId): Observable<post[]> {
-    const url = this.agencyUrl(agencyId, 'post');
+  getPosts(): Observable<post[]> {
+    const url = this.agencyUrl('post');
     return this.http.get<post[]>(url);
   }
 

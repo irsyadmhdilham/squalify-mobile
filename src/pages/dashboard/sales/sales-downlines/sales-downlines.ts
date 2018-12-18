@@ -95,10 +95,9 @@ export class SalesDownlinesPage {
     });
   }
 
-  async fetch(period: string, salesType: string) {
-    const userId = await this.salesProvider.userId();
+  fetch(period: string, salesType: string) {
     this.pageStatus = 'loading';
-    this.salesProvider.getGroupDownlineSales(userId, this.pk, period, salesType).subscribe(observe => {
+    this.salesProvider.getGroupDownlineSales(this.pk, period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       const downlines = observe.downlines.map(val => {
         return {

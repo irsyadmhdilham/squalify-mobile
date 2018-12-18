@@ -13,23 +13,23 @@ export class PostProvider extends ApiUrlModules {
     super(storage);
   }
 
-  postComment(agencyId, postId: number, data: any): Observable<comment> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/comment/`);
+  postComment(postId: number, data: any): Observable<comment> {
+    const url = this.agencyUrl(`post/${postId}/comment/`);
     return this.http.post<comment>(url, data);
   }
 
-  getComments(agencyId, postId: number): Observable<comment[]> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/comment`);
+  getComments(postId: number): Observable<comment[]> {
+    const url = this.agencyUrl(`post/${postId}/comment`);
     return this.http.get<comment[]>(url);
   }
 
-  likePost(agencyId, postId: number, data: { userId: any }): Observable<like> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/like/`);
+  likePost(postId: number, data: { userId: any }): Observable<like> {
+    const url = this.agencyUrl(`post/${postId}/like/`);
     return this.http.post<like>(url, data);
   }
 
-  unlikePost(agencyId, postId: number, likeId: number): Observable<null> {
-    const url = this.agencyUrl(agencyId, `post/${postId}/unlike/${likeId}`);
+  unlikePost(postId: number, likeId: number): Observable<null> {
+    const url = this.agencyUrl(`post/${postId}/unlike/${likeId}`);
     return this.http.delete<null>(url);
   }
 

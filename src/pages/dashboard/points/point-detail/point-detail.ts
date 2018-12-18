@@ -42,10 +42,9 @@ export class PointDetailPage {
     modal.present();
   }
 
-  async fetch() {
-    const userId = await this.pointProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.pointProvider.getPointDetail(userId, this.pk).subscribe(observe => {
+    this.pointProvider.getPointDetail(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
       this.productivePoints = observe.productive_point;
       this.careerPoints = observe.career_point;

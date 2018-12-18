@@ -158,10 +158,9 @@ export class SalesPage {
     });
   }
 
-  async fetchPersonalSales(period, salesType) {
-    const userId = await this.salesProvider.userId();
+  fetchPersonalSales(period, salesType) {
     this.pageStatus = 'loading';
-    this.salesProvider.getSales(userId, period, salesType).subscribe(observe => {
+    this.salesProvider.getSales(period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       this.personalSales = observe.map(val => {
         return {
@@ -175,10 +174,9 @@ export class SalesPage {
     });
   }
 
-  async fetchGroupSales(period, salesType) {
-    const userId = await this.salesProvider.userId();
+  fetchGroupSales(period, salesType) {
     this.pageStatus = 'loading';
-    this.salesProvider.getGroupSales(userId, period, salesType).subscribe(observe => {
+    this.salesProvider.getGroupSales(period, salesType).subscribe(observe => {
       this.pageStatus = undefined;
       const sales = observe.map(val => {
         return {

@@ -34,8 +34,8 @@ export class TabsPage extends Ids {
     super(storage);
   }
 
-  async ionViewWillLoad() {
-    const userId = await this.userId();
+  ionViewWillLoad() {
+    const userId = this.userId;
     if (userId) {
       this.signedIn = true;
     }

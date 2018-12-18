@@ -61,10 +61,9 @@ export class ScheduleDetailPage {
     });
   }
 
-  async getDetail() {
-    const userId = await this.scheduleProvider.userId();
+  getDetail() {
     this.pageStatus = 'loading';
-    this.scheduleProvider.getScheduleDetail(userId, this.pk).subscribe(observe => {
+    this.scheduleProvider.getScheduleDetail(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
       this.date = new Date(observe.date);
       this.title = observe.title;
@@ -91,21 +90,19 @@ export class ScheduleDetailPage {
 
   remove() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
-    this.scheduleProvider.userId().then(userId => {
-      loading.present();
-      this.scheduleProvider.removeSchedule(userId, this.pk).subscribe(() => {
-        loading.dismiss();
-        this.navCtrl.pop();
-      }, (err: Error) => {
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Error occured',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
-      })
-    });
+    loading.present();
+    this.scheduleProvider.removeSchedule(this.pk).subscribe(() => {
+      loading.dismiss();
+      this.navCtrl.pop();
+    }, (err: Error) => {
+      loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Error occured',
+        subTitle: err.message,
+        buttons: ['Ok']
+      });
+      alert.present();
+    })
   }
 
   openContact(id: number) {

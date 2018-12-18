@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Observable } from "rxjs";
+import { Subscription } from "rxjs/Subscription";
+import { Store, select } from "@ngrx/store";
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { ContactsPage } from "./contacts/contacts";
@@ -68,28 +71,18 @@ export class DashboardPage {
 
   ionViewDidLoad() {
     this.fetchTodayPoint();
-    this.getUplineGroup();
   }
 
   fetchTodayPoint() {
-    this.pointProvider.userId().then(userId => {
-      this.pointProvider.getTodayPoint(userId).subscribe(observe => {
-        this.todayPoint = observe[0];
-      }, (err: Error) => {
-        const alert = this.alertCtrl.create({
-          title: 'Error has occured',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
+    this.pointProvider.getTodayPoint().subscribe(observe => {
+      this.todayPoint = observe[0];
+    }, (err: Error) => {
+      const alert = this.alertCtrl.create({
+        title: 'Error has occured',
+        subTitle: err.message,
+        buttons: ['Ok']
       });
-    });
-  }
-
-  async getUplineGroup() {
-    const userId = await this.profileProvider.userId();
-    this.profileProvider.getUplineGroup(userId).subscribe(observe => {
-      this.groupAgencyDetail = observe;
+      alert.present();
     });
   }
 

@@ -10,32 +10,27 @@ import { profile } from "../../interfaces/profile";
 export class ProfileProvider extends ApiUrlModules {
 
   constructor(public http: HttpClient, public storage: Storage) {
-    super(storage)
+    super(storage);
   }
 
-  getProfile(userId): Observable<profile> {
-    const url = this.profileUrl(userId);
+  getProfile(): Observable<profile> {
+    const url = this.profileUrl();
     return this.http.get<profile>(url);
   }
 
-  updateProfile(userId, data): Observable<profile> {
-    const url = this.profileUrl(userId);
+  updateProfile(data): Observable<profile> {
+    const url = this.profileUrl();
     return this.http.put<profile>(url, data);
   }
 
-  updatePushNotification(userId, data): Observable<any> {
-    const url = this.profileUrl(userId, 'settings/push-notifications/');
+  updatePushNotification(data): Observable<any> {
+    const url = this.profileUrl('settings/push-notifications/');
     return this.http.put<any>(url, data)
   }
 
-  updateEmailNotification(userId, value): Observable<{Succeed: boolean}> {
-    const url = this.profileUrl(userId, 'settings/email-notification/');
+  updateEmailNotification(value): Observable<{Succeed: boolean}> {
+    const url = this.profileUrl('settings/email-notification/');
     return this.http.put<{Succeed: boolean}>(url, value);
-  }
-
-  getUplineGroup(userId): Observable<profile> {
-    const url = this.profileUrl(userId, '?fields=upline_group,agency');
-    return this.http.get<profile>(url);
   }
 
 }

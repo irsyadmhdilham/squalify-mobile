@@ -3,25 +3,46 @@ import { Storage } from "@ionic/storage";
 import { AES, enc } from "crypto-js";
 
 export class Ids {
-  constructor(public storage: Storage) { }
+  userId: number | boolean;
+  agencyId: number | boolean;
 
-  async agencyId() {
-    const getId = await this.storage.get('agencyId');
-    if (!getId) {
-      return false;
-    }
-    const bytes = AES.decrypt(getId, 'secret agency pk');
-    return parseInt(bytes.toString(enc.Utf8));
+  constructor(public storage: Storage) {
+    this.storage.get('userId').then(value => {
+      if (!value) {
+        this.userId = false;
+      } else {
+        const bytes =  AES.decrypt(value, 'secret user pk');
+        this.userId = parseInt(bytes.toString(enc.Utf8));
+      }
+    });
+
+    this.storage.get('agencyId').then(value => {
+      if (!value) {
+        this.agencyId = false;
+      } else {
+        const bytes =  AES.decrypt(value, 'secret agency pk');
+        this.agencyId = parseInt(bytes.toString(enc.Utf8));
+      }
+    });
   }
 
-  async userId() {
-    const data = await this.storage.get('userId');
-    if (!data) {
-      return false;
-    }
-    const bytes =  AES.decrypt(data, 'secret user pk');
-    return parseInt(bytes.toString(enc.Utf8));
-  }
+  // async agencyId() {
+  //   const getId = await this.storage.get('agencyId');
+  //   if (!getId) {
+  //     return false;
+  //   }
+  //   const bytes = AES.decrypt(getId, 'secret agency pk');
+  //   return parseInt(bytes.toString(enc.Utf8));
+  // }
+
+  // async userId() {
+  //   const data = await this.storage.get('userId');
+  //   if (!data) {
+  //     return false;
+  //   }
+  //   const bytes =  AES.decrypt(data, 'secret user pk');
+  //   return parseInt(bytes.toString(enc.Utf8));
+  // }
 
   removeAllId(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
@@ -71,18 +92,22 @@ export class ApiUrlModules extends Ids {
     return 'https://api.squalify.com/v1';
   }
 
-  profileUrl(userId: number, url?: string) {
-    if (!url) {
-      return `${this.apiBaseUrl()}/profile/${userId}/`;
+  profileUrl(url?: string, userId?: number) {
+    let id = this.userId;
+    if (userId) {
+      id = userId;
     }
-    return `${this.apiBaseUrl()}/profile/${userId}/${url}`;
+    if (!url) {
+      return `${this.apiBaseUrl()}/profile/${id}/`;
+    }
+    return `${this.apiBaseUrl()}/profile/${id}/${url}`;
   }
 
-  agencyUrl(agencyId: number, url?: string) {
+  agencyUrl(url?: string) {
     if (!url) {
-      return `${this.apiBaseUrl()}/agency/${agencyId}`;
+      return `${this.apiBaseUrl()}/agency/${this.agencyId}`;
     }
-    return `${this.apiBaseUrl()}/agency/${agencyId}/${url}`;
+    return `${this.apiBaseUrl()}/agency/${this.agencyId}/${url}`;
   }
 
   otherUrl(url) {

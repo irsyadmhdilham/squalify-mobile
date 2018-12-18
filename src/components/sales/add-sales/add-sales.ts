@@ -45,10 +45,9 @@ export class AddSalesComponent {
     return false;
   }
 
-  async getCompany() {
+  getCompany() {
     this.screenStatus = 'loading';
-    const agencyId = await this.agencyProvider.agencyId();
-    this.agencyProvider.getAgencyDetail(agencyId, 'company').subscribe(observe => {
+    this.agencyProvider.getAgencyDetail('company').subscribe(observe => {
       this.screenStatus = undefined;
       this.company = observe.company;
     }, () => {
@@ -91,8 +90,7 @@ export class AddSalesComponent {
         data.repeat_sales = true;
       }
       loading.present();
-      const userId = await this.salesProvider.userId();
-      this.salesProvider.createSales(userId, data).subscribe(observe => {
+      this.salesProvider.createSales(data).subscribe(observe => {
         loading.dismiss();
         this.viewCtrl.dismiss({
           sales: observe

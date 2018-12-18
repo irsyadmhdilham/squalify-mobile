@@ -32,10 +32,9 @@ export class PointGroupMemberPage {
     };
   }
 
-  async fetch() {
-    const userId = await this.pointProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.pointProvider.getGroupMemberPoints(userId, this.pk).subscribe(observe => {
+    this.pointProvider.getGroupMemberPoints(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
       const points = observe.map(val => {
         return {

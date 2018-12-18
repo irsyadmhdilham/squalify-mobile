@@ -14,5 +14,5 @@ export interface profile {
     name: string;
     company: string;
   },
-  settings: settings;
+  settings?: settings;
 }

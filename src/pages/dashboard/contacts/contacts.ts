@@ -105,9 +105,9 @@ export class ContactsPage {
   }
 
   call(contact: contact, index) {
-    this.callNumber.callNumber(contact.contact_no, true).then(async () => {
-      const userId = await this.pointProvider.userId();
-      this.pointProvider.getContactPoints(userId).subscribe(observe => {
+    this.callNumber.callNumber(contact.contact_no, true).then(() => {
+      const userId = this.pointProvider.userId;
+      this.pointProvider.getContactPoints().subscribe(observe => {
         const pointId = observe.pk,
               callPoint = observe.calls;       
         const actionSheet = this.actionSheetCtrl.create({
@@ -141,13 +141,11 @@ export class ContactsPage {
 
   fetch() {
     this.pageStatus = 'loading';
-    this.contactProvider.userId().then(userId => {
-      this.contactProvider.getContacts(userId, 'pk,name,status,contact_type,contact_no').subscribe(observe => {
-        this.pageStatus = undefined;
-        this.contacts = observe;
-      }, () => {
-        this.pageStatus = 'error';
-      });
+    this.contactProvider.getContacts('pk,name,status,contact_type,contact_no').subscribe(observe => {
+      this.pageStatus = undefined;
+      this.contacts = observe;
+    }, () => {
+      this.pageStatus = 'error';
     });
   }
 
@@ -176,19 +174,17 @@ export class ContactsPage {
   updateContact(contact: contact, index: number) {
     const loading = this.loadingCtrl.create({ content: 'Please wait...' });
     loading.present();
-    this.contactProvider.userId().then(userId => {
-      this.contactProvider.updateContact(userId, contact.pk, contact).subscribe(observe => {
-        loading.dismiss();
-        this.contacts[index] = observe;
-      }, (err: Error) => {
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Error',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
+    this.contactProvider.updateContact(contact.pk, contact).subscribe(observe => {
+      loading.dismiss();
+      this.contacts[index] = observe;
+    }, (err: Error) => {
+      loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        subTitle: err.message,
+        buttons: ['Ok']
       });
+      alert.present();
     });
   }
 

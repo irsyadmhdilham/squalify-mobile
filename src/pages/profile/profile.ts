@@ -111,19 +111,17 @@ export class ProfilePage extends Ids {
 
   fetch() {
     this.pageStatus = 'loading';
-    this.profileProvider.userId().then(userId => {
-      this.profileProvider.getProfile(userId).subscribe(observe => {
-        this.pageStatus = undefined;
-        this.name = observe.name;
-        this.designation = observe.designation;
-        this.agency = observe.agency.name;
-        this.company = observe.agency.company;
-        this.profileImage = observe.profile_image;
-        this.settings = observe.settings;
-      }, () => {
-        this.pageStatus = 'error';
-      });
-    })
+    this.profileProvider.getProfile().subscribe(observe => {
+      this.pageStatus = undefined;
+      this.name = observe.name;
+      this.designation = observe.designation;
+      this.agency = observe.agency.name;
+      this.company = observe.agency.company;
+      this.profileImage = observe.profile_image;
+      this.settings = observe.settings;
+    }, () => {
+      this.pageStatus = 'error';
+    });
   }
 
   ionViewDidLoad() {

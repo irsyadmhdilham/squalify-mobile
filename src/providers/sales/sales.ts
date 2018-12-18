@@ -13,38 +13,38 @@ export class SalesProvider extends ApiUrlModules {
     super(storage);
   }
 
-  createSales(userId, data: sales): Observable<sales> {
-    const url = this.profileUrl(userId, 'sales/');
+  createSales(data: sales): Observable<sales> {
+    const url = this.profileUrl('sales/');
     return this.http.post<sales>(url, data);
   }
 
-  getSales(userId, period: string, salesType: string): Observable<sales[]> {
-    const url = this.profileUrl(userId, `sales/?p=${period}&t=${salesType}`);
+  getSales(period: string, salesType: string): Observable<sales[]> {
+    const url = this.profileUrl(`sales/?p=${period}&t=${salesType}`);
     return this.http.get<sales[]>(url);
   }
 
-  removeSales(userId, salesId): Observable<null> {
-    const url = this.profileUrl(userId, `sales/${salesId}`);
+  removeSales(salesId): Observable<null> {
+    const url = this.profileUrl(`sales/${salesId}`);
     return this.http.delete<null>(url);
   }
 
-  getPersonalSummary(userId, type: string): Observable<summary> {
-    const url = this.profileUrl(userId, `sales/personal-summary?q=${type}`);
+  getPersonalSummary(type: string): Observable<summary> {
+    const url = this.profileUrl(`sales/personal-summary?q=${type}`);
     return this.http.get<summary>(url);
   }
 
-  getGroupSales(userId, period: string, type?: string): Observable<groupSales[]> {
-    const url = this.profileUrl(userId, `sales/group/${period}/${type ? `?q=${type}` : ''}`);
+  getGroupSales(period: string, type?: string): Observable<groupSales[]> {
+    const url = this.profileUrl(`sales/group/${period}/${type ? `?q=${type}` : ''}`);
     return this.http.get<groupSales[]>(url);
   }
 
-  getGroupSummary(userId, type: string): Observable<any> {
-    const url = this.profileUrl(userId, `sales/group/summary?q=${type}`);
+  getGroupSummary(type: string): Observable<any> {
+    const url = this.profileUrl(`sales/group/summary?q=${type}`);
     return this.http.get<any>(url);
   }
 
-  getGroupDownlineSales(userId, memberId: number, period: string, type?: string): Observable<downlineSales> {
-    const url = this.profileUrl(userId, `sales/group/${memberId}/year/?q=total`);
+  getGroupDownlineSales(memberId: number, period: string, type?: string): Observable<downlineSales> {
+    const url = this.profileUrl(`sales/group/${memberId}/year/?q=total`);
     return this.http.get<downlineSales>(url);
   }
 

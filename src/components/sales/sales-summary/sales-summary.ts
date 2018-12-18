@@ -33,10 +33,9 @@ export class SalesSummaryComponent {
     this.viewCtrl.dismiss();
   }
 
-  async fetch() {
-    const userId = await this.salesProvider.userId();
+  fetch() {
     this.screenStatus = 'loading';
-    this.salesProvider.getPersonalSummary(userId, this.type).subscribe(observe => {
+    this.salesProvider.getPersonalSummary(this.type).subscribe(observe => {
       this.screenStatus = undefined;
       this.today = { sales: parseFloat(observe.today.sales), income: parseFloat(observe.today.income) };
       this.month = { sales: parseFloat(observe.month.sales), income: parseFloat(observe.month.income) };
@@ -47,10 +46,9 @@ export class SalesSummaryComponent {
     });
   }
 
-  async fetchGroup() {
-    const userId = await this.salesProvider.userId();
+  fetchGroup() {
     this.screenStatus = 'loading';
-    this.salesProvider.getGroupSummary(userId, this.type).subscribe(observe => {
+    this.salesProvider.getGroupSummary(this.type).subscribe(observe => {
       this.screenStatus = undefined;
       this.today = { sales: parseFloat(observe.today)};
       this.month = { sales: parseFloat(observe.month)};

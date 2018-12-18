@@ -18,10 +18,9 @@ export class PointDownlinesPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private pointProvider: PointProvider) {
   }
 
-  async fetch() {
-    const userId = await this.pointProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.pointProvider.getDownline(userId, this.pk).subscribe(observe => {
+    this.pointProvider.getDownline(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
       this.downlines = observe;
     }, () => {

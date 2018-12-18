@@ -24,11 +24,10 @@ export class PointLogsComponent {
     this.viewCtrl.dismiss();
   }
 
-  async fetch() {
+  fetch() {
     this.screenStatus = 'loading';
-    const userId = await this.pointProvider.userId();
     const pk = this.navParams.get('pk');
-    this.pointProvider.getPointLogs(userId, pk).subscribe(observe => {
+    this.pointProvider.getPointLogs(pk).subscribe(observe => {
       this.screenStatus = undefined;
       this.logs = observe.point_logs.map(val => {
         return {

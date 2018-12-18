@@ -31,9 +31,8 @@ export class PushNotificationsPage {
     this.update(data);
   }
 
-  async update(data) {
-    const userId = await this.profileProvider.userId();
-    this.profileProvider.updatePushNotification(userId, data).subscribe(observe => {
+  update(data) {
+    this.profileProvider.updatePushNotification(data).subscribe(observe => {
       this.events.publish('settings:push-notification', observe.data);
     });
   }

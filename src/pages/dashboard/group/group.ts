@@ -30,10 +30,9 @@ export class GroupPage {
     }
   }
 
-  async fetch() {
-    const userId = await this.groupProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.groupProvider.getGroupDetail(userId).subscribe(observe => {
+    this.groupProvider.getGroupDetail().subscribe(observe => {
       this.pageStatus = undefined;
       this.members = observe.members;
     }, () => {

@@ -68,16 +68,16 @@ export class PostDetailPage {
     }
   }
 
-  async like() {
+  like() {
     this.likeIcon.nativeElement.classList.add('like-button');
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId(),
+    const agencyId = this.postProvider.agencyId,
+          userId = this.postProvider.userId,
           namespace = `${this.company}:${agencyId}`;
     if (!this.liked) {
-      this.postProvider.likePost(agencyId, this.pk, { userId }).subscribe(observe => {
+      this.postProvider.likePost(this.pk, { userId }).subscribe(observe => {
         this.likeId = observe.pk;
         this.liked = true;
         const like = {
@@ -90,7 +90,7 @@ export class PostDetailPage {
     } else {
       if (this.likeId) {
         const i = this.likes.findIndex(val => val.liker === userId);
-        this.postProvider.unlikePost(agencyId, this.pk, this.likeId).subscribe(() => {
+        this.postProvider.unlikePost(this.pk, this.likeId).subscribe(() => {
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
@@ -100,8 +100,8 @@ export class PostDetailPage {
     }
   }
 
-  async checkLiked() {
-    const userId = await this.postProvider.userId();
+  checkLiked() {
+    const userId = this.postProvider.userId;
     const likes = this.likes.filter(val => val.liker === userId);
     if (likes.length > 0) {
       this.likeId = likes[0].pk;
@@ -109,9 +109,8 @@ export class PostDetailPage {
     }
   }
 
-  async getComments() {
-    const agencyId = await this.postProvider.agencyId();
-    this.postProvider.getComments(agencyId, this.pk).subscribe(observe => {
+  getComments() {
+    this.postProvider.getComments(this.pk).subscribe(observe => {
       this.commentsLoaded = true;
       const comments = observe.map(val => {
         return {
@@ -130,9 +129,9 @@ export class PostDetailPage {
     return false;
   }
 
-  async websocket() {
-    const agencyId = await this.postProvider.agencyId(),
-          userId = await this.postProvider.userId(),
+  websocket() {
+    const agencyId = this.postProvider.agencyId,
+          userId = this.postProvider.userId,
           namespace = `${this.company}:${agencyId}`;
 
     this.io.on(`${namespace}:comment post`, data => {
@@ -172,9 +171,9 @@ export class PostDetailPage {
     this.websocket();
   }
 
-  async postComment() {
-    const userId = await this.postProvider.userId();
-    const agencyId = await this.postProvider.agencyId();
+  postComment() {
+    const userId = this.postProvider.userId;
+    const agencyId = this.postProvider.agencyId;
     if (this.message !== '') {
       const data = {
         userId,
@@ -182,7 +181,7 @@ export class PostDetailPage {
       };
       const loading = this.loadingCtrl.create({content: 'Please wait...'});
       loading.present();
-      this.postProvider.postComment(agencyId, this.pk, data).subscribe(observe => {
+      this.postProvider.postComment(this.pk, data).subscribe(observe => {
         loading.dismiss();
         const comment = {
           ...observe,

@@ -26,10 +26,9 @@ export class AgencyPage {
     }
   }
 
-  async fetch() {
-    const agencyId = await this.agencyProvider.agencyId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.agencyProvider.getAgencyDetail(agencyId, 'members').subscribe(observe => {
+    this.agencyProvider.getAgencyDetail('members').subscribe(observe => {
       this.pageStatus = undefined;
       this.members = observe.members;
     }, () => {

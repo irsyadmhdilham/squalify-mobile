@@ -84,7 +84,7 @@ export class AddScheduleComponent {
     });
   }
 
-  async addSchedule(title, date, location, remark) {
+  addSchedule(title, date, location, remark) {
     const loading = this.loadingCtrl.create({ content: 'Please wait...' });
     try {
       if (!title.valid) {
@@ -103,10 +103,10 @@ export class AddScheduleComponent {
         location: location.value,
         remark: remark.value === '' ? null : remark.value
       };
-      const userId = await this.scheduleProvider.userId();
+      const userId = this.scheduleProvider.userId;
       if (this.appointmentSecured) {
         this.updatePoint(userId).then(() => {
-          this.addScheduleAction(userId, data, loading, true);
+          this.addScheduleAction(data, loading, true);
         });
       } else {
         this.addScheduleAction(userId, data, loading);
@@ -121,8 +121,8 @@ export class AddScheduleComponent {
     }
   }
 
-  addScheduleAction(userId, data, loading, toast?) {
-    this.scheduleProvider.addSchedule(userId, data).pipe(take(1)).subscribe(observe => {
+  addScheduleAction(data, loading, toast?) {
+    this.scheduleProvider.addSchedule(data).pipe(take(1)).subscribe(observe => {
       loading.dismiss();
       if (toast) {
         const toast = this.toastCtrl.create({
@@ -167,9 +167,8 @@ export class AddScheduleComponent {
     });
   }
 
-  async ionViewDidLoad() {
-    const userId = await this.pointProvider.userId();
-    this.pointProvider.getContactPoints(userId).subscribe(observe => {
+  ionViewDidLoad() {
+    this.pointProvider.getContactPoints().subscribe(observe => {
       this.points = observe;
     });
     const appSec = this.navParams.get('appointmentSecured');

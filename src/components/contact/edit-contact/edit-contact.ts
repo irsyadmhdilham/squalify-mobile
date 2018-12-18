@@ -102,10 +102,10 @@ export class EditContactComponent {
       if (statusNgModel.value === 'Appointment secured' && statusNgModel.dirty && this.point) {
         const modal = this.modalCtrl.create(AddScheduleComponent);
         modal.present();
-        modal.onDidDismiss(async cb => {
+        modal.onDidDismiss(cb => {
           if (cb) {
             data.scheduleId = cb.schedule.pk;
-            const userId = await this.contactProvider.userId();
+            const userId = this.contactProvider.userId;
             this.updatePoint(userId).then(() => {
               this.updateContactSubmit(data, 'add point', loading);
             });
@@ -128,45 +128,42 @@ export class EditContactComponent {
     if (!type) {
       loading.present();
     }
-    this.contactProvider.userId().then(userId => {
-      this.contactProvider.updateContact(userId, this.pk, data).subscribe(observe => {
-        loading.dismiss();
-        const toast = this.toastCtrl.create({
-          message: `Point added, Total Appointment secured point: ${this.point.app_sec.point + 2}`,
-          position: 'top',
-          duration: 1500
-        });
-        const data = {
-          name: observe.name,
-          status: observe.status,
-          contact_type: observe.contact_type,
-          contact_no: observe.contact_no,
-          remark: observe.remark,
-          edited: true
-        }
-        if (type) {
-          toast.present();
-          toast.onDidDismiss(() => {
-            this.viewCtrl.dismiss({...data});
-          });
-        } else {
-          this.viewCtrl.dismiss({...data});
-        }
-      }, (err: Error) => {
-        loading.dismiss();
-        const alert = this.alertCtrl.create({
-          title: 'Error',
-          subTitle: err.message,
-          buttons: ['Ok']
-        });
-        alert.present();
+    this.contactProvider.updateContact(this.pk, data).subscribe(observe => {
+      loading.dismiss();
+      const toast = this.toastCtrl.create({
+        message: `Point added, Total Appointment secured point: ${this.point.app_sec.point + 2}`,
+        position: 'top',
+        duration: 1500
       });
+      const data = {
+        name: observe.name,
+        status: observe.status,
+        contact_type: observe.contact_type,
+        contact_no: observe.contact_no,
+        remark: observe.remark,
+        edited: true
+      }
+      if (type) {
+        toast.present();
+        toast.onDidDismiss(() => {
+          this.viewCtrl.dismiss({...data});
+        });
+      } else {
+        this.viewCtrl.dismiss({...data});
+      }
+    }, (err: Error) => {
+      loading.dismiss();
+      const alert = this.alertCtrl.create({
+        title: 'Error',
+        subTitle: err.message,
+        buttons: ['Ok']
+      });
+      alert.present();
     });
   }
 
-  async getContactPoints() {
-    const userId = await this.pointProvider.userId();
-    this.pointProvider.getContactPoints(userId).subscribe(observe => {
+  getContactPoints() {
+    this.pointProvider.getContactPoints().subscribe(observe => {
       this.point = observe;
     });
   }

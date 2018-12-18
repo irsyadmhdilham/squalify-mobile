@@ -23,10 +23,9 @@ export class ContactListComponent {
     this.viewCtrl.dismiss();
   }
 
-  async fetch() {
-    const userId = await this.contactProvider.userId();
+  fetch() {
     this.pageStatus = 'loading';
-    this.contactProvider.getContacts(userId, 'pk,name,contact_no').subscribe(observe => {
+    this.contactProvider.getContacts('pk,name,contact_no').subscribe(observe => {
       this.pageStatus = undefined;
       this.contacts = observe;
     }, () => {

@@ -65,12 +65,12 @@ export class PostComponent implements OnChanges {
     }
   }
 
-  async like() {
+  like() {
     this.likeIcon.nativeElement.classList.add('like-button');
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    const userId = await this.postProvider.userId();
+    const userId = this.postProvider.userId;
     if (!this.liked) {
       this.likePost().then(data => {
         this.likeId = data.pk;
@@ -93,8 +93,8 @@ export class PostComponent implements OnChanges {
     }
   }
 
-  async checkLiked() {
-    const userId = await this.postProvider.userId();
+  checkLiked() {
+    const userId = this.postProvider.userId;
     const likes = this.likes.filter(val => val.liker === userId);
     if (likes.length > 0) {
       this.likeId = likes[0].pk;
