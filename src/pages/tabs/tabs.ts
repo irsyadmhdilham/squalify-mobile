@@ -35,7 +35,7 @@ export class TabsPage extends Ids {
   }
 
   ionViewWillLoad() {
-    this.userId$.subscribe(userId => {
+    this.userId().subscribe(userId => {
       if (userId) {
         this.signedIn = true;
       }

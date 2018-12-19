@@ -68,13 +68,13 @@ export class PostDetailPage {
     }
   }
 
-  like() {
+  async like() {
     this.likeIcon.nativeElement.classList.add('like-button');
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    const agencyId = this.postProvider.agencyId,
-          userId = this.postProvider.userId,
+    const agencyId = await this.postProvider.agencyId().toPromise(),
+          userId = await this.postProvider.userId().toPromise(),
           namespace = `${this.company}:${agencyId}`;
     if (!this.liked) {
       this.postProvider.likePost(this.pk, { userId }).subscribe(observe => {
@@ -100,8 +100,8 @@ export class PostDetailPage {
     }
   }
 
-  checkLiked() {
-    const userId = this.postProvider.userId;
+  async checkLiked() {
+    const userId = await this.postProvider.userId().toPromise();
     const likes = this.likes.filter(val => val.liker === userId);
     if (likes.length > 0) {
       this.likeId = likes[0].pk;
@@ -129,9 +129,9 @@ export class PostDetailPage {
     return false;
   }
 
-  websocket() {
-    const agencyId = this.postProvider.agencyId,
-          userId = this.postProvider.userId,
+  async websocket() {
+    const agencyId = await this.postProvider.agencyId().toPromise(),
+          userId = await this.postProvider.userId().toPromise(),
           namespace = `${this.company}:${agencyId}`;
 
     this.io.on(`${namespace}:comment post`, data => {
@@ -171,9 +171,9 @@ export class PostDetailPage {
     this.websocket();
   }
 
-  postComment() {
-    const userId = this.postProvider.userId;
-    const agencyId = this.postProvider.agencyId;
+  async postComment() {
+    const userId = await this.postProvider.userId().toPromise();
+    const agencyId = await this.postProvider.agencyId().toPromise();
     if (this.message !== '') {
       const data = {
         userId,

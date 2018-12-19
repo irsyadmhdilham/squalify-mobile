@@ -98,9 +98,8 @@ export class AddContactComponent {
   addContactAction(data: contact) {
     const loading = this.loadingCtrl.create({ content: 'Please wait' });
     loading.present();
-    const userId = this.pointProvider.userId
     this.contactProvider.addContact(data).pipe(take(1)).subscribe(observe => {
-      this.updatePoint(data.contact_type, userId).then(res => {
+      this.updatePoint(data.contact_type).then(res => {
         loading.dismiss();
         const toast = this.toastCtrl.create({
           message: `Point added, Total ${res.attribute} point: ${res.data.point}`,
@@ -147,7 +146,7 @@ export class AddContactComponent {
     }
   }
 
-  updatePoint(contactType: string, userId): Promise<{attribute: string; data: any}> {
+  updatePoint(contactType: string): Promise<{attribute: string; data: any}> {
     let point, pk, attrPk, attribute, each;
     if (contactType === 'Referral') {
       pk = this.point.pk;

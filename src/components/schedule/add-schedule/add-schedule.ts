@@ -84,7 +84,7 @@ export class AddScheduleComponent {
     });
   }
 
-  addSchedule(title, date, location, remark) {
+  async addSchedule(title, date, location, remark) {
     const loading = this.loadingCtrl.create({ content: 'Please wait...' });
     try {
       if (!title.valid) {
@@ -103,7 +103,7 @@ export class AddScheduleComponent {
         location: location.value,
         remark: remark.value === '' ? null : remark.value
       };
-      const userId = this.scheduleProvider.userId;
+      const userId = await this.scheduleProvider.userId().toPromise();
       if (this.appointmentSecured) {
         this.updatePoint().then(() => {
           this.addScheduleAction(data, loading, true);

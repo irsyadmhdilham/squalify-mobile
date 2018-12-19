@@ -93,8 +93,6 @@ export class ProfilePage extends Ids {
       this.removeAllId().then(value => {
         if (value) {
           loading.dismiss();
-          this.profileProvider.setUserId = undefined;
-          this.profileProvider.setAgencyId = undefined;
           this.events.publish('sign out', false);
         }
       });

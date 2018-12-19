@@ -1,24 +1,30 @@
 import { isDevMode } from '@angular/core';
 import { Observable } from "rxjs";
-import { take, map } from "rxjs/operators";
+import { map } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 import { AES, enc } from "crypto-js";
 
 export class Ids {
-  userId$: Observable<number | boolean> = Observable.fromPromise(this.userPromise());
-  agencyId$: Observable<number | boolean> = Observable.fromPromise(this.agencyPromise());
 
   constructor(public storage: Storage) { }
+
+  userId(): Observable<number | boolean> {
+    return Observable.fromPromise(this.userPromise());
+  }
+
+  agencyId(): Observable<number | boolean> {
+    return Observable.fromPromise(this.agencyPromise());
+  }
 
   userPromise(): Promise<number | boolean> {
     return new Promise<number | boolean>(resolve => {
       this.storage.get('userId').then(value => {
         if (!value) {
           resolve(false);
-          return;
+        } else {
+          const bytes =  AES.decrypt(value, 'secret user pk');
+          resolve(parseInt(bytes.toString(enc.Utf8)));
         }
-        const bytes =  AES.decrypt(value, 'secret user pk');
-        resolve(parseInt(bytes.toString(enc.Utf8)));
       });
     });
   }
@@ -28,10 +34,10 @@ export class Ids {
       this.storage.get('agencyId').then(value => {
         if (!value) {
           resolve(false);
-          return;
+        } else {
+          const bytes =  AES.decrypt(value, 'secret agency pk');
+          resolve(parseInt(bytes.toString(enc.Utf8)));
         }
-        const bytes =  AES.decrypt(value, 'secret agency pk');
-        resolve(parseInt(bytes.toString(enc.Utf8)));
       });
     })
   }
@@ -85,7 +91,7 @@ export class ApiUrlModules extends Ids {
   }
 
   profileUrl(url?: string, userId?: number) {
-    return this.userId$.pipe(map(value => {
+    return this.userId().pipe(map(value => {
       let id = value;
       if (userId) {
         id = userId;
@@ -94,16 +100,16 @@ export class ApiUrlModules extends Ids {
         return `${this.apiBaseUrl()}/profile/${id}/`;
       }
       return `${this.apiBaseUrl()}/profile/${id}/${url}`;
-    }), take(1))
+    }));
   }
 
   agencyUrl(url?: string): Observable<string> {
-    return this.agencyId$.pipe(map(agencyId => {
+    return this.agencyId().pipe(map(agencyId => {
       if (!url) {
         return `${this.apiBaseUrl()}/agency/${agencyId}`;
       }
       return `${this.apiBaseUrl()}/agency/${agencyId}/${url}`;
-    }), take(1));
+    }));
   }
 
   otherUrl(url) {

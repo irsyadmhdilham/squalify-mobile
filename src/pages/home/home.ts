@@ -141,8 +141,8 @@ export class HomePage {
   }
 
   likePost() {
-    return new Promise(resolve => {
-      const userId = this.postProvider.userId;
+    return new Promise(async resolve => {
+      const userId = await this.postProvider.userId().toPromise();
       this.postProvider.likePost(this.pk, { userId }).subscribe(observe => {
         resolve(observe);
       });
