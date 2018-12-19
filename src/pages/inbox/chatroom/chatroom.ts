@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, Content, Keyboard } from 'ionic-angular';
 
-import { content } from "../../../interfaces/chat";
+// import { content } from "../../../interfaces/chat";
 
 @IonicPage()
 @Component({
@@ -15,14 +15,7 @@ export class ChatroomPage {
   userId = '1';
   senderImage: string;
   senderName: string;
-  chats: content[] = [
-    { date: new Date(2018, 10, 8, 13, 47), senderId: '1', text: 'Hello world' },
-    { date: new Date(2018, 10, 8, 13, 48), senderId: '2', text: 'Hello world' },
-    { date: new Date(2018, 10, 8, 13, 49), senderId: '1', text: 'Hello world' },
-    { date: new Date(2018, 10, 8, 13, 49), senderId: '2', text: 'Hello world' },
-    { date: new Date(2018, 10, 8, 13, 49), senderId: '2', text: 'Manguk' },
-    { date: new Date(2018, 10, 8, 13, 50), senderId: '2', text: 'Hello world' }
-  ];
+  chats = [];
   keyboardDidShow;
 
   constructor(

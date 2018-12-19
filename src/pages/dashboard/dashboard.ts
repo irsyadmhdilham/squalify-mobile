@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { Store, select } from "@ngrx/store";
+import { Observable } from "rxjs";
 
 import { ContactsPage } from "./contacts/contacts";
 import { SchedulesPage } from "./schedules/schedules";
@@ -24,14 +26,15 @@ export class DashboardPage {
 
   connected: boolean = true;
   todayPoint: point;
-  groupAgencyDetail: profile;
+  profile: Observable<profile> = this.store.pipe(select('profile'));
   dontShowToast = true;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private pointProvider: PointProvider,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private store: Store<profile>
   ) { }
 
   navToNotifications() {

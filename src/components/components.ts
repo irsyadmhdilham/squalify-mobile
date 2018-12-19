@@ -1,5 +1,5 @@
 import { profileComponents } from "./profile/profile-components";
-import { InboxComposeComponent } from "./inbox-compose/inbox-compose";
+import { inboxComponents } from "./inbox/inbox-components";
 import { NoConnectionComponent } from "./no-connection/no-connection";
 
 import { ContactComponents } from "./contact/contact-components";
@@ -10,8 +10,8 @@ import { HomeComponents } from "./home/home-components";
 
 export const Components = [
   profileComponents,
-  InboxComposeComponent,
   NoConnectionComponent,
+  ...inboxComponents,
   ...ScheduleComponents,
   ...ContactComponents,
   ...PointComponents,

@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ModalController, AlertController } from "ionic-angular";
+import { Observable } from "rxjs";
+import { map, take } from 'rxjs/operators';
 import * as socketio from "socket.io-client";
 
 import { PointLogsComponent } from "../point-logs/point-logs";
@@ -15,7 +17,7 @@ export class PointPanelComponent implements OnChanges {
 
   @Input() todayPoint;
   @Input() dontShowToast;
-  @Input() groupAgencyDetail: profile;
+  @Input() profile: Observable<profile>;
   pointPk: number;
   productiveTopLine = {
     borderTop: `solid 0.55px ${Colors.lightGrey}`,
@@ -132,9 +134,9 @@ export class PointPanelComponent implements OnChanges {
     this.pointPk = value;
   }
 
-  addAgencyGroupPoint(point: number) {
-    const agency = this.groupAgencyDetail.agency,
-          uplineGroup = this.groupAgencyDetail.group_upline;
+  async addAgencyGroupPoint(point: number) {
+    const agency = await this.profile.pipe(map(val => val.agency), take(1)).toPromise(),
+          uplineGroup = await this.profile.pipe(map(val => val.group_upline), take(1)).toPromise();
     const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
           agencyNamespace = `${agency.company}:${agency.pk}`;
     this.io.emit('add agency point', { point, namespace: agencyNamespace });
@@ -143,9 +145,9 @@ export class PointPanelComponent implements OnChanges {
     }
   }
 
-  subtractAgencyGroupPoint(point: number) {
-    const agency = this.groupAgencyDetail.agency,
-          uplineGroup = this.groupAgencyDetail.group_upline;
+  async subtractAgencyGroupPoint(point: number) {
+    const agency = await this.profile.pipe(map(val => val.agency), take(1)).toPromise(),
+          uplineGroup = await this.profile.pipe(map(val => val.group_upline), take(1)).toPromise();
     const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
           agencyNamespace = `${agency.company}:${agency.pk}`;
     this.io.emit('subtract agency point', { point, namespace: agencyNamespace });

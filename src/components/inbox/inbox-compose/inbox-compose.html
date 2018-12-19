@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Compose chat</ion-title>
+  </ion-toolbar>
+  <ion-searchbar
+    [(ngModel)]="search"
+  ></ion-searchbar>
+</ion-header>
+
+<ion-content padding [ngSwitch]="screenStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to get member list" [retry]="getMembers()" *ngSwitchCase="'error'"></fetch-error>
+  <ion-list *ngSwitchDefault>
+    <ion-item (tap)="selectMember(member)" no-padding *ngFor="let member of members | chatMembersFilter:search">
+      <ion-avatar class="avatar-margin-top" item-start>
+        <div class="profile-image" [ngStyle]="profileImage(member.profile_image)"></div>
+      </ion-avatar>
+      <h5>{{member.name}}</h5>
+      <p>{{member.designation}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

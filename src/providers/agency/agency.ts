@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { agency } from "../../interfaces/agency";
+import { agency, member } from "../../interfaces/agency";
 import { post } from "../../interfaces/post";
 
 @Injectable()
@@ -33,6 +33,13 @@ export class AgencyProvider extends ApiUrlModules {
     const url = this.agencyUrl('post');
     return url.pipe(switchMap(url => {
       return this.http.get<post[]>(url);
+    }));
+  }
+
+  getAgencyMembers(): Observable<member[]> {
+    const url = this.agencyUrl('members');
+    return url.pipe(switchMap(url => {
+      return this.http.get<member[]>(url);
     }));
   }
 
