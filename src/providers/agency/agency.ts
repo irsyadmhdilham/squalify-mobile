@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
@@ -23,12 +24,16 @@ export class AgencyProvider extends ApiUrlModules {
     if (fields) {
       url = this.agencyUrl(`?u=${userId}&fields=${fields}`);
     }
-    return this.http.get<agency>(url);
+    return url.pipe(switchMap(value => {
+      return this.http.get<agency>(value);
+    }))
   }
 
   getPosts(): Observable<post[]> {
     const url = this.agencyUrl('post');
-    return this.http.get<post[]>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<post[]>(url);
+    }));
   }
 
 }

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
+import { switchMap } from 'rxjs/operators';
 
 import { ApiUrlModules } from "../../functions/config";
 import { group } from "../../interfaces/group";
@@ -15,6 +16,8 @@ export class GroupProvider extends ApiUrlModules {
 
   getGroupDetail(userId?: number): Observable<group> {
     const url = this.profileUrl('group', userId);
-    return this.http.get<group>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<group>(url);
+    }));
   }
 }

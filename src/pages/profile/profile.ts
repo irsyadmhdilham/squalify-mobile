@@ -89,11 +89,15 @@ export class ProfilePage extends Ids {
   _signOut() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    this.removeAllId().then(value => {
-      if (value) {
-        loading.dismiss();
-        this.events.publish('sign out', false);
-      }
+    this.profileProvider.signOut().subscribe(() => {
+      this.removeAllId().then(value => {
+        if (value) {
+          loading.dismiss();
+          this.profileProvider.setUserId = undefined;
+          this.profileProvider.setAgencyId = undefined;
+          this.events.publish('sign out', false);
+        }
+      });
     });
   }
 

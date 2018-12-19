@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Observable } from "rxjs";
-import { Subscription } from "rxjs/Subscription";
-import { Store, select } from "@ngrx/store";
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 
 import { ContactsPage } from "./contacts/contacts";
@@ -14,7 +11,6 @@ import { ScoreboardPage } from "./scoreboard/scoreboard";
 import { NotificationsPage } from "../notifications/notifications";
 
 import { PointProvider } from "../../providers/point/point";
-import { ProfileProvider } from "../../providers/profile/profile";
 
 import { point } from "../../interfaces/point";
 import { profile } from "../../interfaces/profile";
@@ -35,7 +31,6 @@ export class DashboardPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private pointProvider: PointProvider,
-    private profileProvider: ProfileProvider,
     private alertCtrl: AlertController
   ) { }
 

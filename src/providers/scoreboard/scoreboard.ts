@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 import { salesScore, pointScore } from "../../interfaces/scoreboard";
 
@@ -16,12 +17,16 @@ export class ScoreboardProvider extends ApiUrlModules {
 
   getSalesScore(period: string, salesType: string): Observable<salesScore[]> {
     let url = this.profileUrl(`sales/agency/${period}/?q=${salesType}`);
-    return this.http.get<salesScore[]>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<salesScore[]>(url);
+    }));
   }
 
   getPointScore(period: string): Observable<pointScore[]> {
     const url = this.profileUrl(`point/scoreboard/?q=${period}`);
-    return this.http.get<pointScore[]>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<pointScore[]>(url);
+    }));
   }
 
 }

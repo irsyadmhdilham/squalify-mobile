@@ -5,7 +5,7 @@ import { Store, select } from "@ngrx/store";
 import { Fetch } from "../../store/actions/profile.action";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
-import { map, catchError, take } from "rxjs/operators";
+import { map, catchError } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";

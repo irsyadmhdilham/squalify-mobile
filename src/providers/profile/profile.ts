@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 import { profile } from "../../interfaces/profile";
@@ -15,22 +16,37 @@ export class ProfileProvider extends ApiUrlModules {
 
   getProfile(): Observable<profile> {
     const url = this.profileUrl();
-    return this.http.get<profile>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<profile>(url);
+    }));
   }
 
   updateProfile(data): Observable<profile> {
     const url = this.profileUrl();
-    return this.http.put<profile>(url, data);
+    return url.pipe(switchMap(url => {
+      return this.http.put<profile>(url, data);
+    }));
   }
 
   updatePushNotification(data): Observable<any> {
     const url = this.profileUrl('settings/push-notifications/');
-    return this.http.put<any>(url, data)
+    return url.pipe(switchMap(url => {
+      return this.http.put<any>(url, data)
+    }));
   }
 
   updateEmailNotification(value): Observable<{Succeed: boolean}> {
     const url = this.profileUrl('settings/email-notification/');
-    return this.http.put<{Succeed: boolean}>(url, value);
+    return url.pipe(switchMap(url => {
+      return this.http.put<{Succeed: boolean}>(url, value);
+    }));
+  }
+
+  signOut(): Observable<{status: string}> {
+    const url = this.profileUrl('sign-out/');
+    return url.pipe(switchMap(url => {
+      return this.http.put<{status: string}>(url, {});
+    }));
   }
 
 }

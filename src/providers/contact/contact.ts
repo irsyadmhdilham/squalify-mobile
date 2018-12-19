@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 
 import { contact } from "../../interfaces/contact";
 import { ApiUrlModules } from "../../functions/config";
@@ -15,16 +16,22 @@ export class ContactProvider extends ApiUrlModules {
 
   addContact(data: contact): Observable<any> {
     const url = this.profileUrl('contact/');
-    return this.http.post<any>(url, data);
+    return url.pipe(switchMap(url => {
+      return this.http.post<any>(url, data);
+    }));
   }
 
   getContacts(fields: string): Observable<contact[]> {
     const url = this.profileUrl(`contact?fields=${fields}`);
-    return this.http.get<contact[]>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<contact[]>(url);
+    }));
   }
   getContactDetail(contactId: number): Observable<contact> {
     const url = this.profileUrl(`contact/${contactId}`);
-    return this.http.get<contact>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.get<contact>(url);
+    }));
   }
 
   updateContact(contactId: number, data: contact): Observable<contact> {
@@ -32,12 +39,16 @@ export class ContactProvider extends ApiUrlModules {
     if (data.scheduleId && data.status === 'Appointment secured') {
       url = this.profileUrl(`contact/${contactId}/?xtra=add-schedule`);
     }
-    return this.http.put<contact>(url, data);
+    return url.pipe(switchMap(url => {
+      return this.http.put<contact>(url, data);
+    }));
   }
 
   removeContact(contactId: number): Observable<any> {
     const url = this.profileUrl(`contact/${contactId}`);
-    return this.http.delete<any>(url);
+    return url.pipe(switchMap(url => {
+      return this.http.delete<any>(url);
+    }));
   }
 
 }
