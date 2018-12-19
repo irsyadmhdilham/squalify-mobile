@@ -44,7 +44,7 @@ export class PointPanelComponent implements OnChanges {
       { img: 'update.png', attribute: 'Update upline', each: 2 },
       { img: 'servicing.png', attribute: 'Servicing/Follow up', each: 1 },
       { img: 'coaching.png', attribute: 'Personal coaching', each: 1 },
-      { img: 'early.png', attribute: 'Be early training', each: 3 },
+      { img: 'early.png', attribute: 'Be early on training', each: 3 },
       { img: 'agency-program.png', attribute: 'Agency program', each: 5 }
     ];
     totalPoints = 0;
