@@ -29,10 +29,10 @@ export class PointLogsComponent {
     const pk = this.navParams.get('pk');
     this.pointProvider.getPointLogs(pk).subscribe(observe => {
       this.screenStatus = undefined;
-      this.logs = observe.point_logs.map(val => {
+      this.logs = observe.logs.map(val => {
         return {
           ...val,
-          time: new Date(val.time)
+          time: new Date(val.timestamp)
         };
       });
     });
@@ -43,7 +43,7 @@ export class PointLogsComponent {
   }
 
   pointColor(log: log) {
-    if (log.type === 'add') {
+    if (log.point_type === 'Add') {
       return { color: Colors.secondary };
     }
     return { color: Colors.danger };

@@ -31,7 +31,7 @@ export class PointDetailPage {
   ) { }
 
   pointColor(log: log) {
-    if (log.type === 'add') {
+    if (log.point_type === 'Add') {
       return { color: Colors.secondary };
     }
     return { color: Colors.danger };
@@ -49,7 +49,7 @@ export class PointDetailPage {
       this.productivePoints = observe.productive_point;
       this.careerPoints = observe.career_point;
       this.total = observe.total;
-      this.logs = observe.point_logs;
+      this.logs = observe.logs;
       this.date = new Date(observe.date);
       this.point = observe;
     }, () => {

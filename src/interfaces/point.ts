@@ -5,8 +5,8 @@ export interface attribute {
 }
 
 export interface log {
-  type: string;
-  time: string;
+  point_type: string;
+  timestamp: string;
   point: number;
   attribute: string
 }
@@ -15,7 +15,7 @@ export interface point {
   pk?: number;
   attributes: attribute[]
   date: any;
-  point_logs: log[];
+  logs: log[];
   productive_point: number;
   career_point: number;
   total: number;

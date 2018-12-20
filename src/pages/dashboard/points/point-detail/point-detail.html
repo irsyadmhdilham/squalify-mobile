@@ -31,7 +31,7 @@
       <ion-item no-padding *ngFor="let log of logs">
         <ion-row justify-content-between>
           <div>
-            <h3 class="time" ion-text color="primary">{{log.time | date:'h:mma'}}</h3>
+            <h3 class="time" ion-text color="primary">{{log.timestamp | date:'h:mma'}}</h3>
             <p ion-text color="dark" class="attribute">{{log.attribute}}</p>
           </div>
           <div>

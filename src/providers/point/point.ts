@@ -49,7 +49,7 @@ export class PointProvider extends ApiUrlModules {
   }
 
   getPointLogs(pointId: number): Observable<point> {
-    const url = this.profileUrl(`point/${pointId}?type=point_logs`);
+    const url = this.profileUrl(`point/${pointId}?type=logs`);
     return url.pipe(switchMap(url => {
       return this.http.get<point>(url);
     }));
