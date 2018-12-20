@@ -37,9 +37,10 @@ export class InboxComposeComponent {
 
   getMembers() {
     this.screenStatus = 'loading';
-    this.agencyProvider.getAgencyMembers().subscribe(members => {
+    this.agencyProvider.getAgencyMembers().subscribe(async members => {
       this.screenStatus = undefined;
-      this.members = members;
+      const userId = await this.agencyProvider.userId().toPromise();
+      this.members = members.filter(val => val.pk !== userId);
     }, () => {
       this.screenStatus = 'error';
     })

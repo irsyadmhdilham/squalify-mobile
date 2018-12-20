@@ -11,6 +11,7 @@
 
 <ion-content padding [ngSwitch]="screenStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error *ngSwitchCase="'error'" message="Failed to get logs" [retry]="fetch.bind(this)"></fetch-error>
   <ng-container *ngSwitchDefault>
     <ion-list>
       <ion-item no-padding *ngFor="let log of logs">

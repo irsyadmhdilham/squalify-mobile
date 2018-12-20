@@ -35,6 +35,8 @@ export class PointLogsComponent {
           time: new Date(val.timestamp)
         };
       });
+    }, () => {
+      this.screenStatus = 'error';
     });
   }
 

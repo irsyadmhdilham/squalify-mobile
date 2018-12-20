@@ -8,6 +8,7 @@ import { AuthProvider } from './auth/auth';
 import { AgencyProvider } from "./agency/agency";
 import { GroupProvider } from "./group/group";
 import { ScoreboardProvider } from "./scoreboard/scoreboard";
+import { InboxProvider } from "./inbox/inbox";
 
 export const Providers = [
   ContactProvider,
@@ -19,5 +20,6 @@ export const Providers = [
   AuthProvider,
   AgencyProvider,
   GroupProvider,
-  ScoreboardProvider
+  ScoreboardProvider,
+  InboxProvider
 ];

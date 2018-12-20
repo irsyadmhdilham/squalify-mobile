@@ -14,7 +14,7 @@
 
 <ion-content padding [ngSwitch]="screenStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to get member list" [retry]="getMembers()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to get member list" [retry]="getMembers.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ion-list *ngSwitchDefault>
     <ion-item (tap)="selectMember(member)" no-padding *ngFor="let member of members | chatMembersFilter:search">
       <ion-avatar class="avatar-margin-top" item-start>

@@ -16,7 +16,7 @@
 
 <ion-content padding [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to retrieve points" [retry]="segment === 'personal' ? fetch() : fetchGroup()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to retrieve points" [retry]="segment === 'personal' ? fetch.bind(this) : fetchGroup.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <h5 title>points</h5>
     <ng-container [ngSwitch]="segment">

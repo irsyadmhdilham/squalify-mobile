@@ -27,7 +27,7 @@
   <ng-container *ngSwitchCase="'sales'">
     <ng-container [ngSwitch]="pageStatus">
       <loading type="list" *ngSwitchCase="'loading'"></loading>
-      <fetch-error message="Failed to retrieve data" [retry]="fetchSalesScore()" *ngSwitchCase="'error'"></fetch-error>
+      <fetch-error message="Failed to retrieve data" [retry]="fetchSalesScore.bind(this)" *ngSwitchCase="'error'"></fetch-error>
       <ion-list *ngSwitchDefault>
         <ion-item no-padding *ngFor="let member of salesScorer; index as i">
           <ion-avatar item-start>
@@ -48,7 +48,7 @@
   <ng-container *ngSwitchCase="'point'">
     <ng-container [ngSwitch]="pageStatus">
       <loading type="list" *ngSwitchCase="'loading'"></loading>
-      <fetch-error message="Failed to retrieve data" [retry]="fetchPointScore()" *ngSwitchCase="'error'"></fetch-error>
+      <fetch-error message="Failed to retrieve data" [retry]="fetchPointScore.bind(this)" *ngSwitchCase="'error'"></fetch-error>
       <ion-list *ngSwitchDefault>
         <ion-item no-padding *ngFor="let member of pointScorer; index as i">
           <ion-avatar item-start>

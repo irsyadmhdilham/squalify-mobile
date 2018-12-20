@@ -6,7 +6,7 @@
 
 <ion-content [ngSwitch]="pageStatus">
   <loading type="form" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to get point logs" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to get point logs" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <ion-grid>
       <ion-row>

@@ -11,7 +11,7 @@
 
 <ion-content padding [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error *ngSwitchCase="'error'" message="Failed to fetch contacts" [retry]="fetch.bind(this)"></fetch-error>
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="contacts; then thenBlock; else elseBlock"></ng-container>
     <ng-template #thenBlock>

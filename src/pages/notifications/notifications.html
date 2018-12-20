@@ -8,7 +8,7 @@
 
 <ion-content padding [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to retrieve notifications" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to retrieve notifications" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ion-list *ngSwitchDefault>
     <ion-item no-padding *ngFor="let notif of notifications">
       <ion-avatar item-start>

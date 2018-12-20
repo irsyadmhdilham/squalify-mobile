@@ -8,7 +8,7 @@
 
 <ion-content [ngSwitch]="pageStatus">
   <loading type="profile" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to retrieve data" [retry]="getDownline()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to retrieve data" [retry]="getDownline.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <section padding id="profile-container">
       <div [ngStyle]="viewProfileImage()" id="profile-image"></div>

@@ -1,7 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
+import { NgModel } from "@angular/forms";
+import { Subscription } from "rxjs/Subscription";
 import { IonicPage, NavController, NavParams, Content, Keyboard } from 'ionic-angular';
 
-// import { content } from "../../../interfaces/chat";
+import { InboxProvider } from "../../../providers/inbox/inbox";
+import { chat } from "../../../interfaces/inbox";
+import { member } from "../../../interfaces/agency";
 
 @IonicPage()
 @Component({
@@ -11,26 +15,41 @@ import { IonicPage, NavController, NavParams, Content, Keyboard } from 'ionic-an
 export class ChatroomPage {
 
   @ViewChild(Content) content: Content;
-  id: string;
-  userId = '1';
-  senderImage: string;
-  senderName: string;
-  chats = [];
-  keyboardDidShow;
+  pk: number;
+  userId: number | boolean;
+  receiverId: number;
+  profileImage: string;
+  title: string;
+  messages = [];
+  keyboardDidShow: Subscription;
+  text = '';
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private keyboard: Keyboard
+    private keyboard: Keyboard,
+    private inboxProvider: InboxProvider
   ) { }
 
+  initializer() {
+    const chat: chat = this.navParams.get('chat');
+    const newChat: member = this.navParams.get('newChat');
+    if (newChat) {
+      this.title = newChat.name;
+      this.profileImage = newChat.profile_image;
+      this.receiverId = newChat.pk;
+    } else {
+      this.pk = chat.pk;
+      this.getChat();
+    }
+  }
+
   ionViewDidLoad() {
-    this.id = this.navParams.get('id');
-    this.senderName = this.navParams.get('name');
-    this.senderImage = this.navParams.get('image');
+    this.initializer();
     this.keyboardDidShow = this.keyboard.didShow.subscribe(() => {
       this.content.scrollToBottom();
-    })
+    });
+    this.inboxProvider.userId().subscribe(userId => this.userId = userId);
   }
 
   ionViewWillLeave() {
@@ -39,13 +58,13 @@ export class ChatroomPage {
 
   titleImage() {
     return {
-      background: `url('${this.senderImage}') center center no-repeat / cover`
+      background: `url('${this.profileImage}') center center no-repeat / cover`
     };
   }
 
   dateShow(senderId, index) {
-    const msg = this.chats[index],
-          upper = this.chats[index - 1];
+    const msg = this.messages[index],
+          upper = this.messages[index - 1];
     const msgYear = msg.date.getFullYear(),
           msgMonth = msg.date.getMonth(),
           msgDate = msg.date.getDate(),
@@ -67,7 +86,7 @@ export class ChatroomPage {
   }
 
   avatarShow(senderId, index) {
-    const below = this.chats[index + 1];
+    const below = this.messages[index + 1];
     if (below) {
       if (below.senderId === senderId) {
         return true;
@@ -80,6 +99,37 @@ export class ChatroomPage {
     return {
       justifyContent: senderId === this.userId ? 'flex-end' : false,
       marginBottom: this.avatarShow(senderId, i) && this.dateShow(senderId, i) ? '0.3em': false
+    }
+  }
+
+  getChat() {
+    this.inboxProvider.getChat(this.pk).subscribe(chat => {
+      this.messages = chat.messages;
+      if (chat.chat_type === 'Personal') {
+        this.profileImage = chat.composed_by.profile_image;
+        this.title = chat.composed_by.name;
+      } else {
+        this.title = chat.group_name;
+      }
+    });
+  }
+
+  sendMessage(msg: NgModel) {
+    if (msg.dirty) {
+      const data = {
+        text: msg.value,
+        receiverId: this.receiverId
+      };
+      if (!this.pk) {
+        this.inboxProvider.createInbox(data).subscribe(inbox => {
+          this.pk = inbox.chat.pk;
+          this.text = '';
+        });
+      } else {
+        this.inboxProvider.sendMessage(this.pk, data).subscribe(chat => {
+          console.log('sent message' ,chat);
+        });
+      }
     }
   }
 

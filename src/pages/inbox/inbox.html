@@ -18,23 +18,29 @@
 
 <ion-content padding>
   <h5 title>Inbox</h5>
-  <ng-container *ngIf="chats.length !== 0; then conversations; else empty"></ng-container>
-  <ng-template #conversations>
-    <ion-list>
-      <ion-item (tap)="toChatroom(chat.id, chat.senderName, chat.senderImage)" *ngFor="let chat of chats" no-padding>
-        <ion-avatar item-start>
-          <img src="{{chat.senderImage}}" alt="{{chat.name}}">
-        </ion-avatar>
-        <h6 [ngStyle]="chat.unread ? { fontWeight: 'bold' } : false">{{chat.senderName}}</h6>
-        <p>Hello world</p>
-        <ion-badge *ngIf="chat.unread" item-end>{{chat.unread}}</ion-badge>
-      </ion-item>
-    </ion-list>
-  </ng-template>
-  <ng-template #empty>
-    <section id="empty-inbox">
-      <img src="../../assets/imgs/inbox.png" alt="inbox">
-      <h4 ion-text color="grey">Your inbox is empty</h4>
-    </section>
-  </ng-template>
+  <ng-container [ngSwitch]="pageStatus">
+    <loading type="list" *ngSwitchCase="'loading'"></loading>
+    <fetch-error message="Failed to get inbox" [retry]="getInbox.bind(this)" *ngSwitchCase="'error'"></fetch-error>
+    <ng-container *ngSwitchDefault>
+      <ng-container *ngIf="inboxes.length !== 0; then conversations; else empty"></ng-container>
+      <ng-template #conversations>
+        <ion-list>
+          <ion-item (tap)="toChatroom(inbox.chat)" *ngFor="let inbox of inboxes" no-padding>
+            <ion-avatar class="avatar-margin-top" item-start>
+              <div [ngStyle]="profileImage(inbox.chat.composed_by.profile_image)" class="profile-image"></div>
+            </ion-avatar>
+            <h6>{{inbox.chat.composed_by.name}}</h6>
+            <p>Hello world</p>
+            <!-- <ion-badge *ngIf="chat.unread" item-end>{{chat.unread}}</ion-badge> -->
+          </ion-item>
+        </ion-list>
+      </ng-template>
+      <ng-template #empty>
+        <section id="empty-inbox">
+          <img src="../../assets/imgs/inbox.png" alt="inbox">
+          <h4 ion-text color="grey">Your inbox is empty</h4>
+        </section>
+      </ng-template>
+    </ng-container>
+  </ng-container>
 </ion-content>

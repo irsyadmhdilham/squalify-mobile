@@ -16,7 +16,7 @@
 
 <ion-content [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to fetch downline" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to fetch downline" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <ion-row class="partition" padding>
       <ion-item no-lines no-padding>

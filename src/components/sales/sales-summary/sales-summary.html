@@ -14,7 +14,7 @@
   <fetch-error
     *ngSwitchCase="'error'"
     message="Failed to retrive sales summary"
-    [retry]="segment === 'personal' ? fetch() : fetchGroup()"
+    [retry]="segment === 'personal' ? fetch.bind(this) : fetchGroup.bind(this)"
   ></fetch-error>
   <ion-list *ngSwitchDefault>
     <ion-item no-padding>

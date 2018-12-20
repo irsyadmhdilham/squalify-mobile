@@ -8,7 +8,7 @@
 
 <ion-content padding [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
-  <fetch-error message="Failed to retrieve downlines" [retry]="fetch()" *ngSwitchCase="'error'"></fetch-error>
+  <fetch-error message="Failed to retrieve downlines" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <h5 title>Downlines</h5>
     <ion-list>

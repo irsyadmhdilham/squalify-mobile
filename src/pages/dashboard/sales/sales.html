@@ -68,7 +68,7 @@
   <ng-container *ngSwitchCase="'group'">
     <ng-container [ngSwitch]="pageStatus">
       <loading type="list" *ngSwitchCase="'loading'"></loading>
-      <fetch-error message="Failed to retrieve data" [retry]="fetchGroupSales()" *ngSwitchCase="'error'"></fetch-error>      
+      <fetch-error message="Failed to retrieve data" [retry]="fetchGroupSales.bind(this)" *ngSwitchCase="'error'"></fetch-error>      
       <ion-list *ngSwitchDefault>
         <ion-item no-padding *ngFor="let group of groupSales" (tap)="navDownline(group)">
           <ion-avatar item-start>
