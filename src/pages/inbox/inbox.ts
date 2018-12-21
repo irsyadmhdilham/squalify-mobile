@@ -4,7 +4,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
-import { inbox, chat } from "../../interfaces/inbox";
+import { inbox, message } from "../../interfaces/inbox";
 import { member } from "../../interfaces/agency";
 import { ChatroomPage } from "./chatroom/chatroom";
 
@@ -34,8 +34,8 @@ export class InboxPage {
     };
   }
 
-  toChatroom(chat: chat, newChat?: member) {
-    this.navCtrl.push(ChatroomPage, { chat, newChat});
+  toChatroom(chatType: string, inbox: inbox, composeNew?: member) {
+    this.navCtrl.push(ChatroomPage, { inbox, composeNew, chatType });
   }
 
   composeChat() {
@@ -43,7 +43,7 @@ export class InboxPage {
     modal.present();
     modal.onDidDismiss((data: member) => {
       if (data) {
-        this.toChatroom(null, data);
+        this.toChatroom('personal', null, data);
       }
     });
   }
@@ -56,6 +56,11 @@ export class InboxPage {
     }, () => {
       this.pageStatus = 'error';
     });
+  }
+
+  lastMessage(messages: message[]) {
+    const len = messages.length;
+    return messages[len - 1].text;
   }
 
   ionViewDidLoad() {

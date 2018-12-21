@@ -6,7 +6,9 @@ import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { inbox, chat } from "../../interfaces/inbox";
+import { inbox, message } from "../../interfaces/inbox";
+
+type createInbox = inbox & { message: message };
 
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
@@ -22,24 +24,24 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
-  createInbox(data): Observable<inbox> {
+  getInboxDetail(inboxId: number): Observable<inbox> {
+    const url = this.profileUrl(`inbox/${inboxId}`);
+    return url.pipe(switchMap(url => {
+      return this.http.get<inbox>(url);
+    }));
+  }
+
+  createInbox(data): Observable<createInbox> {
     const url = this.profileUrl('inbox/');
     return url.pipe(switchMap(url => {
-      return this.http.post<inbox>(url, data);
+      return this.http.post<createInbox>(url, data);
     }));
   }
 
-  sendMessage(chatId: number, data): Observable<chat> {
+  sendMessage(chatId: number, data): Observable<message> {
     const url = this.profileUrl(`inbox/${chatId}/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<chat>(url, data);
-    }));
-  }
-
-  getChat(chatId: number): Observable<chat> {
-    const url = this.profileUrl(`inbox/${chatId}`);
-    return url.pipe(switchMap(url => {
-      return this.http.get<chat>(url);
+      return this.http.put<message>(url, data);
     }));
   }
 

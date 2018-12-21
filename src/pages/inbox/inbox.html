@@ -25,13 +25,13 @@
       <ng-container *ngIf="inboxes.length !== 0; then conversations; else empty"></ng-container>
       <ng-template #conversations>
         <ion-list>
-          <ion-item (tap)="toChatroom(inbox.chat)" *ngFor="let inbox of inboxes" no-padding>
+          <ion-item (tap)="toChatroom('personal', inbox)" *ngFor="let inbox of inboxes" no-padding>
             <ion-avatar class="avatar-margin-top" item-start>
-              <div [ngStyle]="profileImage(inbox.chat.composed_by.profile_image)" class="profile-image"></div>
+              <div [ngStyle]="profileImage(inbox.chat_with.profile_image)" class="profile-image"></div>
             </ion-avatar>
-            <h6>{{inbox.chat.composed_by.name}}</h6>
-            <p>Hello world</p>
-            <!-- <ion-badge *ngIf="chat.unread" item-end>{{chat.unread}}</ion-badge> -->
+            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false">{{inbox.chat_with.name}}</h6>
+            <p>{{lastMessage(inbox.messages)}}</p>
+            <ion-badge *ngIf="inbox.unread > 0" item-end>{{inbox.unread}}</ion-badge>
           </ion-item>
         </ion-list>
       </ng-template>

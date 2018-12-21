@@ -1,22 +1,21 @@
 import { profile } from "./profile";
 
 export interface message {
-  timestamp: string;
+  timestamp: Date;
   person: profile;
   text: string;
 }
 
-export interface chat {
+export interface groupChat {
   pk: number;
   messages: message[];
-  composed_by: profile;
+  owner: profile;
   participants: profile[];
-  group_name: string;
-  chat_type: string;
 }
 
 export interface inbox {
   pk: number;
-  chat: chat;
   created_on: string;
+  chat_with: profile;
+  messages: message[];
 }

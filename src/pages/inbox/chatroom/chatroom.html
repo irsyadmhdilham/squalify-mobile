@@ -7,7 +7,7 @@
         </ion-avatar>
         <div>
           <h6 text-left no-margin>{{title}}</h6>
-          <p ion-text color="grey" text-left no-margin>Chat</p>
+          <p ion-text color="grey" text-left no-margin>{{designation}}</p>
         </div>
       </section>
     </ion-title>
@@ -16,18 +16,17 @@
 
 <ion-content padding>
   <div
-    [ngStyle]="rowStyle(message.senderId, i)"
     class="message-container"
     *ngFor="let message of messages; index as i"
   >
-    <div [ngClass]="message.senderId === userId ? 'message-parent-wrapper-right' : 'message-parent-wrapper-left'">
-      <div class="message-wrapper">
-        <p ion-text color="grey" *ngIf="dateShow(message.senderId, i)" class="date">{{message.date | date:'MMM dd ,h:mm a'}}</p>
+    <div [ngClass]="message.person.pk === userId ? 'message-parent-wrapper-right' : 'message-parent-wrapper-left'">
+      <div class="message-wrapper" [ngStyle]="!dateShow(message.person.pk, i) ? { marginTop: '0.3em' } : false">
+        <p ion-text color="grey" *ngIf="dateShow(message.person.pk, i)" class="date">{{message.timestamp | date:'MMM dd ,h:mm a'}}</p>
         <div>
           <p no-margin>{{message.text}}</p>
         </div>
       </div>
-      <div [ngStyle]="avatarShow(message.senderId, i) && dateShow(message.senderId, i) ? { visibility: 'hidden' } : false" class="profile-image"></div>
+      <div [ngStyle]="viewProfileImage(message, i)" class="profile-image"></div>
     </div>
   </div>
 </ion-content>
