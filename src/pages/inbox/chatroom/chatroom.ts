@@ -2,7 +2,15 @@ import { Component, ViewChild } from '@angular/core';
 import { NgModel } from "@angular/forms";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
-import { IonicPage, NavController, NavParams, Content, Keyboard, Platform } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  Content,
+  Keyboard,
+  Platform,
+  Events
+} from 'ionic-angular';
 import { NativeAudio } from "@ionic-native/native-audio";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
@@ -18,6 +26,7 @@ export class ChatroomPage {
 
   @ViewChild(Content) content: Content;
   chatType = this.navParams.get('chatType');
+  inbox: inbox = this.navParams.get('inbox');
   pk: number;
   userId: number | boolean;
   receiverId: number;
@@ -34,11 +43,11 @@ export class ChatroomPage {
     private keyboard: Keyboard,
     private inboxProvider: InboxProvider,
     private platform: Platform,
-    private nativeAudio: NativeAudio
+    private nativeAudio: NativeAudio,
+    private events: Events
   ) { }
 
   initializer() {
-    const inbox: inbox = this.navParams.get('inbox');
     const composeNew: member = this.navParams.get('composeNew');
     if (composeNew) {
       this.title = composeNew.name;
@@ -46,8 +55,18 @@ export class ChatroomPage {
       this.receiverId = composeNew.pk;
       this.designation = composeNew.designation;
     } else {
-      this.pk = inbox.pk;
+      this.pk = this.inbox.pk;
       this.getInbox();
+    }
+  }
+
+  clearUnread() {
+    if (this.inbox) {
+      if (this.inbox.unread > 0) {
+        this.inboxProvider.clearUnread(this.inbox.pk).subscribe(() => {
+          this.events.publish('inbox: clear unread', this.pk);
+        });
+      }
     }
   }
 
@@ -58,10 +77,12 @@ export class ChatroomPage {
     });
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
     this.registerSound();
+    this.clearUnread();
   }
 
   ionViewWillLeave() {
     this.keyboardDidShow.unsubscribe();
+    this.navCtrl.getPrevious().data.fromChatroom = false;
   }
 
   titleImage() {
@@ -139,6 +160,7 @@ export class ChatroomPage {
         this.profileImage = inbox.chat_with.profile_image;
         this.title = inbox.chat_with.name;
         this.designation = inbox.chat_with.designation;
+        this.receiverId = inbox.chat_with.pk;
       } else {
         this.title = '';
       }
@@ -146,11 +168,12 @@ export class ChatroomPage {
   }
 
   sendMessage(msg: NgModel) {
-    if (msg.dirty) {
+    if (msg.touched && msg.value.length > 0) {
       const data = {
         text: msg.value,
         receiverId: this.receiverId
       };
+      this.text = '';
       if (!this.pk) {
         this.inboxProvider.createInbox(data).pipe(
           map(inbox => {
@@ -158,18 +181,18 @@ export class ChatroomPage {
               ...inbox,
               message: { ...inbox.message, timestamp: new Date(inbox.message.timestamp) }
             }
-          })).subscribe(inbox => {
-          this.pk = inbox.pk;
-          this.text = '';
-          this.messages.push(inbox.message);
+        })).subscribe(data => {
+          this.pk = data.inbox.pk;
+          this.messages.push(data.message);
+          this.events.publish('inbox: new inbox', data.inbox);
           this.playSound('submitMessage');
         });
       } else {
         this.inboxProvider.sendMessage(this.pk, data).pipe(
           map(msg => ({...msg, timestamp: new Date(msg.timestamp)}))
         ).subscribe(message => {
-          this.text = '';
           this.messages.push(message);
+          this.events.publish('inbox: new message', message, this.pk);
           this.playSound('submitMessage');
         });
       }

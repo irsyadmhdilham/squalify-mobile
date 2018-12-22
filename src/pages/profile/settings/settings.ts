@@ -21,6 +21,7 @@ export class SettingsPage {
   };
   pushNotification: pushNotification;
   navToPushNotif = false;
+  listenPushNotif: (value) => void;
 
   constructor(
     public navCtrl: NavController,
@@ -56,14 +57,16 @@ export class SettingsPage {
 
   ionViewWillEnter() {
     this.navToPushNotif = false;
-    this.events.subscribe('settings:push-notification', observe => {
-      this.pushNotification = observe;
-    });
+    this.listenPushNotif = value => {
+      this.pushNotification = value;
+    };
+    this.events.subscribe('settings:push-notification', this.listenPushNotif);
   }
 
   ionViewWillLeave() {
     if (!this.navToPushNotif) {
-      this.events.unsubscribe('settings:push-notification');
+      this.events.unsubscribe('settings:push-notification', this.listenPushNotif);
+      this.listenPushNotif = undefined;
     }
   }
 

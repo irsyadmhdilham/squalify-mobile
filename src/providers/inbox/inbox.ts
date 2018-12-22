@@ -8,7 +8,7 @@ import { ApiUrlModules } from "../../functions/config";
 
 import { inbox, message } from "../../interfaces/inbox";
 
-type createInbox = inbox & { message: message };
+type createInbox = { message: message, inbox: inbox; };
 
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
@@ -38,11 +38,18 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
-  sendMessage(chatId: number, data): Observable<message> {
-    const url = this.profileUrl(`inbox/${chatId}/`);
+  sendMessage(inboxId: number, data): Observable<message> {
+    const url = this.profileUrl(`inbox/${inboxId}/`);
     return url.pipe(switchMap(url => {
       return this.http.put<message>(url, data);
     }));
+  }
+
+  clearUnread(inboxId: number): Observable<{status: boolean}> {
+    const url = this.profileUrl(`inbox/${inboxId}/?cu=true`);
+    return url.pipe(switchMap(url => {
+      return this.http.put<{status: boolean}>(url, null);
+    }))
   }
 
 }

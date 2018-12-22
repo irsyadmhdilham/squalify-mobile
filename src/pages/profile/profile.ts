@@ -34,6 +34,8 @@ export class ProfilePage extends Ids {
   profileImage: string;
   settings: settings;
   pageStatus: string;
+  listenEmailNotif: (value) => void;
+  listenPushNotif: (value) => void;
   navToSettings = false;
 
   constructor(
@@ -132,19 +134,23 @@ export class ProfilePage extends Ids {
 
   unsubscribeSettingsEvent() {
     if (!this.navToSettings) {
-      this.events.unsubscribe('settings:email-notification');
-      this.events.unsubscribe('settings:push-notification');
+      this.events.unsubscribe('settings:email-notification', this.listenEmailNotif);
+      this.events.unsubscribe('settings:push-notification', this.listenPushNotif);
+      this.listenEmailNotif = undefined;
+      this.listenPushNotif = undefined;
     }
   }
 
   subscribeSettingsEvent() {
     this.navToSettings = false;
-    this.events.subscribe('settings:email-notification', observe => {
-      this.settings.notifications.email_notification = observe;
-    });
-    this.events.subscribe('settings:push-notification', observe => {
+    this.listenEmailNotif = value => {
+      this.settings.notifications.email_notification = value;
+    };
+    this.listenPushNotif = observe => {
       this.settings.notifications.push_notification = observe;
-    });
+    };
+    this.events.subscribe('settings:email-notification', this.listenEmailNotif);
+    this.events.subscribe('settings:push-notification', this.listenPushNotif);
   }
 
   ionViewWillEnter() {

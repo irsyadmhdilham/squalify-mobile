@@ -17,5 +17,6 @@ export interface inbox {
   pk: number;
   created_on: string;
   chat_with: profile;
+  unread: number;
   messages: message[];
 }
