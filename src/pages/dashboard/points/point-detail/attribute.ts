@@ -1,4 +1,4 @@
-import { point } from "../../../../interfaces/point";
+import { point } from "../../../../models/point";
 
 export class Attribute {
   baseUrl = '../../../../assets/imgs/points/';

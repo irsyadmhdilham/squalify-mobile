@@ -1,5 +1,5 @@
 import { Action } from "@ngrx/store";
-import { profile } from "../../interfaces/profile";
+import { profile } from "../../models/profile";
 
 export enum ActionTypes {
   fetch = 'FETCH_PROFILE',

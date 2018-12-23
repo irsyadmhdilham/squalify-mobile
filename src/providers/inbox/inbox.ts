@@ -6,7 +6,7 @@ import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { inbox, message } from "../../interfaces/inbox";
+import { inbox, message } from "../../models/inbox";
 
 type createInbox = {
   message: message;

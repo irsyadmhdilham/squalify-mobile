@@ -5,7 +5,7 @@ import { AddContactComponent } from "../../../components/contact/add-contact/add
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
 import { ContactListComponent } from "../../../components/contact/contact-list/contact-list";
 
-import { contact } from "../../../interfaces/contact";
+import { contact } from "../../../models/contact";
 
 export class AttributeFeatures {
 

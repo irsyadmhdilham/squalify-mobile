@@ -5,7 +5,7 @@ import { switchMap } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 import { ApiUrlModules } from "../../functions/config";
 
-import { comment, like } from "../../interfaces/post";
+import { comment, like } from "../../models/post";
 
 @Injectable()
 export class PostProvider extends ApiUrlModules {

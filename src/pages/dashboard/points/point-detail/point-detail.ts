@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Colors } from "../../../../functions/colors";
-import { log } from "../../../../interfaces/point";
+import { log } from "../../../../models/point";
 
 import { PointSummaryComponent } from "../../../../components/point/point-summary/point-summary";
 import { PointProvider } from "../../../../providers/point/point";

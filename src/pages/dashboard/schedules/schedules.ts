@@ -5,7 +5,7 @@ import { AddScheduleComponent } from "../../../components/schedule/add-schedule/
 import { ScheduleDetailPage } from "./schedule-detail/schedule-detail";
 import { ScheduleProvider } from "../../../providers/schedule/schedule";
 
-import { schedule } from "../../../interfaces/schedule";
+import { schedule } from "../../../models/schedule";
 
 @IonicPage()
 @Component({

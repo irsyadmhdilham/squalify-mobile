@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { profile } from "../../interfaces/profile";
+import { profile } from "../../models/profile";
 
 @Injectable()
 export class ProfileProvider extends ApiUrlModules {

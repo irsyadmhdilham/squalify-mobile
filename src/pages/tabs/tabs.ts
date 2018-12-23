@@ -13,7 +13,7 @@ import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 
 import { Ids } from "../../functions/config";
-import { profile } from "../../interfaces/profile";
+import { profile } from "../../models/profile";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -44,7 +44,7 @@ export class TabsPage extends Ids {
         this.signedIn = true;
       }
     });
-    // this.onOpenNotification();
+    this.onOpenNotification();
   }
 
   signIn(value) {

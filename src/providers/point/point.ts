@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { point, contactPoints, groupPoint } from "../../interfaces/point";
+import { point, contactPoints, groupPoint } from "../../models/point";
 
 interface memberPoints {
   date: string;

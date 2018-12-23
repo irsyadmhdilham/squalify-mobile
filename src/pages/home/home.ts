@@ -8,8 +8,8 @@ import { map, catchError } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
-import { post } from "../../interfaces/post";
-import { profile } from "../../interfaces/profile";
+import { post } from "../../models/post";
+import { profile } from "../../models/profile";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";

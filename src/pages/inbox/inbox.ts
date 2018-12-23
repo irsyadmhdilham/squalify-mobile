@@ -8,9 +8,9 @@ import { Subscription } from "rxjs/Subscription";
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
-import { inbox, message } from "../../interfaces/inbox";
-import { profile } from "../../interfaces/profile";
-import { member } from "../../interfaces/agency";
+import { inbox, message } from "../../models/inbox";
+import { profile } from "../../models/profile";
+import { member } from "../../models/agency";
 import { ChatroomPage } from "./chatroom/chatroom";
 
 @IonicPage()

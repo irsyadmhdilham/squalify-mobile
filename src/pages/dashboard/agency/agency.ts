@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { member } from "../../../interfaces/agency";
+import { member } from "../../../models/agency";
 import { AgencyProvider } from "../../../providers/agency/agency";
 
 @IonicPage()

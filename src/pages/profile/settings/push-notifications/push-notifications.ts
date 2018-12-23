@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 
-import { pushNotification } from "../../../../interfaces/profile-settings";
+import { pushNotification } from "../../../../models/profile-settings";
 import { ProfileProvider } from "../../../../providers/profile/profile";
 
 @IonicPage()

@@ -6,8 +6,8 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { agency, member } from "../../interfaces/agency";
-import { post } from "../../interfaces/post";
+import { agency, member } from "../../models/agency";
+import { post } from "../../models/post";
 
 @Injectable()
 export class AgencyProvider extends ApiUrlModules {

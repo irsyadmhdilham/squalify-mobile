@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
-import { salesScore, pointScore } from "../../interfaces/scoreboard";
+import { salesScore, pointScore } from "../../models/scoreboard";
 
 import { ApiUrlModules } from "../../functions/config";
 

@@ -14,8 +14,8 @@ import { NotificationsPage } from "../notifications/notifications";
 
 import { PointProvider } from "../../providers/point/point";
 
-import { point } from "../../interfaces/point";
-import { profile } from "../../interfaces/profile";
+import { point } from "../../models/point";
+import { profile } from "../../models/profile";
 
 @IonicPage()
 @Component({

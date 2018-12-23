@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { member } from "../../../interfaces/group";
+import { member } from "../../../models/group";
 import { GroupProvider } from "../../../providers/group/group";
 import { GroupMemberPage } from "./group-member/group-member";
 

@@ -10,7 +10,7 @@ import { CallNumber } from "@ionic-native/call-number";
 import { PointProvider } from "../../../providers/point/point";
 import { AttributeFeatures } from "./attribute-features";
 
-import { point } from "../../../interfaces/point";
+import { point } from "../../../models/point";
 
 @Component({
   selector: 'point-attribute',

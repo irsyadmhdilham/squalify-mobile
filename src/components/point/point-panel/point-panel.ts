@@ -7,7 +7,7 @@ import * as socketio from "socket.io-client";
 import { PointLogsComponent } from "../point-logs/point-logs";
 import { Colors } from "../../../functions/colors";
 import { PointProvider } from "../../../providers/point/point";
-import { profile } from "../../../interfaces/profile";
+import { profile } from "../../../models/profile";
 
 @Component({
   selector: 'point-panel',

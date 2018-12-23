@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController } from "ionic-angular";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
-import { member } from "../../../interfaces/agency";
+import { member } from "../../../models/agency";
 
 @Component({
   selector: 'inbox-compose',

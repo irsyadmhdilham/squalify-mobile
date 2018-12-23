@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams, LoadingController, AlertController } from "ionic-angular";
 
 import { Colors } from "../../../functions/colors";
-import { sales } from "../../../interfaces/sales";
+import { sales } from "../../../models/sales";
 
 import { SalesProvider } from "../../../providers/sales/sales";
 

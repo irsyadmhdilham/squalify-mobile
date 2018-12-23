@@ -1,5 +1,5 @@
 import { ActionTypes, ActionUnion } from "../actions/profile.action";
-import { profile } from "../../interfaces/profile";
+import { profile } from "../../models/profile";
 
 const initialState: profile = {
   pk: 0,

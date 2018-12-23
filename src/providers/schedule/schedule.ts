@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { schedule } from "../../interfaces/schedule";
+import { schedule } from "../../models/schedule";
 
 @Injectable()
 export class ScheduleProvider extends ApiUrlModules {

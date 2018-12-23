@@ -5,7 +5,7 @@ import { ViewController, AlertController, LoadingController } from "ionic-angula
 import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
 
-import { sales } from "../../../interfaces/sales";
+import { sales } from "../../../models/sales";
 
 @Component({
   selector: 'add-sales',

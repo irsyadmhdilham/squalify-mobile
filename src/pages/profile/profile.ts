@@ -18,7 +18,7 @@ import { NotificationsPage } from "../notifications/notifications";
 
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
-import { settings } from "../../interfaces/profile-settings";
+import { settings } from "../../models/profile-settings";
 
 @IonicPage()
 @Component({
@@ -91,14 +91,14 @@ export class ProfilePage extends Ids {
   _signOut() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    // this.profileProvider.signOut().subscribe(() => {
+    this.profileProvider.signOut().subscribe(() => {
       this.removeAllId().then(value => {
         if (value) {
           loading.dismiss();
           this.events.publish('sign out', false);
         }
       });
-    // });
+    });
   }
 
   signOut() {
@@ -114,7 +114,7 @@ export class ProfilePage extends Ids {
   }
 
   fetch() {
-    // this.pageStatus = 'loading';
+    this.pageStatus = 'loading';
     this.profileProvider.getProfile().subscribe(observe => {
       this.pageStatus = undefined;
       this.name = observe.name;
@@ -124,7 +124,7 @@ export class ProfilePage extends Ids {
       this.profileImage = observe.profile_image;
       this.settings = observe.settings;
     }, () => {
-      // this.pageStatus = 'error';
+      this.pageStatus = 'error';
     });
   }
 

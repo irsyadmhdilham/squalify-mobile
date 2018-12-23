@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales, summary, groupSales, downlineSales } from "../../interfaces/sales";
+import { sales, summary, groupSales, downlineSales } from "../../models/sales";
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {

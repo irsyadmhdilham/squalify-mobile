@@ -17,9 +17,9 @@ import * as socketio from "socket.io-client";
 import { Observable } from "rxjs";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
-import { member } from "../../../interfaces/agency";
-import { profile } from "../../../interfaces/profile";
-import { inbox, message } from "../../../interfaces/inbox";
+import { member } from "../../../models/agency";
+import { profile } from "../../../models/profile";
+import { inbox, message } from "../../../models/inbox";
 
 @IonicPage()
 @Component({

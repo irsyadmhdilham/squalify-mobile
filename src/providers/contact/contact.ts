@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
-import { contact } from "../../interfaces/contact";
+import { contact } from "../../models/contact";
 import { ApiUrlModules } from "../../functions/config";
 
 @Injectable()

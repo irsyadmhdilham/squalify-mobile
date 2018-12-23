@@ -19,7 +19,7 @@ import { AddScheduleComponent } from "../../../components/schedule/add-schedule/
 import { ContactProvider } from "../../../providers/contact/contact";
 import { PointProvider } from "../../../providers/point/point";
 import { UpdatePoint } from "../../../providers/point/update-point";
-import { contact } from "../../../interfaces/contact";
+import { contact } from "../../../models/contact";
 import { ContactStatus } from "../../../functions/colors";
 
 @IonicPage()

@@ -4,7 +4,7 @@ import * as moment from "moment";
 
 import { ScheduleProvider } from "../../../providers/schedule/schedule";
 
-import { schedule } from "../../../interfaces/schedule";
+import { schedule } from "../../../models/schedule";
 
 @Component({
   selector: 'edit-schedule',

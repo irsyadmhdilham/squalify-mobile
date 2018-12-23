@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { member } from "../../interfaces/agency";
+import { member } from "../../models/agency";
 
 @Pipe({
   name: 'chatMembersFilter',

@@ -8,8 +8,8 @@ import {
   ModalController
 } from 'ionic-angular';
 
-import { schedule } from "../../../../interfaces/schedule";
-import { contact } from "../../../../interfaces/contact";
+import { schedule } from "../../../../models/schedule";
+import { contact } from "../../../../models/contact";
 import { ScheduleProvider } from "../../../../providers/schedule/schedule";
 import { EditScheduleComponent } from "../../../../components/schedule/edit-schedule/edit-schedule";
 import { ContactDetailPage } from "../../contacts/contact-detail/contact-detail";

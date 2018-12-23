@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import * as socketio from 'socket.io-client';
 
-import { post } from "../../../interfaces/post";
+import { post } from "../../../models/post";
 import { PostProvider } from "../../../providers/post/post";
 
 @IonicPage()

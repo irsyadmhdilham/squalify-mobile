@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { inbox } from "../../interfaces/inbox";
+import { inbox } from "../../models/inbox";
 
 @Pipe({
   name: 'inboxDuplicate',

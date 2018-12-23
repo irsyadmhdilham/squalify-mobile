@@ -3,7 +3,7 @@ import { ViewController, NavParams } from "ionic-angular";
 
 import { PointProvider } from "../../../providers/point/point";
 import { Colors } from "../../../functions/colors";
-import { log } from "../../../interfaces/point";
+import { log } from "../../../models/point";
 
 @Component({
   selector: 'point-logs',

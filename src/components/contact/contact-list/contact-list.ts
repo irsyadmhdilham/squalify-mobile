@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, ViewController } from "ionic-angular";
 
 import { ContactProvider } from "../../../providers/contact/contact";
-import { contact } from "../../../interfaces/contact";
+import { contact } from "../../../models/contact";
 
 @Component({
   selector: 'contact-list',

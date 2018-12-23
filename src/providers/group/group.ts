@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { switchMap } from 'rxjs/operators';
 
 import { ApiUrlModules } from "../../functions/config";
-import { group } from "../../interfaces/group";
+import { group } from "../../models/group";
 
 @Injectable()
 export class GroupProvider extends ApiUrlModules {

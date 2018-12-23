@@ -15,8 +15,8 @@ import { PointProvider } from "../../../providers/point/point";
 import { UpdatePoint } from "../../../providers/point/update-point";
 
 import { ContactListComponent } from "../../../components/contact/contact-list/contact-list";
-import { contactPoints } from "../../../interfaces/point";
-import { contact } from "../../../interfaces/contact";
+import { contactPoints } from "../../../models/point";
+import { contact } from "../../../models/contact";
 
 
 @Component({

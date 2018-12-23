@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
 
 import { SalesProvider } from "../../../providers/sales/sales";
-import { agency } from "../../../interfaces/agency";
-import { sales } from "../../../interfaces/sales";
+import { agency } from "../../../models/agency";
+import { sales } from "../../../models/sales";
 
 import { AddSalesComponent } from "../../../components/sales/add-sales/add-sales";
 import { SalesDetailComponent } from "../../../components/sales/sales-detail/sales-detail";

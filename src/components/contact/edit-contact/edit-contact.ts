@@ -9,8 +9,8 @@ import {
   ToastController
 } from "ionic-angular";
 
-import { contact } from "../../../interfaces/contact";
-import { contactPoints } from "../../../interfaces/point";
+import { contact } from "../../../models/contact";
+import { contactPoints } from "../../../models/point";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { PointProvider } from "../../../providers/point/point";

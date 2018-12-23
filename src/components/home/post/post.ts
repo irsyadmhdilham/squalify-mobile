@@ -3,7 +3,7 @@ import { NavController } from "ionic-angular";
 
 import { PostProvider } from "../../../providers/post/post";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
-import { post } from "../../../interfaces/post";
+import { post } from "../../../models/post";
 
 @Component({
   selector: 'post',

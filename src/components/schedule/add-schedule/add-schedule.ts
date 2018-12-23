@@ -15,7 +15,7 @@ import { ScheduleProvider } from "../../../providers/schedule/schedule";
 import { PointProvider } from "../../../providers/point/point";
 import { UpdatePoint } from "../../../providers/point/update-point";
 
-import { contactPoints } from "../../../interfaces/point";
+import { contactPoints } from "../../../models/point";
 
 @Component({
   selector: 'add-schedule',

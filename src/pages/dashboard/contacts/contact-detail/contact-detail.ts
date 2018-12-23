@@ -11,7 +11,7 @@ import {
 import { EditContactComponent } from "../../../../components/contact/edit-contact/edit-contact";
 import { ScheduleDetailPage } from "../../schedules/schedule-detail/schedule-detail";
 import { ContactProvider } from "../../../../providers/contact/contact";
-import { schedule } from "../../../../interfaces/schedule";
+import { schedule } from "../../../../models/schedule";
 
 @IonicPage()
 @Component({
