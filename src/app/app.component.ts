@@ -24,7 +24,7 @@ export class MyApp {
 
       const cordova = this.platform.is('cordova');
       if (cordova) {
-        this.grantNotificationPermission();
+        // this.grantNotificationPermission();
       }
     });
   }

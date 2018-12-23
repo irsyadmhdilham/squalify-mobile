@@ -66,7 +66,6 @@ export class SettingsPage {
   ionViewWillLeave() {
     if (!this.navToPushNotif) {
       this.events.unsubscribe('settings:push-notification', this.listenPushNotif);
-      this.listenPushNotif = undefined;
     }
   }
 

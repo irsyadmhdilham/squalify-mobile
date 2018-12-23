@@ -1,5 +1,33 @@
 page-inbox
 
+  #inbox-groups-container
+    height: 6em
+
+    .scroll-content
+      padding: 0
+
+    .group-inbox-container
+      display: flex
+      flex-direction: column
+      align-items: center
+      max-width: 6em
+
+      + .group-inbox-container
+        margin-left: 0.8em
+
+      .group-inbox-image
+        width: 3em
+        height: 3em
+        border-radius: 100%
+        background: color($colors, lightGrey)
+      
+      ion-badge
+        margin-top: -0.9em
+      
+      p
+        margin: 0.4em 0 0
+        font-size: 1.2rem
+
   .profile-image
     background: color($colors, lightGrey)
     width: 2.2em

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
 import * as socketio from "socket.io-client";
 import { Store, select } from "@ngrx/store";
-import { Fetch } from "../../store/actions/profile.action";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 import { map, catchError } from "rxjs/operators";
@@ -146,7 +145,6 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.store.dispatch(new Fetch());
     this.fetchPosts();
     this.agencySubscription = this.agency.subscribe(value => {
       this.pk = value.agency.pk;

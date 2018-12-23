@@ -91,14 +91,14 @@ export class ProfilePage extends Ids {
   _signOut() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    this.profileProvider.signOut().subscribe(() => {
+    // this.profileProvider.signOut().subscribe(() => {
       this.removeAllId().then(value => {
         if (value) {
           loading.dismiss();
           this.events.publish('sign out', false);
         }
       });
-    });
+    // });
   }
 
   signOut() {
@@ -114,7 +114,7 @@ export class ProfilePage extends Ids {
   }
 
   fetch() {
-    this.pageStatus = 'loading';
+    // this.pageStatus = 'loading';
     this.profileProvider.getProfile().subscribe(observe => {
       this.pageStatus = undefined;
       this.name = observe.name;
@@ -124,7 +124,7 @@ export class ProfilePage extends Ids {
       this.profileImage = observe.profile_image;
       this.settings = observe.settings;
     }, () => {
-      this.pageStatus = 'error';
+      // this.pageStatus = 'error';
     });
   }
 
@@ -136,8 +136,6 @@ export class ProfilePage extends Ids {
     if (!this.navToSettings) {
       this.events.unsubscribe('settings:email-notification', this.listenEmailNotif);
       this.events.unsubscribe('settings:push-notification', this.listenPushNotif);
-      this.listenEmailNotif = undefined;
-      this.listenPushNotif = undefined;
     }
   }
 

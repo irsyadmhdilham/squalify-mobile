@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgModel } from "@angular/forms";
+import { Store, select } from "@ngrx/store";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
 import {
@@ -12,9 +13,12 @@ import {
   Events
 } from 'ionic-angular';
 import { NativeAudio } from "@ionic-native/native-audio";
+import * as socketio from "socket.io-client";
+import { Observable } from "rxjs";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { member } from "../../../interfaces/agency";
+import { profile } from "../../../interfaces/profile";
 import { inbox, message } from "../../../interfaces/inbox";
 
 @IonicPage()
@@ -35,7 +39,10 @@ export class ChatroomPage {
   designation: string;
   messages: message[] = [];
   keyboardDidShow: Subscription;
+  storeListener: Subscription;
+  profile: Observable<profile>;
   text = '';
+  io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
   constructor(
     public navCtrl: NavController,
@@ -44,7 +51,8 @@ export class ChatroomPage {
     private inboxProvider: InboxProvider,
     private platform: Platform,
     private nativeAudio: NativeAudio,
-    private events: Events
+    private events: Events,
+    private store: Store<profile>
   ) { }
 
   initializer() {
@@ -70,6 +78,28 @@ export class ChatroomPage {
     }
   }
 
+  listenIncomingMessage() {
+    this.io.on('connect', () => {
+      this.storeListener = this.profile.subscribe(async profile => {
+        const userId = await this.inboxProvider.userId().toPromise();
+        const namespace = `${profile.agency.company}:${profile.agency.pk}:${userId}:new message`;
+        this.io.on(namespace, (data: { message: message }) => {
+          const message: message = {
+            ...data.message,
+            timestamp: new Date(data.message.timestamp)
+          }
+          this.messages.push(message);
+          this.inboxProvider.clearUnread(this.pk).subscribe(() => {
+            this.events.publish('inbox: clear unread', this.pk);
+          });
+          setTimeout(() => {
+            this.content.scrollToBottom();
+          }, 100);
+        });
+      });
+    });
+  }
+
   ionViewDidLoad() {
     this.initializer();
     this.keyboardDidShow = this.keyboard.didShow.subscribe(() => {
@@ -78,11 +108,15 @@ export class ChatroomPage {
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
     this.registerSound();
     this.clearUnread();
+    this.profile = this.store.pipe(select('profile'));
+    this.listenIncomingMessage();
   }
 
   ionViewWillLeave() {
     this.keyboardDidShow.unsubscribe();
+    this.storeListener.unsubscribe();
     this.navCtrl.getPrevious().data.fromChatroom = false;
+    this.io.close();
   }
 
   titleImage() {
@@ -154,7 +188,7 @@ export class ChatroomPage {
           ...inbox,
           messages: inbox.messages.map(val => ({...val, timestamp: new Date(val.timestamp)}))
         };
-      })).subscribe(inbox => {
+    })).subscribe(inbox => {
       this.messages = inbox.messages;
       if (this.chatType === 'personal') {
         this.profileImage = inbox.chat_with.profile_image;
@@ -164,10 +198,29 @@ export class ChatroomPage {
       } else {
         this.title = '';
       }
+      setTimeout(() => {
+        this.content.scrollToBottom();
+      }, 100);
     });
   }
 
   sendMessage(msg: NgModel) {
+    const receiverResponse = data => {
+      this.storeListener = this.profile.subscribe(profile => {
+        const namespace = `${profile.agency.company}:${profile.agency.pk}:${this.receiverId}`;
+        if (data.receiver_create) {
+          this.io.emit('new inbox', { namespace, inbox: data.receiver_create });
+        }
+        if (data.receiver_update) {
+          this.io.emit('new message', { namespace, obj: data.receiver_update });
+        }
+      });
+    };
+    const scrollContent = () => {
+      setTimeout(() => {
+        this.content.scrollToBottom();
+      }, 100);
+    };
     if (msg.touched && msg.value.length > 0) {
       const data = {
         text: msg.value,
@@ -176,24 +229,32 @@ export class ChatroomPage {
       this.text = '';
       if (!this.pk) {
         this.inboxProvider.createInbox(data).pipe(
-          map(inbox => {
+          map(response => {
             return {
-              ...inbox,
-              message: { ...inbox.message, timestamp: new Date(inbox.message.timestamp) }
+              ...response,
+              message: { ...response.message, timestamp: new Date(response.message.timestamp) }
             }
         })).subscribe(data => {
           this.pk = data.inbox.pk;
           this.messages.push(data.message);
           this.events.publish('inbox: new inbox', data.inbox);
           this.playSound('submitMessage');
+          receiverResponse(data);
+          scrollContent();
         });
       } else {
         this.inboxProvider.sendMessage(this.pk, data).pipe(
-          map(msg => ({...msg, timestamp: new Date(msg.timestamp)}))
-        ).subscribe(message => {
-          this.messages.push(message);
-          this.events.publish('inbox: new message', message, this.pk);
+          map(response => {
+            return {
+              ...response,
+              message: { ...response.message, timestamp: new Date(response.message.timestamp) }
+            };
+          })).subscribe(response => {
+          this.messages.push(response.message);
+          this.events.publish('inbox: new message', response.message, this.pk);
           this.playSound('submitMessage');
+          receiverResponse(response);
+          scrollContent();
         });
       }
     }

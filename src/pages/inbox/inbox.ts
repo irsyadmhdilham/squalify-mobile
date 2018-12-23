@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, Events } from 'ionic-angular';
+import * as socketio from "socket.io-client";
+import { Store, select } from "@ngrx/store";
+import { Observable } from "rxjs";
+import { Subscription } from "rxjs/Subscription";
 
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
 import { inbox, message } from "../../interfaces/inbox";
+import { profile } from "../../interfaces/profile";
 import { member } from "../../interfaces/agency";
 import { ChatroomPage } from "./chatroom/chatroom";
 
@@ -16,18 +21,22 @@ import { ChatroomPage } from "./chatroom/chatroom";
 export class InboxPage {
 
   inboxes: inbox[] = [];
+  groupInboxes = [];
   pageStatus: string;
   navToChatroom = false;
   listenNewInbox: (inbox: inbox, pk: number) => void;
   listenNewMessage: (message: message, pk: number) => void;
   listenClearUnread: (pk: number) => void;
+  storeListener: Subscription;
+  io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private inboxProvider: InboxProvider,
-    private events: Events
+    private events: Events,
+    private store: Store<profile>
   ) { }
 
   profileImage(img) {
@@ -98,6 +107,7 @@ export class InboxPage {
   ionViewWillEnter() {
     if (!this.navToChatroom) {
       this.getInbox();
+      this.listenWsEvents();
     }
     this.navToChatroom = this.navParams.get('fromChatroom');
     this.eventsListener();
@@ -108,10 +118,31 @@ export class InboxPage {
       this.events.unsubscribe('inbox: new inbox', this.listenNewInbox);
       this.events.unsubscribe('inbox: new message', this.listenNewMessage);
       this.events.unsubscribe('inbox: clear unread', this.listenClearUnread);
-      this.listenNewInbox = undefined;
-      this.listenNewMessage = undefined;
-      this.listenClearUnread = undefined;
+      this.storeListener.unsubscribe();
+      this.io.close();
     }
+  }
+
+  listenWsEvents() {
+    this.io.on('connect', () => {
+      this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
+      .subscribe(async profile => {
+        const userId = await this.inboxProvider.userId().toPromise();
+        const namespace = `${profile.agency.company}:${profile.agency.pk}:${userId}`;
+        this.io.on(`${namespace}:new inbox`, (inbox: inbox) => {
+          this.inboxes.unshift(inbox);
+        });
+  
+        this.io.on(`${namespace}:new message`, (res: { pk: number; message: message; }) => {
+          const i = this.inboxes.findIndex(val => val.pk === res.pk);
+          const inbox = this.inboxes[i];
+          inbox.messages.push(res.message);
+          inbox.unread++;
+          const splicedInbox = this.inboxes.splice(i, 1);
+          this.inboxes.unshift(splicedInbox[0]);
+        });
+      });
+    });
   }
 
 }

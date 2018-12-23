@@ -3,6 +3,8 @@ import { Events, Platform } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
 import { Deeplinks } from "@ionic-native/deeplinks";
+import { Store } from "@ngrx/store";
+import { Fetch } from "../../store/actions/profile.action";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -11,6 +13,7 @@ import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 
 import { Ids } from "../../functions/config";
+import { profile } from "../../interfaces/profile";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -29,7 +32,8 @@ export class TabsPage extends Ids {
     private events: Events,
     private platform: Platform,
     private firebase: Firebase,
-    private deepLinks: Deeplinks
+    private deepLinks: Deeplinks,
+    private store: Store<profile>
   ) {
     super(storage);
   }
@@ -40,7 +44,7 @@ export class TabsPage extends Ids {
         this.signedIn = true;
       }
     });
-    this.onOpenNotification();
+    // this.onOpenNotification();
   }
 
   signIn(value) {
@@ -50,6 +54,11 @@ export class TabsPage extends Ids {
   ionViewDidLoad() {
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
+    });
+    this.userId().subscribe(userId => {
+      if (userId) {
+        this.store.dispatch(new Fetch());
+      }
     });
   }
 
