@@ -24,11 +24,14 @@ export class InboxPage {
 
   inboxes: inbox[] = [];
   agencyChat: groupInbox;
+  groupChat;
+  uplineGroupChat;
   pageStatus: string;
   navToChatroom = false;
   listenNewInbox: (inbox: inbox, pk: number) => void;
   listenNewMessage: (message: message, pk: number) => void;
   listenClearUnread: (pk: number) => void;
+  listenGroupClearUnread: (pk: number) => void;
   storeListener: Subscription;
   io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
@@ -50,12 +53,18 @@ export class InboxPage {
     };
   }
 
-  groupImage(obj) {
+  groupImage(obj: groupInbox) {
     if (obj) {
-      const image = obj.owner.profile_image;
       return {
-        background: `url('${image}') center center no-repeat / cover`
+        background: `url('${obj.owner.profile_image}') center center no-repeat / cover`
       };
+    }
+    return false;
+  }
+
+  groupUnread(obj: groupInbox) {
+    if (obj) {
+      return obj.unread;
     }
     return false;
   }
@@ -102,7 +111,8 @@ export class InboxPage {
             unread: val.unread,
             participants: groupChat.participants,
             owner: groupChat.owner,
-            messages: groupChat.messages
+            messages: groupChat.messages,
+            role: groupChat.role
           };
         });
         this.agencyChat = agencyChat[0];
@@ -134,9 +144,14 @@ export class InboxPage {
       const i = this.inboxes.findIndex(val => val.pk === pk);
       this.inboxes[i].unread = 0;
     };
+
+    this.listenGroupClearUnread = () => {
+      this.agencyChat.unread = 0;
+    };
     this.events.subscribe('inbox: new inbox', this.listenNewInbox);
     this.events.subscribe('inbox: new message', this.listenNewMessage);
     this.events.subscribe('inbox: clear unread', this.listenClearUnread);
+    this.events.subscribe('inbox: agency clear unread', this.listenGroupClearUnread);
   }
 
   ionViewWillEnter() {
@@ -153,6 +168,7 @@ export class InboxPage {
       this.events.unsubscribe('inbox: new inbox', this.listenNewInbox);
       this.events.unsubscribe('inbox: new message', this.listenNewMessage);
       this.events.unsubscribe('inbox: clear unread', this.listenClearUnread);
+      this.events.unsubscribe('inbox: agency clear unread', this.listenGroupClearUnread);
       if (this.storeListener) {
         this.storeListener.unsubscribe();
       }
@@ -165,7 +181,8 @@ export class InboxPage {
       this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
       .subscribe(async profile => {
         const userId = await this.inboxProvider.userId().toPromise();
-        const namespace = `${profile.agency.company}:${profile.agency.pk}:${userId}`;
+        const agency = profile.agency;
+        const namespace = `${agency.company}:${agency.pk}:${userId}`;
         this.io.on(`${namespace}:new inbox`, (inbox: inbox) => {
           this.inboxes.unshift(inbox);
         });
@@ -177,6 +194,13 @@ export class InboxPage {
           inbox.unread++;
           const splicedInbox = this.inboxes.splice(i, 1);
           this.inboxes.unshift(splicedInbox[0]);
+        });
+
+        const groupNamespace = `${agency.company}:${agency.pk}:${this.agencyChat.pk}`;
+        this.io.on(`${groupNamespace}:new agency message`, (data: {sender: number}) => {
+          if (data.sender !== userId) {
+            this.agencyChat.unread++;
+          }
         });
       });
     });

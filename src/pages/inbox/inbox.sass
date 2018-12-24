@@ -1,7 +1,7 @@
 page-inbox
 
   #inbox-groups-container
-    height: 6em
+    height: 5.3em
 
     .scroll-content
       padding: 0
@@ -20,9 +20,13 @@ page-inbox
         height: 3em
         border-radius: 100%
         background: color($colors, lightGrey)
-      
-      ion-badge
-        margin-top: -0.9em
+        position: relative
+        display: flex
+        justify-content: center
+
+        ion-badge
+          position: absolute
+          bottom: -0.1em
       
       p
         margin: 0.4em 0 0

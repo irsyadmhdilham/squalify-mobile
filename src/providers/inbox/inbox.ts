@@ -6,7 +6,8 @@ import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { inbox, message, groupChat } from "../../models/inbox";
+import { inbox, message } from "../../models/inbox";
+import { member } from '../../models/group';
 
 interface createInbox {
   message: message;
@@ -21,9 +22,14 @@ interface sendMessage {
   receiver_update?: { pk: number; message: message };
 };
 
-interface sendGroupMessage {
-
-};
+interface getGroupInbox {
+  pk: number;
+  inbox_pk: number;
+  messages: message[];
+  owner: member;
+  participants: member[];
+  role: string;
+}
 
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
@@ -46,10 +52,10 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
-  getGroupInboxDetail(inboxId: number): Observable<groupChat> {
+  getGroupInboxDetail(inboxId: number): Observable<getGroupInbox> {
     const url = this.profileUrl(`inbox/${inboxId}/group`);
     return url.pipe(switchMap(url => {
-      return this.http.get<groupChat>(url);
+      return this.http.get<getGroupInbox>(url);
     }));
   }
 
@@ -67,10 +73,10 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
-  sendGroupMessage(inboxId: number, data): Observable<any> {
+  sendGroupMessage(inboxId: number, data): Observable<message> {
     const url = this.profileUrl(`inbox/${inboxId}/group/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<any>(url, data);
+      return this.http.put<message>(url, data);
     }));
   }
 

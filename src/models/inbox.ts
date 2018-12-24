@@ -13,6 +13,7 @@ export interface groupInbox {
   messages: message[];
   participants: profile[];
   unread: number;
+  role: string;
 };
 
 export interface groupChat {

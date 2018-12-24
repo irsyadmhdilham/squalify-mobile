@@ -24,14 +24,16 @@
     <ng-container *ngSwitchDefault>
       <ion-scroll scrollX="true" id="inbox-groups-container">
         <ion-row>
-          <div class="group-inbox-container">
-            <div class="group-inbox-image" [ngStyle]="groupImage(agencyChat)"></div>
-            <ion-badge color="primary">23</ion-badge>
+          <div (tap)="toGroupChatroom(agencyChat)" class="group-inbox-container">
+            <div class="group-inbox-image" [ngStyle]="groupImage(agencyChat)">
+              <ion-badge *ngIf="groupUnread(agencyChat)" color="primary">{{groupUnread(agencyChat)}}</ion-badge>
+            </div>
             <p text-center>Your agency</p>
           </div>
           <div class="group-inbox-container">
-            <div class="group-inbox-image"></div>
-            <ion-badge color="primary">23</ion-badge>
+            <div class="group-inbox-image">
+              <ion-badge color="primary">23</ion-badge>
+            </div>
             <p text-center>Your group</p>
           </div>
         </ion-row>
