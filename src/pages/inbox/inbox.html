@@ -25,7 +25,7 @@
       <ion-scroll scrollX="true" id="inbox-groups-container">
         <ion-row>
           <div class="group-inbox-container">
-            <div class="group-inbox-image"></div>
+            <div class="group-inbox-image" [ngStyle]="groupImage(agencyChat)"></div>
             <ion-badge color="primary">23</ion-badge>
             <p text-center>Your agency</p>
           </div>
@@ -43,7 +43,7 @@
             <ion-avatar class="avatar-margin-top" item-start>
               <div [ngStyle]="profileImage(inbox.chat_with.profile_image)" class="profile-image"></div>
             </ion-avatar>
-            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false">{{inbox.chat_with.name}}</h6>
+            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false" class="ion-item-top-padding">{{inbox.chat_with.name}}</h6>
             <p>{{lastMessage(inbox.messages)}}</p>
             <ion-badge *ngIf="inbox.unread > 0" item-end>{{inbox.unread}}</ion-badge>
           </ion-item>

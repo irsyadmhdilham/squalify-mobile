@@ -21,7 +21,7 @@ import { ChatroomPage } from "./chatroom/chatroom";
 export class InboxPage {
 
   inboxes: inbox[] = [];
-  groupInboxes = [];
+  agencyChat;
   pageStatus: string;
   navToChatroom = false;
   listenNewInbox: (inbox: inbox, pk: number) => void;
@@ -48,6 +48,16 @@ export class InboxPage {
     };
   }
 
+  groupImage(obj) {
+    if (obj) {
+      const image = obj.group_chat.owner.profile_image;
+      return {
+        background: `url('${image}') center center no-repeat / cover`
+      };
+    }
+    return false;
+  }
+
   toChatroom(chatType: string, inbox: inbox, composeNew?: member) {
     this.navToChatroom = true;
     this.navCtrl.push(ChatroomPage, { inbox, composeNew, chatType });
@@ -70,8 +80,22 @@ export class InboxPage {
 
   getInbox() {
     this.pageStatus = 'loading';
-    this.inboxProvider.getInbox().subscribe(inboxes => {
+    this.inboxProvider.getInbox().subscribe(response => {
       this.pageStatus = undefined;
+      const inboxes = response.filter(val => val.group_chat.length === 0);
+      const getAgencyChat = response.filter(val => {
+        return val.group_chat.length > 0 && val.group_chat.filter(value => value.role === 'agency');
+      });
+      if (getAgencyChat.length > 0) {
+        const agencyChat = getAgencyChat.map(val => {
+          return {
+            pk: val.pk,
+            group_chat: val.group_chat[0],
+            unread: val.unread
+          };
+        });
+        this.agencyChat = agencyChat[0];
+      }
       this.inboxes = inboxes;
     }, () => {
       this.pageStatus = 'error';
@@ -118,7 +142,9 @@ export class InboxPage {
       this.events.unsubscribe('inbox: new inbox', this.listenNewInbox);
       this.events.unsubscribe('inbox: new message', this.listenNewMessage);
       this.events.unsubscribe('inbox: clear unread', this.listenClearUnread);
-      this.storeListener.unsubscribe();
+      if (this.storeListener) {
+        this.storeListener.unsubscribe();
+      }
       this.io.close();
     }
   }

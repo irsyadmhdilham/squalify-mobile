@@ -2,7 +2,7 @@ import { Directive, ElementRef } from '@angular/core';
 import { Colors } from "../../functions/colors";
 
 @Directive({
-  selector: '[content-bg]' // Attribute selector
+  selector: '[content-bg]'
 })
 export class ContentBgDirective {
 

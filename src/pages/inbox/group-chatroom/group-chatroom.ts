@@ -1,32 +1,32 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgModel } from "@angular/forms";
-import { Store, select } from "@ngrx/store";
-import { Subscription } from "rxjs/Subscription";
-import { map } from "rxjs/operators";
 import {
   IonicPage,
   NavController,
   NavParams,
   Content,
+  Events,
   Keyboard,
-  Platform,
-  Events
+  Platform
 } from 'ionic-angular';
-import { NativeAudio } from "@ionic-native/native-audio";
-import * as socketio from "socket.io-client";
 import { Observable } from "rxjs";
+import { Subscription } from "rxjs/Subscription";
+import { map } from "rxjs/operators";
+import * as socketio from "socket.io-client";
+import { Store, select } from "@ngrx/store";
+import { NativeAudio } from "@ionic-native/native-audio";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
+import { inbox, message } from "../../../models/inbox";
 import { member } from "../../../models/agency";
 import { profile } from "../../../models/profile";
-import { inbox, message } from "../../../models/inbox";
 
 @IonicPage()
 @Component({
-  selector: 'page-chatroom',
-  templateUrl: 'chatroom.html',
+  selector: 'page-group-chatroom',
+  templateUrl: 'group-chatroom.html',
 })
-export class ChatroomPage {
+export class GroupChatroomPage {
 
   @ViewChild(Content) content: Content;
   chatType = this.navParams.get('chatType');
@@ -47,12 +47,12 @@ export class ChatroomPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private keyboard: Keyboard,
     private inboxProvider: InboxProvider,
-    private platform: Platform,
-    private nativeAudio: NativeAudio,
     private events: Events,
-    private store: Store<profile>
+    private keyboard: Keyboard,
+    private store: Store<profile>,
+    private platform: Platform,
+    private nativeAudio: NativeAudio
   ) { }
 
   initializer() {

@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <section>
+        <ion-avatar>
+          <div [ngStyle]="titleImage()" id="sender-image"></div>
+        </ion-avatar>
+        <div>
+          <h6 text-left no-margin>{{title}}</h6>
+          <p ion-text color="grey" text-left no-margin>{{designation}}</p>
+        </div>
+      </section>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div
+    class="message-container"
+    *ngFor="let message of messages; index as i"
+  >
+    <div [ngClass]="message.person.pk === userId ? 'message-parent-wrapper-right' : 'message-parent-wrapper-left'">
+      <div class="message-wrapper" [ngStyle]="!dateShow(message.person.pk, i) ? { marginTop: '0.3em' } : false">
+        <p ion-text color="grey" *ngIf="dateShow(message.person.pk, i)" class="date">{{message.timestamp | date:'MMM dd ,h:mm a'}}</p>
+        <div>
+          <p no-margin>{{message.text}}</p>
+        </div>
+      </div>
+      <div [ngStyle]="viewProfileImage(message, i)" class="profile-image"></div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer>
+  <section>
+    <div id="chatroom-input-wrapper">
+      <ion-textarea [(ngModel)]="text" #textMsg="ngModel" no-margin type="text" placeholder="write something here"></ion-textarea>
+    </div>
+    <ion-buttons end>
+      <button id="send-button" ion-button color="primary" clear icon-only (tap)="sendMessage(textMsg)">
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-buttons>
+  </section>
+</ion-footer>

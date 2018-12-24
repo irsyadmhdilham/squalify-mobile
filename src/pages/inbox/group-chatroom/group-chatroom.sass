@@ -1,0 +1,97 @@
+page-group-chatroom
+  
+  ion-title section
+    display: flex
+
+    div:first-child
+      width: 1.8em
+      height: 1.8em
+      background: color($colors, lightGrey)
+      border-radius: 100%
+
+    div:last-child
+      margin-left: 0.5em
+
+      h6
+        font-size: 1.3rem
+        font-weight: bold
+      
+      p
+        font-size: 1.3rem
+        font-weight: normal
+  
+  .message-container
+    display: flex
+    flex-direction: column
+
+    .message-parent-wrapper-right
+      display: flex
+      align-self: flex-end
+
+      .profile-image
+        background: color($colors, lightGrey)
+        width: 1.4em
+        height: 1.4em
+        border-radius: 100%
+        align-self: flex-end
+
+      .message-wrapper
+        margin-right: 0.5em
+
+        div
+          padding: 1em
+          border-radius: 15px
+          background: color($colors, primary)
+
+          p
+            color: white
+        
+        .date
+          font-size: 1.1rem
+          text-align: left
+          margin: 0.8em 0
+
+    .message-parent-wrapper-left
+      display: flex
+
+      .profile-image
+        background: color($colors, lightGrey)
+        width: 1.4em
+        height: 1.4em
+        border-radius: 100%
+        align-self: flex-end
+        order: 0
+
+      .message-wrapper
+        order: 1
+        margin-left: 0.5em
+
+        div
+          padding: 1em
+          border-radius: 10px
+          background: lighten(color($colors, grey), 32%)
+        
+        .date
+          font-size: 1.1rem
+          text-align: right
+          margin: 0.8em 0
+
+  ion-footer
+    border-top: solid 0.55px color($colors, lightGrey)
+
+    section
+      display: grid
+      grid-template-columns: auto 10%
+      align-items: center
+      padding: 0 0.6em
+
+      #chatroom-input-wrapper
+        padding: 0.5em 1em
+        border: solid 1px color($colors, lightGrey)
+        border-radius: 100em
+        height: 2.6em
+        overflow: auto
+      
+      #send-button
+        width: 100%
+        

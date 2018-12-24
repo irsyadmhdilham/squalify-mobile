@@ -1,7 +1,7 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
-  selector: '[title]' // Attribute selector
+  selector: '[title]'
 })
 export class TitleDirective {
 

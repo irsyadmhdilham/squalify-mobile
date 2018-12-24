@@ -11,6 +11,7 @@ export interface groupChat {
   messages: message[];
   owner: profile;
   participants: profile[];
+  role: string;
 }
 
 export interface inbox {
@@ -19,4 +20,5 @@ export interface inbox {
   chat_with: profile;
   unread: number;
   messages: message[];
+  group_chat: groupChat[];
 }
