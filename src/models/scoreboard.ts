@@ -4,7 +4,7 @@ export interface pointScore {
   profile_image: string;
   point: number;
   designation: string;
-}
+};
 
 export interface salesScore {
   pk: number;
@@ -12,4 +12,4 @@ export interface salesScore {
   profile_image: string;
   amount: string;
   designation: string;
-}
+};

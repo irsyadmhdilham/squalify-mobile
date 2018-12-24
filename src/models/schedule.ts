@@ -8,4 +8,4 @@ export interface schedule {
   location: string;
   reminder?: any;
   contact?: contact;
-}
+};

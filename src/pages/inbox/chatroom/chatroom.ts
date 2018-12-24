@@ -29,7 +29,6 @@ import { inbox, message } from "../../../models/inbox";
 export class ChatroomPage {
 
   @ViewChild(Content) content: Content;
-  chatType = this.navParams.get('chatType');
   inbox: inbox = this.navParams.get('inbox');
   pk: number;
   userId: number | boolean;
@@ -192,14 +191,10 @@ export class ChatroomPage {
         };
     })).subscribe(inbox => {
       this.messages = inbox.messages;
-      if (this.chatType === 'personal') {
-        this.profileImage = inbox.chat_with.profile_image;
-        this.title = inbox.chat_with.name;
-        this.designation = inbox.chat_with.designation;
-        this.receiverId = inbox.chat_with.pk;
-      } else {
-        this.title = '';
-      }
+      this.profileImage = inbox.chat_with.profile_image;
+      this.title = inbox.chat_with.name;
+      this.designation = inbox.chat_with.designation;
+      this.receiverId = inbox.chat_with.pk;
       setTimeout(() => {
         this.content.scrollToBottom();
       }, 100);

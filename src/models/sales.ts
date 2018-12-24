@@ -9,19 +9,19 @@ export interface sales {
   document_id?: string;
   location?: string;
   commission?: number;
-}
+};
 
 interface instance {
   sales: string,
   income: string
-}
+};
 
 export interface summary {
   year: instance;
   month: instance;
   week: instance;
   today: instance;
-}
+};
 
 export interface groupSales {
   pk: number;
@@ -30,7 +30,7 @@ export interface groupSales {
   designation: string;
   amount: string;
   downline?: number;
-}
+};
 
 export interface downlineSales {
   pk: number;
@@ -39,4 +39,4 @@ export interface downlineSales {
   designation: string;
   amount: string;
   downlines: groupSales[];
-}
+};

@@ -13,6 +13,6 @@ export interface profile {
     agency_image: string;
     name: string;
     company: string;
-  },
+  };
   settings?: settings;
-}
+};

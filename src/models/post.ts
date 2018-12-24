@@ -6,12 +6,12 @@ export interface comment {
   commented_by: owner;
   text: string;
   timestamp: string;
-}
+};
 
 export interface like {
   pk: number;
   liker: any;
-}
+};
 
 export interface post {
   pk: number,
@@ -22,4 +22,4 @@ export interface post {
   comments: number;
   likes: like[];
   monthly_sales: string;
-}
+};

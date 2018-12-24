@@ -6,18 +6,23 @@ import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { inbox, message } from "../../models/inbox";
+import { inbox, message, groupChat } from "../../models/inbox";
 
-type createInbox = {
+interface createInbox {
   message: message;
   inbox: inbox;
   receiver_create?: inbox;
-  receiver_update?: { pk: number; message: message };
+  receiver_update?: { pk: number; message: message; };
 };
-type sendMessage = {
+
+interface sendMessage {
   message: message;
   receiver_create?: inbox;
   receiver_update?: { pk: number; message: message };
+};
+
+interface sendGroupMessage {
+
 };
 
 @Injectable()
@@ -41,6 +46,13 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
+  getGroupInboxDetail(inboxId: number): Observable<groupChat> {
+    const url = this.profileUrl(`inbox/${inboxId}/group`);
+    return url.pipe(switchMap(url => {
+      return this.http.get<groupChat>(url);
+    }));
+  }
+
   createInbox(data): Observable<createInbox> {
     const url = this.profileUrl('inbox/');
     return url.pipe(switchMap(url => {
@@ -52,6 +64,13 @@ export class InboxProvider extends ApiUrlModules {
     const url = this.profileUrl(`inbox/${inboxId}/`);
     return url.pipe(switchMap(url => {
       return this.http.put<sendMessage>(url, data);
+    }));
+  }
+
+  sendGroupMessage(inboxId: number, data): Observable<any> {
+    const url = this.profileUrl(`inbox/${inboxId}/group/`);
+    return url.pipe(switchMap(url => {
+      return this.http.put<any>(url, data);
     }));
   }
 

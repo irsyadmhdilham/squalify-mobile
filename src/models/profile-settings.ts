@@ -3,18 +3,18 @@ export interface pushNotification {
   reminder: boolean;
   activities: boolean;
   direct_message: boolean;
-}
+};
 
 export interface notifications {
   push_notification: pushNotification,
   email_notification: boolean;
-}
+};
 
 export interface socialNetAcc {
   google: string;
   dropbox: string;
   facebook: string;
-}
+};
 
 export interface settings {
   notifications: {
@@ -22,4 +22,4 @@ export interface settings {
     email_notification: true;
   };
   social_net_acc: socialNetAcc;
-}
+};

@@ -8,10 +8,12 @@ import { Subscription } from "rxjs/Subscription";
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
-import { inbox, message } from "../../models/inbox";
+import { inbox, message, groupInbox } from "../../models/inbox";
 import { profile } from "../../models/profile";
 import { member } from "../../models/agency";
+
 import { ChatroomPage } from "./chatroom/chatroom";
+import { GroupChatroomPage } from "./group-chatroom/group-chatroom";
 
 @IonicPage()
 @Component({
@@ -21,7 +23,7 @@ import { ChatroomPage } from "./chatroom/chatroom";
 export class InboxPage {
 
   inboxes: inbox[] = [];
-  agencyChat;
+  agencyChat: groupInbox;
   pageStatus: string;
   navToChatroom = false;
   listenNewInbox: (inbox: inbox, pk: number) => void;
@@ -50,7 +52,7 @@ export class InboxPage {
 
   groupImage(obj) {
     if (obj) {
-      const image = obj.group_chat.owner.profile_image;
+      const image = obj.owner.profile_image;
       return {
         background: `url('${image}') center center no-repeat / cover`
       };
@@ -58,9 +60,14 @@ export class InboxPage {
     return false;
   }
 
-  toChatroom(chatType: string, inbox: inbox, composeNew?: member) {
+  toChatroom(inbox: inbox, composeNew?: member) {
     this.navToChatroom = true;
-    this.navCtrl.push(ChatroomPage, { inbox, composeNew, chatType });
+    this.navCtrl.push(ChatroomPage, { inbox, composeNew });
+  }
+
+  toGroupChatroom(inbox) {
+    this.navToChatroom = true;
+    this.navCtrl.push(GroupChatroomPage, { inbox });
   }
 
   composeChat() {
@@ -70,9 +77,9 @@ export class InboxPage {
       if (profile) {
         const inbox = this.inboxes.find(val => val.chat_with.pk === profile.pk);
         if (inbox) {
-          this.toChatroom('personal', inbox);
+          this.toChatroom(inbox);
         } else {
-          this.toChatroom('personal', null, profile);
+          this.toChatroom(null, profile);
         }
       }
     });
@@ -88,10 +95,14 @@ export class InboxPage {
       });
       if (getAgencyChat.length > 0) {
         const agencyChat = getAgencyChat.map(val => {
+          const groupChat = val.group_chat[0];
           return {
             pk: val.pk,
-            group_chat: val.group_chat[0],
-            unread: val.unread
+            groupId: groupChat.pk,
+            unread: val.unread,
+            participants: groupChat.participants,
+            owner: groupChat.owner,
+            messages: groupChat.messages
           };
         });
         this.agencyChat = agencyChat[0];

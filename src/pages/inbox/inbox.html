@@ -39,7 +39,7 @@
       <ng-container *ngIf="inboxes.length !== 0; then conversations; else empty"></ng-container>
       <ng-template #conversations>
         <ion-list>
-          <ion-item (tap)="toChatroom('personal', inbox)" *ngFor="let inbox of inboxes | inboxDuplicate; index as i" no-padding>
+          <ion-item (tap)="toChatroom(inbox)" *ngFor="let inbox of inboxes | inboxDuplicate; index as i" no-padding>
             <ion-avatar class="avatar-margin-top" item-start>
               <div [ngStyle]="profileImage(inbox.chat_with.profile_image)" class="profile-image"></div>
             </ion-avatar>

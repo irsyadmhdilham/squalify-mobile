@@ -4,7 +4,7 @@ export interface owner {
   pk: number;
   name: string;
   profile_image: string;
-}
+};
 
 export interface member {
   pk?: number;
@@ -12,13 +12,13 @@ export interface member {
   designation: string;
   profile_image: string;
   downline?: number;
-}
+};
 
 export interface points {
   agency: number;
   personal: number;
   group: number;
-}
+};
 
 export interface agency {
   pk: number;
@@ -30,4 +30,4 @@ export interface agency {
   posts?: post[];
   members?: member[];
   points?: points
-}
+};

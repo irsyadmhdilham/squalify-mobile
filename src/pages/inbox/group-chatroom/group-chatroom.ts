@@ -17,8 +17,7 @@ import { Store, select } from "@ngrx/store";
 import { NativeAudio } from "@ionic-native/native-audio";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
-import { inbox, message } from "../../../models/inbox";
-import { member } from "../../../models/agency";
+import { groupInbox, message } from "../../../models/inbox";
 import { profile } from "../../../models/profile";
 
 @IonicPage()
@@ -29,8 +28,7 @@ import { profile } from "../../../models/profile";
 export class GroupChatroomPage {
 
   @ViewChild(Content) content: Content;
-  chatType = this.navParams.get('chatType');
-  inbox: inbox = this.navParams.get('inbox');
+  inbox: groupInbox = this.navParams.get('inbox');
   pk: number;
   userId: number | boolean;
   receiverId: number;
@@ -56,16 +54,8 @@ export class GroupChatroomPage {
   ) { }
 
   initializer() {
-    const composeNew: member = this.navParams.get('composeNew');
-    if (composeNew) {
-      this.title = composeNew.name;
-      this.profileImage = composeNew.profile_image;
-      this.receiverId = composeNew.pk;
-      this.designation = composeNew.designation;
-    } else {
-      this.pk = this.inbox.pk;
-      this.getInbox();
-    }
+    this.pk = this.inbox.pk;
+    this.getInbox();
   }
 
   clearUnread() {
@@ -78,27 +68,27 @@ export class GroupChatroomPage {
     }
   }
 
-  listenIncomingMessage() {
-    this.io.on('connect', () => {
-      this.storeListener = this.profile.subscribe(async profile => {
-        const userId = await this.inboxProvider.userId().toPromise();
-        const namespace = `${profile.agency.company}:${profile.agency.pk}:${userId}:new message`;
-        this.io.on(namespace, (data: { message: message }) => {
-          const message: message = {
-            ...data.message,
-            timestamp: new Date(data.message.timestamp)
-          }
-          this.messages.push(message);
-          this.inboxProvider.clearUnread(this.pk).subscribe(() => {
-            this.events.publish('inbox: clear unread', this.pk);
-          });
-          setTimeout(() => {
-            this.content.scrollToBottom();
-          }, 100);
-        });
-      });
-    });
-  }
+  // listenIncomingMessage() {
+  //   this.io.on('connect', () => {
+  //     this.storeListener = this.profile.subscribe(async profile => {
+  //       const userId = await this.inboxProvider.userId().toPromise();
+  //       const namespace = `${profile.agency.company}:${profile.agency.pk}:${userId}:new message`;
+  //       this.io.on(namespace, (data: { message: message }) => {
+  //         const message: message = {
+  //           ...data.message,
+  //           timestamp: new Date(data.message.timestamp)
+  //         }
+  //         this.messages.push(message);
+  //         this.inboxProvider.clearUnread(this.pk).subscribe(() => {
+  //           this.events.publish('inbox: clear unread', this.pk);
+  //         });
+  //         setTimeout(() => {
+  //           this.content.scrollToBottom();
+  //         }, 100);
+  //       });
+  //     });
+  //   });
+  // }
 
   ionViewDidLoad() {
     this.initializer();
@@ -109,7 +99,7 @@ export class GroupChatroomPage {
     this.registerSound();
     this.clearUnread();
     this.profile = this.store.pipe(select('profile'));
-    this.listenIncomingMessage();
+    // this.listenIncomingMessage();
   }
 
   ionViewWillLeave() {
@@ -184,7 +174,7 @@ export class GroupChatroomPage {
   }
 
   getInbox() {
-    this.inboxProvider.getInboxDetail(this.pk).pipe(
+    this.inboxProvider.getGroupInboxDetail(this.pk).pipe(
       map(inbox => {
         return {
           ...inbox,
@@ -192,14 +182,10 @@ export class GroupChatroomPage {
         };
     })).subscribe(inbox => {
       this.messages = inbox.messages;
-      if (this.chatType === 'personal') {
-        this.profileImage = inbox.chat_with.profile_image;
-        this.title = inbox.chat_with.name;
-        this.designation = inbox.chat_with.designation;
-        this.receiverId = inbox.chat_with.pk;
-      } else {
-        this.title = '';
-      }
+      this.profileImage = inbox.owner.profile_image;
+      this.title = inbox.owner.name;
+      this.designation = inbox.owner.designation;
+      this.receiverId = inbox.owner.pk;
       setTimeout(() => {
         this.content.scrollToBottom();
       }, 100);
@@ -210,9 +196,6 @@ export class GroupChatroomPage {
     const receiverResponse = data => {
       this.storeListener = this.profile.subscribe(profile => {
         const namespace = `${profile.agency.company}:${profile.agency.pk}:${this.receiverId}`;
-        if (data.receiver_create) {
-          this.io.emit('new inbox', { namespace, inbox: data.receiver_create });
-        }
         if (data.receiver_update) {
           this.io.emit('new message', { namespace, obj: data.receiver_update });
         }
@@ -229,36 +212,19 @@ export class GroupChatroomPage {
         receiverId: this.receiverId
       };
       this.text = '';
-      if (!this.pk) {
-        this.inboxProvider.createInbox(data).pipe(
-          map(response => {
-            return {
-              ...response,
-              message: { ...response.message, timestamp: new Date(response.message.timestamp) }
-            }
-        })).subscribe(data => {
-          this.pk = data.inbox.pk;
-          this.messages.push(data.message);
-          this.events.publish('inbox: new inbox', data.inbox);
-          this.playSound('submitMessage');
-          receiverResponse(data);
-          scrollContent();
-        });
-      } else {
-        this.inboxProvider.sendMessage(this.pk, data).pipe(
-          map(response => {
-            return {
-              ...response,
-              message: { ...response.message, timestamp: new Date(response.message.timestamp) }
-            };
-          })).subscribe(response => {
-          this.messages.push(response.message);
-          this.events.publish('inbox: new message', response.message, this.pk);
-          this.playSound('submitMessage');
-          receiverResponse(response);
-          scrollContent();
-        });
-      }
+      this.inboxProvider.sendGroupMessage(this.pk, data).pipe(
+        map(response => {
+          return {
+            ...response,
+            message: { ...response.message, timestamp: new Date(response.message.timestamp) }
+          };
+        })).subscribe(response => {
+        this.messages.push(response.message);
+        this.events.publish('inbox: new message', response.message, this.pk);
+        this.playSound('submitMessage');
+        receiverResponse(response);
+        scrollContent();
+      });
     }
   }
 

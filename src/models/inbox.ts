@@ -4,7 +4,16 @@ export interface message {
   timestamp: Date;
   person: profile;
   text: string;
-}
+};
+
+export interface groupInbox {
+  pk: number;
+  groupId: number;
+  owner: profile;
+  messages: message[];
+  participants: profile[];
+  unread: number;
+};
 
 export interface groupChat {
   pk: number;
@@ -12,7 +21,7 @@ export interface groupChat {
   owner: profile;
   participants: profile[];
   role: string;
-}
+};
 
 export interface inbox {
   pk: number;
@@ -21,4 +30,4 @@ export interface inbox {
   unread: number;
   messages: message[];
   group_chat: groupChat[];
-}
+};

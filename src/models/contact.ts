@@ -10,4 +10,4 @@ export interface contact {
   scheduleId?: number;
   schedules?: schedule[];
   referrerId?: number;
-}
+};
