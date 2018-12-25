@@ -10,6 +10,7 @@ import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
 import { post } from "../../models/post";
 import { profile } from "../../models/profile";
+import { store } from "../../models/store";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
@@ -24,6 +25,7 @@ import { NotificationsPage } from '../notifications/notifications';
 export class HomePage {
 
   agency: Observable<profile> = this.store.pipe(select('profile'));
+  notifications: Observable<number> = this.store.pipe(select('notifications'));
   agencySubscription: Subscription;
   agencyName: string;
   pk: number;
@@ -44,7 +46,7 @@ export class HomePage {
     private modalCtrl: ModalController,
     private postProvider: PostProvider,
     private navParams: NavParams,
-    private store: Store<profile>
+    private store: Store<store>
   ) { }
 
   navToNotifications() {

@@ -6,8 +6,7 @@ import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { inbox, message } from "../../models/inbox";
-import { member } from '../../models/group';
+import { inbox, message, groupInbox } from "../../models/inbox";
 
 interface createInbox {
   message: message;
@@ -21,15 +20,6 @@ interface sendMessage {
   receiver_create?: inbox;
   receiver_update?: { pk: number; message: message };
 };
-
-interface getGroupInbox {
-  pk: number;
-  inbox_pk: number;
-  messages: message[];
-  owner: member;
-  participants: member[];
-  role: string;
-}
 
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
@@ -52,10 +42,10 @@ export class InboxProvider extends ApiUrlModules {
     }));
   }
 
-  getGroupInboxDetail(inboxId: number): Observable<getGroupInbox> {
+  getGroupInboxDetail(inboxId: number): Observable<groupInbox> {
     const url = this.profileUrl(`inbox/${inboxId}/group`);
     return url.pipe(switchMap(url => {
-      return this.http.get<getGroupInbox>(url);
+      return this.http.get<groupInbox>(url);
     }));
   }
 

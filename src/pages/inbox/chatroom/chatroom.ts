@@ -19,6 +19,7 @@ import { Observable } from "rxjs";
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { member } from "../../../models/agency";
 import { profile } from "../../../models/profile";
+import { store } from "../../../models/store";
 import { inbox, message } from "../../../models/inbox";
 
 @IonicPage()
@@ -51,7 +52,7 @@ export class ChatroomPage {
     private platform: Platform,
     private nativeAudio: NativeAudio,
     private events: Events,
-    private store: Store<profile>
+    private store: Store<store>
   ) { }
 
   initializer() {

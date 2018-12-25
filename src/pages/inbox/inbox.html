@@ -28,13 +28,19 @@
             <div class="group-inbox-image" [ngStyle]="groupImage(agencyChat)">
               <ion-badge *ngIf="groupUnread(agencyChat)" color="primary">{{groupUnread(agencyChat)}}</ion-badge>
             </div>
-            <p text-center>Your agency</p>
+            <p text-center>Agency</p>
           </div>
-          <div class="group-inbox-container">
-            <div class="group-inbox-image">
-              <ion-badge color="primary">23</ion-badge>
+          <div *ngIf="groupChat" (tap)="toGroupChatroom(groupChat)" class="group-inbox-container">
+            <div class="group-inbox-image" [ngStyle]="groupImage(groupChat)">
+              <ion-badge *ngIf="groupUnread(groupChat)" color="primary">{{groupUnread(groupChat)}}</ion-badge>
             </div>
-            <p text-center>Your group</p>
+            <p text-center>Group</p>
+          </div>
+          <div *ngIf="uplineGroupChat" (tap)="toGroupChatroom(uplineGroupChat)" class="group-inbox-container">
+            <div class="group-inbox-image" [ngStyle]="groupImage(uplineGroupChat)">
+              <ion-badge *ngIf="groupUnread(uplineGroupChat)" color="primary">{{groupUnread(uplineGroupChat)}}</ion-badge>
+            </div>
+            <p text-center>Upline group</p>
           </div>
         </ion-row>
       </ion-scroll>

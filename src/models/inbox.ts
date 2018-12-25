@@ -1,4 +1,5 @@
 import { profile } from "./profile";
+import { agency } from "./agency";
 
 export interface message {
   timestamp: Date;
@@ -14,6 +15,7 @@ export interface groupInbox {
   participants: profile[];
   unread: number;
   role: string;
+  agency: agency;
 };
 
 export interface groupChat {

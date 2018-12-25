@@ -10,6 +10,7 @@ import { InboxProvider } from "../../providers/inbox/inbox";
 
 import { inbox, message, groupInbox } from "../../models/inbox";
 import { profile } from "../../models/profile";
+import { store } from "../../models/store";
 import { member } from "../../models/agency";
 
 import { ChatroomPage } from "./chatroom/chatroom";
@@ -24,14 +25,16 @@ export class InboxPage {
 
   inboxes: inbox[] = [];
   agencyChat: groupInbox;
-  groupChat;
-  uplineGroupChat;
+  groupChat: groupInbox;
+  uplineGroupChat: groupInbox;
   pageStatus: string;
   navToChatroom = false;
   listenNewInbox: (inbox: inbox, pk: number) => void;
   listenNewMessage: (message: message, pk: number) => void;
   listenClearUnread: (pk: number) => void;
+  listenAgencyClearUnread: (pk: number) => void;
   listenGroupClearUnread: (pk: number) => void;
+  listenUplineGroupClearUnread: (pk: number) => void;
   storeListener: Subscription;
   io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
@@ -41,7 +44,7 @@ export class InboxPage {
     private modalCtrl: ModalController,
     private inboxProvider: InboxProvider,
     private events: Events,
-    private store: Store<profile>
+    private store: Store<store>
   ) { }
 
   profileImage(img) {
@@ -55,8 +58,12 @@ export class InboxPage {
 
   groupImage(obj: groupInbox) {
     if (obj) {
+      let url = obj.owner.profile_image;
+      if (obj.role === 'agency') {
+        url = obj.agency.agency_image;
+      }
       return {
-        background: `url('${obj.owner.profile_image}') center center no-repeat / cover`
+        background: `url('${url}') center center no-repeat / cover`
       };
     }
     return false;
@@ -100,22 +107,46 @@ export class InboxPage {
       this.pageStatus = undefined;
       const inboxes = response.filter(val => val.group_chat.length === 0);
       const getAgencyChat = response.filter(val => {
-        return val.group_chat.length > 0 && val.group_chat.filter(value => value.role === 'agency');
+        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'agency');
       });
+      const getGroupChat = response.filter(val => {
+        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'group');
+      });
+      const getUplineGroupChat = response.filter(val => {
+        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'upline group');
+      });
+      const groupChatMapper = (val1, val2) => {
+        return {
+          pk: val1.pk,
+          groupId: val2.pk,
+          unread: val1.unread,
+          participants: val2.participants,
+          owner: val2.owner,
+          messages: val2.messages,
+          role: val2.role,
+          agency: val2.owner.agency
+        };
+      };
       if (getAgencyChat.length > 0) {
         const agencyChat = getAgencyChat.map(val => {
           const groupChat = val.group_chat[0];
-          return {
-            pk: val.pk,
-            groupId: groupChat.pk,
-            unread: val.unread,
-            participants: groupChat.participants,
-            owner: groupChat.owner,
-            messages: groupChat.messages,
-            role: groupChat.role
-          };
+          return groupChatMapper(val, groupChat);
         });
         this.agencyChat = agencyChat[0];
+      }
+      if (getGroupChat.length > 0) {
+        const groupChat = getGroupChat.map(val => {
+          const groupChat = val.group_chat[0];
+          return groupChatMapper(val, groupChat);
+        });
+        this.groupChat = groupChat[0];
+      }
+      if (getUplineGroupChat.length > 0) {
+        const uplineGroupChat = getUplineGroupChat.map(val => {
+          const groupChat = val.group_chat[0];
+          return groupChatMapper(val, groupChat);
+        });
+        this.uplineGroupChat = uplineGroupChat[0];
       }
       this.inboxes = inboxes;
     }, () => {
@@ -145,13 +176,21 @@ export class InboxPage {
       this.inboxes[i].unread = 0;
     };
 
-    this.listenGroupClearUnread = () => {
+    this.listenAgencyClearUnread = () => {
       this.agencyChat.unread = 0;
+    };
+    this.listenGroupClearUnread = () => {
+      this.groupChat.unread = 0;
+    };
+    this.listenUplineGroupClearUnread = () => {
+      this.uplineGroupChat.unread = 0;
     };
     this.events.subscribe('inbox: new inbox', this.listenNewInbox);
     this.events.subscribe('inbox: new message', this.listenNewMessage);
     this.events.subscribe('inbox: clear unread', this.listenClearUnread);
-    this.events.subscribe('inbox: agency clear unread', this.listenGroupClearUnread);
+    this.events.subscribe('inbox: agency clear unread', this.listenAgencyClearUnread);
+    this.events.subscribe('inbox: group clear unread', this.listenGroupClearUnread);
+    this.events.subscribe('inbox: upline group clear unread', this.listenUplineGroupClearUnread);
   }
 
   ionViewWillEnter() {
@@ -168,7 +207,9 @@ export class InboxPage {
       this.events.unsubscribe('inbox: new inbox', this.listenNewInbox);
       this.events.unsubscribe('inbox: new message', this.listenNewMessage);
       this.events.unsubscribe('inbox: clear unread', this.listenClearUnread);
-      this.events.unsubscribe('inbox: agency clear unread', this.listenGroupClearUnread);
+      this.events.unsubscribe('inbox: agency clear unread', this.listenAgencyClearUnread);
+      this.events.unsubscribe('inbox: group clear unread', this.listenGroupClearUnread);
+      this.events.unsubscribe('inbox: upline group clear unread', this.listenUplineGroupClearUnread);
       if (this.storeListener) {
         this.storeListener.unsubscribe();
       }
@@ -196,12 +237,12 @@ export class InboxPage {
           this.inboxes.unshift(splicedInbox[0]);
         });
 
-        const groupNamespace = `${agency.company}:${agency.pk}:${this.agencyChat.pk}`;
-        this.io.on(`${groupNamespace}:new agency message`, (data: {sender: number}) => {
-          if (data.sender !== userId) {
-            this.agencyChat.unread++;
-          }
-        });
+        // const groupNamespace = `${agency.company}:${agency.pk}:${this.agencyChat.pk}`;
+        // this.io.on(`${groupNamespace}:new agency message`, (data: {sender: number}) => {
+        //   if (data.sender !== userId) {
+        //     this.agencyChat.unread++;
+        //   }
+        // });
       });
     });
   }

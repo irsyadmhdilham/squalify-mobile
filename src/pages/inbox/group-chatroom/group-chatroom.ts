@@ -19,6 +19,7 @@ import { NativeAudio } from "@ionic-native/native-audio";
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { groupInbox, message } from "../../../models/inbox";
 import { profile } from "../../../models/profile";
+import { store } from "../../../models/store";
 
 @IonicPage()
 @Component({
@@ -29,14 +30,13 @@ export class GroupChatroomPage {
 
   @ViewChild(Content) content: Content;
   inbox: groupInbox = this.navParams.get('inbox');
+  inboxId: number;
   pk: number;
   role: string;
-  inboxId: number;
   userId: number | boolean;
-  receiverId: number;
   profileImage: string;
   title: string;
-  designation: string;
+  subTitle: string;
   messages: message[] = [];
   keyboardDidShow: Subscription;
   storeListener: Subscription;
@@ -50,7 +50,7 @@ export class GroupChatroomPage {
     private inboxProvider: InboxProvider,
     private events: Events,
     private keyboard: Keyboard,
-    private store: Store<profile>,
+    private store: Store<store>,
     private platform: Platform,
     private nativeAudio: NativeAudio
   ) { }
@@ -91,7 +91,11 @@ export class GroupChatroomPage {
         this.io.on(namespace, async (data: {message: message; sender: number;}) => {
           const userId = await this.inboxProvider.userId().toPromise();
           if (userId !== data.sender) {
-            this.messages.push(data.message);
+            const message: message = {
+              ...data.message,
+              timestamp: new Date(data.message.timestamp)
+            };
+            this.messages.push(message);
           }
           this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
             let topic = 'inbox: agency clear unread';
@@ -119,6 +123,7 @@ export class GroupChatroomPage {
     this.registerSound();
     this.clearUnread();
     this.profile = this.store.pipe(select('profile'));
+    this.listenIncomingMessage();
   }
 
   ionViewWillLeave() {
@@ -197,15 +202,30 @@ export class GroupChatroomPage {
       map(inbox => {
         return {
           ...inbox,
+          agency: inbox.owner.agency,
           messages: inbox.messages.map(val => ({...val, timestamp: new Date(val.timestamp)}))
         };
     })).subscribe(groupChat => {
       this.messages = groupChat.messages;
-      this.profileImage = groupChat.owner.profile_image;
-      this.title = groupChat.owner.name;
-      this.designation = groupChat.owner.designation;
-      this.receiverId = groupChat.owner.pk;
-      this.listenIncomingMessage();
+      let image = groupChat.owner.profile_image
+      if (this.role === 'agency') {
+        image = groupChat.agency.agency_image;
+      }
+      this.profileImage = image;
+      let title: string;
+      if (this.role === 'agency') {
+        title = 'Your agency';
+      } else if (this.role === 'group') {
+        title = 'Your group';
+      } else {
+        title = 'Your upline group';
+      }
+      this.title = title;
+      let subTitle = groupChat.owner.name
+      if (this.role === 'agency') {
+        subTitle = groupChat.agency.name;
+      }
+      this.subTitle = subTitle;
       setTimeout(() => {
         this.content.scrollToBottom();
       }, 100);
@@ -220,11 +240,10 @@ export class GroupChatroomPage {
     };
     if (msg.touched && msg.value.length > 0) {
       const data = {
-        text: msg.value,
-        receiverId: this.receiverId
+        text: msg.value
       };
       this.text = '';
-      this.inboxProvider.sendGroupMessage(this.pk, data).pipe(
+      this.inboxProvider.sendGroupMessage(this.inboxId, data).pipe(
         map(message => {
           return {
             ...message,

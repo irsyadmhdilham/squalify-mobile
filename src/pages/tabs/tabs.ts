@@ -5,6 +5,7 @@ import { Firebase } from "@ionic-native/firebase";
 import { Deeplinks } from "@ionic-native/deeplinks";
 import { Store } from "@ngrx/store";
 import { Fetch } from "../../store/actions/profile.action";
+import * as socketio from "socket.io-client";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -12,13 +13,13 @@ import { HomePage } from '../home/home';
 import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 
-import { Ids } from "../../functions/config";
+import { ApiUrlModules } from "../../functions/config";
 import { profile } from "../../models/profile";
 
 @Component({
   templateUrl: 'tabs.html'
 })
-export class TabsPage extends Ids {
+export class TabsPage extends ApiUrlModules {
 
   signedIn = false;
   tab1Root = HomePage;
@@ -26,6 +27,7 @@ export class TabsPage extends Ids {
   tab3Root = ApplicationsPage;
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
+  io = socketio(this.wsBaseUrl('notifications'));
 
   constructor(
     public storage: Storage,
