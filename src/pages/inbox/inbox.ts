@@ -177,13 +177,19 @@ export class InboxPage {
     };
 
     this.listenAgencyClearUnread = () => {
-      this.agencyChat.unread = 0;
+      if (this.agencyChat) {
+        this.agencyChat.unread = 0;
+      }
     };
     this.listenGroupClearUnread = () => {
-      this.groupChat.unread = 0;
+      if (this.groupChat) {
+        this.groupChat.unread = 0;
+      }
     };
     this.listenUplineGroupClearUnread = () => {
-      this.uplineGroupChat.unread = 0;
+      if (this.uplineGroupChat) {
+        this.uplineGroupChat.unread = 0;
+      }
     };
     this.events.subscribe('inbox: new inbox', this.listenNewInbox);
     this.events.subscribe('inbox: new message', this.listenNewMessage);

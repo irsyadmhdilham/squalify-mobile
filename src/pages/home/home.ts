@@ -154,7 +154,6 @@ export class HomePage {
       this.company = value.agency.company;
       this.homeWs();
     });
-    this.navToNotifications();
   }
 
   likePost() {

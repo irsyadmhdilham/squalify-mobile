@@ -23,7 +23,7 @@
       <div class="message-wrapper" [ngStyle]="!dateShow(message.person.pk, i) ? { marginTop: '0.3em' } : false">
         <p ion-text color="grey" *ngIf="dateShow(message.person.pk, i)" class="date">{{message.timestamp | date:'MMM dd ,h:mm a'}}</p>
         <div>
-          <h6 ion-text color="white" no-margin>{{message.person.name}}</h6>
+          <h6 ion-text no-margin>{{message.person.name}}</h6>
           <p no-margin>{{message.text}}</p>
         </div>
       </div>
