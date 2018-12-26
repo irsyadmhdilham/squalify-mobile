@@ -21,6 +21,7 @@ import { member } from "../../../models/agency";
 import { profile } from "../../../models/profile";
 import { store } from "../../../models/store";
 import { inbox, message } from "../../../models/inbox";
+import { notification } from "../../../models/notification";
 
 @IonicPage()
 @Component({
@@ -68,6 +69,15 @@ export class ChatroomPage {
     }
   }
 
+  clearNotifRead() {
+    const notif: notification = this.navParams.get('notif');
+    if (notif) {
+      if (!notif.read) {
+        this.events.publish('notifications: read', notif.pk);
+      }
+    }
+  }
+
   clearUnread() {
     if (this.inbox) {
       if (this.inbox.unread > 0) {
@@ -108,6 +118,7 @@ export class ChatroomPage {
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
     this.registerSound();
     this.clearUnread();
+    this.clearNotifRead();
     this.profile = this.store.pipe(select('profile'));
     this.listenIncomingMessage();
   }
@@ -118,6 +129,7 @@ export class ChatroomPage {
       this.storeListener.unsubscribe();
     }
     this.navCtrl.getPrevious().data.fromChatroom = false;
+    this.navCtrl.getPrevious().data.fromNotifDetail = false;
     this.io.close();
   }
 

@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import * as moment from "moment";
 import * as socketio from 'socket.io-client';
 
 import { post } from "../../../models/post";
@@ -49,23 +50,8 @@ export class PostDetailPage {
   }
   
   dateDisplay() {
-    const year = this.date.getFullYear(),
-          month = this.date.getMonth(),
-          date = this.date.getDate();
-    const currentYear = new Date().getFullYear(),
-          currentMonth = new Date().getMonth(),
-          currentDate = new Date().getDate();
-    if (currentYear === year && currentMonth === month) {
-      if (currentDate === date) {
-        return {
-          text: 'Today'
-        };
-      } else {
-        return { text: false };
-      }
-    } else {
-      return { text: false };
-    }
+    const timestamp = moment(this.date).fromNow();
+    return timestamp;
   }
 
   async like() {

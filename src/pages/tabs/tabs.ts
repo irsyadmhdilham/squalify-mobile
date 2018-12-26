@@ -4,7 +4,6 @@ import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
 import { Deeplinks } from "@ionic-native/deeplinks";
 import { Store } from "@ngrx/store";
-import { Fetch } from "../../store/actions/profile.action";
 import * as socketio from "socket.io-client";
 
 import { DashboardPage } from "../dashboard/dashboard";
@@ -15,6 +14,9 @@ import { InboxPage } from "../inbox/inbox";
 
 import { ApiUrlModules } from "../../functions/config";
 import { profile } from "../../models/profile";
+
+import { Fetch } from "../../store/actions/profile.action";
+import { Init as NotifInit } from "../../store/actions/notifications.action";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -60,6 +62,7 @@ export class TabsPage extends ApiUrlModules {
     this.userId().subscribe(userId => {
       if (userId) {
         this.store.dispatch(new Fetch());
+        this.store.dispatch(new NotifInit());
       }
     });
   }

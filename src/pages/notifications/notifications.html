@@ -6,20 +6,21 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding [ngSwitch]="pageStatus">
+<ion-content [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve notifications" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ion-list *ngSwitchDefault>
-    <ion-item no-padding *ngFor="let notif of notifications">
-      <ion-avatar item-start>
+    <ion-item [ngStyle]="read(notif)" *ngFor="let notif of notifications" (tap)="navigate(notif)">
+      <ion-avatar item-start class="avatar-margin-top">
         <div [ngStyle]="profileImage(notif.notified_by.profile_image)" class="profile-image"></div>
       </ion-avatar>
       <ng-container [ngSwitch]="notif.notification_type">
-        <h6 *ngSwitchCase="'Like'"><span>{{notif.notified_by.name}}</span> liked your post</h6>
-        <h6 *ngSwitchCase="'Comment'"><span>{{notif.notified_by.name}}</span> commented your post</h6>
-        <h6 *ngSwitchCase="'Sales closed'"><span>{{notif.notified_by.name}}</span> closed sales</h6>
+        <h6 *ngSwitchCase="'like'"><span>{{notif.notified_by.name}}</span> liked your post</h6>
+        <h6 *ngSwitchCase="'comment'"><span>{{notif.notified_by.name}}</span> commented your post</h6>
+        <h6 *ngSwitchCase="'closed sales'"><span>{{notif.notified_by.name}}</span> closed sales</h6>
+        <h6 *ngSwitchCase="'inbox'"><span>{{notif.notified_by.name}}</span> send you a message</h6>
       </ng-container>
-      <p>{{notif.timestamp}}</p>
+      <p>{{timestamp(notif.timestamp)}}</p>
     </ion-item>
   </ion-list>
 </ion-content>

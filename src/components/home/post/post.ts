@@ -1,5 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { NavController } from "ionic-angular";
+import * as moment from "moment";
 
 import { PostProvider } from "../../../providers/post/post";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
@@ -46,23 +47,8 @@ export class PostComponent implements OnChanges {
   }
 
   dateDisplay() {
-    const year = this.date.getFullYear(),
-          month = this.date.getMonth(),
-          date = this.date.getDate();
-    const currentYear = new Date().getFullYear(),
-          currentMonth = new Date().getMonth(),
-          currentDate = new Date().getDate();
-    if (currentYear === year && currentMonth === month) {
-      if (currentDate === date) {
-        return {
-          text: 'Today'
-        };
-      } else {
-        return { text: false };
-      }
-    } else {
-      return { text: false };
-    }
+    const timestamp = moment(this.date).fromNow();
+    return timestamp;
   }
 
   async like() {

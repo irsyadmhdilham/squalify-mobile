@@ -19,8 +19,6 @@ const initialState: profile = {
 
 export function profileReducer(state = initialState, action: ActionUnion) {
   switch (action.type) {
-    case ActionTypes.fetch:
-      return state;
     case ActionTypes.fetchSucceed:
       return state = action.payload;
     default:
