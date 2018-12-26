@@ -17,9 +17,14 @@ import { Store, select } from "@ngrx/store";
 import { NativeAudio } from "@ionic-native/native-audio";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
+import { NotificationProvider } from "../../../providers/notification/notification";
+
 import { groupInbox, message } from "../../../models/inbox";
 import { profile } from "../../../models/profile";
 import { store } from "../../../models/store";
+import { notification } from "../../../models/notification";
+
+import { Decrement } from "../../../store/actions/notifications.action";
 
 @IonicPage()
 @Component({
@@ -48,6 +53,7 @@ export class GroupChatroomPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private inboxProvider: InboxProvider,
+    private notificationProvider: NotificationProvider,
     private events: Events,
     private keyboard: Keyboard,
     private store: Store<store>,
@@ -60,6 +66,18 @@ export class GroupChatroomPage {
     this.pk = this.inbox.groupId;
     this.role = this.inbox.role;
     this.getInbox();
+  }
+
+  clearNotifRead() {
+    const notif: notification = this.navParams.get('notif');
+    if (notif) {
+      if (!notif.read) {
+        this.notificationProvider.read(notif.pk).subscribe(() => {
+          this.events.publish('notifications: read', notif.pk);
+          this.store.dispatch(new Decrement());
+        });
+      }
+    }
   }
 
   clearUnread() {
@@ -122,6 +140,7 @@ export class GroupChatroomPage {
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
     this.registerSound();
     this.clearUnread();
+    this.clearNotifRead();
     this.profile = this.store.pipe(select('profile'));
     this.listenIncomingMessage();
   }
@@ -132,6 +151,7 @@ export class GroupChatroomPage {
       this.storeListener.unsubscribe();
     }
     this.navCtrl.getPrevious().data.fromChatroom = false;
+    this.navCtrl.getPrevious().data.fromNotifDetail = false;
     this.io.close();
   }
 

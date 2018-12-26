@@ -36,4 +36,11 @@ export class NotificationProvider extends ApiUrlModules {
     }));
   }
 
+  read(notifId: number): Observable<boolean> {
+    const url = this.profileUrl(`notification/${notifId}/`);
+    return url.pipe(switchMap(url => {
+      return this.http.put<boolean>(url, null);
+    }));
+  }
+
 }

@@ -17,6 +17,9 @@ import * as socketio from "socket.io-client";
 import { Observable } from "rxjs";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
+import { NotificationProvider } from "../../../providers/notification/notification";
+import { Decrement } from "../../../store/actions/notifications.action";
+
 import { member } from "../../../models/agency";
 import { profile } from "../../../models/profile";
 import { store } from "../../../models/store";
@@ -50,6 +53,7 @@ export class ChatroomPage {
     public navParams: NavParams,
     private keyboard: Keyboard,
     private inboxProvider: InboxProvider,
+    private notificationProvider: NotificationProvider,
     private platform: Platform,
     private nativeAudio: NativeAudio,
     private events: Events,
@@ -73,7 +77,10 @@ export class ChatroomPage {
     const notif: notification = this.navParams.get('notif');
     if (notif) {
       if (!notif.read) {
-        this.events.publish('notifications: read', notif.pk);
+        this.notificationProvider.read(notif.pk).subscribe(() => {
+          this.events.publish('notifications: read', notif.pk);
+          this.store.dispatch(new Decrement());
+        });
       }
     }
   }

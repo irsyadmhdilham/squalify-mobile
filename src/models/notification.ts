@@ -9,4 +9,5 @@ export interface notification {
   inbox_rel: inbox;
   timestamp: Date;
   read: boolean;
+  group_chat: string;
 };

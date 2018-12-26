@@ -6,6 +6,7 @@ import { notification } from "../../models/notification";
 import { NotificationProvider } from "../../providers/notification/notification";
 
 import { ChatroomPage } from "../../pages/inbox/chatroom/chatroom";
+import { GroupChatroomPage } from "../../pages/inbox/group-chatroom/group-chatroom";
 
 @IonicPage()
 @Component({
@@ -25,6 +26,17 @@ export class NotificationsPage {
     private notificationProvider: NotificationProvider,
     private events: Events
   ) { }
+
+  inboxGroupText(notif: notification) {
+    const groupChat = notif.group_chat;
+    if (groupChat === 'agency') {
+      return 'agency group';
+    } else if (groupChat === 'group') {
+      return 'your group';
+    } else {
+      return 'upline group';
+    }
+  }
 
   profileImage(img) {
     if (!img) {
@@ -78,6 +90,8 @@ export class NotificationsPage {
     this.navToDetail = true;
     if (notif.notification_type === 'inbox') {
       this.navCtrl.push(ChatroomPage, { inbox: notif.inbox_rel, notif });
+    } else if (notif.notification_type === 'group inbox') {
+      this.navCtrl.push(GroupChatroomPage, { inbox: notif.inbox_rel, notif });
     }
   }
 

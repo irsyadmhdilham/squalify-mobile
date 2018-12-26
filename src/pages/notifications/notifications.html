@@ -10,7 +10,7 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve notifications" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ion-list *ngSwitchDefault>
-    <ion-item [ngStyle]="read(notif)" *ngFor="let notif of notifications" (tap)="navigate(notif)">
+    <ion-item [ngStyle]="read(notif)" text-wrap *ngFor="let notif of notifications" (tap)="navigate(notif)">
       <ion-avatar item-start class="avatar-margin-top">
         <div [ngStyle]="profileImage(notif.notified_by.profile_image)" class="profile-image"></div>
       </ion-avatar>
@@ -19,6 +19,7 @@
         <h6 *ngSwitchCase="'comment'"><span>{{notif.notified_by.name}}</span> commented your post</h6>
         <h6 *ngSwitchCase="'closed sales'"><span>{{notif.notified_by.name}}</span> closed sales</h6>
         <h6 *ngSwitchCase="'inbox'"><span>{{notif.notified_by.name}}</span> send you a message</h6>
+        <h6 *ngSwitchCase="'group inbox'"><span>{{notif.notified_by.name}}</span> send a message in {{inboxGroupText(notif)}}</h6>
       </ng-container>
       <p>{{timestamp(notif.timestamp)}}</p>
     </ion-item>
