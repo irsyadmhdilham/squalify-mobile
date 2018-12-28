@@ -47,6 +47,7 @@ export class GroupChatroomPage {
   storeListener: Subscription;
   profile: Observable<profile>;
   text = '';
+  initialSend = true;
   io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
   constructor(
@@ -81,18 +82,19 @@ export class GroupChatroomPage {
   }
 
   clearUnread() {
-    if (this.inbox) {
-      if (this.inbox.unread > 0) {
-        this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
-          let topic = 'inbox: agency clear unread';
-          if (this.role === 'group') {
-            topic = 'inbox: group clear unread'
-          } else if (this.role === 'upline group') {
-            topic = 'inbox: upline group clear unread'
-          }
+    if (this.inbox.unread > 0) {
+      this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
+        let topic = 'inbox: agency clear unread';
+        if (this.role === 'group') {
+          topic = 'inbox: group clear unread'
+        } else if (this.role === 'upline group') {
+          topic = 'inbox: upline group clear unread'
+        }
+        const notif = this.navParams.get('notif');
+        if (!notif) {
           this.events.publish(topic, this.inboxId);
-        });
-      }
+        }
+      });
     }
   }
 
@@ -260,7 +262,9 @@ export class GroupChatroomPage {
     };
     if (msg.touched && msg.value.length > 0) {
       const data = {
-        text: msg.value
+        text: msg.value,
+        initialSend: this.initialSend,
+        role: this.role
       };
       this.text = '';
       this.inboxProvider.sendGroupMessage(this.inboxId, data).pipe(
@@ -274,6 +278,7 @@ export class GroupChatroomPage {
         this.playSound('submitMessage');
         scrollContent();
         this.storeListener = this.profile.subscribe(async profile => {
+          this.initialSend = false;
           const userId = await this.inboxProvider.userId().toPromise();
           const agency = profile.agency,
                 namespace = `${agency.company}:${agency.pk}:${this.inboxId}`;

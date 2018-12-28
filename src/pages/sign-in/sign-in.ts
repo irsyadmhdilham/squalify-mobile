@@ -8,7 +8,11 @@ import {
   Platform
 } from 'ionic-angular';
 import { Firebase } from "@ionic-native/firebase";
+import { Store } from "@ngrx/store";
+import { Fetch } from "../../store/actions/profile.action";
+import { Init } from "../../store/actions/notifications.action";
 
+import { store } from "../../models/store";
 import { AuthProvider } from "../../providers/auth/auth";
 
 @IonicPage()
@@ -27,12 +31,18 @@ export class SignInPage {
     private AuthProvider: AuthProvider,
     private LoadingCtrl: LoadingController,
     private firebase: Firebase,
-    private platform: Platform
+    private platform: Platform,
+    private store: Store<store>
   ) { }
 
   alert(title, message) {
     const alert = this.alertCtrl.create({ title, subTitle: message, buttons: ['Ok']});
     return alert;
+  }
+
+  initializer() {
+    this.store.dispatch(new Init());
+    this.store.dispatch(new Fetch());
   }
 
   async signIn(email, password) {
@@ -59,6 +69,7 @@ export class SignInPage {
               agencyId = observe.data.agency_id;
         this.AuthProvider.setIds(userId, agencyId).then(() => {
           loading.dismiss();
+          this.initializer();
           this.signingIn.emit(true);
         });
       }

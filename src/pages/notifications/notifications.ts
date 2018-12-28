@@ -28,10 +28,10 @@ export class NotificationsPage {
   ) { }
 
   inboxGroupText(notif: notification) {
-    const groupChat = notif.group_chat;
-    if (groupChat === 'agency') {
+    const groupChat = notif.inbox_rel.group_chat;
+    if (groupChat.role === 'agency') {
       return 'agency group';
-    } else if (groupChat === 'group') {
+    } else if (groupChat.role === 'group') {
       return 'your group';
     } else {
       return 'upline group';

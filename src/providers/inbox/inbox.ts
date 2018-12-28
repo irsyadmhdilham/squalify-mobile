@@ -7,18 +7,21 @@ import { switchMap } from "rxjs/operators";
 import { ApiUrlModules } from "../../functions/config";
 
 import { inbox, message, groupInbox } from "../../models/inbox";
+import { notification } from "../../models/notification";
 
 interface createInbox {
   message: message;
   inbox: inbox;
   receiver_create?: inbox;
   receiver_update?: { pk: number; message: message; };
+  notif: notification
 };
 
 interface sendMessage {
   message: message;
   receiver_create?: inbox;
   receiver_update?: { pk: number; message: message };
+  notif: notification
 };
 
 @Injectable()

@@ -45,6 +45,7 @@ export class ChatroomPage {
   keyboardDidShow: Subscription;
   storeListener: Subscription;
   profile: Observable<profile>;
+  initialSend = true;
   text = '';
   io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
@@ -89,7 +90,10 @@ export class ChatroomPage {
     if (this.inbox) {
       if (this.inbox.unread > 0) {
         this.inboxProvider.clearUnread(this.inbox.pk).subscribe(() => {
-          this.events.publish('inbox: clear unread', this.pk);
+          const notif = this.navParams.get('notif');
+          if (!notif) {
+            this.events.publish('inbox: clear unread', this.pk);
+          }
         });
       }
     }
@@ -241,7 +245,8 @@ export class ChatroomPage {
     if (msg.touched && msg.value.length > 0) {
       const data = {
         text: msg.value,
-        receiverId: this.receiverId
+        receiverId: this.receiverId,
+        initialSend: this.initialSend
       };
       this.text = '';
       if (!this.pk) {
@@ -252,6 +257,7 @@ export class ChatroomPage {
               message: { ...response.message, timestamp: new Date(response.message.timestamp) }
             }
         })).subscribe(data => {
+          this.initialSend = false;
           this.pk = data.inbox.pk;
           this.messages.push(data.message);
           this.events.publish('inbox: new inbox', data.inbox);
@@ -267,6 +273,7 @@ export class ChatroomPage {
               message: { ...response.message, timestamp: new Date(response.message.timestamp) }
             };
           })).subscribe(response => {
+          this.initialSend = false;
           this.messages.push(response.message);
           this.events.publish('inbox: new message', response.message, this.pk);
           this.playSound('submitMessage');

@@ -32,5 +32,5 @@ export interface inbox {
   chat_with: profile;
   unread: number;
   messages: message[];
-  group_chat: groupChat[];
+  group_chat: groupChat;
 };

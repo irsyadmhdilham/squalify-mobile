@@ -105,15 +105,21 @@ export class InboxPage {
     this.pageStatus = 'loading';
     this.inboxProvider.getInbox().subscribe(response => {
       this.pageStatus = undefined;
-      const inboxes = response.filter(val => val.group_chat.length === 0);
+      const inboxes = response.filter(val => !val.group_chat);
       const getAgencyChat = response.filter(val => {
-        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'agency');
+        if (val.group_chat) {
+          return val.group_chat.role === 'agency'
+        }
       });
       const getGroupChat = response.filter(val => {
-        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'group');
+        if (val.group_chat) {
+          return val.group_chat.role === 'group';
+        }
       });
       const getUplineGroupChat = response.filter(val => {
-        return val.group_chat.length > 0 && val.group_chat.find(value => value.role === 'upline group');
+        if (val.group_chat) {
+          return val.group_chat.role === 'upline group';
+        }
       });
       const groupChatMapper = (val1, val2) => {
         return {
@@ -129,21 +135,21 @@ export class InboxPage {
       };
       if (getAgencyChat.length > 0) {
         const agencyChat = getAgencyChat.map(val => {
-          const groupChat = val.group_chat[0];
+          const groupChat = val.group_chat;
           return groupChatMapper(val, groupChat);
         });
         this.agencyChat = agencyChat[0];
       }
       if (getGroupChat.length > 0) {
         const groupChat = getGroupChat.map(val => {
-          const groupChat = val.group_chat[0];
+          const groupChat = val.group_chat;
           return groupChatMapper(val, groupChat);
         });
         this.groupChat = groupChat[0];
       }
       if (getUplineGroupChat.length > 0) {
         const uplineGroupChat = getUplineGroupChat.map(val => {
-          const groupChat = val.group_chat[0];
+          const groupChat = val.group_chat;
           return groupChatMapper(val, groupChat);
         });
         this.uplineGroupChat = uplineGroupChat[0];
