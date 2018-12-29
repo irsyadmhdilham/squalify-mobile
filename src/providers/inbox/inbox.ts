@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { switchMap } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
@@ -24,8 +24,16 @@ interface sendMessage {
   notif: notification
 };
 
+export interface newMessage {
+  pk: number;
+  message: message;
+};
+
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
+
+  newMessage$ = new Subject<newMessage>();
+  newInbox$ = new Subject<inbox>();
 
   constructor(public http: HttpClient, public storage: Storage) {
     super(storage);

@@ -14,11 +14,14 @@ import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 
 import { ApiUrlModules } from "../../functions/config";
+import { InboxProvider, newMessage } from "../../providers/inbox/inbox";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
+import { inbox } from "../../models/inbox";
 
 import { Fetch } from "../../store/actions/profile.action";
 import { Init as NotifInit, Increment } from "../../store/actions/notifications.action";
+import { SocketioInit } from "../../store/actions/socketio.action";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -31,7 +34,6 @@ export class TabsPage extends ApiUrlModules {
   tab3Root = ApplicationsPage;
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
-  io = socketio(this.wsBaseUrl('notifications'));
   profile$: Observable<profile> = this.store.pipe(select('profile'));
 
   constructor(
@@ -40,7 +42,8 @@ export class TabsPage extends ApiUrlModules {
     private platform: Platform,
     private firebase: Firebase,
     private deepLinks: Deeplinks,
-    private store: Store<store>
+    private store: Store<store>,
+    private inboxProvider: InboxProvider
   ) {
     super(storage);
   }
@@ -66,7 +69,7 @@ export class TabsPage extends ApiUrlModules {
       if (userId) {
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
-        this.listenIncomingNotif();
+        this.listenWsEvents();
       }
     });
   }
@@ -95,12 +98,30 @@ export class TabsPage extends ApiUrlModules {
     });
   }
 
-  listenIncomingNotif() {
+  listenWsEvents() {
     this.profile$.subscribe(profile =>{
-      const namespace = `${profile.agency.company}:${profile.agency.pk}:${profile.pk}`;
-      this.io.on(`${namespace}:notifications`, () => {
-        this.store.dispatch(new Increment());
-      });
+      const agency = profile.agency;
+      if (agency.pk !== 0) {
+        const namespace = `agency(${agency.pk}):user(${profile.pk})`;
+        let company = agency.company;
+        if (company === 'CWA') {
+          company = 'cwa';
+        } else if (company === 'Public Mutual') {
+          company = 'public-mutual';
+        }
+        const io = socketio(this.wsBaseUrl(company));
+        this.store.dispatch(new SocketioInit(io));
+        io.on(`${namespace}:chat:new message`, (data: newMessage) => {
+          this.inboxProvider.newMessage$.next(data);
+        });
+
+        io.on(`${namespace}:chat:new inbox`, (data: inbox) => {
+          this.inboxProvider.newInbox$.next(data);
+        });
+        // this.io.on(`${namespace}:notifications`, () => {
+        //   this.store.dispatch(new Increment());
+        // });
+      }
     });
   }
 

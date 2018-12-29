@@ -100,35 +100,32 @@ export class GroupChatroomPage {
 
   listenIncomingMessage() {
     this.io.on('connect', () => {
-      this.storeListener = this.profile.subscribe(profile => {
-        const agency = profile.agency;
-        let namespace = `${agency.company}:${agency.pk}:${this.inboxId}:new agency message`;
-        if (this.role === 'group') {
-          namespace = `${agency.company}:${agency.pk}:${this.inboxId}:new group message`;
-        } else if (this.role === 'upline group') {
-          namespace = `${agency.company}:${agency.pk}:${this.inboxId}:new upline group message`;
-        }
-        this.io.on(namespace, async (data: {message: message; sender: number;}) => {
-          const userId = await this.inboxProvider.userId().toPromise();
-          if (userId !== data.sender) {
-            const message: message = {
-              ...data.message,
-              timestamp: new Date(data.message.timestamp)
-            };
-            this.messages.push(message);
-          }
-          this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
-            let topic = 'inbox: agency clear unread';
-            if (this.role === 'group') {
-              topic = 'inbox: group clear unread'
-            } else if (this.role === 'upline group') {
-              topic = 'inbox: upline group clear unread'
+      this.storeListener = this.profile.subscribe(async profile => {
+        const userId = await this.inboxProvider.userId().toPromise(),
+              agency = profile.agency;
+        let namespace = `${agency.company}:${agency.pk}:${userId}:new group message`;
+        this.io.on(namespace, (data: {message: message; sender: number; groupChatId: number;}) => {
+          if (this.pk === data.groupChatId) {
+            if (userId !== data.sender) {
+              const message: message = {
+                ...data.message,
+                timestamp: new Date(data.message.timestamp)
+              };
+              this.messages.push(message);
             }
-            this.events.publish(topic, this.inboxId);
-          });
-          setTimeout(() => {
-            this.content.scrollToBottom();
-          }, 100);
+            this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
+              let topic = 'inbox: agency clear unread';
+              if (this.role === 'group') {
+                topic = 'inbox: group clear unread'
+              } else if (this.role === 'upline group') {
+                topic = 'inbox: upline group clear unread'
+              }
+              this.events.publish(topic, this.inboxId);
+            });
+            setTimeout(() => {
+              this.content.scrollToBottom();
+            }, 100);
+          }
         });
       });
     });
@@ -281,14 +278,15 @@ export class GroupChatroomPage {
           this.initialSend = false;
           const userId = await this.inboxProvider.userId().toPromise();
           const agency = profile.agency,
-                namespace = `${agency.company}:${agency.pk}:${this.inboxId}`;
-          let topic = 'new agency message';
-          if (this.role === 'group') {
-            topic = 'new group message';
-          } else if (this.role === 'upline group') {
-            topic = 'new upline group message';
-          }
-          this.io.emit(topic, { namespace, message, sender: userId });
+                namespace = `${agency.company}:${agency.pk}`;
+          const participants = this.inbox.participants.filter(val => val.pk !== userId);
+          this.io.emit('new group message', {
+            namespace,
+            message,
+            sender: userId,
+            participants,
+            groupChatId: this.pk
+          });
         });
       });
     }

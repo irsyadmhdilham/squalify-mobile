@@ -1,16 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, Events } from 'ionic-angular';
-import * as socketio from "socket.io-client";
-import { Store, select } from "@ngrx/store";
-import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
 import { inbox, message, groupInbox } from "../../models/inbox";
-import { profile } from "../../models/profile";
-import { store } from "../../models/store";
 import { member } from "../../models/agency";
 
 import { ChatroomPage } from "./chatroom/chatroom";
@@ -36,15 +31,13 @@ export class InboxPage {
   listenGroupClearUnread: (pk: number) => void;
   listenUplineGroupClearUnread: (pk: number) => void;
   storeListener: Subscription;
-  io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private inboxProvider: InboxProvider,
-    private events: Events,
-    private store: Store<store>
+    private events: Events
   ) { }
 
   profileImage(img) {
@@ -208,7 +201,7 @@ export class InboxPage {
   ionViewWillEnter() {
     if (!this.navToChatroom) {
       this.getInbox();
-      this.listenWsEvents();
+      // this.listenWsEvents();
     }
     this.navToChatroom = this.navParams.get('fromChatroom');
     this.eventsListener();
@@ -225,38 +218,40 @@ export class InboxPage {
       if (this.storeListener) {
         this.storeListener.unsubscribe();
       }
-      this.io.close();
     }
   }
 
   listenWsEvents() {
-    this.io.on('connect', () => {
-      this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
-      .subscribe(async profile => {
-        const userId = await this.inboxProvider.userId().toPromise();
-        const agency = profile.agency;
-        const namespace = `${agency.company}:${agency.pk}:${userId}`;
-        this.io.on(`${namespace}:new inbox`, (inbox: inbox) => {
-          this.inboxes.unshift(inbox);
-        });
-  
-        this.io.on(`${namespace}:new message`, (res: { pk: number; message: message; }) => {
-          const i = this.inboxes.findIndex(val => val.pk === res.pk);
-          const inbox = this.inboxes[i];
-          inbox.messages.push(res.message);
-          inbox.unread++;
-          const splicedInbox = this.inboxes.splice(i, 1);
-          this.inboxes.unshift(splicedInbox[0]);
-        });
-
-        // const groupNamespace = `${agency.company}:${agency.pk}:${this.agencyChat.pk}`;
-        // this.io.on(`${groupNamespace}:new agency message`, (data: {sender: number}) => {
-        //   if (data.sender !== userId) {
-        //     this.agencyChat.unread++;
-        //   }
-        // });
-      });
+    this.inboxProvider.newInbox$.subscribe(inbox => {
+      this.inboxes.unshift(inbox);
     });
+
+    this.inboxProvider.newMessage$.subscribe(response => {
+      const i = this.inboxes.findIndex(val => val.pk === response.pk);
+      const inbox = this.inboxes[i];
+      inbox.messages.push(response.message);
+      inbox.unread++;
+      const splicedInbox = this.inboxes.splice(i, 1);
+      this.inboxes.unshift(splicedInbox[0]);
+    });
+
+    // this.io.on(`${groupNamespace}:new group message`, (data: {sender: number; groupChatId: number;}) => {
+    //   if (data.sender !== userId) {
+    //     if (this.agencyChat.groupId === data.groupChatId) {
+    //         this.agencyChat.unread++;
+    //     }
+    //     if (this.groupChat) {
+    //       if (this.groupChat.groupId === data.groupChatId) {
+    //         this.groupChat.unread++;
+    //       }
+    //     }
+    //     if (this.uplineGroupChat) {
+    //       if (this.uplineGroupChat.groupId === data.groupChatId) {
+    //         this.uplineGroupChat.unread++;
+    //       }
+    //     }
+    //   }
+    // });
   }
 
 }

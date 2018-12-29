@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
-import * as socketio from "socket.io-client";
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
@@ -38,7 +37,6 @@ export class HomePage {
     group: 0,
     agency: 0
   };
-  io = socketio(this.agencyProvider.wsBaseUrl('home'));
 
   constructor(
     public navCtrl: NavController,
@@ -78,9 +76,9 @@ export class HomePage {
       return this.modalCtrl.create(component);
     };
     const newPost = () => {
-      this.io.emit('new post', {
-        namespace: `${this.company}:${this.pk}`
-      });
+      // this.io.emit('new post', {
+      //   namespace: `${this.company}:${this.pk}`
+      // });
     }
     switch (attribute) {
       case 'sales':
@@ -103,48 +101,48 @@ export class HomePage {
     }
   }
 
-  homeWs() {
-    const namespace = `${this.company}:${this.pk}`;
-    this.io.on(`${namespace}:new post`, () => {
-      this.newPost++;
-    });
+  // homeWs() {
+  //   const namespace = `${this.company}:${this.pk}`;
+  //   this.io.on(`${namespace}:new post`, () => {
+  //     this.newPost++;
+  //   });
     
-    this.io.on(`${namespace}:comment post`, data => {
-      const i = data.index;
-      const post = this.posts[i];
-      post.comments++;
-    });
+  //   this.io.on(`${namespace}:comment post`, data => {
+  //     const i = data.index;
+  //     const post = this.posts[i];
+  //     post.comments++;
+  //   });
 
-    this.io.on(`${namespace}:like post`, data => {
-      const i = data.index,
-            like = data.like;
-      this.posts[i].likes.push(like);
-    });
+  //   this.io.on(`${namespace}:like post`, data => {
+  //     const i = data.index,
+  //           like = data.like;
+  //     this.posts[i].likes.push(like);
+  //   });
 
-    this.io.on(`${namespace}:unlike post`, data => {
-      const i = data.index,
-            unliker = data.unliker;
-      const post = this.posts[i],
-            x = post.likes.findIndex(val => val.liker === unliker);
-      post.likes.splice(x, 1);
-    });
+  //   this.io.on(`${namespace}:unlike post`, data => {
+  //     const i = data.index,
+  //           unliker = data.unliker;
+  //     const post = this.posts[i],
+  //           x = post.likes.findIndex(val => val.liker === unliker);
+  //     post.likes.splice(x, 1);
+  //   });
 
-    this.io.on(`${namespace}:add agency point`, data => {
-      this.points.agency += data.point;
-    });
+  //   this.io.on(`${namespace}:add agency point`, data => {
+  //     this.points.agency += data.point;
+  //   });
 
-    this.io.on(`${namespace}:subtract agency point`, data => {
-      this.points.agency -= data.point;
-    });
+  //   this.io.on(`${namespace}:subtract agency point`, data => {
+  //     this.points.agency -= data.point;
+  //   });
 
-    this.io.on(`${namespace}:add group point`, data => {
-      this.points.group += data.point;
-    });
+  //   this.io.on(`${namespace}:add group point`, data => {
+  //     this.points.group += data.point;
+  //   });
 
-    this.io.on(`${namespace}:subtract group point`, data => {
-      this.points.group -= data.point;
-    });
-  }
+  //   this.io.on(`${namespace}:subtract group point`, data => {
+  //     this.points.group -= data.point;
+  //   });
+  // }
 
   ionViewDidLoad() {
     this.fetchPosts();
@@ -152,7 +150,7 @@ export class HomePage {
       this.pk = value.agency.pk;
       this.agencyName = value.agency.name;
       this.company = value.agency.company;
-      this.homeWs();
+      // this.homeWs();
     });
   }
 
