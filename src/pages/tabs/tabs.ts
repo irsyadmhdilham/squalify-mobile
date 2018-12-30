@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Events, Platform } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
-import { Deeplinks } from "@ionic-native/deeplinks";
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
 import { Observable } from "rxjs";
@@ -14,7 +13,8 @@ import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 
 import { ApiUrlModules } from "../../functions/config";
-import { InboxProvider, newMessage } from "../../providers/inbox/inbox";
+import { InboxProvider, newMessage, newGroupMessage } from "../../providers/inbox/inbox";
+import { PostProvider, commentPost, likePost, unlikePost } from "../../providers/post/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 import { inbox } from "../../models/inbox";
@@ -41,20 +41,11 @@ export class TabsPage extends ApiUrlModules {
     private events: Events,
     private platform: Platform,
     private firebase: Firebase,
-    private deepLinks: Deeplinks,
     private store: Store<store>,
-    private inboxProvider: InboxProvider
+    private inboxProvider: InboxProvider,
+    private postProvider: PostProvider
   ) {
     super(storage);
-  }
-
-  ionViewWillLoad() {
-    this.userId().subscribe(userId => {
-      if (userId) {
-        this.signedIn = true;
-      }
-    });
-    this.onOpenNotification();
   }
 
   signIn(value) {
@@ -62,29 +53,18 @@ export class TabsPage extends ApiUrlModules {
   }
 
   ionViewDidLoad() {
+    this.onOpenNotification();
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
     });
     this.userId().subscribe(userId => {
       if (userId) {
+        this.signedIn = true;
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
-        this.listenWsEvents();
       }
     });
-  }
-
-  deepLinkHandler() {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
-        this.deepLinks.route({
-          '/profile': ProfilePage
-        }).subscribe(match => {
-          console.log(match);
-        });
-      }
-    });
+    this.listenWsEvents();
   }
 
   onOpenNotification() {
@@ -102,26 +82,55 @@ export class TabsPage extends ApiUrlModules {
     this.profile$.subscribe(profile =>{
       const agency = profile.agency;
       if (agency.pk !== 0) {
-        const namespace = `agency(${agency.pk}):user(${profile.pk})`;
         let company = agency.company;
         if (company === 'CWA') {
           company = 'cwa';
         } else if (company === 'Public Mutual') {
           company = 'public-mutual';
         }
-        const io = socketio(this.wsBaseUrl(company));
+        const io = socketio.connect(this.wsBaseUrl(company));
         this.store.dispatch(new SocketioInit(io));
-        io.on(`${namespace}:chat:new message`, (data: newMessage) => {
-          this.inboxProvider.newMessage$.next(data);
-        });
-
-        io.on(`${namespace}:chat:new inbox`, (data: inbox) => {
-          this.inboxProvider.newInbox$.next(data);
-        });
-        // this.io.on(`${namespace}:notifications`, () => {
-        //   this.store.dispatch(new Increment());
-        // });
+        this.chatSocket(io, profile);
+        this.postSocket(io, profile);
       }
+    });
+  }
+
+  chatSocket(io, profile: profile) {
+    const namespace = `agency(${profile.agency.pk}):user(${profile.pk})`;
+    io.on(`${namespace}:chat:new message`, (data: newMessage) => {
+      this.inboxProvider.newMessage$.next(data);
+    });
+
+    io.on(`${namespace}:chat:new inbox`, (data: inbox) => {
+      this.inboxProvider.newInbox$.next(data);
+    });
+
+    io.on(`${namespace}:chat:new group message`, (data: newGroupMessage) => {
+      this.inboxProvider.newGroupMessage$.next(data);
+    });
+
+    io.on(`${namespace}:notifications`, () => {
+      this.store.dispatch(new Increment());
+    });
+  }
+
+  postSocket(io, profile: profile) {
+    const namespace = `agency(${profile.agency.pk})`;
+    io.on(`${namespace}:post:new post`, () => {
+      this.postProvider.newPost$.next(true);
+    });
+
+    io.on(`${namespace}:post:comment post`, (data: commentPost) => {
+      this.postProvider.commentPost$.next(data);
+    });
+
+    io.on(`${namespace}:post:like post`, (data: likePost) => {
+      this.postProvider.likePost$.next(data);
+    });
+
+    io.on(`${namespace}:post:unlike post`, (data: unlikePost) => {
+      this.postProvider.unlikePost$.next(data);
     });
   }
 

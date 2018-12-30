@@ -44,6 +44,7 @@ export class ChatroomPage {
   keyboardDidShow: Subscription;
   storeListener: Subscription;
   ioListener: Subscription;
+  newMessageListener: Subscription;
   profile: profile;
   initialSend = true;
   text = '';
@@ -100,7 +101,7 @@ export class ChatroomPage {
   }
 
   listenIncomingMessage() {
-    this.inboxProvider.newMessage$.subscribe(data => {
+    this.newMessageListener = this.inboxProvider.newMessage$.subscribe(data => {
       const message: message = {
         ...data.message,
         timestamp: new Date(data.message.timestamp)
@@ -143,6 +144,7 @@ export class ChatroomPage {
     this.keyboardDidShow.unsubscribe();
     this.storeListener.unsubscribe();
     this.ioListener.unsubscribe();
+    this.newMessageListener.unsubscribe();
     this.navCtrl.getPrevious().data.fromChatroom = false;
     this.navCtrl.getPrevious().data.fromNotifDetail = false;
   }
@@ -223,7 +225,7 @@ export class ChatroomPage {
       this.designation = inbox.chat_with.designation;
       this.receiverId = inbox.chat_with.pk;
       setTimeout(() => {
-        this.content.scrollToBottom();
+        this.content.scrollToBottom(0);
       }, 100);
     });
   }
@@ -231,12 +233,12 @@ export class ChatroomPage {
   sendMessage(msg: NgModel) {
     const receiverResponse = data => {
       const profile = this.profile;
-      const namespace = `${profile.agency.company}:${profile.agency.pk}:${this.receiverId}`;
+      const namespace = `agency(${profile.agency.pk}):user(${this.receiverId})`;
       if (data.receiver_create) {
         this.io.emit('chat:new inbox', { namespace, inbox: data.receiver_create });
       }
       if (data.receiver_update) {
-        this.io.emit('chat:new message', { namespace, obj: data.receiver_update });
+        this.io.emit('chat:new message', { namespace, obj: data.receiver_update, initialSend: this.initialSend });
       }
     };
     const scrollContent = () => {
@@ -259,12 +261,12 @@ export class ChatroomPage {
               message: { ...response.message, timestamp: new Date(response.message.timestamp) }
             }
         })).subscribe(data => {
+          receiverResponse(data);
           this.initialSend = false;
           this.pk = data.inbox.pk;
           this.messages.push(data.message);
           this.events.publish('inbox: new inbox', data.inbox);
           this.playSound('submitMessage');
-          receiverResponse(data);
           scrollContent();
         });
       } else {

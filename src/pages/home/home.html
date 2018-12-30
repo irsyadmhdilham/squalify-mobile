@@ -20,7 +20,7 @@
   </ion-row>
   <ion-grid padding id="top-container" class="container">
     <ion-row>
-      <div [ngStyle]="agencyImageView() | async" id="agency-image"></div>
+      <div [ngStyle]="agencyImageView()" id="agency-image"></div>
       <div id="title">
         <h4>Welcome to</h4>
         <h5>{{agencyName}}</h5>
@@ -79,9 +79,8 @@
       [data]="post"
       [index]="i"
       [company]="company"
-      [likePost]="likePost"
-      [unlikePost]="unlikePost"
       [likeStatus]="likeStatus"
+      (navToDetail)="navToDetailListener($event)"
     ></post>
   </ion-list>
 </ion-content>

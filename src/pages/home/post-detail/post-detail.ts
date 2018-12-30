@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
 import * as moment from "moment";
-import * as socketio from 'socket.io-client';
+import { Subscription } from "rxjs/Subscription";
 
 import { post } from "../../../models/post";
 import { PostProvider } from "../../../providers/post/post";
@@ -31,8 +31,9 @@ export class PostDetailPage {
   comments = [];
   message = '';
   commentsLoaded = false;
-  company: string;
-  io = socketio(this.postProvider.wsBaseUrl('home'));
+  likeListener: Subscription;
+  unlikeListener: Subscription;
+  commentListener: Subscription;
 
   constructor(
     public navCtrl: NavController,
@@ -59,9 +60,7 @@ export class PostDetailPage {
     setTimeout(() => {
       this.likeIcon.nativeElement.classList.remove('like-button');
     }, 500);
-    const agencyId = await this.postProvider.agencyId().toPromise(),
-          userId = await this.postProvider.userId().toPromise(),
-          namespace = `${this.company}:${agencyId}`;
+    const userId = await this.postProvider.userId().toPromise();
     if (!this.liked) {
       this.postProvider.likePost(this.pk, { userId }).subscribe(observe => {
         this.likeId = observe.pk;
@@ -71,7 +70,7 @@ export class PostDetailPage {
           liker: observe.liker.pk
         };
         this.likes.push(like);
-        this.io.emit('like post', { namespace: namespace, index: this.index, like});
+        this.postProvider.likePostEmit(this.pk, like);
       });
     } else {
       if (this.likeId) {
@@ -80,7 +79,7 @@ export class PostDetailPage {
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
-          this.io.emit('unlike post', { namespace: namespace, index: this.index, unliker: userId });
+          this.postProvider.unlikePostEmit(this.pk);
         });
       }
     }
@@ -116,23 +115,20 @@ export class PostDetailPage {
   }
 
   async websocket() {
-    const agencyId = await this.postProvider.agencyId().toPromise(),
-          userId = await this.postProvider.userId().toPromise(),
-          namespace = `${this.company}:${agencyId}`;
-
-    this.io.on(`${namespace}:comment post`, data => {
-      if (data.comment.commented_by.pk !== userId && data.index !== this.index) {
+    const userId = await this.postProvider.userId().toPromise();
+    this.commentListener = this.postProvider.commentPost$.subscribe(data => {
+      if (data.comment.commented_by.pk !== userId && data.postId !== this.pk) {
         this.comments.push(data.comment);
       }
     });
 
-    this.io.on(`${namespace}:like post`, async data => {
+    this.likeListener = this.postProvider.likePost$.subscribe(data => {
       if (data.like.liker !== userId) {
         this.likes.push(data.like);
       }
     });
 
-    this.io.on(`${namespace}:unlike post`, async data => {
+    this.unlikeListener = this.postProvider.unlikePost$.subscribe(data => {
       if (userId !== data.unliker) {
         const i = this.likes.findIndex(val => val.liker === data.unliker);
         this.likes.splice(i, 1);
@@ -151,7 +147,6 @@ export class PostDetailPage {
     this.monthlySales = parseFloat(post.monthly_sales);
     this.date = new Date(post.timestamp);
     this.likes = post.likes;
-    this.company = this.navParams.get('company');
     this.checkLiked();
     this.getComments();
     this.websocket();
@@ -159,7 +154,6 @@ export class PostDetailPage {
 
   async postComment() {
     const userId = await this.postProvider.userId().toPromise();
-    const agencyId = await this.postProvider.agencyId().toPromise();
     if (this.message !== '') {
       const data = {
         userId,
@@ -175,7 +169,7 @@ export class PostDetailPage {
         };
         this.message = '';
         this.comments.push(comment);
-        this.io.emit('comment post', { namespace: `${this.company}:${agencyId}`, index: this.index, comment });
+        this.postProvider.commentPostEmit(comment, this.pk);
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({
@@ -195,6 +189,10 @@ export class PostDetailPage {
       index: this.index,
       status: this.liked
     }
+    this.navCtrl.getPrevious().data.navToDetail = false;
+    this.likeListener.unsubscribe();
+    this.unlikeListener.unsubscribe();
+    this.commentListener.unsubscribe();
   }
 
 }

@@ -29,11 +29,18 @@ export interface newMessage {
   message: message;
 };
 
+export interface newGroupMessage {
+  message: message;
+  sender: number;
+  groupChatId: number;
+}
+
 @Injectable()
 export class InboxProvider extends ApiUrlModules {
 
   newMessage$ = new Subject<newMessage>();
   newInbox$ = new Subject<inbox>();
+  newGroupMessage$ = new Subject<newGroupMessage>();
 
   constructor(public http: HttpClient, public storage: Storage) {
     super(storage);

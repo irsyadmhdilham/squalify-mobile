@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
 import { NavController } from "ionic-angular";
 import * as moment from "moment";
 
@@ -15,11 +15,10 @@ export class PostComponent implements OnChanges {
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @Input() data: post;
   @Input() index: number;
-  @Input() likePost: any;
-  @Input() unlikePost: any;
   @Input() commentPost: any;
   @Input() company: string;
   @Input() likeStatus: { index: number; status: boolean; }
+  @Output() navToDetail = new EventEmitter();
   pk: number;
   postType: string;
   name: string;
@@ -58,7 +57,7 @@ export class PostComponent implements OnChanges {
     }, 500);
     const userId = await this.postProvider.userId().toPromise();
     if (!this.liked) {
-      this.likePost().then(data => {
+      this.postProvider.likePost(this.pk, { userId }).subscribe(data => {
         this.likeId = data.pk;
         this.liked = true;
         const like = {
@@ -66,14 +65,16 @@ export class PostComponent implements OnChanges {
           liker: data.liker.pk
         };
         this.likes.push(like);
+        this.postProvider.likePostEmit(this.pk, like);
       });
     } else {
       if (this.likeId) {
-        this.unlikePost(this.pk, this.likeId).then(() => {
+        this.postProvider.unlikePost(this.pk, this.likeId).subscribe(() => {
           const i = this.likes.findIndex(val => val.liker === userId);
           this.likeId = undefined;
           this.liked = false;
           this.likes.splice(i, 1);
+          this.postProvider.unlikePostEmit(this.pk);
         });
       }
     }
@@ -90,8 +91,8 @@ export class PostComponent implements OnChanges {
   }
 
   comment() {
+    this.navToDetail.next(true);
     this.navCtrl.push(PostDetailPage, {
-      company: this.company,
       post: this.data,
       index: this.index
     });

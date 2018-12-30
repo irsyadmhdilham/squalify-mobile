@@ -12,7 +12,6 @@ import {
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
-import * as socketio from "socket.io-client";
 import { Store, select } from "@ngrx/store";
 import { NativeAudio } from "@ionic-native/native-audio";
 
@@ -45,10 +44,12 @@ export class GroupChatroomPage {
   messages: message[] = [];
   keyboardDidShow: Subscription;
   storeListener: Subscription;
-  profile: Observable<profile>;
+  ioListener: Subscription;
+  newMessageListener: Subscription;
+  io: any;
+  profile: profile;
   text = '';
   initialSend = true;
-  io = socketio(this.inboxProvider.wsBaseUrl('chat'));
 
   constructor(
     public navCtrl: NavController,
@@ -99,35 +100,29 @@ export class GroupChatroomPage {
   }
 
   listenIncomingMessage() {
-    this.io.on('connect', () => {
-      this.storeListener = this.profile.subscribe(async profile => {
-        const userId = await this.inboxProvider.userId().toPromise(),
-              agency = profile.agency;
-        let namespace = `${agency.company}:${agency.pk}:${userId}:new group message`;
-        this.io.on(namespace, (data: {message: message; sender: number; groupChatId: number;}) => {
-          if (this.pk === data.groupChatId) {
-            if (userId !== data.sender) {
-              const message: message = {
-                ...data.message,
-                timestamp: new Date(data.message.timestamp)
-              };
-              this.messages.push(message);
-            }
-            this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
-              let topic = 'inbox: agency clear unread';
-              if (this.role === 'group') {
-                topic = 'inbox: group clear unread'
-              } else if (this.role === 'upline group') {
-                topic = 'inbox: upline group clear unread'
-              }
-              this.events.publish(topic, this.inboxId);
-            });
-            setTimeout(() => {
-              this.content.scrollToBottom();
-            }, 100);
+    this.newMessageListener = this.inboxProvider.newGroupMessage$.subscribe(async data => {
+      const userId = await this.inboxProvider.userId().toPromise();
+      if (this.pk === data.groupChatId) {
+        if (userId !== data.sender) {
+          const message: message = {
+            ...data.message,
+            timestamp: new Date(data.message.timestamp)
+          };
+          this.messages.push(message);
+        }
+        this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
+          let topic = 'inbox: agency clear unread';
+          if (this.role === 'group') {
+            topic = 'inbox: group clear unread'
+          } else if (this.role === 'upline group') {
+            topic = 'inbox: upline group clear unread'
           }
+          this.events.publish(topic, this.inboxId);
         });
-      });
+        setTimeout(() => {
+          this.content.scrollToBottom();
+        }, 100);
+      }
     });
   }
 
@@ -140,18 +135,27 @@ export class GroupChatroomPage {
     this.registerSound();
     this.clearUnread();
     this.clearNotifRead();
-    this.profile = this.store.pipe(select('profile'));
     this.listenIncomingMessage();
+  }
+
+  ionViewWillEnter() {
+    this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
+    .subscribe(profile => {
+      this.profile = profile;
+    });
+
+    this.ioListener = (this.store.pipe(select('io')) as Observable<any>)
+    .subscribe(io => {
+      this.io = io;
+    });
   }
 
   ionViewWillLeave() {
     this.keyboardDidShow.unsubscribe();
-    if (this.storeListener) {
-      this.storeListener.unsubscribe();
-    }
+    this.storeListener.unsubscribe();
+    this.newMessageListener.unsubscribe();
     this.navCtrl.getPrevious().data.fromChatroom = false;
     this.navCtrl.getPrevious().data.fromNotifDetail = false;
-    this.io.close();
   }
 
   titleImage() {
@@ -246,7 +250,7 @@ export class GroupChatroomPage {
       }
       this.subTitle = subTitle;
       setTimeout(() => {
-        this.content.scrollToBottom();
+        this.content.scrollToBottom(0);
       }, 100);
     });
   }
@@ -270,24 +274,23 @@ export class GroupChatroomPage {
             ...message,
             timestamp: new Date(message.timestamp)
           };
-        })).subscribe(message => {
+        })).subscribe(async message => {
         this.messages.push(message);
         this.playSound('submitMessage');
         scrollContent();
-        this.storeListener = this.profile.subscribe(async profile => {
-          this.initialSend = false;
-          const userId = await this.inboxProvider.userId().toPromise();
-          const agency = profile.agency,
-                namespace = `${agency.company}:${agency.pk}`;
-          const participants = this.inbox.participants.filter(val => val.pk !== userId);
-          this.io.emit('new group message', {
-            namespace,
-            message,
-            sender: userId,
-            participants,
-            groupChatId: this.pk
-          });
+        const userId = await this.inboxProvider.userId().toPromise();
+        const agency = this.profile.agency,
+              namespace = `agency(${agency.pk})`;
+        const participants = this.inbox.participants.filter(val => val.pk !== userId);
+        this.io.emit('chat:new group message', {
+          namespace,
+          message,
+          sender: userId,
+          participants,
+          groupChatId: this.pk,
+          initialSend: this.initialSend
         });
+        this.initialSend = false;
       });
     }
   }

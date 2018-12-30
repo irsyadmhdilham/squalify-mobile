@@ -30,6 +30,9 @@ export class InboxPage {
   listenAgencyClearUnread: (pk: number) => void;
   listenGroupClearUnread: (pk: number) => void;
   listenUplineGroupClearUnread: (pk: number) => void;
+  newMessageListener: Subscription;
+  newInboxListener: Subscription;
+  newGroupMessageListener: Subscription;
   storeListener: Subscription;
 
   constructor(
@@ -201,7 +204,7 @@ export class InboxPage {
   ionViewWillEnter() {
     if (!this.navToChatroom) {
       this.getInbox();
-      // this.listenWsEvents();
+      this.listenWsEvents();
     }
     this.navToChatroom = this.navParams.get('fromChatroom');
     this.eventsListener();
@@ -215,6 +218,9 @@ export class InboxPage {
       this.events.unsubscribe('inbox: agency clear unread', this.listenAgencyClearUnread);
       this.events.unsubscribe('inbox: group clear unread', this.listenGroupClearUnread);
       this.events.unsubscribe('inbox: upline group clear unread', this.listenUplineGroupClearUnread);
+      this.newMessageListener.unsubscribe();
+      this.newInboxListener.unsubscribe();
+      this.newGroupMessageListener.unsubscribe();
       if (this.storeListener) {
         this.storeListener.unsubscribe();
       }
@@ -222,11 +228,11 @@ export class InboxPage {
   }
 
   listenWsEvents() {
-    this.inboxProvider.newInbox$.subscribe(inbox => {
+    this.newInboxListener = this.inboxProvider.newInbox$.subscribe(inbox => {
       this.inboxes.unshift(inbox);
     });
 
-    this.inboxProvider.newMessage$.subscribe(response => {
+    this.newMessageListener = this.inboxProvider.newMessage$.subscribe(response => {
       const i = this.inboxes.findIndex(val => val.pk === response.pk);
       const inbox = this.inboxes[i];
       inbox.messages.push(response.message);
@@ -235,23 +241,24 @@ export class InboxPage {
       this.inboxes.unshift(splicedInbox[0]);
     });
 
-    // this.io.on(`${groupNamespace}:new group message`, (data: {sender: number; groupChatId: number;}) => {
-    //   if (data.sender !== userId) {
-    //     if (this.agencyChat.groupId === data.groupChatId) {
-    //         this.agencyChat.unread++;
-    //     }
-    //     if (this.groupChat) {
-    //       if (this.groupChat.groupId === data.groupChatId) {
-    //         this.groupChat.unread++;
-    //       }
-    //     }
-    //     if (this.uplineGroupChat) {
-    //       if (this.uplineGroupChat.groupId === data.groupChatId) {
-    //         this.uplineGroupChat.unread++;
-    //       }
-    //     }
-    //   }
-    // });
+    this.newGroupMessageListener = this.inboxProvider.newGroupMessage$.subscribe(async response => {
+      const userId = await this.inboxProvider.userId().toPromise();
+      if (response.sender !== userId) {
+        if (this.agencyChat.groupId === response.groupChatId) {
+            this.agencyChat.unread++;
+        }
+        if (this.groupChat) {
+          if (this.groupChat.groupId === response.groupChatId) {
+            this.groupChat.unread++;
+          }
+        }
+        if (this.uplineGroupChat) {
+          if (this.uplineGroupChat.groupId === response.groupChatId) {
+            this.uplineGroupChat.unread++;
+          }
+        }
+      }
+    });
   }
 
 }
