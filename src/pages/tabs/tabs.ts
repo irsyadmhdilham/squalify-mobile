@@ -5,7 +5,7 @@ import { Firebase } from "@ionic-native/firebase";
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, take } from "rxjs/operators";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -35,8 +35,6 @@ export class TabsPage extends ApiUrlModules {
   tab3Root = ApplicationsPage;
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
-  profile$: Observable<profile> = this.store.pipe(select('profile'));
-  profileInit$ = new Subject();
 
   constructor(
     public storage: Storage,
@@ -52,6 +50,13 @@ export class TabsPage extends ApiUrlModules {
 
   signIn(value) {
     this.signedIn = value;
+    this.store.pipe(select('io'), take(1)).subscribe((io: any) => {
+      if (!io) {
+        const profileInit$ = new Subject<boolean>(),
+              profile$: Observable<profile> = this.store.pipe(select('profile'));
+        this.listenWsEvents(profile$, profileInit$);
+      }
+    });
   }
 
   ionViewDidLoad() {
@@ -66,7 +71,13 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new NotifInit());
       }
     });
-    this.listenWsEvents();
+    this.store.pipe(select('io'), take(1)).subscribe((io: any) => {
+      if (!io) {
+        const profileInit$ = new Subject<boolean>(),
+              profile$: Observable<profile> = this.store.pipe(select('profile'));
+        this.listenWsEvents(profile$, profileInit$);
+      }
+    });
   }
 
   onOpenNotification() {
@@ -82,8 +93,8 @@ export class TabsPage extends ApiUrlModules {
     });
   }
 
-  listenWsEvents() {
-    this.profile$.pipe(takeUntil(this.profileInit$)).subscribe(profile =>{
+  listenWsEvents(profile$: Observable<profile>, profileInit$: Subject<boolean>) {
+    profile$.pipe(takeUntil(profileInit$)).subscribe(profile =>{
       const agency = profile.agency;
       if (agency.pk !== 0) {
         let company = agency.company;
@@ -96,10 +107,10 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new SocketioInit(io));
         this.chatSocket(io, profile);
         this.postSocket(io, profile);
-        this.profileInit$.next(true);
-        this.profileInit$.unsubscribe();
+        profileInit$.next(true);
+        profileInit$.unsubscribe();
       }
-    }, null, () => console.log('profile observable unsubscribed'));
+    });
   }
 
   chatSocket(io, profile: profile) {

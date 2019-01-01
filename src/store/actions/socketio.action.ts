@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 
 export enum ActionTypes {
-  init = 'SOCKET_IO_INSTANCE'
+  init = 'SOCKET_IO_INSTANCE',
+  reset = 'SOCKET_IO_RESET'
 };
 
 export class SocketioInit implements Action {
@@ -10,4 +11,8 @@ export class SocketioInit implements Action {
   constructor(public payload: any) { }
 }
 
-export type actionsUnion = SocketioInit;
+export class SocketioReset implements Action {
+  readonly type = ActionTypes.reset;
+}
+
+export type actionsUnion = SocketioInit | SocketioReset;
