@@ -1,10 +1,25 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, TextInput, NavController, NavParams, AlertController, LoadingController } from 'ionic-angular';
+import {
+  IonicPage,
+  TextInput,
+  NavController,
+  NavParams,
+  AlertController,
+  LoadingController,
+  Events
+} from 'ionic-angular';
 import * as moment from "moment";
 import { Subscription } from "rxjs/Subscription";
+import { Store } from "@ngrx/store";
 
 import { post } from "../../../models/post";
+import { notification } from "../../../models/notification";
+import { store } from "../../../models/store";
+
 import { PostProvider } from "../../../providers/post/post";
+import { NotificationProvider } from "../../../providers/notification/notification";
+
+import { Decrement } from "../../../store/actions/notifications.action";
 
 @IonicPage()
 @Component({
@@ -15,9 +30,9 @@ export class PostDetailPage {
 
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @ViewChild('textMessageArea') textarea: TextInput;
-  index: number;
   pk: number;
   postType: string;
+  postedBy: number;
   name: string;
   profileImage: string;
   totalSales: number;
@@ -39,8 +54,11 @@ export class PostDetailPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private postProvider: PostProvider,
+    private notificationProvider: NotificationProvider,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private events: Events,
+    private store: Store<store>
   ) { }
 
   profileImageView() {
@@ -70,7 +88,7 @@ export class PostDetailPage {
           liker: observe.liker.pk
         };
         this.likes.push(like);
-        this.postProvider.likePostEmit(this.pk, like);
+        this.postProvider.likePostEmit(this.pk, like, this.postedBy);
       });
     } else {
       if (this.likeId) {
@@ -136,19 +154,34 @@ export class PostDetailPage {
     });
   }
 
+  readNotif() {
+    const notif: notification = this.navParams.get('notif');
+    if (notif) {
+      if (!notif.read) {
+        this.notificationProvider.read(notif.pk).subscribe(() => {
+          this.events.publish('notifications: read', notif.pk);
+          this.store.dispatch(new Decrement());
+        });
+      }
+    }
+  }
+
   ionViewDidLoad() {
     const post: post = this.navParams.get('post');
-    this.index = this.navParams.get('index');
-    this.pk = post.pk;
-    this.name = post.posted_by.name;
-    this.profileImage = post.posted_by.profile_image;
-    this.postType = post.post_type;
-    this.totalSales = post.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
-    this.monthlySales = parseFloat(post.monthly_sales);
-    this.date = new Date(post.timestamp);
-    this.likes = post.likes;
+    this.readNotif();
+    this.postProvider.getPostDetail(post.pk).subscribe(post => {
+      this.postedBy = post.posted_by.pk;
+      this.pk = post.pk;
+      this.name = post.posted_by.name;
+      this.profileImage = post.posted_by.profile_image;
+      this.postType = post.post_type;
+      this.totalSales = post.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
+      this.monthlySales = parseFloat(post.monthly_sales);
+      this.date = new Date(post.timestamp);
+      this.likes = post.likes;
+      this.comments = post.comments;
+    });
     this.checkLiked();
-    this.getComments();
     this.websocket();
   }
 
@@ -169,7 +202,9 @@ export class PostDetailPage {
         };
         this.message = '';
         this.comments.push(comment);
-        this.postProvider.commentPostEmit(comment, this.pk);
+        this.postProvider.commentPostEmit(comment, this.pk, this.postedBy);
+        const commentCount = this.comments.length;
+        this.events.publish('post:comment post', this.pk, commentCount);
       }, (err: Error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({
@@ -186,7 +221,6 @@ export class PostDetailPage {
 
   ionViewWillLeave() {
     this.navCtrl.getPrevious().data.likeStatus = {
-      index: this.index,
       status: this.liked
     }
     this.navCtrl.getPrevious().data.navToDetail = false;

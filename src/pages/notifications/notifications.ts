@@ -7,6 +7,7 @@ import { NotificationProvider } from "../../providers/notification/notification"
 
 import { ChatroomPage } from "../../pages/inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../../pages/inbox/group-chatroom/group-chatroom";
+import { PostDetailPage } from "../../pages/home/post-detail/post-detail";
 
 @IonicPage()
 @Component({
@@ -92,6 +93,8 @@ export class NotificationsPage {
       this.navCtrl.push(ChatroomPage, { inbox: notif.inbox_rel, notif });
     } else if (notif.notification_type === 'group inbox') {
       this.navCtrl.push(GroupChatroomPage, { inbox: notif.inbox_rel, notif });
+    } else if (notif.notification_type === 'like' || notif.notification_type === 'comment') {
+      this.navCtrl.push(PostDetailPage, { post: { pk: notif.post_rel }, notif });
     }
   }
 

@@ -4,7 +4,7 @@ import * as moment from "moment";
 
 import { PostProvider } from "../../../providers/post/post";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
-import { post } from "../../../models/post";
+import { post, comment } from "../../../models/post";
 
 @Component({
   selector: 'post',
@@ -15,8 +15,6 @@ export class PostComponent implements OnChanges {
   @ViewChild('likeIcon') likeIcon: ElementRef;
   @Input() data: post;
   @Input() index: number;
-  @Input() commentPost: any;
-  @Input() company: string;
   @Input() likeStatus: { index: number; status: boolean; }
   @Output() navToDetail = new EventEmitter();
   pk: number;
@@ -28,7 +26,7 @@ export class PostComponent implements OnChanges {
   date: Date = new Date();
   location: string;
   taggedUsers = [];
-  comments: number;
+  comments: comment[];
   likes = [];
   liked = false;
   likeId: number;
@@ -57,7 +55,7 @@ export class PostComponent implements OnChanges {
     }, 500);
     const userId = await this.postProvider.userId().toPromise();
     if (!this.liked) {
-      this.postProvider.likePost(this.pk, { userId }).subscribe(data => {
+      this.postProvider.likePost(this.pk, { userId }).subscribe(async data => {
         this.likeId = data.pk;
         this.liked = true;
         const like = {
@@ -65,7 +63,7 @@ export class PostComponent implements OnChanges {
           liker: data.liker.pk
         };
         this.likes.push(like);
-        this.postProvider.likePostEmit(this.pk, like);
+        this.postProvider.likePostEmit(this.pk, like, this.data.posted_by.pk);
       });
     } else {
       if (this.likeId) {

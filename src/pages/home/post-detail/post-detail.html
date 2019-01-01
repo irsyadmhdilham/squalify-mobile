@@ -57,26 +57,18 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ng-container *ngIf="commentsLoaded; then commentsContent; else loadingComments"></ng-container>
-  <ng-template #loadingComments>
-    <section id="loading-comments-container">
-      <ion-spinner></ion-spinner>
-    </section>
-  </ng-template>
-  <ng-template #commentsContent>
-    <ion-list no-lines>
-      <ion-item class="comment-container" *ngFor="let comment of comments">
-        <div item-start [ngStyle]="commentProfileImage(comment.commented_by.profile_image)" class="commenter-image"></div>
-        <ion-row>
-          <div class="comment-wrapper">
-            <h6 ion-text color="dark">{{comment.commented_by.name}}</h6>
-            <p ion-text color="dark">{{comment.text}}</p>
-          </div>
-        </ion-row>
-        <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
-      </ion-item>
-    </ion-list>
-  </ng-template>
+  <ion-list no-lines>
+    <ion-item class="comment-container" *ngFor="let comment of comments">
+      <div item-start [ngStyle]="commentProfileImage(comment.commented_by.profile_image)" class="commenter-image"></div>
+      <ion-row>
+        <div class="comment-wrapper">
+          <h6 ion-text color="dark">{{comment.commented_by.name}}</h6>
+          <p ion-text color="dark">{{comment.text}}</p>
+        </div>
+      </ion-row>
+      <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+    </ion-item>
+  </ion-list>
 </ion-content>
 
 <ion-footer>

@@ -9,6 +9,7 @@ import {
   Events
 } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
+import { Store, select } from "@ngrx/store";
 
 import { ChangePasswordComponent } from "../../components/profile/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/profile/change-email/change-email";
@@ -19,6 +20,7 @@ import { NotificationsPage } from "../notifications/notifications";
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
 import { settings } from "../../models/profile-settings";
+import { store } from "../../models/store";
 
 @IonicPage()
 @Component({
@@ -46,7 +48,8 @@ export class ProfilePage extends Ids {
     private profileProvider: ProfileProvider,
     public storage: Storage,
     private loadingCtrl: LoadingController,
-    private events: Events
+    private events: Events,
+    private store: Store<store>
   ) {
     super(storage);
   }
@@ -95,6 +98,9 @@ export class ProfilePage extends Ids {
       this.removeAllId().then(value => {
         if (value) {
           loading.dismiss();
+          this.store.pipe(select('io')).subscribe((io: any) => {
+            io.close();
+          });
           this.events.publish('sign out', false);
         }
       });

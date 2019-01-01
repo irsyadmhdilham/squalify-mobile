@@ -4,7 +4,8 @@ import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -35,6 +36,7 @@ export class TabsPage extends ApiUrlModules {
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
   profile$: Observable<profile> = this.store.pipe(select('profile'));
+  profileInit$ = new Subject();
 
   constructor(
     public storage: Storage,
@@ -72,14 +74,16 @@ export class TabsPage extends ApiUrlModules {
       const isCordova = await this.platform.is('cordova');
       if (isCordova) {
         this.firebase.onNotificationOpen().subscribe(observe => {
-          console.log(JSON.stringify(observe));
+          console.log('open notif type =', typeof observe);
+          const stringify = JSON.stringify(observe);
+          console.log('open notif stringify =', stringify);
         });
       }
     });
   }
 
   listenWsEvents() {
-    this.profile$.subscribe(profile =>{
+    this.profile$.pipe(takeUntil(this.profileInit$)).subscribe(profile =>{
       const agency = profile.agency;
       if (agency.pk !== 0) {
         let company = agency.company;
@@ -92,8 +96,10 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new SocketioInit(io));
         this.chatSocket(io, profile);
         this.postSocket(io, profile);
+        this.profileInit$.next(true);
+        this.profileInit$.unsubscribe();
       }
-    });
+    }, null, () => console.log('profile observable unsubscribed'));
   }
 
   chatSocket(io, profile: profile) {
@@ -116,7 +122,7 @@ export class TabsPage extends ApiUrlModules {
   }
 
   postSocket(io, profile: profile) {
-    const namespace = `agency(${profile.agency.pk})`;
+    const namespace = `agency(${profile.agency.pk}):user(${profile.pk})`;
     io.on(`${namespace}:post:new post`, () => {
       this.postProvider.newPost$.next(true);
     });

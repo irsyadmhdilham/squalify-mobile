@@ -14,7 +14,8 @@ const initialState: profile = {
     agency_image: '',
     name: '',
     company: '',
-  }
+    members: []
+  },
 };
 
 export function profileReducer(state = initialState, action: ActionUnion) {

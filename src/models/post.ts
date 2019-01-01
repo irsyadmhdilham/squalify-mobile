@@ -19,7 +19,7 @@ export interface post {
   post_type: string;
   sales_rel: sales[];
   timestamp: string;
-  comments: number;
+  comments: comment[];
   likes: like[];
   monthly_sales: string;
 };

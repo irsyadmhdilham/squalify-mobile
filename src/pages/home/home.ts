@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController, NavParams } from 'ionic-angular';
+import {
+  IonicPage,
+  NavController,
+  ModalController,
+  NavParams,
+  Events
+} from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
-import { post } from "../../models/post";
+import { post, comment } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 
@@ -45,6 +51,7 @@ export class HomePage {
   likePostListener: Subscription;
   unlikePostListener: Subscription;
   navToDetail = false;
+  commentEventListener: (postId: number, comment: comment) => void;
 
   constructor(
     public navCtrl: NavController,
@@ -52,7 +59,8 @@ export class HomePage {
     private modalCtrl: ModalController,
     private postProvider: PostProvider,
     private navParams: NavParams,
-    private store: Store<store>
+    private store: Store<store>,
+    private events: Events
   ) { }
 
   navToDetailListener(value: boolean) {
@@ -114,9 +122,8 @@ export class HomePage {
     
     this.commentPostListener = this.postProvider.commentPost$.subscribe(response => {
       const postId = response.postId,
-            i = this.posts.findIndex(val => val.pk === postId),
-            post = this.posts[i];
-      post.comments++;
+            i = this.posts.findIndex(val => val.pk === postId);
+      this.posts[i].comments.push(response.comment);
     });
 
     this.likePostListener = this.postProvider.likePost$.subscribe(response => {
@@ -152,6 +159,14 @@ export class HomePage {
     // });
   }
 
+  commentListener() {
+    this.commentEventListener = (postId: number, comment: comment) => {
+      const i = this.posts.findIndex(val => val.pk === postId);
+      this.posts[i].comments.push(comment);
+    };
+    this.events.subscribe('post:comment post', this.commentEventListener);
+  }
+
   ionViewWillEnter() {
     const likeStatus = this.navParams.get('likeStatus');
     const navToDetail = this.navParams.get('navToDetail');
@@ -169,6 +184,7 @@ export class HomePage {
       this.agencyImage = profile.agency.agency_image;
     });
     this.homeWs();
+    this.commentListener();
   }
 
   ionViewDidLoad() {
@@ -182,6 +198,7 @@ export class HomePage {
       this.ioListener.unsubscribe();
       this.commentPostListener.unsubscribe();
       this.likePostListener.unsubscribe();
+      this.events.unsubscribe('post:comment post', this.commentEventListener);
     }
   }
 }

@@ -59,7 +59,7 @@ export class SignInPage {
     const loading = this.LoadingCtrl.create({content: 'Please wait...'});
     loading.present();
     const isCordova = this.platform.is('cordova');
-    let fcmToken;
+    let fcmToken = null;
     if (isCordova) {
       fcmToken = await this.firebase.getToken();
     }

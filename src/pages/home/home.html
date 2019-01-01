@@ -78,7 +78,6 @@
       *ngFor="let post of posts; index as i"
       [data]="post"
       [index]="i"
-      [company]="company"
       [likeStatus]="likeStatus"
       (navToDetail)="navToDetailListener($event)"
     ></post>
