@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { point, contactPoints, groupPoint } from "../../models/point";
+import { point, contactPoints, groupPoint, allPoints } from "../../models/point";
 
 interface memberPoints {
   date: string;
@@ -87,6 +87,13 @@ export class PointProvider extends ApiUrlModules {
     const url = this.profileUrl(`point/group/${memberId}/downline`);
     return url.pipe(switchMap(url => {
       return this.http.get<groupPoint[]>(url);
+    }));
+  }
+
+  getAllPoints(): Observable<allPoints> {
+    const url = this.profileUrl('point/all-points');
+    return url.pipe(switchMap(url => {
+      return this.http.get<allPoints>(url);
     }));
   }
 

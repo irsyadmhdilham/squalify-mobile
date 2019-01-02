@@ -9,12 +9,16 @@ import {
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
+import { map } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
 import { post, comment } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
+import { allPoints } from "../../models/point";
+
+import { PointInit } from "../../store/actions/points.action";
 
 import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
 import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
@@ -38,11 +42,12 @@ export class HomePage {
   newPost = 0;
   posts: post[] = [];
   likeStatus: { index: number, status: boolean; };
+  points$: Observable<allPoints> = this.store.pipe(select('points'));
   points = {
-    personal: 0,
-    group: 0,
-    agency: 0
-  };
+    personal: this.points$.pipe(map(value => value.personal)),
+    agency: this.points$.pipe(map(value => value.agency)),
+    group: this.points$.pipe(map(value => value.group))
+  }
   io: any;
   storeListener: Subscription;
   ioListener: Subscription;
@@ -189,6 +194,7 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.fetchPosts();
+    this.store.dispatch(new PointInit());
   }
 
   ionViewDidLeave() {

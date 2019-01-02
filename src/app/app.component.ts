@@ -30,13 +30,13 @@ export class MyApp {
   }
 
   async grantNotificationPermission() {
-    // const hasPerm = await this.firebase.hasPermission();
-    // if (!hasPerm) {
-    //   const isIOS = this.platform.is('ios');
-    //   if (isIOS) {
+    const hasPerm = await this.firebase.hasPermission();
+    if (!hasPerm.isEnabled) {
+      const isIOS = this.platform.is('ios');
+      if (isIOS) {
         this.firebase.grantPermission();
-    //   }
-    // }
+      }
+    }
   }
 
 }

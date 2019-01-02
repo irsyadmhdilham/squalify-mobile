@@ -60,15 +60,15 @@
     <h6 no-margin>Today points</h6>
     <ion-row>
       <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal}}</button>
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal | async}}</button>
         <p text-center no-margin>Personal</p>
       </ion-col>
       <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency}}</button>
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency | async}}</button>
         <p text-center no-margin>Agency</p>
       </ion-col>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group}}</button>
+      <ion-col *ngIf="(points.group | async) !== null" class="points-wrapper">
+        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group | async}}</button>
         <p text-center no-margin>Group</p>
       </ion-col>
     </ion-row>

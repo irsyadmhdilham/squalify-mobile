@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Events, Platform } from "ionic-angular";
+import { Events, Platform, NavController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
 import { Observable, Subject } from "rxjs";
-import { takeUntil, take } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
@@ -23,6 +23,8 @@ import { inbox } from "../../models/inbox";
 import { Fetch } from "../../store/actions/profile.action";
 import { Init as NotifInit, Increment } from "../../store/actions/notifications.action";
 import { SocketioInit } from "../../store/actions/socketio.action";
+
+import { PostDetailPage } from "../home/post-detail/post-detail";
 
 @Component({
   templateUrl: 'tabs.html'
@@ -43,20 +45,17 @@ export class TabsPage extends ApiUrlModules {
     private firebase: Firebase,
     private store: Store<store>,
     private inboxProvider: InboxProvider,
-    private postProvider: PostProvider
+    private postProvider: PostProvider,
+    private navCtrl: NavController
   ) {
     super(storage);
   }
 
   signIn(value) {
     this.signedIn = value;
-    this.store.pipe(select('io'), take(1)).subscribe((io: any) => {
-      if (!io) {
-        const profileInit$ = new Subject<boolean>(),
-              profile$: Observable<profile> = this.store.pipe(select('profile'));
-        this.listenWsEvents(profile$, profileInit$);
-      }
-    });
+    const profileInit$ = new Subject<boolean>(),
+          profile$: Observable<profile> = this.store.pipe(select('profile'));
+    this.listenWsEvents(profile$, profileInit$);
   }
 
   ionViewDidLoad() {
@@ -69,10 +68,6 @@ export class TabsPage extends ApiUrlModules {
         this.signedIn = true;
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
-      }
-    });
-    this.store.pipe(select('io'), take(1)).subscribe((io: any) => {
-      if (!io) {
         const profileInit$ = new Subject<boolean>(),
               profile$: Observable<profile> = this.store.pipe(select('profile'));
         this.listenWsEvents(profile$, profileInit$);
@@ -85,9 +80,15 @@ export class TabsPage extends ApiUrlModules {
       const isCordova = await this.platform.is('cordova');
       if (isCordova) {
         this.firebase.onNotificationOpen().subscribe(observe => {
-          console.log('open notif type =', typeof observe);
-          const stringify = JSON.stringify(observe);
-          console.log('open notif stringify =', stringify);
+          const title = observe.title;
+          if (title === 'like post' || title === 'comment post') {
+            const postId = parseInt(observe.post_id),
+                  notifId = parseInt(observe.notif_id);
+            this.navCtrl.push(PostDetailPage, {
+              post: { pk: postId },
+              notif: { pk: notifId, read: false }
+            });
+          }
         });
       }
     });

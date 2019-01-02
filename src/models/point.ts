@@ -50,3 +50,8 @@ export interface groupPoint {
   downline?: number;
 };
 
+export interface allPoints {
+  personal: number;
+  group?: number;
+  agency: number;
+}
