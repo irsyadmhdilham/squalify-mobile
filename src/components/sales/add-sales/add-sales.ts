@@ -92,6 +92,7 @@ export class AddSalesComponent {
       loading.present();
       this.salesProvider.createSales(data).subscribe(observe => {
         loading.dismiss();
+        this.salesProvider.addSalesEmit(observe.amount);
         this.viewCtrl.dismiss({
           sales: observe
         });

@@ -1,17 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
-import { Observable } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { Store } from "@ngrx/store";
+import { Observable, Subject } from "rxjs";
+import { switchMap, map, take } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales, summary, groupSales, downlineSales } from "../../models/sales";
+import { sales, summary, groupSales, downlineSales, salesIo } from "../../models/sales";
+import { store } from "../../models/store";
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {
 
-  constructor(public http: HttpClient, public storage: Storage) {
+  addSales$ = new Subject<salesIo>();
+
+  constructor(public http: HttpClient, public storage: Storage, private store: Store<store>) {
     super(storage);
+  }
+
+  addSalesEmit(amount) {
+    this.store.pipe(map(store => {
+      const profile = store.profile,
+            agency = profile.agency,
+            io = store.io;
+      return { namespace: `agency(${agency.pk})`, io, sender: profile.pk, members: agency.members };
+    }), take(1)).subscribe(response => {
+      response.io.emit('sales:add sales', {
+        amount,
+        namespace: response.namespace,
+        sender: response.sender,
+        members: response.members
+      });
+    });
   }
 
   createSales(data: sales): Observable<sales> {

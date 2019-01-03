@@ -6,11 +6,14 @@ import {
   ToastController
 } from "ionic-angular";
 import { CallNumber } from "@ionic-native/call-number";
+import { Store } from "@ngrx/store";
 
 import { PointProvider } from "../../../providers/point/point";
 import { AttributeFeatures } from "./attribute-features";
+import { PointIncrement } from "../../../store/actions/points.action";
 
 import { point } from "../../../models/point";
+import { store } from "../../../models/store";
 
 @Component({
   selector: 'point-attribute',
@@ -39,7 +42,8 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     private loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
     private toastCtrl: ToastController,
-    private callNumber: CallNumber
+    private callNumber: CallNumber,
+    private store: Store<store>
   ) {
     super(modalCtrl);
   }
@@ -48,6 +52,8 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     const addPoint = () => {
       this.point += this.each;
       this.addMinus('add');
+      this.store.dispatch(new PointIncrement(this.each));
+      this.pointProvider.addPointEmit(this.each);
     };
     switch (this.attribute) {
       case 'Case closed':

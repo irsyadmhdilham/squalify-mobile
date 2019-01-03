@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ModalController, AlertController } from "ionic-angular";
 import { Observable } from "rxjs";
-import { map, take } from 'rxjs/operators';
 import * as socketio from "socket.io-client";
 
 import { PointLogsComponent } from "../point-logs/point-logs";
@@ -113,7 +112,6 @@ export class PointPanelComponent implements OnChanges {
   updatePoint(value) {
     if (value.type === 'add') {
       this.totalPoints += value.point;
-      this.addAgencyGroupPoint(value.point);
       if (value.pointType === 'career') {
         this.totalCareerPoints += value.point;
       } else {
@@ -121,7 +119,6 @@ export class PointPanelComponent implements OnChanges {
       }
     } else {
       this.totalPoints -= value.point;
-      this.subtractAgencyGroupPoint(value.point);
       if (value.pointType === 'career') {
         this.totalCareerPoints -= value.point;
       } else {
@@ -132,28 +129,6 @@ export class PointPanelComponent implements OnChanges {
 
   getPointPk(value) {
     this.pointPk = value;
-  }
-
-  async addAgencyGroupPoint(point: number) {
-    const agency = await this.profile.pipe(map(val => val.agency), take(1)).toPromise(),
-          uplineGroup = await this.profile.pipe(map(val => val.group_upline), take(1)).toPromise();
-    const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
-          agencyNamespace = `${agency.company}:${agency.pk}`;
-    this.io.emit('add agency point', { point, namespace: agencyNamespace });
-    if (uplineGroup) {
-      this.io.emit('add group point', { point, namespace: groupNamespace });
-    }
-  }
-
-  async subtractAgencyGroupPoint(point: number) {
-    const agency = await this.profile.pipe(map(val => val.agency), take(1)).toPromise(),
-          uplineGroup = await this.profile.pipe(map(val => val.group_upline), take(1)).toPromise();
-    const groupNamespace = `${agency.company}:${agency.pk}:${uplineGroup}`,
-          agencyNamespace = `${agency.company}:${agency.pk}`;
-    this.io.emit('subtract agency point', { point, namespace: agencyNamespace });
-    if (uplineGroup) {
-      this.io.emit('subtract group point', { point, namespace: groupNamespace });
-    }
   }
 
 }

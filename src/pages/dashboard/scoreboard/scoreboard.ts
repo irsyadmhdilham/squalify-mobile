@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { Subscription } from "rxjs/Subscription";
 
 import { ScoreboardProvider } from "../../../providers/scoreboard/scoreboard";
+import { PointProvider } from "../../../providers/point/point";
+import { SalesProvider } from "../../../providers/sales/sales";
+import { pointScore, salesScore } from "../../../models/scoreboard";
 
 @IonicPage()
 @Component({
@@ -16,14 +20,19 @@ export class ScoreboardPage {
   salesType = 'Sales type';
   salesTypeActive = false;
   period = 'period';
-  salesScorer = [];
-  pointScorer = [];
+  salesScorer: salesScore[] = [];
+  pointScorer: pointScore[] = [];
+  addPointListener: Subscription;
+  subtractPointListener: Subscription;
+  addSalesListener: Subscription;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private scoreboardProvider: ScoreboardProvider,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private pointProvider: PointProvider,
+    private salesProvider: SalesProvider
   ) { }
 
   selectSalesType() {
@@ -107,14 +116,8 @@ export class ScoreboardPage {
 
   fetchSalesScore(period, salesType) {
     this.pageStatus = 'loading';
-    this.scoreboardProvider.getSalesScore(period, salesType).subscribe(observe => {
+    this.scoreboardProvider.getSalesScore(period, salesType).subscribe(sales => {
       this.pageStatus = undefined;
-      const sales = observe.map(val => {
-        return {
-          ...val,
-          amount: parseFloat(val.amount)
-        };
-      });
       this.salesScorer = sales;
     }, () => {
       this.pageStatus = 'error';
@@ -131,8 +134,41 @@ export class ScoreboardPage {
     });
   }
 
+  pointMutation() {
+    this.addPointListener = this.pointProvider.addPoint$.subscribe(response => {
+      if (this.pointScorer.length > 0) {
+        const i = this.pointScorer.findIndex(val => val.pk === response.sender);
+        this.pointScorer[i].point += response.point;
+      }
+    });
+
+    this.subtractPointListener = this.pointProvider.subtractPoint$.subscribe(response => {
+      if (this.pointScorer.length > 0) {
+        const i = this.pointScorer.findIndex(val => val.pk === response.sender);
+        this.pointScorer[i].point -= response.point;
+      }
+    });
+  }
+
+  salesMutatation() {
+    this.addSalesListener = this.salesProvider.addSales$.subscribe(response => {
+      if (this.salesScorer.length > 0) {
+        const i = this.salesScorer.findIndex(val => val.pk === response.sender);
+        this.salesScorer[i].amount += response.amount;
+      }
+    });
+  }
+
   ionViewDidLoad() {
     this.fetchSalesScore('year', 'total');
+    this.pointMutation();
+    this.salesMutatation();
+  }
+
+  ionViewWillLeave() {
+    this.addPointListener.unsubscribe();
+    this.subtractPointListener.unsubscribe();
+    this.addSalesListener.unsubscribe();
   }
 
 }

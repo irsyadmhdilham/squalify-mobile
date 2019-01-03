@@ -40,3 +40,8 @@ export interface downlineSales {
   amount: string;
   downlines: groupSales[];
 };
+
+export interface salesIo {
+  sender: number;
+  amount: number;
+}

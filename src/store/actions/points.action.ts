@@ -20,14 +20,28 @@ export class PointInitSucceed implements Action {
 
 export class PointIncrement implements Action {
   readonly type = ActionTypes.increment;
+  group = false;
+  personal: boolean;
 
-  constructor(public payload: number) { }
+  constructor(public payload: number, group?: boolean, personal: boolean=true) {
+    this.personal = personal;
+    if (group) {
+      this.group = group;
+    }
+  }
 }
 
 export class PointDecrement implements Action {
   readonly type = ActionTypes.decrement;
+  group = false;
+  personal: boolean;
 
-  constructor(public payload: number) { }
+  constructor(public payload: number, group?: boolean, personal: boolean=true) {
+    this.personal = personal; 
+    if (group) {
+      this.group = group;
+    }
+  }
 }
 
 export type actionsUnion = PointInit | PointInitSucceed | PointIncrement | PointDecrement;

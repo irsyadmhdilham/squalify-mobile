@@ -16,13 +16,19 @@ import { InboxPage } from "../inbox/inbox";
 import { ApiUrlModules } from "../../functions/config";
 import { InboxProvider, newMessage, newGroupMessage } from "../../providers/inbox/inbox";
 import { PostProvider, commentPost, likePost, unlikePost } from "../../providers/post/post";
+import { PointProvider } from "../../providers/point/point";
+import { SalesProvider } from "../../providers/sales/sales";
+
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 import { inbox } from "../../models/inbox";
+import { pointIo } from "../../models/point";
+import { salesIo } from "../../models/sales";
 
 import { Fetch } from "../../store/actions/profile.action";
 import { Init as NotifInit, Increment } from "../../store/actions/notifications.action";
 import { SocketioInit } from "../../store/actions/socketio.action";
+import { PointDecrement, PointIncrement } from "../../store/actions/points.action";
 
 import { PostDetailPage } from "../home/post-detail/post-detail";
 
@@ -46,7 +52,9 @@ export class TabsPage extends ApiUrlModules {
     private store: Store<store>,
     private inboxProvider: InboxProvider,
     private postProvider: PostProvider,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private pointProvider: PointProvider,
+    private salesProvider: SalesProvider
   ) {
     super(storage);
   }
@@ -108,6 +116,8 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new SocketioInit(io));
         this.chatSocket(io, profile);
         this.postSocket(io, profile);
+        this.pointSocket(io, profile);
+        this.salesSocket(io, profile);
         profileInit$.next(true);
         profileInit$.unsubscribe();
       }
@@ -149,6 +159,38 @@ export class TabsPage extends ApiUrlModules {
 
     io.on(`${namespace}:post:unlike post`, (data: unlikePost) => {
       this.postProvider.unlikePost$.next(data);
+    });
+  }
+
+  pointSocket(io, profile: profile) {
+    const namespace = `agency(${profile.agency.pk}):user(${profile.pk})`;
+    io.on(`${namespace}:point:add point`, (data: pointIo) => {
+      let group = false;
+      if (profile.group) {
+        if (profile.pk === data.uplineId) {
+          group = true;
+        }
+      }
+      this.store.dispatch(new PointIncrement(data.point, group, false));
+      this.pointProvider.addPoint$.next(data);
+    });
+
+    io.on(`${namespace}:point:subtract point`, (data: pointIo) => {
+      let group = false;
+      if (profile.group) {
+        if (profile.pk === data.uplineId) {
+          group = true;
+        }
+      }
+      this.store.dispatch(new PointDecrement(data.point, group, false));
+      this.pointProvider.subtractPoint$.next(data);
+    });
+  }
+
+  salesSocket(io, profile: profile) {
+    const namespace = `agency(${profile.agency.pk}):user(${profile.pk})`;
+    io.on(`${namespace}:sales:add sales`, (data: salesIo) => {
+      this.salesProvider.addSales$.next(data);
     });
   }
 

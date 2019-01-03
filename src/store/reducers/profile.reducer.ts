@@ -3,12 +3,9 @@ import { profile } from "../../models/profile";
 
 const initialState: profile = {
   pk: 0,
-  group: 0,
   name: '',
   designation: '',
   profile_image: '',
-  upline: '',
-  group_upline: 0,
   agency: {
     pk: 0,
     agency_image: '',

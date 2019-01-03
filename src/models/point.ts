@@ -52,6 +52,12 @@ export interface groupPoint {
 
 export interface allPoints {
   personal: number;
-  group?: number;
+  group: number | null;
   agency: number;
+}
+
+export interface pointIo {
+  point: number;
+  uplineId: number;
+  sender: number;
 }

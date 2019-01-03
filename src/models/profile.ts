@@ -1,13 +1,23 @@
 import { settings } from "./profile-settings";
 
+interface group {
+  pk: number;
+  members: number[];
+}
+
+interface upline {
+  pk: number;
+  name: string;
+  members: number[];
+}
+
 export interface profile {
   pk: number;
-  group: number;
   name: string;
   designation: string;
   profile_image: string;
-  upline?: string; 
-  group_upline: number;
+  upline?: upline; 
+  group?: group;
   agency: {
     pk: number;
     agency_image: string;

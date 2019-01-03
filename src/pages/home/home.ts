@@ -146,22 +146,6 @@ export class HomePage {
             x = post.likes.findIndex(val => val.liker === unliker);
       post.likes.splice(x, 1);
     });
-
-    // this.io.on(`${namespace}:add agency point`, data => {
-    //   this.points.agency += data.point;
-    // });
-
-    // this.io.on(`${namespace}:subtract agency point`, data => {
-    //   this.points.agency -= data.point;
-    // });
-
-    // this.io.on(`${namespace}:add group point`, data => {
-    //   this.points.group += data.point;
-    // });
-
-    // this.io.on(`${namespace}:subtract group point`, data => {
-    //   this.points.group -= data.point;
-    // });
   }
 
   commentListener() {

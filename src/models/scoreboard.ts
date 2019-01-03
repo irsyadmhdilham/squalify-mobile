@@ -10,6 +10,6 @@ export interface salesScore {
   pk: number;
   name: string;
   profile_image: string;
-  amount: string;
+  amount: number;
   designation: string;
 };

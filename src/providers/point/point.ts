@@ -1,12 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { Store, select } from "@ngrx/store";
+import { Observable, Subject } from "rxjs";
+import { switchMap, map, take } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { point, contactPoints, groupPoint, allPoints } from "../../models/point";
+import { point, contactPoints, groupPoint, allPoints, pointIo } from "../../models/point";
+import { store } from "../../models/store";
+import { profile } from "../../models/profile";
 
 interface memberPoints {
   date: string;
@@ -16,8 +19,57 @@ interface memberPoints {
 @Injectable()
 export class PointProvider extends ApiUrlModules {
 
-  constructor(public http: HttpClient, public storage: Storage) {
+  addPoint$ = new Subject<pointIo>();
+  subtractPoint$ = new Subject<pointIo>();
+
+  constructor(public http: HttpClient, public storage: Storage, private store: Store<store>) {
     super(storage);
+  }
+
+  addPointEmit(point: number) {
+    this.store.pipe(select('profile'), switchMap((profile: profile) => {
+      return this.store.pipe(select('io'), map((io: any) => {
+        const agency = profile.agency;
+        let upline: number;
+        if (profile.upline) {
+          upline = profile.upline.pk;
+        }
+        const members = agency.members.map(val => {
+          return { userId: val, uplineId: upline };
+        });
+        return { io: io, namespace: `agency(${agency.pk})`, members: members, sender: profile.pk };
+      }));
+    }), take(1)).subscribe(response => {
+      response.io.emit('point:add point', {
+        point,
+        sender: response.sender,
+        members: response.members,
+        namespace: response.namespace
+      });
+    });
+  }
+
+  subtractPointEmit(point: number) {
+    this.store.pipe(select('profile'), switchMap((profile: profile) => {
+      return this.store.pipe(select('io'), map((io: any) => {
+        const agency = profile.agency;
+        let upline: number;
+        if (profile.upline) {
+          upline = profile.upline.pk;
+        }
+        const members = agency.members.map(val => {
+          return { userId: val, uplineId: upline };
+        });
+        return { io: io, namespace: `agency(${agency.pk})`, members: members, sender: profile.pk };
+      }));
+    }), take(1)).subscribe(response => {
+      response.io.emit('point:subtract point', {
+        point,
+        sender: response.sender,
+        members: response.members,
+        namespace: response.namespace
+      });
+    });
   }
 
   createPoint(add: boolean, data: any): Observable<point> {
