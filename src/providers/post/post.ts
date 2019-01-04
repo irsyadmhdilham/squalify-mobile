@@ -42,15 +42,18 @@ export class PostProvider extends ApiUrlModules {
   }
 
   newPostEmit() {
-    this.store.pipe(select('profile')).pipe(
-      switchMap((profile: profile) => {
-        return this.store.pipe(select('io')).pipe(map((io: any) => {
-          const agencyId = profile.agency.pk;
-          return { io, namespace: `agency(${agencyId})`};
-        }))
-      })
-    ).pipe(take(1)).subscribe(data => {
-      data.io.emit('post:new post', { namespace: data.namespace });
+    this.store.pipe(map(store => {
+      const profile = store.profile,
+            agency = profile.agency,
+            members = agency.members,
+            agencyId = agency.pk;
+      return { io: store.io, namespace: `agency(${agencyId})`, sender: profile.pk, members };
+    }), take(1)).subscribe(data => {
+      data.io.emit('post:new post', {
+        namespace: data.namespace,
+        sender: data.sender,
+        members: data.members
+      });
     });
   }
 

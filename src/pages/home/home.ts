@@ -106,6 +106,7 @@ export class HomePage {
         sales.onDidDismiss(data => {
           if (data) {
             newPost();
+            this.fetchPosts();
           }
         });
       break;
