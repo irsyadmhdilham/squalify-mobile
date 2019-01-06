@@ -103,13 +103,12 @@ export class AddScheduleComponent {
         location: location.value,
         remark: remark.value === '' ? null : remark.value
       };
-      const userId = await this.scheduleProvider.userId().toPromise();
       if (this.appointmentSecured) {
         this.updatePoint().then(() => {
           this.addScheduleAction(data, loading, true);
         });
       } else {
-        this.addScheduleAction(userId, data, loading);
+        this.addScheduleAction(data, loading);
       }
     } catch (err) {
       const alert = this.alertCtrl.create({

@@ -61,6 +61,7 @@ export class TabsPage extends ApiUrlModules {
 
   signIn(value) {
     this.signedIn = value;
+    this.grantNotificationPermission();
     const profileInit$ = new Subject<boolean>(),
           profile$: Observable<profile> = this.store.pipe(select('profile'));
     this.listenWsEvents(profile$, profileInit$);
@@ -191,6 +192,19 @@ export class TabsPage extends ApiUrlModules {
     const namespace = `agency(${profile.agency.pk}):user(${profile.pk})`;
     io.on(`${namespace}:sales:add sales`, (data: salesIo) => {
       this.salesProvider.addSales$.next(data);
+    });
+  }
+
+  grantNotificationPermission() {
+    this.platform.ready().then(async () => {
+      const cordova = this.platform.is('cordova'),
+            isIOS = this.platform.is('ios');
+      if (cordova && isIOS) {
+        const hasPerm = await this.firebase.hasPermission();
+        if (!hasPerm.isEnabled) {
+          this.firebase.grantPermission();
+        }
+      }
     });
   }
 
