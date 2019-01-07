@@ -41,6 +41,7 @@ export class ProfilePage extends Ids {
   listenEmailNotif: (value) => void;
   listenPushNotif: (value) => void;
   navToSettings = false;
+  notifications$ = this.store.pipe(select('notifications'));
 
   constructor(
     public navCtrl: NavController,
@@ -88,8 +89,10 @@ export class ProfilePage extends Ids {
     });
     modal.present();
     modal.onDidDismiss(data => {
-      this.name = data.name;
-      this.profileImage = data.profileImage;
+      if (data) {
+        this.name = data.name;
+        this.profileImage = data.profileImage;
+      }
     })
   }
 

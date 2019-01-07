@@ -12,7 +12,7 @@
 <ion-content padding>
   <div id="profile-image-container">
     <div [ngStyle]="profileImageView()" id="profile-image"></div>
-    <button ion-button clear small color="dark">Change image</button>
+    <button (tap)="changeImage()" ion-button clear small color="dark">Change image</button>
   </div>
   <ion-list class="form-list" no-lines>
     <ion-item>

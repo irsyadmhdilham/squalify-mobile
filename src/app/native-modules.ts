@@ -6,6 +6,8 @@ import { CallNumber } from "@ionic-native/call-number";
 import { Firebase } from "@ionic-native/firebase";
 import { Deeplinks } from "@ionic-native/deeplinks";
 import { NativeAudio } from "@ionic-native/native-audio";
+import { Camera } from "@ionic-native/camera";
+import { FileTransfer } from "@ionic-native/file-transfer";
 
 export const NativeModules = [
   StatusBar,
@@ -15,5 +17,7 @@ export const NativeModules = [
   CallNumber,
   Firebase,
   Deeplinks,
-  NativeAudio
+  NativeAudio,
+  Camera,
+  FileTransfer
 ];

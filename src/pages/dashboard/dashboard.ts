@@ -28,6 +28,7 @@ export class DashboardPage {
   todayPoint: point;
   profile: Observable<profile> = this.store.pipe(select('profile'));
   dontShowToast = true;
+  notifications$ = this.store.pipe(select('notifications'));
 
   constructor(
     public navCtrl: NavController,

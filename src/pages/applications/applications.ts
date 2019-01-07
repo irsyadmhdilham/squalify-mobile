@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Store, select } from "@ngrx/store";
 
 import { EpfCalculatorPage } from "./epf-calculator/epf-calculator";
 import { CashCalculatorPage } from "./cash-calculator/cash-calculator";
@@ -11,6 +12,8 @@ interface app {
   component: any;
 }
 
+import { store } from "../../models/store";
+
 @IonicPage()
 @Component({
   selector: 'page-applications',
@@ -19,8 +22,13 @@ interface app {
 export class ApplicationsPage {
 
   apps: app[];
+  notifications$ = this.store.pipe(select('notifications'));
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private store: Store<store>
+  ) {
     this.apps = [
       { img: '../../assets/imgs/apps/epf.png', caption: 'Unit trust EPF calculator', component: EpfCalculatorPage },
       { img: '../../assets/imgs/apps/cash.png', caption: 'Unit trust cash calculator', component: CashCalculatorPage }

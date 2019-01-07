@@ -1,15 +1,18 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, Events } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
+import { Store, select } from "@ngrx/store";
 
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
 import { inbox, message, groupInbox } from "../../models/inbox";
 import { member } from "../../models/agency";
+import { store } from "../../models/store";
 
 import { ChatroomPage } from "./chatroom/chatroom";
 import { GroupChatroomPage } from "./group-chatroom/group-chatroom";
+import { NotificationsPage } from "../notifications/notifications";
 
 @IonicPage()
 @Component({
@@ -34,14 +37,20 @@ export class InboxPage {
   newInboxListener: Subscription;
   newGroupMessageListener: Subscription;
   storeListener: Subscription;
+  notifications$ = this.store.pipe(select('notifications'));
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
     private inboxProvider: InboxProvider,
-    private events: Events
+    private events: Events,
+    private store: Store<store>
   ) { }
+
+  navToNotifications() {
+    this.navCtrl.push(NotificationsPage);
+  }
 
   profileImage(img) {
     if (!img) {

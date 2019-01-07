@@ -76,7 +76,7 @@ import { effectsModule } from "./effects-module";
   ],
   providers: [
     ...NativeModules,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
     ...Providers
   ]
 })

@@ -85,9 +85,10 @@ export class TabsPage extends ApiUrlModules {
   }
 
   onOpenNotification() {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
+    this.platform.ready().then(() => {
+      const isCordova = this.platform.is('cordova'),
+            isMobile = this.platform.is('isMobile');
+      if (isCordova && isMobile) {
         this.firebase.onNotificationOpen().subscribe(observe => {
           const title = observe.title;
           if (title === 'like post' || title === 'comment post') {
@@ -198,8 +199,9 @@ export class TabsPage extends ApiUrlModules {
   grantNotificationPermission() {
     this.platform.ready().then(async () => {
       const cordova = this.platform.is('cordova'),
-            isIOS = this.platform.is('ios');
-      if (cordova && isIOS) {
+            isIOS = this.platform.is('ios'),
+            isMobile = this.platform.is('mobile');
+      if (cordova && isIOS && isMobile) {
         const hasPerm = await this.firebase.hasPermission();
         if (!hasPerm.isEnabled) {
           this.firebase.grantPermission();

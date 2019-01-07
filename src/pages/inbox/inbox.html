@@ -9,9 +9,12 @@
       <img style="width: 5em" src="../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only clear=true color="grey">
-        <ion-icon name="notifications"></ion-icon>
-      </button>
+      <div (tap)="navToNotifications()" class="notifications-badge-wrapper">
+        <button ion-button icon-only clear color="grey">
+          <ion-icon name="notifications"></ion-icon>
+        </button>
+        <div class="notifications-badge" *ngIf="notifications$ | async">{{notifications$ | async}}</div>
+      </div>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
