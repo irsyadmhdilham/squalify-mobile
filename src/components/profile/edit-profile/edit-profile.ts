@@ -9,8 +9,16 @@ import {
 } from "ionic-angular";
 import { Camera, CameraOptions } from "@ionic-native/camera";
 import { FileTransfer, FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer";
+import { Observable, Observer } from "rxjs";
+import { first, switchMap, catchError, map } from "rxjs/operators";
 
 import { ProfileProvider } from "../../../providers/profile/profile";
+
+interface uploadImage {
+  upload: boolean;
+  image?: string;
+  succeed?: boolean;
+}
 
 @Component({
   selector: 'edit-profile',
@@ -20,6 +28,7 @@ export class EditProfileComponent {
 
   name: string;
   profileImage: string;
+  imageToUpload: string
 
   constructor(
     private viewCtrl: ViewController,
@@ -46,23 +55,39 @@ export class EditProfileComponent {
     if (isCordova) {
       this.platform.ready().then(() => {
         this.camera.getPicture(options).then(async imageData => {
-          const fileTransfer: FileTransferObject = this.transfer.create(),
-                options: FileUploadOptions = {
-                  fileKey: 'profile_image',
-                  chunkedMode: false,
-                  mimeType: 'image/jpeg',
-                  httpMethod: 'PUT',
-                  headers: {}
-                };
-          const imgPath = normalizeURL(imageData);
+          const imgPath = (window as any).Ionic.WebView.convertFileSrc(imageData);
           this.profileImage = imgPath;
-          const profileURL = await this.profileProvider.profileUrl('profile-image/').toPromise();
-          fileTransfer.upload(imageData, profileURL, options).then(data => {
-            console.log(JSON.stringify(data, null, 4));
-          }).catch(err => console.warn(JSON.stringify(err, null, 4)));
-        });
+          this.imageToUpload = imageData;
+        }).catch(() => {});
       });
     }
+  }
+
+  uploadImage(): Observable<uploadImage> {
+    const obs: Observable<uploadImage> = Observable.create((observer: Observer<uploadImage>) => {
+      const isCordova = this.platform.is('cordova');
+      if (isCordova && this.imageToUpload) {
+        const fileTransfer: FileTransferObject = this.transfer.create(),
+        options: FileUploadOptions = {
+          fileKey: 'profile_image',
+          chunkedMode: false,
+          mimeType: 'image/jpeg',
+          httpMethod: 'PUT',
+          headers: {}
+        };
+        this.platform.ready().then(async () => {
+          const profileURL = await this.profileProvider.profileUrl('profile-image/').toPromise();
+          fileTransfer.upload(this.imageToUpload, profileURL, options).then(data => {
+            const response = JSON.parse(data.response);
+            observer.next({upload: true, succeed: true, image: response.profile_image});
+          }).catch(err => observer.error(err));
+        });
+      } else {
+        observer.next({upload: false})
+      }
+    });
+    obs.pipe(first());
+    return obs;
   }
 
   profileImageView() {
@@ -78,11 +103,18 @@ export class EditProfileComponent {
         content: 'Please wait...'
       });
       loading.present();
-      this.profileProvider.updateProfile({name: this.name, profile_image: this.profileImage}).subscribe(observe => {
+      this.uploadImage().pipe(
+        catchError(err => Observable.of(err)),
+        switchMap((upload: uploadImage) => {
+          return this.profileProvider.updateProfile({name: this.name}).pipe(map(data => {
+            return { name: data.name, profileImage: upload.image };
+          }));
+        })
+      ).subscribe(observe => {
         loading.dismiss();
         this.viewCtrl.dismiss({
           name: observe.name,
-          profileImage: this.profileImage
+          profileImage: observe.profileImage
         });
       }, (err: Error) => {
         loading.dismiss();

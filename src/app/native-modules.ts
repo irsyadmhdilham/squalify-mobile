@@ -7,6 +7,8 @@ import { Deeplinks } from "@ionic-native/deeplinks";
 import { NativeAudio } from "@ionic-native/native-audio";
 import { Camera } from "@ionic-native/camera";
 import { FileTransfer } from "@ionic-native/file-transfer";
+import { Badge } from "@ionic-native/badge";
+import { AndroidPermissions } from "@ionic-native/android-permissions";
 
 export const NativeModules = [
   StatusBar,
@@ -17,5 +19,7 @@ export const NativeModules = [
   Deeplinks,
   NativeAudio,
   Camera,
-  FileTransfer
+  FileTransfer,
+  Badge,
+  AndroidPermissions
 ];
