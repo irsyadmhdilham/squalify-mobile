@@ -11,7 +11,12 @@
   <fetch-error message="Failed to retrieve data" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
     <h5 title>Agency</h5>
-    <ion-list>
+    <section id="agency-image-wrapper">
+      <div [ngStyle]="agencyImageView()" id="agency-image"></div>
+      <h6 no-margin ion-text color="dark">{{agencyName}}</h6>
+      <button (tap)="editAgency()" ion-button clear small no-margin>Edit agency</button>
+    </section>
+    <ion-list margin-top>
       <ion-item no-padding *ngFor="let member of members">
         <div [ngStyle]="profileImage(member.profile_image)" item-start class="profile-image"></div>
         <h5>{{member.name}}</h5>

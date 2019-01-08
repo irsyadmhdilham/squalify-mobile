@@ -4,13 +4,13 @@ import {
   NavParams,
   AlertController,
   LoadingController,
-  Platform,
-  normalizeURL
+  Platform
 } from "ionic-angular";
 import { Camera, CameraOptions } from "@ionic-native/camera";
+import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { FileTransfer, FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer";
 import { Observable, Observer } from "rxjs";
-import { first, switchMap, catchError, map } from "rxjs/operators";
+import { first, switchMap, map } from "rxjs/operators";
 
 import { ProfileProvider } from "../../../providers/profile/profile";
 
@@ -38,7 +38,8 @@ export class EditProfileComponent {
     private loadingCtrl: LoadingController,
     private transfer: FileTransfer,
     private camera: Camera,
-    private platform: Platform
+    private platform: Platform,
+    private androidPermissions: AndroidPermissions
   ) { }
 
   dismiss() {
@@ -64,7 +65,7 @@ export class EditProfileComponent {
   }
 
   uploadImage(): Observable<uploadImage> {
-    const obs: Observable<uploadImage> = Observable.create((observer: Observer<uploadImage>) => {
+    return (Observable.create((observer: Observer<uploadImage>) => {
       const isCordova = this.platform.is('cordova');
       if (isCordova && this.imageToUpload) {
         const fileTransfer: FileTransferObject = this.transfer.create(),
@@ -85,9 +86,7 @@ export class EditProfileComponent {
       } else {
         observer.next({upload: false})
       }
-    });
-    obs.pipe(first());
-    return obs;
+    }) as Observable<uploadImage>).pipe(first());
   }
 
   profileImageView() {
@@ -104,12 +103,11 @@ export class EditProfileComponent {
       });
       loading.present();
       this.uploadImage().pipe(
-        catchError(err => Observable.of(err)),
         switchMap((upload: uploadImage) => {
           return this.profileProvider.updateProfile({name: this.name}).pipe(map(data => {
             return { name: data.name, profileImage: upload.image };
           }));
-        })
+        }),
       ).subscribe(observe => {
         loading.dismiss();
         this.viewCtrl.dismiss({
@@ -140,6 +138,22 @@ export class EditProfileComponent {
           profileImage = this.navParams.get('profileImage');
     this.name = name;
     this.profileImage = profileImage;
+    this.androidPermissionsHandler();
+  }
+
+  androidPermissionsHandler() {
+    const isCordova = this.platform.is('cordova'),
+          isMobile = this.platform.is('mobile'),
+          isAndroid = this.platform.is('android');
+    if (isCordova && isMobile && isAndroid) {
+      this.platform.ready().then(() => {
+        const readExternalStorage = this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE;
+        this.androidPermissions.checkPermission(readExternalStorage).then(
+          result => console.log(result.hasPermission),
+          () => this.androidPermissions.requestPermission(readExternalStorage)
+        );
+      });
+    }
   }
 
 }

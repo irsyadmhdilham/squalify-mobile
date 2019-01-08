@@ -1,22 +1,36 @@
 import { Component } from '@angular/core';
+import { ViewController, NavParams } from "ionic-angular";
 
-/**
- * Generated class for the EditAgencyComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
   selector: 'edit-agency',
   templateUrl: 'edit-agency.html'
 })
 export class EditAgencyComponent {
 
-  text: string;
+  agencyName: string;
+  agencyImage: string;
 
-  constructor() {
-    console.log('Hello EditAgencyComponent Component');
-    this.text = 'Hello World';
+  constructor(
+    private viewCtrl: ViewController,
+    private navParams: NavParams
+  ) { }
+
+  agencyImageView() {
+    if (this.agencyImage) {
+      return { background: `url('${this.agencyImage}') center center no-repeat / cover` };
+    }
+    return false;
+  }
+
+  dismiss() {
+    this.viewCtrl.dismiss();
+  }
+
+  ionViewDidLoad() {
+    const agencyName = this.navParams.get('agencyName'),
+          agencyImage = this.navParams.get('agencyImage');
+    this.agencyName = agencyName;
+    this.agencyImage = agencyImage;
   }
 
 }

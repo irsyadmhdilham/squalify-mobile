@@ -1,4 +1,31 @@
-<!-- Generated template for the EditAgencyComponent component -->
-<div>
-  {{text}}
-</div>
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons start>
+        <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-title>Edit agency</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+<ion-content padding>
+  <div id="agency-image-container">
+    <div [ngStyle]="agencyImageView()" id="agency-image"></div>
+    <button (tap)="changeImage()" ion-button clear small color="dark">Change image</button>
+  </div>
+  <ion-list class="form-list" no-lines>
+    <ion-item>
+      <ion-label stacked>NAME</ion-label>
+      <ion-input
+        type="text"
+        placeholder="Write your name here"
+        [(ngModel)]="agencyName"
+        #_name="ngModel"
+      ></ion-input>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong (tap)="submitChanges(_name)">Submit changes</button>
+  </ion-row>
+</ion-content>

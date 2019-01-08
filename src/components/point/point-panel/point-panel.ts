@@ -1,11 +1,9 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ModalController, AlertController } from "ionic-angular";
 import { Observable } from "rxjs";
-import * as socketio from "socket.io-client";
 
 import { PointLogsComponent } from "../point-logs/point-logs";
 import { Colors } from "../../../functions/colors";
-import { PointProvider } from "../../../providers/point/point";
 import { profile } from "../../../models/profile";
 
 @Component({
@@ -49,12 +47,10 @@ export class PointPanelComponent implements OnChanges {
     totalPoints = 0;
     totalProductivePoints = 0;
     totalCareerPoints = 0;
-    io = socketio(this.pointProvider.wsBaseUrl('home'));
   
   constructor(
     private modalCtrl: ModalController,
-    public alertCtrl: AlertController,
-    private pointProvider: PointProvider
+    public alertCtrl: AlertController
   ) { }
 
   edit() {
