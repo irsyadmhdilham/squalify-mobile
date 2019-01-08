@@ -19,6 +19,13 @@ export class AgencyProvider extends ApiUrlModules {
     super(storage);
   }
 
+  updateAgency(data): Observable<agency> {
+    const url = this.agencyUrl();
+    return url.pipe(switchMap(url => {
+      return this.http.put<agency>(url, data);
+    }));
+  }
+
   getAgencyDetail(fields?: string, userId?): Observable<agency> {
     let url = this.agencyUrl();
     if (fields) {

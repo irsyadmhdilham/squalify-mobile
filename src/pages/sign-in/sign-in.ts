@@ -1,11 +1,12 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
 import {
   IonicPage,
   NavController,
   NavParams,
   AlertController,
   LoadingController,
-  Platform
+  Platform,
+  TextInput
 } from 'ionic-angular';
 import { Firebase } from "@ionic-native/firebase";
 import { Store } from "@ngrx/store";
@@ -23,6 +24,7 @@ import { AuthProvider } from "../../providers/auth/auth";
 export class SignInPage {
 
   @Output() signingIn = new EventEmitter();
+  @ViewChild('_password') passwordInput: TextInput
 
   constructor(
     public navCtrl: NavController,
@@ -43,6 +45,16 @@ export class SignInPage {
   initializer() {
     this.store.dispatch(new Init());
     this.store.dispatch(new Fetch());
+  }
+
+  returnHandler(input: string, event: KeyboardEvent, data?) {
+    if (event.key === 'Enter') {
+      if (input === 'email') {
+        this.passwordInput.setFocus();
+      } else {
+        this.signIn(data.email, data.password);
+      }
+    }
   }
 
   async signIn(email, password) {

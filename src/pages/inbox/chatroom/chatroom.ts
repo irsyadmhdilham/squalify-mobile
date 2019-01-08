@@ -9,10 +9,8 @@ import {
   NavParams,
   Content,
   Keyboard,
-  Platform,
   Events
 } from 'ionic-angular';
-import { NativeAudio } from "@ionic-native/native-audio";
 import { Observable } from "rxjs";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
@@ -56,8 +54,6 @@ export class ChatroomPage {
     private keyboard: Keyboard,
     private inboxProvider: InboxProvider,
     private notificationProvider: NotificationProvider,
-    private platform: Platform,
-    private nativeAudio: NativeAudio,
     private events: Events,
     private store: Store<store>
   ) { }
@@ -122,7 +118,6 @@ export class ChatroomPage {
       this.content.scrollToBottom();
     });
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
-    this.registerSound();
     this.clearUnread();
     this.clearNotifRead();
     this.listenIncomingMessage();
@@ -266,7 +261,6 @@ export class ChatroomPage {
           this.pk = data.inbox.pk;
           this.messages.push(data.message);
           this.events.publish('inbox: new inbox', data.inbox);
-          this.playSound('submitMessage');
           scrollContent();
         });
       } else {
@@ -280,35 +274,11 @@ export class ChatroomPage {
           this.initialSend = false;
           this.messages.push(response.message);
           this.events.publish('inbox: new message', response.message, this.pk);
-          this.playSound('submitMessage');
           receiverResponse(response);
           scrollContent();
         });
       }
     }
-  }
-
-  registerSound() {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
-        this.nativeAudio.preloadSimple('incomingMessage', '../../../assets/sound/water-drop.mp3');
-        this.nativeAudio.preloadSimple('submitMessage', '../../../assets/sound/blob.mp3');
-      }
-    });
-  }
-
-  playSound(action) {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
-        if (action === 'incoming message') {
-          this.nativeAudio.play('incomingMessage');
-        } else {
-          this.nativeAudio.play('submitMessage');
-        }
-      }
-    });
   }
 
 }

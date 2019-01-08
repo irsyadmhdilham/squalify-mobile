@@ -19,6 +19,15 @@ export function profileReducer(state = initialState, action: ActionUnion) {
   switch (action.type) {
     case ActionTypes.fetchSucceed:
       return state = action.payload;
+    case ActionTypes.agencyNameImage:
+      return {
+        ...state,
+        agency: {
+          ...state.agency,
+          agency_image: action.payload.agencyImage,
+          name: action.payload.agencyName
+        }
+      };
     default:
       return state;
   }

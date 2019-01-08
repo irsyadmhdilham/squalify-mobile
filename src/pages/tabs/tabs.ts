@@ -62,9 +62,9 @@ export class TabsPage extends ApiUrlModules {
   signIn(value) {
     this.signedIn = value;
     this.grantNotificationPermission();
-    const profileInit$ = new Subject<boolean>(),
-          profile$: Observable<profile> = this.store.pipe(select('profile'));
-    this.listenWsEvents(profile$, profileInit$);
+    // const profileInit$ = new Subject<boolean>(),
+    //       profile$: Observable<profile> = this.store.pipe(select('profile'));
+    // this.listenWsEvents(profile$, profileInit$);
   }
 
   ionViewDidLoad() {

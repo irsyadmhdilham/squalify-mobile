@@ -44,6 +44,12 @@ export class AgencyPage {
   editAgency() {
     const modal = this.modalCtrl.create(EditAgencyComponent, { agencyImage: this.agencyImage, agencyName: this.agencyName });
     modal.present();
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.agencyImage = data.agencyImage;
+        this.agencyName = data.agencyName;
+      }
+    });
   }
 
   fetch() {

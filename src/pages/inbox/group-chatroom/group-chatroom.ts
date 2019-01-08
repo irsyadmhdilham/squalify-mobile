@@ -6,14 +6,12 @@ import {
   NavParams,
   Content,
   Events,
-  Keyboard,
-  Platform
+  Keyboard
 } from 'ionic-angular';
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
 import { Store, select } from "@ngrx/store";
-import { NativeAudio } from "@ionic-native/native-audio";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { NotificationProvider } from "../../../providers/notification/notification";
@@ -58,9 +56,7 @@ export class GroupChatroomPage {
     private notificationProvider: NotificationProvider,
     private events: Events,
     private keyboard: Keyboard,
-    private store: Store<store>,
-    private platform: Platform,
-    private nativeAudio: NativeAudio
+    private store: Store<store>
   ) { }
 
   initializer() {
@@ -132,7 +128,6 @@ export class GroupChatroomPage {
       this.content.scrollToBottom();
     });
     this.inboxProvider.userId().subscribe(userId => this.userId = userId);
-    this.registerSound();
     this.clearUnread();
     this.clearNotifRead();
     this.listenIncomingMessage();
@@ -276,7 +271,6 @@ export class GroupChatroomPage {
           };
         })).subscribe(async message => {
         this.messages.push(message);
-        this.playSound('submitMessage');
         scrollContent();
         const userId = await this.inboxProvider.userId().toPromise();
         const agency = this.profile.agency,
@@ -293,29 +287,6 @@ export class GroupChatroomPage {
         this.initialSend = false;
       });
     }
-  }
-
-  registerSound() {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
-        this.nativeAudio.preloadSimple('incomingMessage', '../../../assets/sound/water-drop.mp3');
-        this.nativeAudio.preloadSimple('submitMessage', '../../../assets/sound/blob.mp3');
-      }
-    });
-  }
-
-  playSound(action) {
-    this.platform.ready().then(async () => {
-      const isCordova = await this.platform.is('cordova');
-      if (isCordova) {
-        if (action === 'incoming message') {
-          this.nativeAudio.play('incomingMessage');
-        } else {
-          this.nativeAudio.play('submitMessage');
-        }
-      }
-    });
   }
 
 }

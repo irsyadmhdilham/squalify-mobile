@@ -3,7 +3,8 @@ import { profile } from "../../models/profile";
 
 export enum ActionTypes {
   fetch = 'FETCH_PROFILE',
-  fetchSucceed = 'FETCH_PROFILE_SUCCEED'
+  fetchSucceed = 'FETCH_PROFILE_SUCCEED',
+  agencyNameImage = 'AGENCY_NAME_IMAGE'
 }
 
 export class Fetch implements Action {
@@ -16,4 +17,10 @@ export class FetchSucceed implements Action {
   constructor(public payload: profile) { }
 }
 
-export type ActionUnion = Fetch | FetchSucceed;
+export class AgencyNameImage implements Action {
+  readonly type = ActionTypes.agencyNameImage;
+
+  constructor(public payload: { agencyName: string; agencyImage: string; }) { }
+}
+
+export type ActionUnion = Fetch | FetchSucceed | AgencyNameImage;

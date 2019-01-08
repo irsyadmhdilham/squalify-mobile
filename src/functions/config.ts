@@ -106,7 +106,7 @@ export class ApiUrlModules extends Ids {
   agencyUrl(url?: string): Observable<string> {
     return this.agencyId().pipe(map(agencyId => {
       if (!url) {
-        return `${this.apiBaseUrl()}/agency/${agencyId}`;
+        return `${this.apiBaseUrl()}/agency/${agencyId}/`;
       }
       return `${this.apiBaseUrl()}/agency/${agencyId}/${url}`;
     }));
