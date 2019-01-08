@@ -250,15 +250,16 @@ export class GroupChatroomPage {
     });
   }
 
-  sendMessage(msg: NgModel) {
+  sendMessage() {
     const scrollContent = () => {
       setTimeout(() => {
         this.content.scrollToBottom();
       }, 100);
     };
-    if (msg.touched && msg.value.length > 0) {
+    const valid = this.text.match(/^\s+/);
+    if (!valid && this.text.length > 0) {
       const data = {
-        text: msg.value,
+        text: this.text,
         initialSend: this.initialSend,
         role: this.role
       };

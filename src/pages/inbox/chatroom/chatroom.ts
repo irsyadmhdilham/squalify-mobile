@@ -225,7 +225,7 @@ export class ChatroomPage {
     });
   }
 
-  sendMessage(msg: NgModel) {
+  sendMessage() {
     const receiverResponse = data => {
       const profile = this.profile;
       const namespace = `agency(${profile.agency.pk}):user(${this.receiverId})`;
@@ -241,9 +241,10 @@ export class ChatroomPage {
         this.content.scrollToBottom();
       }, 100);
     };
-    if (msg.touched && msg.value.length > 0) {
+    const valid = this.text.match(/^\s+/);
+    if (!valid && this.text.length > 0) {
       const data = {
-        text: msg.value,
+        text: this.text,
         receiverId: this.receiverId,
         initialSend: this.initialSend
       };

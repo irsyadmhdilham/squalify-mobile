@@ -33,10 +33,10 @@
 <ion-footer>
   <section>
     <div id="chatroom-input-wrapper">
-      <ion-textarea [(ngModel)]="text" #textMsg="ngModel" no-margin type="text" placeholder="write something here"></ion-textarea>
+      <ion-textarea [(ngModel)]="text" no-margin type="text" placeholder="write something here"></ion-textarea>
     </div>
     <ion-buttons end>
-      <button id="send-button" ion-button color="primary" clear icon-only (tap)="sendMessage(textMsg)">
+      <button id="send-button" ion-button color="primary" clear icon-only (tap)="sendMessage()">
         <ion-icon name="send"></ion-icon>
       </button>
     </ion-buttons>
