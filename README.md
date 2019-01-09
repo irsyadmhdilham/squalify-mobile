@@ -1,1 +1,1 @@
-#Squalify mobile apps
+# Squalify mobile apps
