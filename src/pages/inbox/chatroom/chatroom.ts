@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgModel } from "@angular/forms";
 import { Store, select } from "@ngrx/store";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";

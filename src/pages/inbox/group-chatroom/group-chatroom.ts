@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgModel } from "@angular/forms";
 import {
   IonicPage,
   NavController,
