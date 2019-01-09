@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, ActionSheetController } from 'ionic-angular';
 
 import { SalesProvider } from "../../../providers/sales/sales";
 import { agency } from "../../../models/agency";
@@ -10,7 +10,6 @@ import { SalesDetailComponent } from "../../../components/sales/sales-detail/sal
 import { SalesSummaryComponent } from "../../../components/sales/sales-summary/sales-summary";
 import { SalesDownlinesPage } from "./sales-downlines/sales-downlines";
 
-@IonicPage()
 @Component({
   selector: 'page-sales',
   templateUrl: 'sales.html',

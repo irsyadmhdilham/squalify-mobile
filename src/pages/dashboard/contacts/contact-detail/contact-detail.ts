@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   ModalController,
@@ -13,7 +12,6 @@ import { ScheduleDetailPage } from "../../schedules/schedule-detail/schedule-det
 import { ContactProvider } from "../../../../providers/contact/contact";
 import { schedule } from "../../../../models/schedule";
 
-@IonicPage()
 @Component({
   selector: 'page-contact-detail',
   templateUrl: 'contact-detail.html',

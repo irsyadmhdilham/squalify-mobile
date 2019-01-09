@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../../providers/point/point";
 import { PointDownlinesPage } from "../point-downlines/point-downlines";
 import { PointDetailPage } from "../point-detail/point-detail";
 
-@IonicPage()
 @Component({
   selector: 'page-point-group-member',
   templateUrl: 'point-group-member.html',

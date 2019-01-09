@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   ModalController,
@@ -24,7 +23,6 @@ import { settings } from "../../models/profile-settings";
 import { store } from "../../models/store";
 import { SocketioReset } from "../../store/actions/socketio.action";
 
-@IonicPage()
 @Component({
   selector: 'page-profile',
   templateUrl: 'profile.html',

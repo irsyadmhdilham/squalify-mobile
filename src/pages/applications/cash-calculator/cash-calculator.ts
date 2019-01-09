@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Keyboard, AlertController } from 'ionic-angular';
+import { NavController, NavParams, Keyboard, AlertController } from 'ionic-angular';
 
 import { CashElaborationPage } from "./cash-elaboration/cash-elaboration";
 
 import { futureValue } from "../../../functions/future-value";
 
-@IonicPage()
 @Component({
   selector: 'page-cash-calculator',
   templateUrl: 'cash-calculator.html',

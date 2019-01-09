@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { EpfRetirementPlanPage } from "../epf-retirement-plan/epf-retirement-plan";
 
-@IonicPage()
 @Component({
   selector: 'page-epf-elaboration',
   templateUrl: 'epf-elaboration.html',

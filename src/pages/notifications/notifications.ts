@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import * as moment from "moment";
 
 import { notification } from "../../models/notification";
@@ -9,7 +9,6 @@ import { ChatroomPage } from "../../pages/inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../../pages/inbox/group-chatroom/group-chatroom";
 import { PostDetailPage } from "../../pages/home/post-detail/post-detail";
 
-@IonicPage()
 @Component({
   selector: 'page-notifications',
   templateUrl: 'notifications.html',

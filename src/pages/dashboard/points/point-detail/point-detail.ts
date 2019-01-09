@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { Colors } from "../../../../functions/colors";
 import { log } from "../../../../models/point";
@@ -7,7 +7,6 @@ import { log } from "../../../../models/point";
 import { PointSummaryComponent } from "../../../../components/point/point-summary/point-summary";
 import { PointProvider } from "../../../../providers/point/point";
 
-@IonicPage()
 @Component({
   selector: 'page-point-detail',
   templateUrl: 'point-detail.html',

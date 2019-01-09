@@ -16,10 +16,12 @@
       <ion-input
         ngModel
         #email="ngModel"
+        #_email
         (keydown)="focusInputField($event)"
         type="email"
         required
         placeholder="Insert current email"
+        email
       ></ion-input>
     </ion-item>
     <ion-item>
@@ -29,13 +31,14 @@
         #newEmail="ngModel"
         required
         #_newEmail
-        (keydown)="returnKeyNewEmail(email, newEmail)"
+        (keydown)="returnKeyNewEmail(email, newEmail, $event)"
         type="email"
         placeholder="Insert new email"
+        email
       ></ion-input>
     </ion-item>
   </ion-list>
   <ion-row justify-content-center>
-    <button (tap)="submit(email, newEmail)" ion-button clear strong>Change email</button>
+    <button (tap)="submit('button', email, newEmail)" ion-button clear strong>Change email</button>
   </ion-row>
 </ion-content>

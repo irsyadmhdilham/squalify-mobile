@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   AlertController,
@@ -16,7 +15,6 @@ import { Init } from "../../store/actions/notifications.action";
 import { store } from "../../models/store";
 import { AuthProvider } from "../../providers/auth/auth";
 
-@IonicPage()
 @Component({
   selector: 'page-sign-in',
   templateUrl: 'sign-in.html',

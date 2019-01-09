@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 
 import { ScoreboardProvider } from "../../../providers/scoreboard/scoreboard";
@@ -7,7 +7,6 @@ import { PointProvider } from "../../../providers/point/point";
 import { SalesProvider } from "../../../providers/sales/sales";
 import { pointScore, salesScore } from "../../../models/scoreboard";
 
-@IonicPage()
 @Component({
   selector: 'page-scoreboard',
   templateUrl: 'scoreboard.html',

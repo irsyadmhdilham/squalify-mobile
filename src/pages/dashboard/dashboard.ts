@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 
@@ -17,7 +17,6 @@ import { PointProvider } from "../../providers/point/point";
 import { point } from "../../models/point";
 import { profile } from "../../models/profile";
 
-@IonicPage()
 @Component({
   selector: 'page-dashboard',
   templateUrl: 'dashboard.html',

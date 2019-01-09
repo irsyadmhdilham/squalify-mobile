@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 
 import { member } from "../../../models/agency";
 import { AgencyProvider } from "../../../providers/agency/agency";
 
 import { EditAgencyComponent } from "../../../components/edit-agency/edit-agency";
 
-@IonicPage()
 @Component({
   selector: 'page-agency',
   templateUrl: 'agency.html',

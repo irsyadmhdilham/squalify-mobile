@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   ModalController,
   NavParams,
@@ -25,7 +24,6 @@ import { AddContactComponent } from "../../components/contact/add-contact/add-co
 import { AddScheduleComponent } from "../../components/schedule/add-schedule/add-schedule";
 import { NotificationsPage } from '../notifications/notifications';
 
-@IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'

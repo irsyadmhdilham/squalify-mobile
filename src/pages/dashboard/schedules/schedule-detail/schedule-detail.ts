@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   LoadingController,
@@ -14,7 +13,6 @@ import { ScheduleProvider } from "../../../../providers/schedule/schedule";
 import { EditScheduleComponent } from "../../../../components/schedule/edit-schedule/edit-schedule";
 import { ContactDetailPage } from "../../contacts/contact-detail/contact-detail";
 
-@IonicPage()
 @Component({
   selector: 'page-schedule-detail',
   templateUrl: 'schedule-detail.html',

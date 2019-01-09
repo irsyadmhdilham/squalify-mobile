@@ -12,7 +12,7 @@ import { Applications } from "./pages/applications";
 import { Profile } from "./pages/profile";
 import { Inbox } from "./pages/inbox";
 import { Dashboard } from "./pages/dashboard";
-import { HomePages } from "./pages/home";
+// import { HomePages } from "./pages/home";
 import { NotificationsPage } from "../pages/notifications/notifications";
 
 //imported modules
@@ -43,8 +43,8 @@ import { effectsModule } from "./effects-module";
     ...Inbox,
     ...Profile,
     ...Applications,
+    // ...HomePages,
     ...Components,
-    ...HomePages
   ],
   imports: [
     BrowserModule,
@@ -71,8 +71,8 @@ import { effectsModule } from "./effects-module";
     ...Inbox,
     ...Profile,
     ...Applications,
+    // ...HomePages,
     ...Components,
-    ...HomePages
   ],
   providers: [
     ...NativeModules,

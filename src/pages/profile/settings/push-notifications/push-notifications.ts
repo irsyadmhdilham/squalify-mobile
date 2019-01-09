@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 
 import { pushNotification } from "../../../../models/profile-settings";
 import { ProfileProvider } from "../../../../providers/profile/profile";
 
-@IonicPage()
 @Component({
   selector: 'page-push-notifications',
   templateUrl: 'push-notifications.html',

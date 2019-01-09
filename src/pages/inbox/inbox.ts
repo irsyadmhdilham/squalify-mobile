@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, Events } from 'ionic-angular';
+import { NavController, NavParams, ModalController, Events } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { Store, select } from "@ngrx/store";
 
@@ -14,7 +14,6 @@ import { ChatroomPage } from "./chatroom/chatroom";
 import { GroupChatroomPage } from "./group-chatroom/group-chatroom";
 import { NotificationsPage } from "../notifications/notifications";
 
-@IonicPage()
 @Component({
   selector: 'page-inbox',
   templateUrl: 'inbox.html',

@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController } from 'ionic-angular';
 
 import { SalesProvider } from "../../../../providers/sales/sales";
 
-@IonicPage()
 @Component({
   selector: 'page-sales-downlines',
   templateUrl: 'sales-downlines.html',

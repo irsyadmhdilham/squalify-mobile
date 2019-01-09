@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 
 import { EpfCalculatorPage } from "./epf-calculator/epf-calculator";
@@ -14,7 +14,6 @@ interface app {
 
 import { store } from "../../models/store";
 
-@IonicPage()
 @Component({
   selector: 'page-applications',
   templateUrl: 'applications.html',

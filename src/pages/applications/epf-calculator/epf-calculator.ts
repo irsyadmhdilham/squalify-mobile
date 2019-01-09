@@ -1,13 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Keyboard } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Keyboard } from 'ionic-angular';
 
 import { EpfElaborationPage } from "./epf-elaboration/epf-elaboration";
 const epfSchemes = require('../../../assets/epf-schemes.json');
 
 import { roundDecimal } from '../../../functions/number-commas';
 
-
-@IonicPage()
 @Component({
   selector: 'page-epf-calculator',
   templateUrl: 'epf-calculator.html',

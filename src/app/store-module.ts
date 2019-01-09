@@ -11,6 +11,11 @@ function logger(reducer: ActionReducer<any>) {
   return storeLogger(loggerOptions)(reducer);
 }
 
-const metaReducers = isDevMode() ? [logger] : [];
+function metaReducers() {
+  if (isDevMode()) {
+    return [logger];
+  }
+  return [];
+}
 
-export const storeModule = StoreModule.forRoot(reducers, { metaReducers });
+export const storeModule = StoreModule.forRoot(reducers, { metaReducers: metaReducers() });

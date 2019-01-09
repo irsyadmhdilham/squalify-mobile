@@ -49,4 +49,18 @@ export class ProfileProvider extends ApiUrlModules {
     }));
   }
 
+  changeEmail(email: string, newEmail: string): Observable<boolean> {
+    const url = this.profileUrl('change-email/');
+    return url.pipe(switchMap(url => {
+      return this.http.put<boolean>(url, { email, newEmail });
+    }));
+  }
+
+  changePassword(password: string, newPassword: string): Observable<boolean> {
+    const url = this.profileUrl('change-password/');
+    return url.pipe(switchMap(url => {
+      return this.http.put<boolean>(url, { password, newPassword });
+    }));
+  }
+
 }

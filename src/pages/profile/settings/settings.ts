@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 
 import { PushNotificationsPage } from "./push-notifications/push-notifications";
 import { Colors } from "../../../functions/colors";
 import { settings, socialNetAcc, pushNotification } from "../../../models/profile-settings";
 import { ProfileProvider } from "../../../providers/profile/profile";
 
-@IonicPage()
 @Component({
   selector: 'page-settings',
   templateUrl: 'settings.html',

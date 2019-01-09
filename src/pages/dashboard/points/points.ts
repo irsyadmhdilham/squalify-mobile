@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../providers/point/point";
 import { point } from "../../../models/point";
@@ -7,7 +7,6 @@ import { point } from "../../../models/point";
 import { PointDetailPage } from "./point-detail/point-detail";
 import { PointGroupMemberPage } from "./point-group-member/point-group-member";
 
-@IonicPage()
 @Component({
   selector: 'page-points',
   templateUrl: 'points.html',

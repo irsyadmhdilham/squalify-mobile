@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { member } from "../../../models/group";
 import { GroupProvider } from "../../../providers/group/group";
 import { GroupMemberPage } from "./group-member/group-member";
 
-@IonicPage()
 @Component({
   selector: 'page-group',
   templateUrl: 'group.html',

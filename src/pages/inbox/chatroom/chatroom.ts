@@ -3,7 +3,6 @@ import { Store, select } from "@ngrx/store";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
 import {
-  IonicPage,
   NavController,
   NavParams,
   Content,
@@ -22,7 +21,6 @@ import { store } from "../../../models/store";
 import { inbox, message } from "../../../models/inbox";
 import { notification } from "../../../models/notification";
 
-@IonicPage()
 @Component({
   selector: 'page-chatroom',
   templateUrl: 'chatroom.html',

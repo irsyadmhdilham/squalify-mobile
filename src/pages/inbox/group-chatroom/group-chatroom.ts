@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   Content,
@@ -22,7 +21,6 @@ import { notification } from "../../../models/notification";
 
 import { Decrement } from "../../../store/actions/notifications.action";
 
-@IonicPage()
 @Component({
   selector: 'page-group-chatroom',
   templateUrl: 'group-chatroom.html',

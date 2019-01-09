@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {
-  IonicPage,
   NavController,
   NavParams,
   ModalController,
@@ -22,7 +21,6 @@ import { UpdatePoint } from "../../../providers/point/update-point";
 import { contact } from "../../../models/contact";
 import { ContactStatus } from "../../../functions/colors";
 
-@IonicPage()
 @Component({
   selector: 'page-contacts',
   templateUrl: 'contacts.html',

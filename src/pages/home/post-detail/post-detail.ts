@@ -1,6 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import {
-  IonicPage,
   TextInput,
   NavController,
   NavParams,
@@ -21,7 +20,6 @@ import { NotificationProvider } from "../../../providers/notification/notificati
 
 import { Decrement } from "../../../store/actions/notifications.action";
 
-@IonicPage()
 @Component({
   selector: 'page-post-detail',
   templateUrl: 'post-detail.html',
