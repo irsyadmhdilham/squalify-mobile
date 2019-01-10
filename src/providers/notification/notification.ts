@@ -30,7 +30,7 @@ export class NotificationProvider extends ApiUrlModules {
   }
 
   getNotifsReadTotal(): Observable<number> {
-    const url = this.profileUrl('notification/read');
+    const url = this.profileUrl('notification/seen');
     return url.pipe(switchMap(url => {
       return this.http.get<number>(url);
     }));
@@ -38,6 +38,13 @@ export class NotificationProvider extends ApiUrlModules {
 
   read(notifId: number): Observable<boolean> {
     const url = this.profileUrl(`notification/${notifId}/`);
+    return url.pipe(switchMap(url => {
+      return this.http.put<boolean>(url, null);
+    }));
+  }
+
+  clearSeen(): Observable<boolean> {
+    const url = this.profileUrl(`notification/clear-seen/`);
     return url.pipe(switchMap(url => {
       return this.http.put<boolean>(url, null);
     }));

@@ -2,7 +2,7 @@ import { Action } from "@ngrx/store";
 
 export enum ActionTypes {
   increment = 'NOTIFICATIONS_INCREMENT',
-  decrement = 'NOTIFICATIONS_DECREMENT',
+  clear = 'NOTIFICATIONS_CLEAR',
   init = 'NOTIFICATIONS_INIT',
   initSucceed = 'NOTIFICATIONS_INIT_SUCCEED'
 }
@@ -11,8 +11,8 @@ export class Increment implements Action {
   readonly type = ActionTypes.increment;
 }
 
-export class Decrement implements Action {
-  readonly type = ActionTypes.decrement;
+export class ClearNotifications implements Action {
+  readonly type = ActionTypes.clear;
 }
 
 export class Init implements Action {
@@ -25,4 +25,4 @@ export class InitSucceed implements Action {
   constructor(public payload: number) { }
 }
 
-export type actionsUnion = Increment | Decrement | Init | InitSucceed;
+export type actionsUnion = Increment | ClearNotifications | Init | InitSucceed;

@@ -6,10 +6,9 @@ import {
   Events,
   Keyboard
 } from 'ionic-angular';
-import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
-import { Store, select } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { NotificationProvider } from "../../../providers/notification/notification";
@@ -18,8 +17,6 @@ import { groupInbox, message } from "../../../models/inbox";
 import { profile } from "../../../models/profile";
 import { store } from "../../../models/store";
 import { notification } from "../../../models/notification";
-
-import { Decrement } from "../../../store/actions/notifications.action";
 
 @Component({
   selector: 'page-group-chatroom',
@@ -39,7 +36,6 @@ export class GroupChatroomPage {
   messages: message[] = [];
   keyboardDidShow: Subscription;
   storeListener: Subscription;
-  ioListener: Subscription;
   newMessageListener: Subscription;
   io: any;
   profile: profile;
@@ -69,7 +65,6 @@ export class GroupChatroomPage {
       if (!notif.read) {
         this.notificationProvider.read(notif.pk).subscribe(() => {
           this.events.publish('notifications: read', notif.pk);
-          this.store.dispatch(new Decrement());
         });
       }
     }
@@ -131,14 +126,9 @@ export class GroupChatroomPage {
   }
 
   ionViewWillEnter() {
-    this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
-    .subscribe(profile => {
-      this.profile = profile;
-    });
-
-    this.ioListener = (this.store.pipe(select('io')) as Observable<any>)
-    .subscribe(io => {
-      this.io = io;
+    this.storeListener = this.store.subscribe(store => {
+      this.profile = store.profile;
+      this.io = store.io;
     });
   }
 

@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Events } from 'ionic-angular';
+import { Store } from "@ngrx/store";
 import * as moment from "moment";
 
 import { notification } from "../../models/notification";
+import { store } from "../../models/store";
 import { NotificationProvider } from "../../providers/notification/notification";
+import { ClearNotifications } from "../../store/actions/notifications.action";
 
 import { ChatroomPage } from "../../pages/inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../../pages/inbox/group-chatroom/group-chatroom";
@@ -24,7 +27,8 @@ export class NotificationsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private notificationProvider: NotificationProvider,
-    private events: Events
+    private events: Events,
+    private store: Store<store>
   ) { }
 
   inboxGroupText(notif: notification) {
@@ -52,6 +56,9 @@ export class NotificationsPage {
     this.notificationProvider.getNotifications().subscribe(notifications => {
       this.pageStatus = undefined;
       this.notifications = notifications
+      setTimeout(() => {
+        this.clearNotifBadge();
+      }, 500);
     }, () => this.pageStatus = 'error');
   }
 
@@ -61,6 +68,15 @@ export class NotificationsPage {
       this.notifications[i].read = true;
     };
     this.events.subscribe('notifications: read', this.listenRead);
+  }
+
+  clearNotifBadge() {
+    const seenNotifs = this.notifications.filter(val => !val.seen);
+    if (seenNotifs.length > 0) {
+      this.notificationProvider.clearSeen().subscribe(() => {
+        this.store.dispatch(new ClearNotifications());
+      });
+    }
   }
 
   ionViewDidLoad() {

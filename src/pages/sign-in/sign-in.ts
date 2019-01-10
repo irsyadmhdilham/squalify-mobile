@@ -21,7 +21,7 @@ import { AuthProvider } from "../../providers/auth/auth";
 })
 export class SignInPage {
 
-  @Output() signingIn = new EventEmitter();
+  @Output() signingIn = new EventEmitter<string>();
   @ViewChild('_password') passwordInput: TextInput
 
   constructor(
@@ -80,7 +80,7 @@ export class SignInPage {
         this.AuthProvider.setIds(userId, agencyId).then(() => {
           loading.dismiss();
           this.initializer();
-          this.signingIn.emit(true);
+          this.signingIn.emit('signed in');
         });
       }
     }, () => {

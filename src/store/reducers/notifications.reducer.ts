@@ -6,8 +6,8 @@ export function notificationReducer(state = 0, action: actionsUnion) {
       return state = action.payload;
     case ActionTypes.increment:
       return state += 1;
-    case ActionTypes.decrement:
-      return state -= 1;
+    case ActionTypes.clear:
+      return state = 0;
     default:
       return state;
   }

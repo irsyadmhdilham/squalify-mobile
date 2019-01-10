@@ -176,8 +176,12 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.fetchPosts();
-    this.store.dispatch(new PointInit());
+    this.postProvider.userId().subscribe(userId => {
+      if (userId) {
+        this.fetchPosts();
+        this.store.dispatch(new PointInit());
+      }
+    });
   }
 
   ionViewDidLeave() {

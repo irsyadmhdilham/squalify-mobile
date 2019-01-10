@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { Events, Platform, NavController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
 import { Firebase } from "@ionic-native/firebase";
+import { StatusBar } from "@ionic-native/status-bar";
+import { SplashScreen } from "@ionic-native/splash-screen";
+
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
 import { Observable, Subject } from "rxjs";
@@ -37,7 +40,7 @@ import { PostDetailPage } from "../home/post-detail/post-detail";
 })
 export class TabsPage extends ApiUrlModules {
 
-  signedIn = false;
+  signedIn: string;
   tab1Root = HomePage;
   tab2Root = DashboardPage;
   tab3Root = ApplicationsPage;
@@ -54,34 +57,65 @@ export class TabsPage extends ApiUrlModules {
     private postProvider: PostProvider,
     private navCtrl: NavController,
     private pointProvider: PointProvider,
-    private salesProvider: SalesProvider
+    private salesProvider: SalesProvider,
+    private statusBar: StatusBar,
+    private splashScreen: SplashScreen
   ) {
     super(storage);
   }
 
-  signIn(value) {
+  signIn(value: string) {
     this.signedIn = value;
+    this.statusBarConfig();
     this.grantNotificationPermission();
-    const profileInit$ = new Subject<boolean>(),
-          profile$: Observable<profile> = this.store.pipe(select('profile'));
-    this.listenWsEvents(profile$, profileInit$);
+    // const profileInit$ = new Subject<boolean>(),
+    //       profile$: Observable<profile> = this.store.pipe(select('profile'));
+    // this.listenWsEvents(profile$, profileInit$);
   }
 
   ionViewDidLoad() {
     this.onOpenNotification();
+    this.statusBarConfig(true);
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
     });
+    this.splashScreenCtrl();
     this.userId().subscribe(userId => {
       if (userId) {
-        this.signedIn = true;
+        this.signedIn = 'signed in';
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
+        this.statusBarConfig();
         // const profileInit$ = new Subject<boolean>(),
         //       profile$: Observable<profile> = this.store.pipe(select('profile'));
         // this.listenWsEvents(profile$, profileInit$);
+      } else {
+        this.signedIn = 'not sign in';
       }
     });
+  }
+
+  splashScreenCtrl() {
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        this.splashScreen.hide();
+      });
+    }
+  }
+
+  statusBarConfig(light: boolean = false) {
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        this.statusBar.show();
+        if (light) {
+          this.statusBar.styleLightContent();
+        } else {
+          this.statusBar.styleDefault();
+        }
+      });
+    }
   }
 
   onOpenNotification() {

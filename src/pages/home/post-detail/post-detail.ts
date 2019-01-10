@@ -9,16 +9,12 @@ import {
 } from 'ionic-angular';
 import * as moment from "moment";
 import { Subscription } from "rxjs/Subscription";
-import { Store } from "@ngrx/store";
 
 import { post } from "../../../models/post";
 import { notification } from "../../../models/notification";
-import { store } from "../../../models/store";
 
 import { PostProvider } from "../../../providers/post/post";
 import { NotificationProvider } from "../../../providers/notification/notification";
-
-import { Decrement } from "../../../store/actions/notifications.action";
 
 @Component({
   selector: 'page-post-detail',
@@ -55,8 +51,7 @@ export class PostDetailPage {
     private notificationProvider: NotificationProvider,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private events: Events,
-    private store: Store<store>
+    private events: Events
   ) { }
 
   profileImageView() {
@@ -158,7 +153,6 @@ export class PostDetailPage {
       if (!notif.read) {
         this.notificationProvider.read(notif.pk).subscribe(() => {
           this.events.publish('notifications: read', notif.pk);
-          this.store.dispatch(new Decrement());
         });
       }
     }

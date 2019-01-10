@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import { Platform } from "ionic-angular";
+import { StatusBar } from "@ionic-native/status-bar";
 
 import { TabsPage } from "../pages/tabs/tabs";
 
@@ -13,13 +12,14 @@ export class MyApp {
 
   constructor(
     private platform: Platform,
-    private statusBar: StatusBar,
-    private splashScreen: SplashScreen
+    private statusBar: StatusBar
   ) {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
-    });
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        this.statusBar.hide();
+      });
+    }
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Store, select } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
 import {
@@ -9,11 +9,9 @@ import {
   Keyboard,
   Events
 } from 'ionic-angular';
-import { Observable } from "rxjs";
 
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { NotificationProvider } from "../../../providers/notification/notification";
-import { Decrement } from "../../../store/actions/notifications.action";
 
 import { member } from "../../../models/agency";
 import { profile } from "../../../models/profile";
@@ -38,7 +36,6 @@ export class ChatroomPage {
   messages: message[] = [];
   keyboardDidShow: Subscription;
   storeListener: Subscription;
-  ioListener: Subscription;
   newMessageListener: Subscription;
   profile: profile;
   initialSend = true;
@@ -74,7 +71,6 @@ export class ChatroomPage {
       if (!notif.read) {
         this.notificationProvider.read(notif.pk).subscribe(() => {
           this.events.publish('notifications: read', notif.pk);
-          this.store.dispatch(new Decrement());
         });
       }
     }
@@ -121,21 +117,15 @@ export class ChatroomPage {
   }
 
   ionViewWillEnter() {
-    this.storeListener = (this.store.pipe(select('profile')) as Observable<profile>)
-    .subscribe(profile => {
-      this.profile = profile;
-    });
-
-    this.ioListener = (this.store.pipe(select('io')) as Observable<any>)
-    .subscribe(io => {
-      this.io = io;
+    this.storeListener = this.store.subscribe(store => {
+      this.profile = store.profile;
+      this.io = store.io;
     });
   }
 
   ionViewWillLeave() {
     this.keyboardDidShow.unsubscribe();
     this.storeListener.unsubscribe();
-    this.ioListener.unsubscribe();
     this.newMessageListener.unsubscribe();
     this.navCtrl.getPrevious().data.fromChatroom = false;
     this.navCtrl.getPrevious().data.fromNotifDetail = false;
