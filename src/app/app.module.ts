@@ -12,7 +12,7 @@ import { Applications } from "./pages/applications";
 import { Profile } from "./pages/profile";
 import { Inbox } from "./pages/inbox";
 import { Dashboard } from "./pages/dashboard";
-// import { HomePages } from "./pages/home";
+import { HomePages } from "./pages/home";
 import { NotificationsPage } from "../pages/notifications/notifications";
 
 //imported modules
@@ -43,12 +43,11 @@ import { effectsModule } from "./effects-module";
     ...Inbox,
     ...Profile,
     ...Applications,
-    // ...HomePages,
+    ...HomePages,
     ...Components,
   ],
   imports: [
     BrowserModule,
-    storeModule,
     effectsModule,
     DirectivesModule,
     PipesModule,
@@ -59,7 +58,8 @@ import { effectsModule } from "./effects-module";
       name: 'db',
       driverOrder: ['indexeddb', 'sqlite', 'localstorage', 'websql'],
       version: 1.0
-    })
+    }),
+    storeModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -71,7 +71,7 @@ import { effectsModule } from "./effects-module";
     ...Inbox,
     ...Profile,
     ...Applications,
-    // ...HomePages,
+    ...HomePages,
     ...Components,
   ],
   providers: [

@@ -1,8 +1,7 @@
 import { StoreModule, ActionReducer } from "@ngrx/store";
 import { storeLogger, LoggerOptions } from "ngrx-store-logger";
-import { isDevMode } from "@angular/core";
-
 import { reducers } from "../store/reducers/all-reducers";
+const isProd = process.env.IONIC_DEV === 'prod';
 
 function logger(reducer: ActionReducer<any>) {
   const loggerOptions: LoggerOptions = {
@@ -11,11 +10,6 @@ function logger(reducer: ActionReducer<any>) {
   return storeLogger(loggerOptions)(reducer);
 }
 
-function metaReducers() {
-  if (isDevMode()) {
-    return [logger];
-  }
-  return [];
-}
+const metaReducers = isProd ? [] : [logger];
 
-export const storeModule = StoreModule.forRoot(reducers, { metaReducers: metaReducers() });
+export const storeModule = StoreModule.forRoot(reducers, { metaReducers });

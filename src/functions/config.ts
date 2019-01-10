@@ -71,6 +71,7 @@ export class Ids {
 export class ApiUrlModules extends Ids {
 
   devIpAddress = 'http://192.168.0.4';
+  prodIpAddress = 'http://192.168.0.4';
 
   constructor(public storage: Storage) {
     super(storage);
@@ -87,7 +88,7 @@ export class ApiUrlModules extends Ids {
     if (isDevMode()) {
       return `${this.devIpAddress}:8030/v1`;
     }
-    return 'https://api.squalify.com/v1';
+    return `${this.prodIpAddress}:8030/v1`;
   }
 
   profileUrl(url?: string, userId?: number) {
