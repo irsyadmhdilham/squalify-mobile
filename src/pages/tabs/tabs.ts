@@ -68,9 +68,9 @@ export class TabsPage extends ApiUrlModules {
     this.signedIn = value;
     this.statusBarConfig();
     this.grantNotificationPermission();
-    // const profileInit$ = new Subject<boolean>(),
-    //       profile$: Observable<profile> = this.store.pipe(select('profile'));
-    // this.listenWsEvents(profile$, profileInit$);
+    const profileInit$ = new Subject<boolean>(),
+          profile$: Observable<profile> = this.store.pipe(select('profile'));
+    this.listenWsEvents(profile$, profileInit$);
   }
 
   ionViewDidLoad() {
@@ -86,9 +86,9 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
         this.statusBarConfig();
-        // const profileInit$ = new Subject<boolean>(),
-        //       profile$: Observable<profile> = this.store.pipe(select('profile'));
-        // this.listenWsEvents(profile$, profileInit$);
+        const profileInit$ = new Subject<boolean>(),
+              profile$: Observable<profile> = this.store.pipe(select('profile'));
+        this.listenWsEvents(profile$, profileInit$);
       } else {
         this.signedIn = 'not sign in';
       }
@@ -148,7 +148,7 @@ export class TabsPage extends ApiUrlModules {
         } else if (company === 'Public Mutual') {
           company = 'public-mutual';
         }
-        const io = socketio.connect(this.wsBaseUrl(company));
+        const io = socketio.connect(this.wsBaseUrl(company), { transports: ['websocket'] });
         this.store.dispatch(new SocketioInit(io));
         this.chatSocket(io, profile);
         this.postSocket(io, profile);

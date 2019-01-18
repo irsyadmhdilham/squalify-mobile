@@ -70,8 +70,7 @@ export class Ids {
 
 export class ApiUrlModules extends Ids {
 
-  devIpAddress = 'http://192.168.0.4';
-  prodIpAddress = 'http://192.168.0.4';
+  devIpAddress = 'http://localdocker';
 
   constructor(public storage: Storage) {
     super(storage);
@@ -79,16 +78,18 @@ export class ApiUrlModules extends Ids {
 
   wsBaseUrl(namespace: string) {
     if (isDevMode()) {
-      return `${this.devIpAddress}:8040/${namespace}`;
+      // return `${this.devIpAddress}:8300/${namespace}`;
+      return `https://ws.squalify.com/${namespace}`;
     }
     return `https://ws.squalify.com/${namespace}`;
   }
 
   apiBaseUrl() {
     if (isDevMode()) {
-      return `${this.devIpAddress}:8030/v1`;
+      // return `${this.devIpAddress}:8200/v1`;
+      return 'https://api.squalify.com/v1';
     }
-    return `${this.prodIpAddress}:8030/v1`;
+    return 'https://api.squalify.com/v1';
   }
 
   profileUrl(url?: string, userId?: number) {
