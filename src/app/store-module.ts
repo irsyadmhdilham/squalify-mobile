@@ -1,7 +1,7 @@
 import { StoreModule, ActionReducer } from "@ngrx/store";
 import { storeLogger, LoggerOptions } from "ngrx-store-logger";
 import { reducers } from "../store/reducers/all-reducers";
-const isProd = false;
+const isProd = true;
 
 function logger(reducer: ActionReducer<any>) {
   const loggerOptions: LoggerOptions = {
