@@ -1,0 +1,9 @@
+#!/bin/bash
+
+APK_PATH=platforms/android/app/build/outputs/apk/release
+
+echo 'Sign release...'
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks ${APK_PATH}/app-release-unsigned.apk my-alias
+
+echo 'Optimize release...'
+zipalign -v 4 ${APK_PATH}/app-release-unsigned.apk squalify.apk
