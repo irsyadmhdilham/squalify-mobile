@@ -105,7 +105,7 @@ export class ProfilePage extends Ids {
             io.close();
             this.store.dispatch(new SocketioReset());
           });
-          this.events.publish('sign out', false);
+          this.events.publish('sign out', 'not sign in');
         }
       });
     });
