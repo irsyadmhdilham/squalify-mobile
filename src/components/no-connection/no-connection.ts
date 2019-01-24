@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-// import { NavController } from "ionic-angular";
+import { Platform, ViewController } from "ionic-angular";
+import { Network } from "@ionic-native/network";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'no-connection',
@@ -7,11 +9,49 @@ import { Component } from '@angular/core';
 })
 export class NoConnectionComponent {
 
+  connectionListener: Subscription;
+
   constructor(
-    // private navCtrl: NavController
+    private platform: Platform,
+    private network: Network,
+    private viewCtrl: ViewController
   ) { }
 
-  retry() {
-    // this.navCtrl.setRoot(this.navCtrl.getActive().component);
+  dismiss() {
+    this.viewCtrl.dismiss();
   }
+
+  retry() {
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        const type = this.network.type.match(/(unknown|none)/);
+        if (!type) {
+          this.dismiss();
+        }
+      });
+    }
+  }
+
+  listenToConnection() {
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        this.connectionListener = this.network.onConnect().subscribe(() => {
+          this.dismiss();
+        });
+      });
+    }
+  }
+
+  ionViewDidLoad() {
+    this.listenToConnection();
+  }
+
+  ionViewWillUnload() {
+    if (this.connectionListener) {
+      this.connectionListener.unsubscribe();
+    }
+  }
+
 }

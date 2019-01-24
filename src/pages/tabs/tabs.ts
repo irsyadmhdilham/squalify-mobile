@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { Events, Platform, NavController } from "ionic-angular";
+import { Events, Platform, NavController, ModalController } from "ionic-angular";
 import { Storage } from "@ionic/storage";
+import { Network } from "@ionic-native/network";
 import { Firebase } from "@ionic-native/firebase";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
@@ -8,13 +9,16 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
 import { Observable, Subject } from "rxjs";
-import { takeUntil } from "rxjs/operators";
+import { takeUntil, first } from "rxjs/operators";
 
 import { DashboardPage } from "../dashboard/dashboard";
 import { ProfilePage } from '../profile/profile';
 import { HomePage } from '../home/home';
 import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
+import { ChatroomPage } from "../inbox/chatroom/chatroom";
+import { GroupChatroomPage } from "../inbox/group-chatroom/group-chatroom";
+import { NoConnectionComponent } from "../../components/no-connection/no-connection";
 
 import { ApiUrlModules } from "../../functions/config";
 import { InboxProvider, newMessage, newGroupMessage } from "../../providers/inbox/inbox";
@@ -59,7 +63,9 @@ export class TabsPage extends ApiUrlModules {
     private pointProvider: PointProvider,
     private salesProvider: SalesProvider,
     private statusBar: StatusBar,
-    private splashScreen: SplashScreen
+    private splashScreen: SplashScreen,
+    private network: Network,
+    private modalCtrl: ModalController
   ) {
     super(storage);
   }
@@ -73,8 +79,12 @@ export class TabsPage extends ApiUrlModules {
     this.listenWsEvents(profile$, profileInit$);
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.onOpenNotification();
+  }
+
+  ionViewDidLoad() {
+    this.watchConnection();
     this.statusBarConfig(true);
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
@@ -121,10 +131,12 @@ export class TabsPage extends ApiUrlModules {
   onOpenNotification() {
     this.platform.ready().then(() => {
       const isCordova = this.platform.is('cordova'),
-            isMobile = this.platform.is('isMobile');
+            isMobile = this.platform.is('mobile');
       if (isCordova && isMobile) {
-        this.firebase.onNotificationOpen().subscribe(observe => {
+        this.firebase.onNotificationOpen().pipe(first()).subscribe(observe => {
           const title = observe.title;
+          const inboxId = parseInt(observe.inbox_id),
+                notifId = parseInt(observe.notif_id);
           if (title === 'like post' || title === 'comment post') {
             const postId = parseInt(observe.post_id),
                   notifId = parseInt(observe.notif_id);
@@ -132,10 +144,32 @@ export class TabsPage extends ApiUrlModules {
               post: { pk: postId },
               notif: { pk: notifId, read: false }
             });
+          } else if (title === 'personal inbox') {
+            this.navCtrl.push(ChatroomPage, {
+              inbox: { pk: inboxId },
+              notif: { pk: notifId, read: false }
+            });
+          } else if (title === 'group inbox') {
+            this.navCtrl.push(GroupChatroomPage, {
+              inbox: { pk: inboxId },
+              notif: { pk: notifId, read: false }
+            });
           }
         });
       }
     });
+  }
+
+  watchConnection() {
+    const isCordova = this.platform.is('cordova');
+    if (isCordova) {
+      this.platform.ready().then(() => {
+        this.network.onDisconnect().subscribe(() => {
+          const modal = this.modalCtrl.create(NoConnectionComponent);
+          modal.present();
+        });
+      });
+    }
   }
 
   listenWsEvents(profile$: Observable<profile>, profileInit$: Subject<boolean>) {

@@ -1,6 +1,14 @@
-<main>
-  <img src="../../assets/imgs/error.png" alt="no connection">
-  <h4>Oppss...</h4>
-  <p no-margin ion-text color="grey">Currently you got no internet connection</p>
-  <button (tap)="retry()" ion-button clear strong>Retry</button>
-</main>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <img img-title src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <main>
+    <img src="../../assets/imgs/error.png" alt="error">
+    <h5 ion-text color="dark">No connection</h5>
+    <button (tap)="retry()" ion-button clear>Retry</button>
+  </main>
+</ion-content>
