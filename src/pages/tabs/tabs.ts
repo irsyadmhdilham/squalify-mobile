@@ -137,7 +137,7 @@ export class TabsPage extends ApiUrlModules {
           const title = observe.title;
           const inboxId = parseInt(observe.inbox_id),
                 notifId = parseInt(observe.notif_id);
-          if (title === 'like post' || title === 'comment post') {
+          if (title === 'like post' || title === 'comment post' || title === 'closed sales') {
             const postId = parseInt(observe.post_id),
                   notifId = parseInt(observe.notif_id);
             this.navCtrl.push(PostDetailPage, {

@@ -10,7 +10,7 @@ export interface message {
 export interface groupInbox {
   pk: number;
   groupId: number;
-  owner: profile;
+  created_by: profile;
   messages: message[];
   participants: profile[];
   unread: number;

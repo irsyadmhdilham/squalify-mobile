@@ -207,12 +207,12 @@ export class GroupChatroomPage {
       map(inbox => {
         return {
           ...inbox,
-          agency: inbox.owner.agency,
+          agency: inbox.created_by.agency,
           messages: inbox.messages.map(val => ({...val, timestamp: new Date(val.timestamp)}))
         };
     })).subscribe(groupChat => {
       this.messages = groupChat.messages;
-      let image = groupChat.owner.profile_image
+      let image = groupChat.created_by.profile_image
       if (this.role === 'agency') {
         image = groupChat.agency.agency_image;
       }
@@ -226,7 +226,7 @@ export class GroupChatroomPage {
         title = 'Your upline group';
       }
       this.title = title;
-      let subTitle = groupChat.owner.name
+      let subTitle = groupChat.created_by.name
       if (this.role === 'agency') {
         subTitle = groupChat.agency.name;
       }

@@ -62,7 +62,7 @@ export class InboxPage {
 
   groupImage(obj: groupInbox) {
     if (obj) {
-      let url = obj.owner.profile_image;
+      let url = obj.created_by.profile_image;
       if (obj.role === 'agency') {
         url = obj.agency.agency_image;
       }
@@ -131,10 +131,10 @@ export class InboxPage {
           groupId: val2.pk,
           unread: val1.unread,
           participants: val2.participants,
-          owner: val2.owner,
+          created_by: val2.created_by,
           messages: val2.messages,
           role: val2.role,
-          agency: val2.owner.agency
+          agency: val2.created_by.agency
         };
       };
       if (getAgencyChat.length > 0) {

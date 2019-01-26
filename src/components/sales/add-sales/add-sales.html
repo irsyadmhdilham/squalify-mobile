@@ -27,9 +27,9 @@
           <ion-option *ngFor="let type of salesTypes()">{{type}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="surcharges()">
+      <ion-item *ngIf="company === 'CWA'">
         <ion-label>Surcharge</ion-label>
-        <ion-select ngModel #surchargeNgModel="ngModel" required>
+        <ion-select [(ngModel)]="surchargeVal">
           <ion-option *ngFor="let surcharge of surcharges()" value="{{surcharge}}">{{surcharge}}%</ion-option>
         </ion-select>
       </ion-item>
@@ -43,7 +43,7 @@
       </ion-item>
     </ion-list>
     <ion-row justify-content-center>
-      <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, surchargeNgModel, locationNgModel)">Add sales</button>
+      <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, locationNgModel)">Add sales</button>
     </ion-row>
   </ng-container>
 </ion-content>

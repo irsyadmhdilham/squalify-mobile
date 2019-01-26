@@ -17,6 +17,7 @@ export class AddSalesComponent {
   company: string;
   repeatSales = false;
   newSales = false;
+  surchargeVal: string
 
   constructor(
     private viewCtrl: ViewController,
@@ -65,7 +66,7 @@ export class AddSalesComponent {
     this.getCompany();
   }
 
-  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, surchargeNgModel: NgModel, locationNgModel: NgModel) {
+  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel) {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
       if (!amountNgModel.valid) {
@@ -74,15 +75,16 @@ export class AddSalesComponent {
       if (!salesTypeNgModel.valid) {
         throw 'Please select sales type';
       }
-      if (this.company === 'CWA' && amountNgModel.value === 'EPF' || amountNgModel.value === 'Cash') {
-        if (!surchargeNgModel.valid) {
-          throw 'Please select surcharge';
-        }
-      }
       let data: sales = {
         amount: parseFloat(amountNgModel.value),
         sales_type: salesTypeNgModel.value
       };
+      if (this.company === 'CWA' && salesTypeNgModel.value === 'EPF' || salesTypeNgModel.value === 'Cash') {
+        if (!this.surchargeVal || this.surchargeVal === '') {
+          throw 'Please select surcharge';
+        }
+        data.surcharge = parseInt(this.surchargeVal);
+      }
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
       }

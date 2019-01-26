@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   NavController,
   NavParams,
@@ -83,10 +84,15 @@ export class SignInPage {
           this.signingIn.emit('signed in');
         });
       }
-    }, () => {
+    }, (err: HttpErrorResponse) => {
       loading.dismiss();
-      const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
-      alert.present();
+      if (err.error.is_auth) {
+        const alert = this.alert('User has logged in', 'Only one account per user is allowed');
+        alert.present();
+      } else {
+        const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
+        alert.present();
+      }
     });
   }
 
