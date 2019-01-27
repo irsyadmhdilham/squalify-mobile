@@ -146,12 +146,12 @@ export class TabsPage extends ApiUrlModules {
             });
           } else if (title === 'personal inbox') {
             this.navCtrl.push(ChatroomPage, {
-              inbox: { pk: inboxId },
+              inbox: { pk: inboxId, unread: 1 },
               notif: { pk: notifId, read: false }
             });
           } else if (title === 'group inbox') {
             this.navCtrl.push(GroupChatroomPage, {
-              inbox: { pk: inboxId },
+              inbox: { pk: inboxId, unread: 1 },
               notif: { pk: notifId, read: false }
             });
           }
