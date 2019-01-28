@@ -30,6 +30,16 @@
         </ion-chip>
         <h6>{{agency}}</h6>
         <p no-margin ion-text color="grey">{{company}}</p>
+        <div id="amazing-tips-wrapper">
+          <h6 text-center>Amazing tips</h6>
+          <ng-container *ngIf="amazingTips; then amazingTipsBlock; else noAmazingTipsBlock"></ng-container>
+          <ng-template #amazingTipsBlock>
+            <p text-center no-margin ion-text color="grey">{{amazingTips.join(', ')}}</p>
+          </ng-template>
+          <ng-template #noAmazingTipsBlock>
+            <p text-center no-margin ion-text color="grey">None</p>
+          </ng-template>
+        </div>
       </section>
     </section>
     <section class="bottom">

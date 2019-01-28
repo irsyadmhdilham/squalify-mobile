@@ -17,27 +17,34 @@
       <h1 no-margin ion-text color="primary">{{date | date:'dd MMM' | uppercase}}</h1>
       <h4 no-margin ion-text color="grey">{{date | date:'hh:mma'}}</h4>
     </div>
-    <h4>{{title}}</h4>
-    <div id="location-wrapper">
-      <ion-icon item-start name="pin" color="grey" small></ion-icon>
-      <p item-start>{{location}}</p>
-    </div>
-    <section margin-top *ngIf="contact && from === 'schedule'" id="contact-section">
-      <ion-row justify-content-between>
-        <div>
-          <p no-margin ion-text color="dark">{{contact.name}}</p>
-          <p no-margin ion-text color="grey">{{contact.contact_no}}</p>
-          <button class="contact-open-button" no-padding (tap)="openContact(contact.pk)" ion-button clear strong>Open contact</button>
-        </div>
-        <button ion-button icon-only clear>
-          <ion-icon no-padding name="call"></ion-icon>
-        </button>
-      </ion-row>
-    </section>
-    <ion-item *ngIf="remark" no-lines no-padding>
-      <h5>Remark</h5>
-      <p>{{remark}}</p>
-    </ion-item>
+    <ion-list>
+      <ion-item no-padding>
+        <p>Title</p>
+        <h4 ion-text color="dark">{{title}}</h4>
+      </ion-item>
+      <ion-item no-padding>
+        <p>Location</p>
+        <h4 ion-text color="dark">{{location}}</h4>
+      </ion-item>
+      <ion-item *ngIf="contact && from === 'schedule'">
+        <section margin-top id="contact-section">
+          <ion-row justify-content-between>
+            <div>
+              <p no-margin ion-text color="dark">{{contact.name}}</p>
+              <p no-margin ion-text color="grey">{{contact.contact_no}}</p>
+              <button class="contact-open-button" no-padding (tap)="openContact(contact.pk)" ion-button clear strong>Open contact</button>
+            </div>
+            <button ion-button icon-only clear>
+              <ion-icon no-padding name="call"></ion-icon>
+            </button>
+          </ion-row>
+        </section>
+      </ion-item>
+      <ion-item *ngIf="remark" no-lines no-padding>
+        <h5>Remark</h5>
+        <p>{{remark}}</p>
+      </ion-item>
+    </ion-list>
     <button (tap)="remove()" no-padding ion-button clear color="danger">Remove schedule</button>
   </ng-container>
 </ion-content>

@@ -40,6 +40,7 @@ export class ProfilePage extends Ids {
   listenPushNotif: (value) => void;
   navToSettings = false;
   notifications$ = this.store.pipe(select('notifications'));
+  amazingTips: string[];
 
   constructor(
     public navCtrl: NavController,
@@ -83,7 +84,8 @@ export class ProfilePage extends Ids {
   editProfile() {
     const modal = this.modalCtrl.create(EditProfileComponent, {
       name: this.name,
-      profileImage: this.profileImage
+      profileImage: this.profileImage,
+      amazingTips: this.amazingTips
     });
     modal.present();
     modal.onDidDismiss(data => {
@@ -133,6 +135,7 @@ export class ProfilePage extends Ids {
       this.company = observe.agency.company;
       this.profileImage = observe.profile_image;
       this.settings = observe.settings;
+      this.amazingTips = observe.words;
     }, () => {
       this.pageStatus = 'error';
     });

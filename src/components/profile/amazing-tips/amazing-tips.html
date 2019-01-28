@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      <img img-title src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <ion-item>
+    <ion-label stacked>Tips</ion-label>
+    <ion-input [(ngModel)]="text" type="text" placeholder="Write something here"></ion-input>
+  </ion-item>
+  <ion-row margin-top justify-content-center>
+    <button (tap)="addUpdate()" ion-button clear>{{mode === 'add' ? 'Add' : 'Update'}}</button>
+  </ion-row>
+</ion-content>
