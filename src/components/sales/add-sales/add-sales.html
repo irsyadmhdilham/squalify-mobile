@@ -42,6 +42,21 @@
         <ion-toggle [(ngModel)]="repeatSales"></ion-toggle>
       </ion-item>
     </ion-list>
+    <div id="tips-container">
+      <h6 no-margin>Amazing tips (OPTIONAL)</h6>
+      <ng-container *ngIf="tips; then tipsBlock; else tipsElseBlock"></ng-container>
+      <ng-template #tipsBlock>
+        <ion-item no-padding no-lines>
+          <p>{{tips}}</p>
+          <button color="danger" no-padding item-end ion-button clear large item-only (tap)="removeTips()">
+            <ion-icon name="close-circle"></ion-icon>
+          </button>
+        </ion-item>
+      </ng-template>
+      <ng-template #tipsElseBlock>
+        <button item-end (tap)="addTips()" no-padding no-margin item-end ion-button clear>Add tips</button>
+      </ng-template>
+    </div>
     <ion-row justify-content-center>
       <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, locationNgModel)">Add sales</button>
     </ion-row>

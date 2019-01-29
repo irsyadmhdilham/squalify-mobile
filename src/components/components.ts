@@ -8,6 +8,7 @@ import { PointComponents } from "./point/point-components";
 import { SalesComponents } from "./sales/sales-components";
 import { HomeComponents } from "./home/home-components";
 import { EditAgencyComponent } from "./edit-agency/edit-agency";
+import { PostTipsComponent } from "./post-tips/post-tips";
 
 export const Components = [
   profileComponents,
@@ -18,5 +19,6 @@ export const Components = [
   ...PointComponents,
   ...SalesComponents,
   ...HomeComponents,
-  EditAgencyComponent
+  EditAgencyComponent,
+  PostTipsComponent
 ];

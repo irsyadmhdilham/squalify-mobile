@@ -23,6 +23,7 @@
         </ion-row>
       </div>
     </ng-container>
+    <p class="amazing-tips" *ngIf="tips">Amazing tips: <span>{{tips}}</span></p>
   </section>
   <ion-row margin-left margin-bottom>
     <p ion-text class="likes-total total" color="grey" *ngIf="likes.length > 0">{{likes.length}} likes</p>

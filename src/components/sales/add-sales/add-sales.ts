@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
 import { NgModel } from "@angular/forms";
-import { ViewController, AlertController, LoadingController } from "ionic-angular";
+import {
+  ViewController,
+  AlertController,
+  LoadingController,
+  ActionSheetController,
+  ModalController
+} from "ionic-angular";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
+import { PostTipsComponent } from "../../post-tips/post-tips";
 
 import { sales } from "../../../models/sales";
 
@@ -18,13 +25,16 @@ export class AddSalesComponent {
   repeatSales = false;
   newSales = false;
   surchargeVal: string
+  tips: string;
 
   constructor(
     private viewCtrl: ViewController,
     private agencyProvider: AgencyProvider,
     private salesProvider: SalesProvider,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private actionSheetCtrl: ActionSheetController,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
@@ -62,6 +72,31 @@ export class AddSalesComponent {
     });
   }
 
+  addTips() {
+    const selectTips = (mode: string) => {
+      const modal = this.modalCtrl.create(PostTipsComponent, { mode });
+      modal.present();
+      modal.onDidDismiss(data => {
+        if (data) {
+          this.tips = data.tips;
+        }
+      });
+    };
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select option',
+      buttons: [
+        { text: 'Select from template', handler: () => selectTips('template') },
+        { text: 'Write tips', handler: () => selectTips('write') },
+        { text: 'Cancel', role: 'cancel' }
+      ]
+    });
+    actionSheet.present();
+  }
+
+  removeTips() {
+    this.tips = undefined;
+  }
+
   ionViewDidLoad() {
     this.getCompany();
   }
@@ -75,7 +110,8 @@ export class AddSalesComponent {
       if (!salesTypeNgModel.valid) {
         throw 'Please select sales type';
       }
-      let data: sales = {
+      type data = sales & { tips?: string };
+      let data: data  = {
         amount: parseFloat(amountNgModel.value),
         sales_type: salesTypeNgModel.value
       };
@@ -90,6 +126,9 @@ export class AddSalesComponent {
       }
       if (this.repeatSales) {
         data.repeat_sales = true;
+      }
+      if (this.tips) {
+        data.tips = this.tips;
       }
       loading.present();
       this.salesProvider.createSales(data).subscribe(observe => {

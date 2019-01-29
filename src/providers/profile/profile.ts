@@ -14,6 +14,13 @@ export class ProfileProvider extends ApiUrlModules {
     super(storage);
   }
 
+  getWords(): Observable<string[]> {
+    const url = this.profileUrl('words');
+    return url.pipe(switchMap(url => {
+      return this.http.get<string[]>(url);
+    }));
+  }
+
   getProfile(): Observable<profile> {
     const url = this.profileUrl();
     return url.pipe(switchMap(url => {

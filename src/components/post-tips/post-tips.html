@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button icon-only clear>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>
+      <img img-title src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading *ngSwitchCase="'loading'" type="list"></loading>
+  <ng-container *ngSwitchDefault>
+    <ng-container [ngSwitch]="mode">
+      <h5 title>Select template</h5>
+      <ion-list *ngSwitchCase="'template'">
+        <ion-item (tap)="select(template)" no-padding *ngFor="let template of templates">{{template}}</ion-item>
+      </ion-list>
+      <ion-item *ngSwitchCase="'write'">
+        <ion-label stacked>Tips</ion-label>
+        <ion-input [(ngModel)]="tips" type="text" placeholder="Write tips here"></ion-input>
+      </ion-item>
+    </ng-container>
+    <ion-row margin-top justify-content-center *ngIf="mode === 'write'">
+      <button (tap)="submit()" ion-button clear>Add</button>
+    </ion-row>
+  </ng-container>
+</ion-content>
