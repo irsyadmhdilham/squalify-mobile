@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button clear icon-only>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Create group chat</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding [ngSwitch]="pageStatus">
+  <loading *ngSwitchCase="'loading'" type="list"></loading>
+  <fetch-error *ngSwitchCase="'error'" message="Failed to fetch agency members" [retry]="getMembers.bind(this)"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ion-item>
+      <ion-label stacked>Title</ion-label>
+      <ion-input type="text" placeholder="Write group title here"></ion-input>
+    </ion-item>
+    <ion-list>
+      <ion-item>
+        <div item-start></div>
+        <h6></h6>
+        <p></p>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+</ion-content>

@@ -4,6 +4,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Store, select } from "@ngrx/store";
 
 import { InboxComposeComponent } from "../../components/inbox/inbox-compose/inbox-compose";
+import { CreateGroupchatComponent } from "../../components/inbox/create-groupchat/create-groupchat";
 import { InboxProvider } from "../../providers/inbox/inbox";
 
 import { inbox, message, groupInbox } from "../../models/inbox";
@@ -82,12 +83,21 @@ export class InboxPage {
 
   toChatroom(inbox: inbox, composeNew?: member) {
     this.navToChatroom = true;
-    this.navCtrl.push(ChatroomPage, { inbox, composeNew });
+    if (inbox.chat_with) {
+      this.navCtrl.push(ChatroomPage, { inbox, composeNew });
+    } else {
+      this.toGroupChatroom(inbox);
+    }
   }
 
-  toGroupChatroom(inbox) {
+  toGroupChatroom(inbox: inbox) {
     this.navToChatroom = true;
     this.navCtrl.push(GroupChatroomPage, { inbox });
+  }
+
+  createGroup() {
+    const modal = this.modalCtrl.create(CreateGroupchatComponent);
+    modal.present();
   }
 
   composeChat() {
@@ -107,66 +117,27 @@ export class InboxPage {
 
   getInbox() {
     this.pageStatus = 'loading';
-    this.inboxProvider.getInbox().subscribe(response => {
+    this.inboxProvider.getInbox().subscribe(inboxes => {
       this.pageStatus = undefined;
-      const inboxes = response.filter(val => !val.group_chat);
-      const getAgencyChat = response.filter(val => {
-        if (val.group_chat) {
-          return val.group_chat.role === 'agency'
-        }
-      });
-      const getGroupChat = response.filter(val => {
-        if (val.group_chat) {
-          return val.group_chat.role === 'group';
-        }
-      });
-      const getUplineGroupChat = response.filter(val => {
-        if (val.group_chat) {
-          return val.group_chat.role === 'upline group';
-        }
-      });
-      const groupChatMapper = (val1, val2) => {
-        return {
-          pk: val1.pk,
-          groupId: val2.pk,
-          unread: val1.unread,
-          participants: val2.participants,
-          created_by: val2.created_by,
-          messages: val2.messages,
-          role: val2.role,
-          agency: val2.created_by.agency
-        };
-      };
-      if (getAgencyChat.length > 0) {
-        const agencyChat = getAgencyChat.map(val => {
-          const groupChat = val.group_chat;
-          return groupChatMapper(val, groupChat);
-        });
-        this.agencyChat = agencyChat[0];
-      }
-      if (getGroupChat.length > 0) {
-        const groupChat = getGroupChat.map(val => {
-          const groupChat = val.group_chat;
-          return groupChatMapper(val, groupChat);
-        });
-        this.groupChat = groupChat[0];
-      }
-      if (getUplineGroupChat.length > 0) {
-        const uplineGroupChat = getUplineGroupChat.map(val => {
-          const groupChat = val.group_chat;
-          return groupChatMapper(val, groupChat);
-        });
-        this.uplineGroupChat = uplineGroupChat[0];
-      }
       this.inboxes = inboxes;
     }, () => {
       this.pageStatus = 'error';
     });
   }
 
-  lastMessage(messages: message[]) {
-    const len = messages.length;
-    return messages[len - 1].text;
+  lastMessage(inbox: inbox) {
+    if (inbox.group_chat) {
+      const groupChat = inbox.group_chat;
+      const len = groupChat.messages.length;
+      if (len > 0) {
+        return groupChat.messages[len - 1].text;
+      }
+    } else {
+      const len = inbox.messages.length;
+      if (len > 0) {
+        return inbox.messages[len - 1].text;
+      }
+    }
   }
 
   eventsListener() {

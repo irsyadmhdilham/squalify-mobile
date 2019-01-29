@@ -20,42 +20,25 @@
 </ion-header>
 
 <ion-content padding>
-  <h5 title>Inbox</h5>
+  <ion-row justify-content-between>
+    <h5 title>Inbox</h5>
+    <button no-padding small ion-button clear (tap)="createGroup()">Create group</button>
+  </ion-row>
   <ng-container [ngSwitch]="pageStatus">
     <loading type="list" *ngSwitchCase="'loading'"></loading>
     <fetch-error message="Failed to get inbox" [retry]="getInbox.bind(this)" *ngSwitchCase="'error'"></fetch-error>
     <ng-container *ngSwitchDefault>
-      <ion-scroll scrollX="true" id="inbox-groups-container">
-        <ion-row>
-          <div (tap)="toGroupChatroom(agencyChat)" class="group-inbox-container">
-            <div class="group-inbox-image" [ngStyle]="groupImage(agencyChat)">
-              <ion-badge *ngIf="groupUnread(agencyChat)" color="primary">{{groupUnread(agencyChat)}}</ion-badge>
-            </div>
-            <p text-center>Agency</p>
-          </div>
-          <div *ngIf="groupChat" (tap)="toGroupChatroom(groupChat)" class="group-inbox-container">
-            <div class="group-inbox-image" [ngStyle]="groupImage(groupChat)">
-              <ion-badge *ngIf="groupUnread(groupChat)" color="primary">{{groupUnread(groupChat)}}</ion-badge>
-            </div>
-            <p text-center>Group</p>
-          </div>
-          <div *ngIf="uplineGroupChat" (tap)="toGroupChatroom(uplineGroupChat)" class="group-inbox-container">
-            <div class="group-inbox-image" [ngStyle]="groupImage(uplineGroupChat)">
-              <ion-badge *ngIf="groupUnread(uplineGroupChat)" color="primary">{{groupUnread(uplineGroupChat)}}</ion-badge>
-            </div>
-            <p text-center>Upline group</p>
-          </div>
-        </ion-row>
-      </ion-scroll>
       <ng-container *ngIf="inboxes.length !== 0; then conversations; else empty"></ng-container>
       <ng-template #conversations>
         <ion-list>
           <ion-item (tap)="toChatroom(inbox)" *ngFor="let inbox of inboxes | inboxDuplicate; index as i" no-padding>
             <ion-avatar class="avatar-margin-top" item-start>
-              <div [ngStyle]="profileImage(inbox.chat_with.profile_image)" class="profile-image"></div>
+              <div [ngStyle]="inbox.chat_with ? profileImage(inbox.chat_with.profile_image) : false" class="profile-image"></div>
             </ion-avatar>
-            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false" class="ion-item-top-padding">{{inbox.chat_with.name}}</h6>
-            <p>{{lastMessage(inbox.messages)}}</p>
+            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false" class="ion-item-top-padding">
+              {{inbox.chat_with ? inbox.chat_with.name : inbox.group_chat.title}}
+            </h6>
+            <p>{{lastMessage(inbox)}}</p>
             <ion-badge *ngIf="inbox.unread > 0" item-end>{{inbox.unread}}</ion-badge>
           </ion-item>
         </ion-list>
