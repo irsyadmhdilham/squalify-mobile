@@ -21,9 +21,11 @@ export interface groupInbox {
 export interface groupChat {
   pk: number;
   messages: message[];
-  owner: profile;
+  created_by: profile;
   participants: profile[];
   role: string;
+  title: string;
+  group_image: string;
 };
 
 export interface inbox {

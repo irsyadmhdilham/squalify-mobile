@@ -12,16 +12,27 @@
   <loading *ngSwitchCase="'loading'" type="list"></loading>
   <fetch-error *ngSwitchCase="'error'" message="Failed to fetch agency members" [retry]="getMembers.bind(this)"></fetch-error>
   <ng-container *ngSwitchDefault>
+    <section id="image-container">
+      <div [ngStyle]="groupImage()" id="group-image"></div>
+      <button ion-button clear small>Add image</button>
+    </section>
     <ion-item>
       <ion-label stacked>Title</ion-label>
-      <ion-input type="text" placeholder="Write group title here"></ion-input>
+      <ion-input [(ngModel)]="title" type="text" placeholder="Write group title here"></ion-input>
     </ion-item>
-    <ion-list>
-      <ion-item>
-        <div item-start></div>
-        <h6></h6>
-        <p></p>
+    <ion-list margin-top>
+      <ion-list-header no-margin>Select members to add</ion-list-header>
+      <ion-item (tap)="select(i)" *ngFor="let member of members; index as i">
+        <ion-avatar class="avatar-margin-top" item-start>
+          <div class="avatar-image" [ngStyle]="avatar(member)" item-start></div>
+        </ion-avatar>
+        <h6>{{member.name}}</h6>
+        <p>{{member.designation}}</p>
+        <ion-icon *ngIf="member.chosen" color="primary" item-end name="checkmark-circle"></ion-icon>
       </ion-item>
     </ion-list>
+    <ion-row justify-content-center>
+      <button (tap)="create()" ion-button clear>Create</button>
+    </ion-row>
   </ng-container>
 </ion-content>

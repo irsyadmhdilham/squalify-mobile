@@ -55,7 +55,6 @@ export class GroupChatroomPage {
   initializer() {
     this.inboxId = this.inbox.pk;
     this.pk = this.inbox.groupId;
-    this.role = this.inbox.role;
     this.getInbox();
   }
 
@@ -73,12 +72,7 @@ export class GroupChatroomPage {
   clearUnread() {
     if (this.inbox.unread > 0) {
       this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
-        let topic = 'inbox: agency clear unread';
-        if (this.role === 'group') {
-          topic = 'inbox: group clear unread'
-        } else if (this.role === 'upline group') {
-          topic = 'inbox: upline group clear unread'
-        }
+        let topic = 'inbox: clear unread';
         const notif = this.navParams.get('notif');
         if (!notif) {
           this.events.publish(topic, this.inboxId);
@@ -88,23 +82,15 @@ export class GroupChatroomPage {
   }
 
   listenIncomingMessage() {
-    this.newMessageListener = this.inboxProvider.newGroupMessage$.subscribe(async data => {
-      const userId = await this.inboxProvider.userId().toPromise();
+    this.newMessageListener = this.inboxProvider.newGroupMessage$.subscribe(data => {
       if (this.pk === data.groupChatId) {
-        if (userId !== data.sender) {
-          const message: message = {
-            ...data.message,
-            timestamp: new Date(data.message.timestamp)
-          };
-          this.messages.push(message);
-        }
+        const message: message = {
+          ...data.message,
+          timestamp: new Date(data.message.timestamp)
+        };
+        this.messages.push(message);
         this.inboxProvider.clearUnread(this.inboxId).subscribe(() => {
-          let topic = 'inbox: agency clear unread';
-          if (this.role === 'group') {
-            topic = 'inbox: group clear unread'
-          } else if (this.role === 'upline group') {
-            topic = 'inbox: upline group clear unread'
-          }
+          let topic = 'inbox: clear unread';
           this.events.publish(topic, this.inboxId);
         });
         setTimeout(() => {
@@ -207,30 +193,14 @@ export class GroupChatroomPage {
       map(inbox => {
         return {
           ...inbox,
-          agency: inbox.created_by.agency,
           messages: inbox.messages.map(val => ({...val, timestamp: new Date(val.timestamp)}))
         };
-    })).subscribe(groupChat => {
-      this.messages = groupChat.messages;
-      let image = groupChat.created_by.profile_image
-      if (this.role === 'agency') {
-        image = groupChat.agency.agency_image;
-      }
+    })).subscribe(inbox => {
+      this.messages = inbox.messages;
+      let image = inbox.group_chat.group_image
       this.profileImage = image;
-      let title: string;
-      if (this.role === 'agency') {
-        title = 'Your agency';
-      } else if (this.role === 'group') {
-        title = 'Your group';
-      } else {
-        title = 'Your upline group';
-      }
-      this.title = title;
-      let subTitle = groupChat.created_by.name
-      if (this.role === 'agency') {
-        subTitle = groupChat.agency.name;
-      }
-      this.subTitle = subTitle;
+      this.title = inbox.group_chat.title;
+      this.subTitle = `${inbox.group_chat.participants.length} members`;
       setTimeout(() => {
         this.content.scrollToBottom(0);
       }, 100);
@@ -247,8 +217,7 @@ export class GroupChatroomPage {
     if (!valid && this.text.length > 0) {
       const data = {
         text: this.text,
-        initialSend: this.initialSend,
-        role: this.role
+        initialSend: this.initialSend
       };
       this.text = '';
       this.inboxProvider.sendGroupMessage(this.inboxId, data).pipe(
@@ -270,6 +239,7 @@ export class GroupChatroomPage {
           sender: userId,
           participants,
           groupChatId: this.pk,
+          inboxId: this.inboxId,
           initialSend: this.initialSend
         });
         this.initialSend = false;

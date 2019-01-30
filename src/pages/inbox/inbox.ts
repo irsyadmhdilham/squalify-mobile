@@ -30,9 +30,6 @@ export class InboxPage {
   listenNewInbox: (inbox: inbox, pk: number) => void;
   listenNewMessage: (message: message, pk: number) => void;
   listenClearUnread: (pk: number) => void;
-  listenAgencyClearUnread: (pk: number) => void;
-  listenGroupClearUnread: (pk: number) => void;
-  listenUplineGroupClearUnread: (pk: number) => void;
   newMessageListener: Subscription;
   newInboxListener: Subscription;
   newGroupMessageListener: Subscription;
@@ -52,13 +49,19 @@ export class InboxPage {
     this.navCtrl.push(NotificationsPage);
   }
 
-  profileImage(img) {
-    if (!img) {
-      return false;
+  avatarImage(inbox: inbox) {
+    let image: string;
+    if (inbox.group_chat) {
+      image = inbox.group_chat.group_image;
+    } else {
+      image = inbox.chat_with.profile_image;
     }
-    return {
-      background: `url('${img}') center center no-repeat / cover`
-    };
+    if (image) {
+      return {
+        background: `url('${image}') center center no-repeat / cover`
+      };
+    }
+    return false;
   }
 
   groupImage(obj: groupInbox) {
@@ -98,6 +101,15 @@ export class InboxPage {
   createGroup() {
     const modal = this.modalCtrl.create(CreateGroupchatComponent);
     modal.present();
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.pageStatus = 'loading';
+        setTimeout(() => {
+          this.pageStatus = undefined;
+        }, 300);
+        this.inboxes.unshift(data);
+      }
+    });
   }
 
   composeChat() {
@@ -126,17 +138,9 @@ export class InboxPage {
   }
 
   lastMessage(inbox: inbox) {
-    if (inbox.group_chat) {
-      const groupChat = inbox.group_chat;
-      const len = groupChat.messages.length;
-      if (len > 0) {
-        return groupChat.messages[len - 1].text;
-      }
-    } else {
-      const len = inbox.messages.length;
-      if (len > 0) {
-        return inbox.messages[len - 1].text;
-      }
+    const len = inbox.messages.length;
+    if (len > 0) {
+      return inbox.messages[len - 1].text;
     }
   }
 
@@ -156,28 +160,9 @@ export class InboxPage {
       const i = this.inboxes.findIndex(val => val.pk === pk);
       this.inboxes[i].unread = 0;
     };
-
-    this.listenAgencyClearUnread = () => {
-      if (this.agencyChat) {
-        this.agencyChat.unread = 0;
-      }
-    };
-    this.listenGroupClearUnread = () => {
-      if (this.groupChat) {
-        this.groupChat.unread = 0;
-      }
-    };
-    this.listenUplineGroupClearUnread = () => {
-      if (this.uplineGroupChat) {
-        this.uplineGroupChat.unread = 0;
-      }
-    };
     this.events.subscribe('inbox: new inbox', this.listenNewInbox);
     this.events.subscribe('inbox: new message', this.listenNewMessage);
     this.events.subscribe('inbox: clear unread', this.listenClearUnread);
-    this.events.subscribe('inbox: agency clear unread', this.listenAgencyClearUnread);
-    this.events.subscribe('inbox: group clear unread', this.listenGroupClearUnread);
-    this.events.subscribe('inbox: upline group clear unread', this.listenUplineGroupClearUnread);
   }
 
   ionViewWillEnter() {
@@ -194,9 +179,6 @@ export class InboxPage {
       this.events.unsubscribe('inbox: new inbox', this.listenNewInbox);
       this.events.unsubscribe('inbox: new message', this.listenNewMessage);
       this.events.unsubscribe('inbox: clear unread', this.listenClearUnread);
-      this.events.unsubscribe('inbox: agency clear unread', this.listenAgencyClearUnread);
-      this.events.unsubscribe('inbox: group clear unread', this.listenGroupClearUnread);
-      this.events.unsubscribe('inbox: upline group clear unread', this.listenUplineGroupClearUnread);
       this.newMessageListener.unsubscribe();
       this.newInboxListener.unsubscribe();
       this.newGroupMessageListener.unsubscribe();
@@ -220,23 +202,13 @@ export class InboxPage {
       this.inboxes.unshift(splicedInbox[0]);
     });
 
-    this.newGroupMessageListener = this.inboxProvider.newGroupMessage$.subscribe(async response => {
-      const userId = await this.inboxProvider.userId().toPromise();
-      if (response.sender !== userId) {
-        if (this.agencyChat.groupId === response.groupChatId) {
-            this.agencyChat.unread++;
-        }
-        if (this.groupChat) {
-          if (this.groupChat.groupId === response.groupChatId) {
-            this.groupChat.unread++;
-          }
-        }
-        if (this.uplineGroupChat) {
-          if (this.uplineGroupChat.groupId === response.groupChatId) {
-            this.uplineGroupChat.unread++;
-          }
-        }
-      }
+    this.newGroupMessageListener = this.inboxProvider.newGroupMessage$.subscribe(response => {
+      const i = this.inboxes.findIndex(val => val.pk === response.inboxId);
+      const inbox = this.inboxes[i];
+      inbox.messages.push(response.message);
+      inbox.unread++;
+      const splicedInbox = this.inboxes.splice(i, 1);
+      this.inboxes.unshift(splicedInbox[0]);
     });
   }
 
