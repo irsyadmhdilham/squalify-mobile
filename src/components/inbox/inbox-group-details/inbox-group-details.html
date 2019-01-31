@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button clear icon-only>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Group details</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <section>
+    <div [ngStyle]="image()" id="image"></div>
+    <h5 ion-text color="dark">{{title}}</h5>
+  </section>
+  <ion-list margin-top>
+    <ion-list-header>Participants</ion-list-header>
+    <ion-item *ngFor="let member of members">
+      <ion-avatar class="avatar-margin-top" item-start>
+        <div [ngStyle]="profileImage(member.profile_image)" class="profile-image"></div>
+      </ion-avatar>
+      <h6>{{member.name}}</h6>
+      <p>{{member.designation}}</p>
+      <p *ngIf="member.pk === admin" class="admin" item-end>Admin</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

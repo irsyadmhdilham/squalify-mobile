@@ -203,7 +203,7 @@ export class InboxPage {
     });
 
     this.newGroupMessageListener = this.inboxProvider.newGroupMessage$.subscribe(response => {
-      const i = this.inboxes.findIndex(val => val.pk === response.inboxId);
+      const i = this.inboxes.findIndex(val => val.group_chat.pk === response.groupChatId);
       const inbox = this.inboxes[i];
       inbox.messages.push(response.message);
       inbox.unread++;

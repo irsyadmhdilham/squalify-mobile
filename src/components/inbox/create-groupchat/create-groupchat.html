@@ -14,7 +14,7 @@
   <ng-container *ngSwitchDefault>
     <section id="image-container">
       <div [ngStyle]="groupImage()" id="group-image"></div>
-      <button ion-button clear small>Add image</button>
+      <button ion-button clear small (tap)="addChangeImage()">Add image</button>
     </section>
     <ion-item>
       <ion-label stacked>Title</ion-label>

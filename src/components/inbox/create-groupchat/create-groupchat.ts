@@ -92,7 +92,7 @@ export class CreateGroupchatComponent {
           headers: {}
         };
         this.platform.ready().then(async () => {
-          const profileURL = await this.inboxProvider.profileUrl('inbox/group-image/').toPromise();
+          const profileURL = await this.inboxProvider.profileUrl('inbox/create-group-image/').toPromise();
           fileTransfer.upload(this.imageToUpload, profileURL, options).then(data => {
             const response = JSON.parse(data.response);
             observer.next({upload: true, group_image: response.group_image, chatId: response.pk });

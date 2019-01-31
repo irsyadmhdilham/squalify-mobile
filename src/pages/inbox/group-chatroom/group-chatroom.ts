@@ -4,7 +4,8 @@ import {
   NavParams,
   Content,
   Events,
-  Keyboard
+  Keyboard,
+  ModalController
 } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { map } from "rxjs/operators";
@@ -13,10 +14,13 @@ import { Store } from "@ngrx/store";
 import { InboxProvider } from "../../../providers/inbox/inbox";
 import { NotificationProvider } from "../../../providers/notification/notification";
 
-import { groupInbox, message } from "../../../models/inbox";
+import { inbox, message } from "../../../models/inbox";
 import { profile } from "../../../models/profile";
+import { member } from "../../../models/agency";
 import { store } from "../../../models/store";
 import { notification } from "../../../models/notification";
+
+import { InboxGroupDetailsComponent } from "../../../components/inbox/inbox-group-details/inbox-group-details";
 
 @Component({
   selector: 'page-group-chatroom',
@@ -25,7 +29,7 @@ import { notification } from "../../../models/notification";
 export class GroupChatroomPage {
 
   @ViewChild(Content) content: Content;
-  inbox: groupInbox = this.navParams.get('inbox');
+  inbox: inbox = this.navParams.get('inbox');
   inboxId: number;
   pk: number;
   role: string;
@@ -37,6 +41,7 @@ export class GroupChatroomPage {
   keyboardDidShow: Subscription;
   storeListener: Subscription;
   newMessageListener: Subscription;
+  participants: member[];
   io: any;
   profile: profile;
   text = '';
@@ -49,12 +54,23 @@ export class GroupChatroomPage {
     private notificationProvider: NotificationProvider,
     private events: Events,
     private keyboard: Keyboard,
-    private store: Store<store>
+    private store: Store<store>,
+    private modalCtrl: ModalController
   ) { }
+
+  showGroupDetail() {
+    const data = {
+      members: this.participants,
+      title: this.title,
+      image: this.profileImage
+    };
+    const modal = this.modalCtrl.create(InboxGroupDetailsComponent, data);
+    modal.present();
+  }
 
   initializer() {
     this.inboxId = this.inbox.pk;
-    this.pk = this.inbox.groupId;
+    this.pk = this.inbox.group_chat.pk;
     this.getInbox();
   }
 
@@ -200,6 +216,7 @@ export class GroupChatroomPage {
       let image = inbox.group_chat.group_image
       this.profileImage = image;
       this.title = inbox.group_chat.title;
+      this.participants = inbox.group_chat.participants;
       this.subTitle = `${inbox.group_chat.participants.length} members`;
       setTimeout(() => {
         this.content.scrollToBottom(0);
@@ -232,16 +249,16 @@ export class GroupChatroomPage {
         const userId = await this.inboxProvider.userId().toPromise();
         const agency = this.profile.agency,
               namespace = `agency(${agency.pk})`;
-        const participants = this.inbox.participants.filter(val => val.pk !== userId);
-        this.io.emit('chat:new group message', {
+        const participants = this.inbox.group_chat.participants.filter(val => val.pk !== userId);
+        const emitData = {
           namespace,
           message,
           sender: userId,
           participants,
           groupChatId: this.pk,
-          inboxId: this.inboxId,
           initialSend: this.initialSend
-        });
+        };
+        this.io.emit('chat:new group message', emitData);
         this.initialSend = false;
       });
     }

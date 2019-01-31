@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      <section>
+      <section (tap)="showGroupDetail()">
         <ion-avatar>
           <div [ngStyle]="titleImage()" id="sender-image"></div>
         </ion-avatar>
