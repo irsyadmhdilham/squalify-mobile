@@ -3,14 +3,11 @@ import { NgModel } from "@angular/forms";
 import {
   ViewController,
   AlertController,
-  LoadingController,
-  ActionSheetController,
-  ModalController
+  LoadingController
 } from "ionic-angular";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
-import { PostTipsComponent } from "../../post-tips/post-tips";
 
 import { sales } from "../../../models/sales";
 
@@ -32,9 +29,7 @@ export class AddSalesComponent {
     private agencyProvider: AgencyProvider,
     private salesProvider: SalesProvider,
     private alertCtrl: AlertController,
-    private loadingCtrl: LoadingController,
-    private actionSheetCtrl: ActionSheetController,
-    private modalCtrl: ModalController
+    private loadingCtrl: LoadingController
   ) { }
 
   dismiss() {
@@ -70,27 +65,6 @@ export class AddSalesComponent {
       });
       alert.present();
     });
-  }
-
-  addTips() {
-    const selectTips = (mode: string) => {
-      const modal = this.modalCtrl.create(PostTipsComponent, { mode });
-      modal.present();
-      modal.onDidDismiss(data => {
-        if (data) {
-          this.tips = data.tips;
-        }
-      });
-    };
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Select option',
-      buttons: [
-        { text: 'Select from template', handler: () => selectTips('template') },
-        { text: 'Write tips', handler: () => selectTips('write') },
-        { text: 'Cancel', role: 'cancel' }
-      ]
-    });
-    actionSheet.present();
   }
 
   removeTips() {

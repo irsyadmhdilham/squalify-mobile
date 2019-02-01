@@ -22,5 +22,4 @@ export interface post {
   comments: comment[];
   likes: like[];
   monthly_sales: string;
-  tips?: string;
 };

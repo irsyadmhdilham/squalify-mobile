@@ -4,8 +4,7 @@ import {
   NavParams,
   AlertController,
   LoadingController,
-  Platform,
-  ModalController
+  Platform
 } from "ionic-angular";
 import { Camera, CameraOptions } from "@ionic-native/camera";
 import { AndroidPermissions } from "@ionic-native/android-permissions";
@@ -40,8 +39,7 @@ export class EditProfileComponent {
     private transfer: FileTransfer,
     private camera: Camera,
     private platform: Platform,
-    private androidPermissions: AndroidPermissions,
-    private modalCtrl: ModalController
+    private androidPermissions: AndroidPermissions
   ) { }
 
   dismiss() {

@@ -30,7 +30,6 @@ export class PostComponent implements OnChanges {
   likes = [];
   liked = false;
   likeId: number;
-  tips: string;
 
   constructor(
     private postProvider: PostProvider,
@@ -107,7 +106,6 @@ export class PostComponent implements OnChanges {
     this.comments = this.data.comments;
     this.likes = this.data.likes;
     this.pk = this.data.pk;
-    this.tips = this.data.tips;
     this.checkLiked();
     const likeStats = this.likeStatus;
     if (likeStats) {
