@@ -14,7 +14,6 @@ import { Observable, Observer } from "rxjs";
 import { first, switchMap, map } from "rxjs/operators";
 
 import { ProfileProvider } from "../../../providers/profile/profile";
-import { AmazingTipsComponent } from "../amazing-tips/amazing-tips";
 
 interface uploadImage {
   upload: boolean;
@@ -31,7 +30,6 @@ export class EditProfileComponent {
   name: string;
   profileImage: string;
   imageToUpload: string;
-  amazingTips: string[];
 
   constructor(
     private viewCtrl: ViewController,
@@ -48,30 +46,6 @@ export class EditProfileComponent {
 
   dismiss() {
     this.viewCtrl.dismiss();
-  }
-
-  removeTips(i: number) {
-    this.amazingTips.splice(i, 1);
-  }
-
-  addEditTips(mode: string, text?: string, index?: number) {
-    if (mode === 'add') {
-      const modal = this.modalCtrl.create(AmazingTipsComponent);
-      modal.present();
-      modal.onDidDismiss(data => {
-        if (data) {
-          this.amazingTips.push(data.text);
-        }
-      });
-    } else {
-      const modal = this.modalCtrl.create(AmazingTipsComponent, { isEdit: true, text, index });
-      modal.present();
-      modal.onDidDismiss(data => {
-        if (data) {
-          this.amazingTips[data.index] = data.text;
-        }
-      });
-    }
   }
 
   changeImage() {
@@ -132,7 +106,7 @@ export class EditProfileComponent {
       loading.present();
       this.uploadImage().pipe(
         switchMap((upload: uploadImage) => {
-          return this.profileProvider.updateProfile({name: this.name, amazingTips: this.amazingTips}).pipe(map(data => {
+          return this.profileProvider.updateProfile({name: this.name}).pipe(map(data => {
             return { name: data.name, profileImage: upload.image };
           }));
         }),
@@ -163,11 +137,9 @@ export class EditProfileComponent {
 
   ionViewDidLoad() {
     const name = this.navParams.get('name'),
-          profileImage = this.navParams.get('profileImage'),
-          amazingTips = this.navParams.get('amazingTips');
+          profileImage = this.navParams.get('profileImage');
     this.name = name;
     this.profileImage = profileImage;
-    this.amazingTips = amazingTips;
     this.androidPermissionsHandler();
   }
 

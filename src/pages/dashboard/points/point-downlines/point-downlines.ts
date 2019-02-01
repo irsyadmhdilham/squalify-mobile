@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, InfiniteScroll } from 'ionic-angular';
 
 import { PointProvider } from "../../../../providers/point/point";
 import { PointDownlineGroupMemberPage } from "../point-downline-group-member/point-downline-group-member";
@@ -27,6 +27,14 @@ export class PointDownlinesPage {
       this.points = points;
     }, () => {
       this.pageStatus = 'error';
+    });
+  }
+
+  fetchMore(infiniteScroll: InfiniteScroll) {
+    this.pointProvider.getDownlineMore(this.userId, this.points.length).subscribe(points => {
+      const all = this.points.concat(points);
+      this.points = all;
+      infiniteScroll.complete();
     });
   }
 

@@ -25,17 +25,6 @@
       ></ion-input>
     </ion-item>
   </ion-list>
-  <section id="amazing-tips-wrapper">
-    <h6 no-margin>Amazing tips</h6>
-    <button ion-button round small (tap)="addEditTips('add')">Add</button>
-  </section>
-  <ion-list>
-    <ion-item no-padding *ngFor="let tips of amazingTips; index as i">
-      <ion-label color="grey">{{tips}}</ion-label>
-      <button no-padding item-end clear ion-button (tap)="addEditTips('edit', tips, i)">Edit</button>
-      <button (tap)="removeTips(i)" class="remove-button" no-padding item-end clear ion-button color="danger">Remove</button>
-    </ion-item>
-  </ion-list>
   <ion-row justify-content-center>
     <button ion-button clear strong (tap)="submitChanges(_name)">Submit changes</button>
   </ion-row>

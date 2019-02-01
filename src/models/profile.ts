@@ -26,5 +26,4 @@ export interface profile {
     members: number[];
   };
   settings?: settings;
-  words?: string[];
 };

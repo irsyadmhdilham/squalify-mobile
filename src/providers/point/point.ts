@@ -147,6 +147,11 @@ export class PointProvider extends ApiUrlModules {
     return this.http.get<point[]>(url);
   }
 
+  getDownlineMore(userId: number, start: number): Observable<point[]> {
+    const url = `${this.apiBaseUrl()}/profile/${userId}/point/group/?start=${start}`;
+    return this.http.get<point[]>(url);
+  }
+
   getAllPoints(): Observable<allPoints> {
     const url = this.profileUrl('point/all-points');
     return url.pipe(switchMap(url => {
