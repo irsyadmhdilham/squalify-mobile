@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 import { PointProvider } from "../../../../providers/point/point";
-import { PointGroupMemberPage } from "../point-group-member/point-group-member";
+import { PointDownlineGroupMemberPage } from "../point-downline-group-member/point-downline-group-member";
+
+import { point } from "../../../../models/point";
 
 @Component({
   selector: 'page-point-downlines',
@@ -10,28 +12,29 @@ import { PointGroupMemberPage } from "../point-group-member/point-group-member";
 })
 export class PointDownlinesPage {
 
-  pk: number;
-  downlines = [];
+  userId: number;
+  points: point[] = [];
   pageStatus: string;
+  name: string = this.navParams.get('name');
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private pointProvider: PointProvider) {
   }
 
   fetch() {
     this.pageStatus = 'loading';
-    this.pointProvider.getDownline(this.pk).subscribe(observe => {
+    this.pointProvider.getDownline(this.userId).subscribe(points => {
       this.pageStatus = undefined;
-      this.downlines = observe;
+      this.points = points;
     }, () => {
       this.pageStatus = 'error';
     });
   }
 
-  navigate(data) {
-    this.navCtrl.push(PointGroupMemberPage, { data });
+  navToMember(date: string) {
+    this.navCtrl.push(PointDownlineGroupMemberPage, { date, userId: this.userId });
   }
 
-  profileImage(img) {
+  profileImage(img: string) {
     if (!img) {
       return false;
     }
@@ -41,8 +44,8 @@ export class PointDownlinesPage {
   }
 
   ionViewDidLoad() {
-    const user = this.navParams.get('user');
-    this.pk = user;
+    const userId = this.navParams.get('userId');
+    this.userId = userId;
     this.fetch();
   }
 

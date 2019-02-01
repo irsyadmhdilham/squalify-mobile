@@ -46,7 +46,7 @@ export interface groupPoint {
   name: string;
   designation: string;
   profile_image: string;
-  today: number;
+  point: { pk: number; total: number;};
   downline?: number;
 };
 

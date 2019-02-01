@@ -9,11 +9,11 @@ import * as moment from "moment";
 import { groupPoint } from "../../../../models/point";
 
 @Component({
-  selector: 'page-point-group-member',
-  templateUrl: 'point-group-member.html',
+  selector: 'page-point-downline-group-member',
+  templateUrl: 'point-downline-group-member.html',
 })
-export class PointGroupMemberPage {
-  
+export class PointDownlineGroupMemberPage {
+
   members: groupPoint[] = [];
   date: Date;
   pageStatus: string;
@@ -36,9 +36,9 @@ export class PointGroupMemberPage {
     };
   }
 
-  fetch(date: string) {
+  fetch(date: string, userId: number) {
     this.pageStatus = 'loading';
-    this.pointProvider.getGroupMember(date).subscribe(members => {
+    this.pointProvider.getDownlineGroupMember(date, userId).subscribe(members => {
       this.pageStatus = undefined;
       this.members = members;
     }, () => {
@@ -47,9 +47,10 @@ export class PointGroupMemberPage {
   }
 
   ionViewDidLoad() {
-    const date: string = this.navParams.get('date');
+    const date: string = this.navParams.get('date'),
+          userId: number = this.navParams.get('userId');
     this.date = moment(date).toDate();
-    this.fetch(date);
+    this.fetch(date, userId);
   }
 
   viewPointDetail(pointId: number) {

@@ -29,21 +29,16 @@
         </ion-item>
       </ion-list>
       <ion-list *ngSwitchCase="'group'">
-        <ion-item (tap)="navToMember(member)" no-padding *ngFor="let member of groupMembers">
-          <ion-avatar item-start>
-            <div [ngStyle]="profileImage(member.profile_image)" class="profile-image"></div>
-          </ion-avatar>
-          <h5>{{member.name}}</h5>
-          <p>{{member.designation}}</p>
-          <p *ngIf="member.downline && member.downline > 0" ion-text color="primary">
-            <strong>{{member.downline}} downline{{member.downline > 1 ? 's' : '' }}</strong>
-          </p>
-          <div item-end>
-            <h4 ion-text color="primary" text-center no-margin class="point">{{member.today}}</h4>
-            <p text-center no-margin class="today-label">Today</p>
-          </div>
+        <ion-item (tap)="navToMember(point.date)" no-padding *ngFor="let point of points">
+          <ion-row justify-content-between>
+            <p>{{point.date | date:'d MMM yyyy'}}</p>
+            <h5 ion-text color="primary" class="point" text-center>{{point.total}}</h5>
+          </ion-row>
         </ion-item>
       </ion-list>
     </ng-container>
+    <ion-infinite-scroll (ionInfinite)="fetchMoreGroup($event)" *ngIf="segment === 'group'">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ng-container>
 </ion-content>

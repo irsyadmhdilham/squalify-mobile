@@ -59,7 +59,7 @@ export class SalesPage {
         period = 'year';
       }
       if (salesType === 'sales type') {
-        period = 'total';
+        salesType = 'total';
       }
       if (!this.cancel) {
         if (this.segment === 'personal') {
@@ -96,7 +96,7 @@ export class SalesPage {
         period = 'year';
       }
       if (salesType === 'sales type') {
-        period = 'total';
+        salesType = 'total';
       }
       if (!this.cancel) {
         if (this.segment === 'personal') {

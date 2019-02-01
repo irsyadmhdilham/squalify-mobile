@@ -9,6 +9,7 @@ import { PointsPage } from "../../pages/dashboard/points/points";
 import { PointDetailPage } from "../../pages/dashboard/points/point-detail/point-detail";
 import { PointGroupMemberPage } from "../../pages/dashboard/points/point-group-member/point-group-member";
 import { PointDownlinesPage } from "../../pages/dashboard/points/point-downlines/point-downlines";
+import { PointDownlineGroupMemberPage } from "../../pages/dashboard/points/point-downline-group-member/point-downline-group-member";
 
 import { SalesPage } from "../../pages/dashboard/sales/sales";
 import { SalesDownlinesPage } from "../../pages/dashboard/sales/sales-downlines/sales-downlines";
@@ -30,6 +31,7 @@ export const Dashboard = [
   PointDetailPage,
   PointGroupMemberPage,
   PointDownlinesPage,
+  PointDownlineGroupMemberPage,
   SalesPage,
   SalesDownlinesPage,
   GroupPage,

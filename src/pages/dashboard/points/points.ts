@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, InfiniteScroll } from 'ionic-angular';
 
 import { PointProvider } from "../../../providers/point/point";
 import { point } from "../../../models/point";
@@ -16,7 +16,6 @@ export class PointsPage {
   pageStatus: string;
   segment = 'personal';
   points: point[] = [];
-  groupMembers = [];
 
   constructor(
     public navCtrl: NavController,
@@ -52,9 +51,18 @@ export class PointsPage {
     this.pageStatus = 'loading';
     this.pointProvider.getGroupPoints().subscribe(observe => {
       this.pageStatus = undefined;
-      this.groupMembers = observe;
+      this.points = observe;
     }, () => {
       this.pageStatus = 'error';
+    });
+  }
+
+  fetchMoreGroup(infiniteScroll: InfiniteScroll) {
+    const x = this.points.length;
+    this.pointProvider.fetchGroupMore(x).subscribe(points => {
+      const all = this.points.concat(points);
+      this.points = all;
+      infiniteScroll.complete();
     });
   }
 
@@ -75,7 +83,7 @@ export class PointsPage {
     this.navCtrl.push(PointDetailPage, { pointId: point.pk });
   }
 
-  navToMember(data) {
-    this.navCtrl.push(PointGroupMemberPage, { data });
+  navToMember(date: string) {
+    this.navCtrl.push(PointGroupMemberPage, { date });
   }
 }

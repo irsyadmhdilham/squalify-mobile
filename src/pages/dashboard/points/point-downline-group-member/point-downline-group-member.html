@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img img-title src="../../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content [ngSwitch]="pageStatus">
+  <loading type="list" *ngSwitchCase="'loading'"></loading>
+  <fetch-error message="Failed to get members point" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngIf="members.length > 0; then pointsBlock; else emptyBlock"></ng-container>
+    <ng-template #pointsBlock>
+      <h5 margin-left title>{{date | date:'dd MMM yyyy'}}</h5>
+      <ion-list padding>
+        <ion-item no-padding *ngFor="let member of members">
+          <ion-avatar class="avatar-margin-top" item-start>
+            <div [ngStyle]="avatarImage(member.profile_image)" class="avatar-image"></div>
+          </ion-avatar>
+          <h5>{{member.name}}</h5>
+          <p>{{member.designation}}</p>
+          <ion-row>
+            <button *ngIf="member.point.pk" (tap)="viewPointDetail(member.point.pk)" strong ion-button small clear no-padding>View detail</button>
+            <button [ngStyle]="downlineMargin(member.point.pk)" (tap)="viewDownlines(member)" ion-button no-padding small strong clear *ngIf="member.downline">View downlines</button>
+          </ion-row>
+          <h5 class="point" item-end ion-text color="primary">{{member.point.total}}</h5>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+    <ng-template #emptyBlock>
+      <empty-content title="Points empty"></empty-content>
+    </ng-template>
+  </ng-container>
+</ion-content>

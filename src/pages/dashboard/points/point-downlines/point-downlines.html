@@ -10,21 +10,13 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve downlines" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <h5 title>Downlines</h5>
+    <h5 title>{{name}}</h5>
     <ion-list>
-      <ion-item (tap)="navigate(downline)" no-padding *ngFor="let downline of downlines">
-        <ion-avatar item-start>
-          <div [ngStyle]="profileImage(downline.profile_image)" class="profile-image"></div>
-        </ion-avatar>
-        <h5>{{downline.name}}</h5>
-        <p>{{downline.designation}}</p>
-        <p *ngIf="downline.downline && downline.downline > 0" ion-text color="primary">
-          <strong>{{downline.downline}} downline{{downline.downline > 1 ? 's' : '' }}</strong>
-        </p>
-        <div item-end>
-          <h4 ion-text color="primary" text-center no-margin class="point">{{downline.today}}</h4>
-          <p text-center no-margin class="today-label">Today</p>
-        </div>
+      <ion-item (tap)="navToMember(point.date)" no-padding *ngFor="let point of points">
+        <ion-row justify-content-between>
+          <p>{{point.date | date:'d MMM yyyy'}}</p>
+          <h5 ion-text color="primary" class="point" text-center>{{point.total}}</h5>
+        </ion-row>
       </ion-item>
     </ion-list>
   </ng-container>

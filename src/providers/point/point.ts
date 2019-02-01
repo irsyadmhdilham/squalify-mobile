@@ -11,11 +11,6 @@ import { point, contactPoints, groupPoint, allPoints, pointIo } from "../../mode
 import { store } from "../../models/store";
 import { profile } from "../../models/profile";
 
-interface memberPoints {
-  date: string;
-  point: number
-};
-
 @Injectable()
 export class PointProvider extends ApiUrlModules {
 
@@ -121,25 +116,35 @@ export class PointProvider extends ApiUrlModules {
     }));
   }
 
-  getGroupPoints(): Observable<groupPoint[]> {
+  getGroupPoints(): Observable<point[]> {
     const url = this.profileUrl('point/group');
     return url.pipe(switchMap(url => {
+      return this.http.get<point[]>(url);
+    }));
+  }
+
+  fetchGroupMore(start: number): Observable<point[]> {
+    const url = this.profileUrl(`point/group/?start=${start}`);
+    return url.pipe(switchMap(url => {
+      return this.http.get<point[]>(url);
+    }));
+  }
+
+  getGroupMember(date: string): Observable<groupPoint[]> {
+    const url = this.profileUrl(`point/group/${date}`);
+    return url.pipe(switchMap(url => {
       return this.http.get<groupPoint[]>(url);
     }));
   }
 
-  getGroupMemberPoints(memberId: number): Observable<memberPoints[]> {
-    const url = this.profileUrl(`point/group/${memberId}`);
-    return url.pipe(switchMap(url => {
-      return this.http.get<memberPoints[]>(url);
-    }));
+  getDownlineGroupMember(date: string, userId: number): Observable<groupPoint[]> {
+    const url = `${this.apiBaseUrl()}/profile/${userId}/point/group/${date}`;
+    return this.http.get<groupPoint[]>(url);
   }
 
-  getDownline(memberId: number): Observable<groupPoint[]> {
-    const url = this.profileUrl(`point/group/${memberId}/downline`);
-    return url.pipe(switchMap(url => {
-      return this.http.get<groupPoint[]>(url);
-    }));
+  getDownline(userId: number): Observable<point[]> {
+    const url = `${this.apiBaseUrl()}/profile/${userId}/point/group`;
+    return this.http.get<point[]>(url);
   }
 
   getAllPoints(): Observable<allPoints> {

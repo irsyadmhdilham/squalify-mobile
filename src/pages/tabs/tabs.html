@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="signedIn">
   <page-sign-in *ngSwitchCase="'not sign in'" (signingIn)="signIn($event)"></page-sign-in>
-  <ion-tabs *ngSwitchDefault selectedIndex="3">
+  <ion-tabs *ngSwitchDefault selectedIndex="1">
     <ion-tab tabsHideOnSubPages [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
     <ion-tab tabsHideOnSubPages [root]="tab2Root" tabTitle="Dashboard" tabIcon="stats"></ion-tab>
     <ion-tab tabsHideOnSubPages [root]="tab3Root" tabTitle="Apps" tabIcon="apps"></ion-tab>
