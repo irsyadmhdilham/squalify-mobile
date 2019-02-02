@@ -77,8 +77,9 @@ export class SignInPage {
     this.AuthProvider.authenticate(email.value, password.value, fcmToken).subscribe(observe => {
       if (observe.auth) {
         const userId = observe.data.user_id,
-              agencyId = observe.data.agency_id;
-        this.AuthProvider.setIds(userId, agencyId).then(() => {
+              agencyId = observe.data.agency_id,
+              token = observe.data.token;
+        this.AuthProvider.setCredentials(userId, agencyId, token).then(() => {
           loading.dismiss();
           this.initializer();
           this.signingIn.emit('signed in');

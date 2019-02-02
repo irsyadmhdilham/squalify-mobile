@@ -9,7 +9,8 @@ interface auth {
   auth: boolean;
   data: {
     user_id: number;
-    agency_id: number
+    agency_id: number;
+    token: string;
   };
 }
 
@@ -21,8 +22,9 @@ export class AuthProvider extends ApiUrlModules {
   }
 
   authenticate(email: string, password: string, fcmToken: string): Observable<auth> {
-    const url = this.otherUrl(`auth?email=${email}&password=${password}&fcmToken=${fcmToken}`);
-    return this.http.get<auth>(url);
+    const url = this.otherUrl(`auth/`),
+          data = { email, password, fcmToken };
+    return this.http.post<auth>(url, data);
   }
 
 }

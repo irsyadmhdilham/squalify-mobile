@@ -98,7 +98,7 @@ export class ProfilePage extends Ids {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
     this.profileProvider.signOut().subscribe(() => {
-      this.removeAllId().then(value => {
+      this.removeAllCredentials().then(value => {
         if (value) {
           loading.dismiss();
           this.store.pipe(select('io'), take(1)).subscribe((io: any) => {

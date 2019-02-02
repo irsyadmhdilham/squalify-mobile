@@ -50,56 +50,72 @@ export class InboxProvider extends ApiUrlModules {
   getInbox(): Observable<inbox[]> {
     const url = this.profileUrl('inbox');
     return url.pipe(switchMap(url => {
-      return this.http.get<inbox[]>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<inbox[]>(url, { headers });
+      }));
     }));
   }
 
   getInboxDetail(inboxId: number): Observable<inbox> {
     const url = this.profileUrl(`inbox/${inboxId}`);
     return url.pipe(switchMap(url => {
-      return this.http.get<inbox>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<inbox>(url, { headers });
+      }));
     }));
   }
 
   getGroupInboxDetail(inboxId: number): Observable<inbox> {
     const url = this.profileUrl(`inbox/${inboxId}/group`);
     return url.pipe(switchMap(url => {
-      return this.http.get<inbox>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<inbox>(url, { headers });
+      }));
     }));
   }
 
   createInbox(data): Observable<createInbox> {
     const url = this.profileUrl('inbox/');
     return url.pipe(switchMap(url => {
-      return this.http.post<createInbox>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.post<createInbox>(url, data, { headers });
+      }));
     }));
   }
 
   createGroup(data): Observable<inbox> {
     const url = this.profileUrl('inbox/create-group/');
     return url.pipe(switchMap(url => {
-      return this.http.post<inbox>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.post<inbox>(url, data, { headers });
+      }));
     }));
   }
 
   sendMessage(inboxId: number, data): Observable<sendMessage> {
     const url = this.profileUrl(`inbox/${inboxId}/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<sendMessage>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.put<sendMessage>(url, data, { headers });
+      }));
     }));
   }
 
   sendGroupMessage(inboxId: number, data): Observable<message> {
     const url = this.profileUrl(`inbox/${inboxId}/group/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<message>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.put<message>(url, data, { headers });
+      }));
     }));
   }
 
   clearUnread(inboxId: number): Observable<{status: boolean}> {
     const url = this.profileUrl(`inbox/${inboxId}/?cu=true`);
     return url.pipe(switchMap(url => {
-      return this.http.put<{status: boolean}>(url, null);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.put<{status: boolean}>(url, null, { headers });
+      }));
     }))
   }
 

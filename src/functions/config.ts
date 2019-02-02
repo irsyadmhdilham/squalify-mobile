@@ -1,8 +1,13 @@
+import { HttpHeaders } from "@angular/common/http";
 import { isDevMode } from '@angular/core';
 import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 import { AES, enc } from "crypto-js";
+
+interface token {
+  token: string;
+}
 
 export class Ids {
 
@@ -42,11 +47,12 @@ export class Ids {
     })
   }
 
-  removeAllId(): Promise<boolean> {
+  removeAllCredentials(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       const userId = this.storage.remove('userId'),
-            agencyId = this.storage.remove('agencyId');
-      Promise.all([userId, agencyId]).then(() => {
+            agencyId = this.storage.remove('agencyId'),
+            token = this.storage.remove('apiToken');
+      Promise.all([userId, agencyId, token]).then(() => {
         resolve(true);
       }).catch(() => {
         reject(false);
@@ -54,13 +60,24 @@ export class Ids {
     });
   }
 
-  setIds(userId: number, agencyId: number) {
+  authHeaders(): Observable<HttpHeaders> {
+    const token = this.storage.get('apiToken');
+    return Observable.fromPromise<token>(token).pipe(switchMap(token => {
+      const headers = new HttpHeaders({
+        'Authorization': `Token ${token}`
+      });
+      return Observable.of(headers);
+    }));
+  }
+
+  setCredentials(userId: number, agencyId: number, token: string) {
     const encryptedUserId = AES.encrypt(userId.toString(), 'secret user pk').toString(),
           encryptedAgencyId = AES.encrypt(agencyId.toString(), 'secret agency pk').toString();
     const setUserId = this.storage.set('userId', encryptedUserId),
-          setAgencyId = this.storage.set('agencyId', encryptedAgencyId);
+          setAgencyId = this.storage.set('agencyId', encryptedAgencyId),
+          setToken = this.storage.set('apiToken', token);
     return new Promise(resolve => {
-      Promise.all([setUserId, setAgencyId]).then(() => {
+      Promise.all([setUserId, setAgencyId, setToken]).then(() => {
         resolve(true);
       });
     });
@@ -70,7 +87,7 @@ export class Ids {
 
 export class ApiUrlModules extends Ids {
 
-  devIpAddress = 'http://192.168.1.40';
+  devIpAddress = 'http://192.168.1.16';
 
   constructor(public storage: Storage) {
     super(storage);
