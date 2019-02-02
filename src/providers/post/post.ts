@@ -119,35 +119,45 @@ export class PostProvider extends ApiUrlModules {
   postComment(postId: number, data: any): Observable<comment> {
     const url = this.agencyUrl(`post/${postId}/comment/`);
     return url.pipe(switchMap(url => {
-      return this.http.post<comment>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.post<comment>(url, data, { headers });
+      }));
     }));
   }
 
   getComments(postId: number): Observable<comment[]> {
     const url = this.agencyUrl(`post/${postId}/comment`);
     return url.pipe(switchMap(url => {
-      return this.http.get<comment[]>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<comment[]>(url, { headers });
+      }));
     }));
   }
 
   likePost(postId: number, data: { userId: any }): Observable<like> {
     const url = this.agencyUrl(`post/${postId}/like/`);
     return url.pipe(switchMap(url => {
-      return this.http.post<like>(url, data);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.post<like>(url, data, { headers });
+      }));
     }));
   }
 
   unlikePost(postId: number, likeId: number): Observable<null> {
     const url = this.agencyUrl(`post/${postId}/unlike/${likeId}`);
     return url.pipe(switchMap(url => {
-      return this.http.delete<null>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.delete<null>(url, { headers });
+      }));
     }));
   }
 
   getPostDetail(postId: number): Observable<post> {
     const url = this.agencyUrl(`post/${postId}`);
     return url.pipe(switchMap(url => {
-      return this.http.get<post>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<post>(url, { headers });
+      }));
     }));
   }
 

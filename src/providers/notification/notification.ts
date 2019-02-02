@@ -17,36 +17,44 @@ export class NotificationProvider extends ApiUrlModules {
   getNotifications(): Observable<notification[]> {
     const url = this.profileUrl('notification');
     return url.pipe(switchMap(url => {
-      return this.http.get<notification[]>(url).pipe(
-        map(value => {
-          return value.map(val => {
-            return {
-              ...val,
-              timestamp: new Date(val.timestamp)
-            }
-          });
-        }))
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<notification[]>(url, { headers }).pipe(
+          map(value => {
+            return value.map(val => {
+              return {
+                ...val,
+                timestamp: new Date(val.timestamp)
+              }
+            });
+          }));
+      }));
     }));
   }
 
   getNotifsReadTotal(): Observable<number> {
     const url = this.profileUrl('notification/seen');
     return url.pipe(switchMap(url => {
-      return this.http.get<number>(url);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.get<number>(url, { headers });
+      }));
     }));
   }
 
   read(notifId: number): Observable<boolean> {
     const url = this.profileUrl(`notification/${notifId}/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<boolean>(url, null);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.put<boolean>(url, null, { headers });
+      }));
     }));
   }
 
   clearSeen(): Observable<boolean> {
     const url = this.profileUrl(`notification/clear-seen/`);
     return url.pipe(switchMap(url => {
-      return this.http.put<boolean>(url, null);
+      return this.authHeaders().pipe(switchMap(headers => {
+        return this.http.put<boolean>(url, null, { headers });
+      }));
     }));
   }
 
