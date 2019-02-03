@@ -19,6 +19,7 @@ import { NotificationsPage } from "../notifications/notifications";
 
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
+import { AuthProvider } from "../../providers/auth/auth";
 import { settings } from "../../models/profile-settings";
 import { store } from "../../models/store";
 import { SocketioReset } from "../../store/actions/socketio.action";
@@ -47,6 +48,7 @@ export class ProfilePage extends Ids {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private profileProvider: ProfileProvider,
+    private authProvider: AuthProvider,
     public storage: Storage,
     private loadingCtrl: LoadingController,
     private events: Events,
@@ -97,7 +99,7 @@ export class ProfilePage extends Ids {
   _signOut() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    this.profileProvider.signOut().subscribe(() => {
+    this.authProvider.signOut().subscribe(() => {
       this.removeAllCredentials().then(value => {
         if (value) {
           loading.dismiss();

@@ -50,15 +50,6 @@ export class ProfileProvider extends ApiUrlModules {
     }));
   }
 
-  signOut(): Observable<{status: string}> {
-    const url = this.profileUrl('sign-out/');
-    return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<{status: string}>(url, null, { headers });
-      }));
-    }));
-  }
-
   changeEmail(email: string, newEmail: string): Observable<boolean> {
     const url = this.profileUrl('change-email/');
     return url.pipe(switchMap(url => {

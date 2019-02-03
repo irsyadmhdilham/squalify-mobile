@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
+import { switchMap } from "rxjs/operators";
 import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
@@ -11,6 +12,7 @@ interface auth {
     user_id: number;
     agency_id: number;
     token: string;
+    fcm_id: number;
   };
 }
 
@@ -22,9 +24,23 @@ export class AuthProvider extends ApiUrlModules {
   }
 
   authenticate(email: string, password: string, fcmToken: string): Observable<auth> {
-    const url = this.otherUrl(`auth/`),
+    const url = this.otherUrl('auth/'),
           data = { email, password, fcmToken };
-    return this.http.post<auth>(url, data);
+    const headers = new HttpHeaders({
+      'Authorization': `${email}:${password}`
+    });
+    return this.http.post<auth>(url, data, { headers });
+  }
+
+  signOut(): Observable<{status: string}> {
+    const url = this.otherUrl('auth/sign-out/');
+    return this.userId().pipe(switchMap(userId => {
+      return this.fcmId().pipe(switchMap(fcmId => {
+        return this.authHeaders().pipe(switchMap(headers => {
+          return this.http.post<{status: string}>(url, { userId, fcmId }, { headers });
+        }));
+      }));
+    }));
   }
 
 }

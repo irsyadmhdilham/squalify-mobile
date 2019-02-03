@@ -21,6 +21,20 @@ export class Ids {
     return Observable.fromPromise(this.agencyPromise());
   }
 
+  fcmId(): Observable<number> {
+    const fcmIdPromise = new Promise<number>(resolve => {
+      this.storage.get('fcmId').then(fcmId => {
+        if (!fcmId) {
+          resolve(null);
+        } else {
+          const bytes = AES.decrypt(fcmId, 'secret fcm id');
+          resolve(parseInt(bytes.toString(enc.Utf8)));
+        }
+      });
+    });
+    return Observable.fromPromise(fcmIdPromise);
+  }
+
   userPromise(): Promise<number | boolean> {
     return new Promise<number | boolean>(resolve => {
       this.storage.get('userId').then(value => {
@@ -70,14 +84,26 @@ export class Ids {
     }));
   }
 
-  setCredentials(userId: number, agencyId: number, token: string) {
+  setCredentials(userId: number, agencyId: number, token: string, fcmId?: number) {
     const encryptedUserId = AES.encrypt(userId.toString(), 'secret user pk').toString(),
           encryptedAgencyId = AES.encrypt(agencyId.toString(), 'secret agency pk').toString();
+    let encryptedFcmId: string;
+    if (fcmId) {
+      encryptedFcmId = AES.encrypt(fcmId.toString(), 'secret fcm id').toString();
+    }
     const setUserId = this.storage.set('userId', encryptedUserId),
           setAgencyId = this.storage.set('agencyId', encryptedAgencyId),
           setToken = this.storage.set('apiToken', token);
+    let setFcmId: Promise<any>;
+    if (encryptedFcmId) {
+      setFcmId = this.storage.set('secret fcm id', encryptedFcmId);
+    }
     return new Promise(resolve => {
-      Promise.all([setUserId, setAgencyId, setToken]).then(() => {
+      const tasks = [setUserId, setAgencyId, setToken];
+      if (setFcmId) {
+        tasks.push(setFcmId);
+      }
+      Promise.all(tasks).then(() => {
         resolve(true);
       });
     });

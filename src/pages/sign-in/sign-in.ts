@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   NavController,
   NavParams,
@@ -78,22 +77,18 @@ export class SignInPage {
       if (observe.auth) {
         const userId = observe.data.user_id,
               agencyId = observe.data.agency_id,
-              token = observe.data.token;
-        this.AuthProvider.setCredentials(userId, agencyId, token).then(() => {
+              token = observe.data.token,
+              fcmId = observe.data.fcm_id;
+        this.AuthProvider.setCredentials(userId, agencyId, token, fcmId).then(() => {
           loading.dismiss();
           this.initializer();
           this.signingIn.emit('signed in');
         });
       }
-    }, (err: HttpErrorResponse) => {
+    }, () => {
       loading.dismiss();
-      if (err.error.is_auth) {
-        const alert = this.alert('User has logged in', 'Only one account per user is allowed');
-        alert.present();
-      } else {
-        const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
-        alert.present();
-      }
+      const alert = this.alert('Failed to sign in', 'Please check both and password were correct');
+      alert.present();
     });
   }
 
