@@ -18,8 +18,8 @@ export class ScoreboardProvider extends ApiUrlModules {
   getSalesScore(period: string, salesType: string): Observable<salesScore[]> {
     let url = this.profileUrl(`sales/agency/${period}/?q=${salesType}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<salesScore[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<salesScore[]>(url, httpOptions);
       }));
     }), map(value => {
       return value.map((val: any) => {
@@ -34,8 +34,8 @@ export class ScoreboardProvider extends ApiUrlModules {
   getPointScore(period: string): Observable<pointScore[]> {
     const url = this.profileUrl(`point/scoreboard/?q=${period}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<pointScore[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<pointScore[]>(url, httpOptions);
       }));
     }));
   }

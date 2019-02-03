@@ -17,8 +17,8 @@ export class GroupProvider extends ApiUrlModules {
   getGroupDetail(userId?: number): Observable<group> {
     const url = this.profileUrl('group', userId);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<group>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<group>(url, httpOptions);
       }));
     }));
   }

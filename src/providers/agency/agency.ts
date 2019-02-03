@@ -22,8 +22,8 @@ export class AgencyProvider extends ApiUrlModules {
   updateAgency(data): Observable<agency> {
     const url = this.agencyUrl();
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<agency>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<agency>(url, data, httpOptions);
       }))
     }));
   }
@@ -34,8 +34,8 @@ export class AgencyProvider extends ApiUrlModules {
       url = this.agencyUrl(`?u=${userId}&fields=${fields}`);
     }
     return url.pipe(switchMap(value => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<agency>(value, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<agency>(value, httpOptions);
       }));
     }))
   }
@@ -43,8 +43,8 @@ export class AgencyProvider extends ApiUrlModules {
   getPosts(): Observable<post[]> {
     const url = this.agencyUrl('post');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<post[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<post[]>(url, httpOptions);
       }));
     }));
   }
@@ -52,8 +52,8 @@ export class AgencyProvider extends ApiUrlModules {
   getAgencyMembers(): Observable<member[]> {
     const url = this.agencyUrl('members');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<member[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<member[]>(url, httpOptions);
       }));
     }));
   }

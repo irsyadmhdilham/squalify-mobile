@@ -70,8 +70,8 @@ export class PointProvider extends ApiUrlModules {
   createPoint(add: boolean, data: any): Observable<point> {
     const url = this.profileUrl('point/');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<point>(url, { ...data, add }, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<point>(url, { ...data, add }, httpOptions);
       }));
     }));
   }
@@ -79,8 +79,8 @@ export class PointProvider extends ApiUrlModules {
   updatePoint(pointId: number, add: boolean, data: any): Observable<point> {
     const url = this.profileUrl(`point/${pointId}/?add=${add}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<point>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<point>(url, data, httpOptions);
       }));
     }));
   }
@@ -88,8 +88,8 @@ export class PointProvider extends ApiUrlModules {
   getPoints(): Observable<point[]> {
     const url = this.profileUrl('point');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point[]>(`${url}?fields=pk,date,total`, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point[]>(`${url}?fields=pk,date,total`, httpOptions);
       }));
     }));
   }
@@ -97,8 +97,8 @@ export class PointProvider extends ApiUrlModules {
   getTodayPoint(): Observable<point[]> {
     const url = this.profileUrl('point');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point[]>(`${url}?mode=today`, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point[]>(`${url}?mode=today`, httpOptions);
       }));
     }));
   }
@@ -106,8 +106,8 @@ export class PointProvider extends ApiUrlModules {
   getPointLogs(pointId: number): Observable<point> {
     const url = this.profileUrl(`point/${pointId}?type=logs`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point>(url, httpOptions);
       }));
     }));
   }
@@ -115,8 +115,8 @@ export class PointProvider extends ApiUrlModules {
   getPointDetail(pointId: number): Observable<point> {
     const url = this.profileUrl(`point/${pointId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point>(url, httpOptions);
       }));
     }));
   }
@@ -124,8 +124,8 @@ export class PointProvider extends ApiUrlModules {
   getContactPoints(): Observable<contactPoints> {
     const url = this.profileUrl('point/contact');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<contactPoints>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<contactPoints>(url, httpOptions);
       }));
     }));
   }
@@ -133,8 +133,8 @@ export class PointProvider extends ApiUrlModules {
   getGroupPoints(): Observable<point[]> {
     const url = this.profileUrl('point/group');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point[]>(url, httpOptions);
       }));
     }));
   }
@@ -142,8 +142,8 @@ export class PointProvider extends ApiUrlModules {
   fetchGroupMore(start: number): Observable<point[]> {
     const url = this.profileUrl(`point/group/?start=${start}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<point[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<point[]>(url, httpOptions);
       }));
     }));
   }
@@ -151,38 +151,38 @@ export class PointProvider extends ApiUrlModules {
   getGroupMember(date: string): Observable<groupPoint[]> {
     const url = this.profileUrl(`point/group/${date}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<groupPoint[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<groupPoint[]>(url, httpOptions);
       }));
     }));
   }
 
   getDownlineGroupMember(date: string, userId: number): Observable<groupPoint[]> {
     const url = `${this.apiBaseUrl()}/profile/${userId}/point/group/${date}`;
-    return this.authHeaders().pipe(switchMap(headers => {
-      return this.http.get<groupPoint[]>(url, { headers });
+    return this.httpOptions().pipe(switchMap(httpOptions => {
+      return this.http.get<groupPoint[]>(url, httpOptions);
     }));
   }
 
   getDownline(userId: number): Observable<point[]> {
     const url = `${this.apiBaseUrl()}/profile/${userId}/point/group`;
-    return this.authHeaders().pipe(switchMap(headers => {
-      return this.http.get<point[]>(url, { headers });
+    return this.httpOptions().pipe(switchMap(httpOptions => {
+      return this.http.get<point[]>(url, httpOptions);
     }));
   }
 
   getDownlineMore(userId: number, start: number): Observable<point[]> {
     const url = `${this.apiBaseUrl()}/profile/${userId}/point/group/?start=${start}`;
-    return this.authHeaders().pipe(switchMap(headers => {
-      return this.http.get<point[]>(url, { headers });
+    return this.httpOptions().pipe(switchMap(httpOptions => {
+      return this.http.get<point[]>(url, httpOptions);
     }));
   }
 
   getAllPoints(): Observable<allPoints> {
     const url = this.profileUrl('point/all-points');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<allPoints>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<allPoints>(url, httpOptions);
       }));
     }));
   }

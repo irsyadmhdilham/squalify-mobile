@@ -36,8 +36,8 @@ export class AuthProvider extends ApiUrlModules {
     const url = this.otherUrl('auth/sign-out/');
     return this.userId().pipe(switchMap(userId => {
       return this.fcmId().pipe(switchMap(fcmId => {
-        return this.authHeaders().pipe(switchMap(headers => {
-          return this.http.post<{status: string}>(url, { userId, fcmId }, { headers });
+        return this.httpOptions().pipe(switchMap(httpOptions => {
+          return this.http.post<{status: string}>(url, { userId, fcmId }, httpOptions);
         }));
       }));
     }));

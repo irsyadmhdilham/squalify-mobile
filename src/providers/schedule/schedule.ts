@@ -17,8 +17,8 @@ export class ScheduleProvider extends ApiUrlModules {
   addSchedule(data: schedule): Observable<schedule> {
     const url = this.profileUrl('schedule/');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<schedule>(url, data, { headers })
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<schedule>(url, data, httpOptions)
       }));
     }));
   }
@@ -26,8 +26,8 @@ export class ScheduleProvider extends ApiUrlModules {
   getSchedules(): Observable<schedule[]> {
     const url = this.profileUrl('schedule?fields=pk,title,date,location');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<schedule[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<schedule[]>(url, httpOptions);
       }));
     }));
   }
@@ -35,8 +35,8 @@ export class ScheduleProvider extends ApiUrlModules {
   getScheduleDetail(scheduleId: number): Observable<schedule> {
     const url = this.profileUrl(`schedule/${scheduleId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<schedule>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<schedule>(url, httpOptions);
       }));
     }));
   }
@@ -44,8 +44,8 @@ export class ScheduleProvider extends ApiUrlModules {
   removeSchedule(scheduleId: number): Observable<null> {
     const url = this.profileUrl(`schedule/${scheduleId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.delete<null>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
       }));
     }));
   }
@@ -53,8 +53,8 @@ export class ScheduleProvider extends ApiUrlModules {
   updateSchedule(scheduleId: number, data: schedule): Observable<schedule> {
     const url = this.profileUrl(`schedule/${scheduleId}/`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<schedule>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<schedule>(url, data, httpOptions);
       }));
     }));
   }

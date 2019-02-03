@@ -17,8 +17,8 @@ export class NotificationProvider extends ApiUrlModules {
   getNotifications(): Observable<notification[]> {
     const url = this.profileUrl('notification');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<notification[]>(url, { headers }).pipe(
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<notification[]>(url, httpOptions).pipe(
           map(value => {
             return value.map(val => {
               return {
@@ -34,8 +34,8 @@ export class NotificationProvider extends ApiUrlModules {
   getNotifsReadTotal(): Observable<number> {
     const url = this.profileUrl('notification/seen');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<number>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<number>(url, httpOptions);
       }));
     }));
   }
@@ -43,8 +43,8 @@ export class NotificationProvider extends ApiUrlModules {
   read(notifId: number): Observable<boolean> {
     const url = this.profileUrl(`notification/${notifId}/`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<boolean>(url, null, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<boolean>(url, null, httpOptions);
       }));
     }));
   }
@@ -52,8 +52,8 @@ export class NotificationProvider extends ApiUrlModules {
   clearSeen(): Observable<boolean> {
     const url = this.profileUrl(`notification/clear-seen/`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<boolean>(url, null, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<boolean>(url, null, httpOptions);
       }));
     }));
   }

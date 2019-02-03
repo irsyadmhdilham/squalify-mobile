@@ -119,8 +119,8 @@ export class PostProvider extends ApiUrlModules {
   postComment(postId: number, data: any): Observable<comment> {
     const url = this.agencyUrl(`post/${postId}/comment/`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<comment>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<comment>(url, data, httpOptions);
       }));
     }));
   }
@@ -128,8 +128,8 @@ export class PostProvider extends ApiUrlModules {
   getComments(postId: number): Observable<comment[]> {
     const url = this.agencyUrl(`post/${postId}/comment`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<comment[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<comment[]>(url, httpOptions);
       }));
     }));
   }
@@ -137,8 +137,8 @@ export class PostProvider extends ApiUrlModules {
   likePost(postId: number, data: { userId: any }): Observable<like> {
     const url = this.agencyUrl(`post/${postId}/like/`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<like>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<like>(url, data, httpOptions);
       }));
     }));
   }
@@ -146,8 +146,8 @@ export class PostProvider extends ApiUrlModules {
   unlikePost(postId: number, likeId: number): Observable<null> {
     const url = this.agencyUrl(`post/${postId}/unlike/${likeId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.delete<null>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
       }));
     }));
   }
@@ -155,8 +155,8 @@ export class PostProvider extends ApiUrlModules {
   getPostDetail(postId: number): Observable<post> {
     const url = this.agencyUrl(`post/${postId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<post>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<post>(url, httpOptions);
       }));
     }));
   }

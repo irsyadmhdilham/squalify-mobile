@@ -17,8 +17,8 @@ export class ContactProvider extends ApiUrlModules {
   addContact(data: contact): Observable<any> {
     const url = this.profileUrl('contact/');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<any>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<any>(url, data, httpOptions);
       }));
     }));
   }
@@ -26,16 +26,16 @@ export class ContactProvider extends ApiUrlModules {
   getContacts(fields: string): Observable<contact[]> {
     const url = this.profileUrl(`contact?fields=${fields}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<contact[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<contact[]>(url, httpOptions);
       }));
     }));
   }
   getContactDetail(contactId: number): Observable<contact> {
     const url = this.profileUrl(`contact/${contactId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<contact>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<contact>(url, httpOptions);
       }));
     }));
   }
@@ -46,8 +46,8 @@ export class ContactProvider extends ApiUrlModules {
       url = this.profileUrl(`contact/${contactId}/?xtra=add-schedule`);
     }
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.put<contact>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<contact>(url, data, httpOptions);
       }))
     }));
   }
@@ -55,8 +55,8 @@ export class ContactProvider extends ApiUrlModules {
   removeContact(contactId: number): Observable<any> {
     const url = this.profileUrl(`contact/${contactId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.delete<any>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<any>(url, httpOptions);
       }));
     }));
   }

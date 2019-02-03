@@ -24,10 +24,12 @@ export class Ids {
   fcmId(): Observable<number> {
     const fcmIdPromise = new Promise<number>(resolve => {
       this.storage.get('fcmId').then(fcmId => {
+        console.log('storage fcm id =', fcmId);
         if (!fcmId) {
           resolve(null);
         } else {
           const bytes = AES.decrypt(fcmId, 'secret fcm id');
+          console.log('storage fcm id after =', bytes.toString(enc.Utf8));
           resolve(parseInt(bytes.toString(enc.Utf8)));
         }
       });
@@ -65,8 +67,9 @@ export class Ids {
     return new Promise<boolean>((resolve, reject) => {
       const userId = this.storage.remove('userId'),
             agencyId = this.storage.remove('agencyId'),
-            token = this.storage.remove('apiToken');
-      Promise.all([userId, agencyId, token]).then(() => {
+            token = this.storage.remove('apiToken'),
+            fcmId = this.storage.remove('fcmId');
+      Promise.all([userId, agencyId, token, fcmId]).then(() => {
         resolve(true);
       }).catch(() => {
         reject(false);
@@ -74,13 +77,16 @@ export class Ids {
     });
   }
 
-  authHeaders(): Observable<HttpHeaders> {
+  httpOptions(): Observable<{headers: HttpHeaders}> {
     const token = this.storage.get('apiToken');
     return Observable.fromPromise<token>(token).pipe(switchMap(token => {
-      const headers = new HttpHeaders({
-        'Authorization': `Token ${token}`
-      });
-      return Observable.of(headers);
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`
+        })
+      };
+      return Observable.of(httpOptions);
     }));
   }
 
@@ -96,7 +102,7 @@ export class Ids {
           setToken = this.storage.set('apiToken', token);
     let setFcmId: Promise<any>;
     if (encryptedFcmId) {
-      setFcmId = this.storage.set('secret fcm id', encryptedFcmId);
+      setFcmId = this.storage.set('fcmId', encryptedFcmId);
     }
     return new Promise(resolve => {
       const tasks = [setUserId, setAgencyId, setToken];
@@ -113,7 +119,7 @@ export class Ids {
 
 export class ApiUrlModules extends Ids {
 
-  devIpAddress = 'http://192.168.1.16';
+  devIpAddress = 'http://192.168.1.7';
 
   constructor(public storage: Storage) {
     super(storage);

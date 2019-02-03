@@ -37,8 +37,8 @@ export class SalesProvider extends ApiUrlModules {
   createSales(data: sales): Observable<sales> {
     const url = this.profileUrl('sales/');
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.post<sales>(url, data, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<sales>(url, data, httpOptions);
       }));
     }));
   }
@@ -46,8 +46,8 @@ export class SalesProvider extends ApiUrlModules {
   getSales(period: string, salesType: string): Observable<sales[]> {
     const url = this.profileUrl(`sales/?p=${period}&t=${salesType}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<sales[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<sales[]>(url, httpOptions);
       }));
     }));
   }
@@ -55,8 +55,8 @@ export class SalesProvider extends ApiUrlModules {
   removeSales(salesId): Observable<null> {
     const url = this.profileUrl(`sales/${salesId}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.delete<null>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
       }));
     }));
   }
@@ -64,8 +64,8 @@ export class SalesProvider extends ApiUrlModules {
   getPersonalSummary(type: string): Observable<summary> {
     const url = this.profileUrl(`sales/personal-summary?q=${type}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<summary>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<summary>(url, httpOptions);
       }));
     }));
   }
@@ -73,8 +73,8 @@ export class SalesProvider extends ApiUrlModules {
   getGroupSales(period: string, type?: string): Observable<groupSales[]> {
     const url = this.profileUrl(`sales/group/${period}/${type ? `?q=${type}` : ''}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<groupSales[]>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<groupSales[]>(url, httpOptions);
       }));
     }));
   }
@@ -82,8 +82,8 @@ export class SalesProvider extends ApiUrlModules {
   getGroupSummary(type: string): Observable<any> {
     const url = this.profileUrl(`sales/group/summary?q=${type}`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<any>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<any>(url, httpOptions);
       }));
     }));
   }
@@ -91,8 +91,8 @@ export class SalesProvider extends ApiUrlModules {
   getGroupDownlineSales(memberId: number, period: string, type?: string): Observable<downlineSales> {
     const url = this.profileUrl(`sales/group/${memberId}/year/?q=total`);
     return url.pipe(switchMap(url => {
-      return this.authHeaders().pipe(switchMap(headers => {
-        return this.http.get<downlineSales>(url, { headers });
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<downlineSales>(url, httpOptions);
       }));
     }));
   }

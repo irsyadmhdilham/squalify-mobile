@@ -93,7 +93,7 @@ export class AddSalesComponent {
         if (!this.surchargeVal || this.surchargeVal === '') {
           throw 'Please select surcharge';
         }
-        data.surcharge = parseInt(this.surchargeVal);
+        data.surcharge = parseFloat(this.surchargeVal);
       }
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
