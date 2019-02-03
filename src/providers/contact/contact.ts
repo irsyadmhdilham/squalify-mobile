@@ -24,7 +24,7 @@ export class ContactProvider extends ApiUrlModules {
   }
 
   getContacts(fields: string): Observable<contact[]> {
-    const url = this.profileUrl(`contact?fields=${fields}`);
+    const url = this.profileUrl(`contact/?fields=${fields}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<contact[]>(url, httpOptions);
@@ -32,7 +32,7 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
   getContactDetail(contactId: number): Observable<contact> {
-    const url = this.profileUrl(`contact/${contactId}`);
+    const url = this.profileUrl(`contact/${contactId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<contact>(url, httpOptions);
@@ -53,7 +53,7 @@ export class ContactProvider extends ApiUrlModules {
   }
 
   removeContact(contactId: number): Observable<any> {
-    const url = this.profileUrl(`contact/${contactId}`);
+    const url = this.profileUrl(`contact/${contactId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.delete<any>(url, httpOptions);

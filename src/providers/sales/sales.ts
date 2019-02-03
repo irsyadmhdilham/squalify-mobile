@@ -53,7 +53,7 @@ export class SalesProvider extends ApiUrlModules {
   }
 
   removeSales(salesId): Observable<null> {
-    const url = this.profileUrl(`sales/${salesId}`);
+    const url = this.profileUrl(`sales/${salesId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.delete<null>(url, httpOptions);
@@ -62,7 +62,7 @@ export class SalesProvider extends ApiUrlModules {
   }
 
   getPersonalSummary(type: string): Observable<summary> {
-    const url = this.profileUrl(`sales/personal-summary?q=${type}`);
+    const url = this.profileUrl(`sales/personal-summary/?q=${type}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summary>(url, httpOptions);
@@ -80,7 +80,7 @@ export class SalesProvider extends ApiUrlModules {
   }
 
   getGroupSummary(type: string): Observable<any> {
-    const url = this.profileUrl(`sales/group/summary?q=${type}`);
+    const url = this.profileUrl(`sales/group/summary/?q=${type}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<any>(url, httpOptions);

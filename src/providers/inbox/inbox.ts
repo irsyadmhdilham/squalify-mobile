@@ -48,7 +48,7 @@ export class InboxProvider extends ApiUrlModules {
   }
 
   getInbox(): Observable<inbox[]> {
-    const url = this.profileUrl('inbox');
+    const url = this.profileUrl('inbox/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<inbox[]>(url, httpOptions);
@@ -57,7 +57,7 @@ export class InboxProvider extends ApiUrlModules {
   }
 
   getInboxDetail(inboxId: number): Observable<inbox> {
-    const url = this.profileUrl(`inbox/${inboxId}`);
+    const url = this.profileUrl(`inbox/${inboxId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<inbox>(url, httpOptions);
@@ -66,7 +66,7 @@ export class InboxProvider extends ApiUrlModules {
   }
 
   getGroupInboxDetail(inboxId: number): Observable<inbox> {
-    const url = this.profileUrl(`inbox/${inboxId}/group`);
+    const url = this.profileUrl(`inbox/${inboxId}/group/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<inbox>(url, httpOptions);

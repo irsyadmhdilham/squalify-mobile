@@ -3,7 +3,7 @@
     <name>Squalify</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content src="index.html" />
+    <content original-src="index.html" src="http://192.168.1.7:8100" />
     <access origin="*" />
     <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
         <string>Need camera access to take pictures</string>
@@ -120,6 +120,7 @@
     <plugin name="cordova-plugin-camera" spec="4.0.3" />
     <plugin name="cordova-plugin-file-transfer" spec="1.7.1" />
     <plugin name="cordova-plugin-android-permissions" spec="1.0.0" />
+    <allow-navigation href="http://192.168.1.7:8100" sessionid="54a23aa4" />
     <engine name="ios" spec="4.5.5" />
     <engine name="android" spec="7.1.4" />
     <engine name="browser" spec="5.0.4" />

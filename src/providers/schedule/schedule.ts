@@ -24,7 +24,7 @@ export class ScheduleProvider extends ApiUrlModules {
   }
 
   getSchedules(): Observable<schedule[]> {
-    const url = this.profileUrl('schedule?fields=pk,title,date,location');
+    const url = this.profileUrl('schedule/?fields=pk,title,date,location');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<schedule[]>(url, httpOptions);
@@ -33,7 +33,7 @@ export class ScheduleProvider extends ApiUrlModules {
   }
 
   getScheduleDetail(scheduleId: number): Observable<schedule> {
-    const url = this.profileUrl(`schedule/${scheduleId}`);
+    const url = this.profileUrl(`schedule/${scheduleId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<schedule>(url, httpOptions);
@@ -42,7 +42,7 @@ export class ScheduleProvider extends ApiUrlModules {
   }
 
   removeSchedule(scheduleId: number): Observable<null> {
-    const url = this.profileUrl(`schedule/${scheduleId}`);
+    const url = this.profileUrl(`schedule/${scheduleId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.delete<null>(url, httpOptions);

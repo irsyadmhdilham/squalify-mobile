@@ -15,7 +15,7 @@ export class NotificationProvider extends ApiUrlModules {
   }
 
   getNotifications(): Observable<notification[]> {
-    const url = this.profileUrl('notification');
+    const url = this.profileUrl('notification/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<notification[]>(url, httpOptions).pipe(
@@ -32,7 +32,7 @@ export class NotificationProvider extends ApiUrlModules {
   }
 
   getNotifsReadTotal(): Observable<number> {
-    const url = this.profileUrl('notification/seen');
+    const url = this.profileUrl('notification/seen/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<number>(url, httpOptions);

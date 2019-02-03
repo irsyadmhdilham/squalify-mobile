@@ -41,7 +41,7 @@ export class AgencyProvider extends ApiUrlModules {
   }
 
   getPosts(): Observable<post[]> {
-    const url = this.agencyUrl('post');
+    const url = this.agencyUrl('post/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<post[]>(url, httpOptions);
@@ -50,7 +50,7 @@ export class AgencyProvider extends ApiUrlModules {
   }
 
   getAgencyMembers(): Observable<member[]> {
-    const url = this.agencyUrl('members');
+    const url = this.agencyUrl('members/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<member[]>(url, httpOptions);

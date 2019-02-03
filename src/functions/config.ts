@@ -80,12 +80,8 @@ export class Ids {
   httpOptions(): Observable<{headers: HttpHeaders}> {
     const token = this.storage.get('apiToken');
     return Observable.fromPromise<token>(token).pipe(switchMap(token => {
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`
-        })
-      };
+      const headers = new HttpHeaders().set('Authorization', `Token ${token}`);
+      const httpOptions = { headers };
       return Observable.of(httpOptions);
     }));
   }
