@@ -11,3 +11,9 @@ export interface contact {
   schedules?: schedule[];
   referrerId?: number;
 };
+
+export interface logs {
+  date: Date;
+  name: string;
+  answered: boolean;
+};

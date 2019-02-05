@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ModalController } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 
@@ -16,6 +16,8 @@ import { PointProvider } from "../../providers/point/point";
 
 import { point } from "../../models/point";
 import { profile } from "../../models/profile";
+
+// import { CallLogsComponent } from "../../components/contact/call-logs/call-logs";
 
 @Component({
   selector: 'page-dashboard',
@@ -34,7 +36,8 @@ export class DashboardPage {
     public navParams: NavParams,
     private pointProvider: PointProvider,
     private alertCtrl: AlertController,
-    private store: Store<profile>
+    private store: Store<profile>,
+    // private modalCtrl: ModalController
   ) { }
 
   navToNotifications() {
@@ -69,6 +72,8 @@ export class DashboardPage {
 
   ionViewDidLoad() {
     this.fetchTodayPoint();
+    // const modal = this.modalCtrl.create(CallLogsComponent);
+    // modal.present();
   }
 
   fetchTodayPoint() {

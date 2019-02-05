@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" ion-button clear icon-only color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Call logs</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let log of callLogs">
+      <ion-label>
+        <h6>{{log.name}}</h6>
+        <p>{{date(log.date)}}</p>
+      </ion-label>
+      <ion-toggle [(ngModel)]="log.answered"></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -24,12 +24,10 @@ export class Ids {
   fcmId(): Observable<number> {
     const fcmIdPromise = new Promise<number>(resolve => {
       this.storage.get('fcmId').then(fcmId => {
-        console.log('storage fcm id =', fcmId);
         if (!fcmId) {
           resolve(null);
         } else {
           const bytes = AES.decrypt(fcmId, 'secret fcm id');
-          console.log('storage fcm id after =', bytes.toString(enc.Utf8));
           resolve(parseInt(bytes.toString(enc.Utf8)));
         }
       });
@@ -124,6 +122,7 @@ export class ApiUrlModules extends Ids {
   wsBaseUrl(namespace: string) {
     if (isDevMode()) {
       return `${this.devIpAddress}:8040/${namespace}`;
+      // return `https://ws.squalify.com/${namespace}`;
     }
     return `https://ws.squalify.com/${namespace}`;
   }
@@ -131,6 +130,7 @@ export class ApiUrlModules extends Ids {
   apiBaseUrl() {
     if (isDevMode()) {
       return `${this.devIpAddress}:8030/v1`;
+      // return 'https://api.squalify.com/v1';
     }
     return 'https://api.squalify.com/v1';
   }
