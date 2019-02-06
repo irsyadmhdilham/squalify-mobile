@@ -6,7 +6,7 @@ import {
   ActionSheetController,
   AlertController,
   LoadingController,
-  ToastController
+  Platform
 } from 'ionic-angular';
 import { CallNumber } from "@ionic-native/call-number";
 
@@ -14,10 +14,9 @@ import { ContactDetailPage } from "./contact-detail/contact-detail";
 
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+import { CallLogsComponent } from "../../../components/contact/call-logs/call-logs";
 
 import { ContactProvider } from "../../../providers/contact/contact";
-import { PointProvider } from "../../../providers/point/point";
-import { UpdatePoint } from "../../../providers/point/update-point";
 import { contact } from "../../../models/contact";
 import { ContactStatus } from "../../../functions/colors";
 
@@ -40,8 +39,7 @@ export class ContactsPage {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private callNumber: CallNumber,
-    private pointProvider: PointProvider,
-    private toastCtrl: ToastController
+    private platform: Platform
   ) { }
 
   statusColor(status) {
@@ -60,68 +58,43 @@ export class ContactsPage {
     }
   }
 
-  callAnsweredHandler(pointId, callPoint, contact: contact, index: number) {
-    const update = new UpdatePoint(
-      this.pointProvider,
-      pointId,
-      callPoint.point,
-      'Calls/Email/Socmed',
-      callPoint.pk,
-      1
-    );
-    update.add().then(response => {
-      const toast = this.toastCtrl.create({
-        message: `Call point added, total: ${response.point}`,
-        duration: 1500,
-        position: 'top'
-      });
-      toast.present();
-      toast.onDidDismiss(() => {
-        const actionSheet = this.actionSheetCtrl.create({
-          title: 'Get an appointment?',
-          buttons: [
-            { text: 'Yes, I got', handler: () => {
-              const modal = this.modalCtrl.create(AddScheduleComponent, {
-                appointmentSecured: true
-              });
-              modal.present();
-              modal.onDidDismiss(data => {
-                if (data) {
-                  contact.status = 'Appointment secured';
-                  contact.scheduleId = data.schedule.pk;
-                  this.updateContact(contact, index);
-                }
-              });
-            }},
-            { text: "No, I don't get" }
-          ]
+  call(contact: contact, index: number) {
+    const isCordova = this.platform.is('cordova'),
+          isMobile = this.platform.is('mobile');
+    if (isCordova && isMobile) {
+      this.callNumber.callNumber(contact.contact_no, true).then(() => {
+        this.contactProvider.createCallLog(contact.name).subscribe(() => {
+          const actionSheet = this.actionSheetCtrl.create({
+            title: 'Get an appointment?',
+            buttons: [
+              { text: 'Yes, I got', handler: () => {
+                const modal = this.modalCtrl.create(AddScheduleComponent, {
+                  appointmentSecured: true
+                });
+                modal.present();
+                modal.onDidDismiss(data => {
+                  if (data) {
+                    contact.status = 'Appointment secured';
+                    contact.scheduleId = data.schedule.pk;
+                    this.updateContact(contact, index);
+                  }
+                });
+              }},
+              { text: "No, I don't get" }
+            ]
+          });
+          actionSheet.present();
+        }, () => {
+          const alert = this.alertCtrl.create({title: 'Error', subTitle: 'Failed to add call log', buttons: ['Ok']});
+          alert.present();
         });
-        actionSheet.present();
       });
-    });
+    }
   }
 
-  call(contact: contact, index) {
-    this.callNumber.callNumber(contact.contact_no, true).then(() => {
-      this.pointProvider.getContactPoints().subscribe(observe => {
-        const pointId = observe.pk,
-              callPoint = observe.calls;       
-        const actionSheet = this.actionSheetCtrl.create({
-          title: 'Call answered',
-          buttons: [
-            { text: 'Answered', handler: () => this.callAnsweredHandler(pointId, callPoint, contact, index)},
-            { text: 'Not answer' }
-          ]
-        });
-        actionSheet.present();
-      }, () => {
-        const alert = this.alertCtrl.create({
-          title: 'Error has occured',
-          subTitle: 'Please try again later'
-        });
-        alert.present();
-      });
-    });
+  callLogs() {
+    const modal = this.modalCtrl.create(CallLogsComponent);
+    modal.present();
   }
 
   addContact() {

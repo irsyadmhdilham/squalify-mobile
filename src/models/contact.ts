@@ -13,6 +13,7 @@ export interface contact {
 };
 
 export interface logs {
+  pk?: number;
   date: Date;
   name: string;
   answered: boolean;

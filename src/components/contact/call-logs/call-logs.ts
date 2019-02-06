@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { ViewController } from "ionic-angular";
+import { ViewController, Toggle, Col } from "ionic-angular";
 import * as moment from "moment";
 
+import { ContactProvider } from "../../../providers/contact/contact";
 import { logs } from "../../../models/contact";
 
-const callLogs: logs[] = require('./call-logs.json');
+import { Colors } from "../../../functions/colors";
 
 @Component({
   selector: 'call-logs',
@@ -12,9 +13,10 @@ const callLogs: logs[] = require('./call-logs.json');
 })
 export class CallLogsComponent {
 
-  callLogs: logs[] = callLogs;
+  callLogs: logs[];
+  pageStatus: string;
 
-  constructor(private viewCtrl: ViewController) {
+  constructor(private viewCtrl: ViewController, private contactProvider: ContactProvider) {
     moment.updateLocale('en', {
       calendar: {
         lastDay: '[Yesterday], h:mma',
@@ -30,6 +32,29 @@ export class CallLogsComponent {
 
   date(date: string) {
     return moment(date).calendar();
+  }
+
+  update(event: Toggle, id: number) {
+    this.contactProvider.updateCallLog(id, event.value).subscribe();
+  }
+
+  status(answered: boolean) {
+    const color = answered ? Colors.secondary : Colors.danger;
+    return { color };
+  }
+
+  fetch() {
+    this.pageStatus = 'loading';
+    this.contactProvider.getCallLogs().subscribe(callLogs => {
+      this.pageStatus = undefined;
+      this.callLogs = callLogs;
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
+  ionViewDidLoad() {
+    this.fetch();
   }
 
 }
