@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, Toggle, Col } from "ionic-angular";
+import { ViewController, Toggle } from "ionic-angular";
 import * as moment from "moment";
 
 import { ContactProvider } from "../../../providers/contact/contact";

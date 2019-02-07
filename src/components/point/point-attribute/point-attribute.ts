@@ -158,10 +158,45 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     }
   }
 
+  minusAction() {
+    const data = {
+      pk: this.pk,
+      point: this.point,
+      attribute: this.attribute,
+      attr_pk: this.attrPk
+    };
+    const toast = this.toastCtrl.create({
+      message: `${this.attribute} point added`,
+      position: 'top',
+      duration: 2000
+    });
+    const loading = this.loadingCtrl.create({content: 'Please wait...'});
+    loading.present();
+    if (this.pk) {
+      this.pointProvider.updatePoint(this.pk, false, data).subscribe(observe => {
+        loading.dismiss();
+        const attr = observe.attributes.filter(val => val.attribute === this.attribute)[0];
+        this.attrPk = attr.pk;
+        if (!this.dontShowToast) {
+          toast.present();
+        }
+      }, (err: Error) => {
+        loading.dismiss();
+        const alert = this.alertCtrl.create({
+          title: 'Error has occured',
+          subTitle: err.message,
+          buttons: ['Ok']
+        });
+        alert.present();
+      });
+    }
+  }
+
   minus() {
     if (this.point !== 0) {
       this.point -= this.each;
       this.addMinus('minus');
+      this.minusAction();
     }
   }
 

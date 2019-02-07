@@ -63,4 +63,26 @@ export class UpdatePoint {
       }
     }); 
   }
+
+  subtract(): Promise<response> {
+    const data = { pk: this.pk, point: this.point - this.each, attribute: this.attribute, attr_pk: this.attrPk };
+    return new Promise<response>((resolve, reject) => {
+      //if point had created, just update the point
+      if (this.pk && this.point > 0) {
+        this.pointProvider.updatePoint(this.pk, true, data).subscribe(() => {
+          const response = {
+            status: true,
+            point: this.point + this.each
+          }
+          resolve(response);
+        }, () => {
+          const response = {
+            status: false,
+            point: this.point
+          }
+          reject(response);
+        });
+      }
+    }); 
+  }
 }

@@ -13,14 +13,15 @@
   <loading type="form" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve data" [retry]="getDetail.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <div id="timestamp-wrapper">
-      <h1 no-margin ion-text color="primary">{{date | date:'dd MMM' | uppercase}}</h1>
-      <h4 no-margin ion-text color="grey">{{date | date:'hh:mma'}}</h4>
-    </div>
+    <h5 title>{{title}}</h5>
     <ion-list>
       <ion-item no-padding>
-        <p>Title</p>
-        <h4 ion-text color="dark">{{title}}</h4>
+        <p>Date</p>
+        <h4 ion-text color="dark">{{date | date:'dd MMM yyyy'}}</h4>
+      </ion-item>
+      <ion-item no-padding>
+        <p>Time</p>
+        <h4 ion-text color="dark">{{date | date:'hh:mma'}}</h4>
       </ion-item>
       <ion-item no-padding>
         <p>Location</p>
