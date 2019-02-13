@@ -86,8 +86,12 @@ export class InboxPage {
 
   toChatroom(inbox: inbox, composeNew?: member) {
     this.navToChatroom = true;
+    if (composeNew) {
+      this.navCtrl.push(ChatroomPage, { inbox: null, composeNew });
+      return;
+    }
     if (inbox.chat_with) {
-      this.navCtrl.push(ChatroomPage, { inbox, composeNew });
+      this.navCtrl.push(ChatroomPage, { inbox });
     } else {
       this.toGroupChatroom(inbox);
     }
@@ -117,7 +121,12 @@ export class InboxPage {
     modal.present();
     modal.onDidDismiss((profile: member) => {
       if (profile) {
-        const inbox = this.inboxes.find(val => val.chat_with.pk === profile.pk);
+        const inbox = this.inboxes.find(val => {
+          if (val.chat_with) {
+            return val.chat_with.pk === profile.pk;
+          }
+          return false;
+        });
         if (inbox) {
           this.toChatroom(inbox);
         } else {

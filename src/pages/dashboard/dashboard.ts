@@ -67,7 +67,7 @@ export class DashboardPage {
     }
   }
 
-  ionViewDidLoad() {
+  ionViewWillEnter() {
     this.fetchTodayPoint();
   }
 

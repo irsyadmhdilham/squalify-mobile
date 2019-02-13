@@ -6,19 +6,21 @@ import {
   ActionSheetController,
   AlertController,
   LoadingController,
-  Platform
+  Platform,
+  Segment,
+  Toggle
 } from 'ionic-angular';
 import { CallNumber } from "@ionic-native/call-number";
+import * as moment from "moment";
 
 import { ContactDetailPage } from "./contact-detail/contact-detail";
 
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
-import { CallLogsComponent } from "../../../components/contact/call-logs/call-logs";
 
 import { ContactProvider } from "../../../providers/contact/contact";
-import { contact } from "../../../models/contact";
-import { ContactStatus } from "../../../functions/colors";
+import { contact, logs } from "../../../models/contact";
+import { ContactStatus, Colors } from "../../../functions/colors";
 
 @Component({
   selector: 'page-contacts',
@@ -27,8 +29,10 @@ import { ContactStatus } from "../../../functions/colors";
 export class ContactsPage {
 
   contacts: contact[] = [];
+  callLogs: logs[] = [];
   pageStatus: string;
   userId: number;
+  segment = 'contacts';
 
   constructor(
     public navCtrl: NavController,
@@ -40,10 +44,26 @@ export class ContactsPage {
     private loadingCtrl: LoadingController,
     private callNumber: CallNumber,
     private platform: Platform
-  ) { }
+  ) {
+    moment.updateLocale('en', {
+      calendar: {
+        lastDay: '[Yesterday], h:mma',
+        sameDay: '[Today], h:mma',
+        sameElse: 'D MMM YYYY, h:mma'
+      }
+    });
+  }
+
+  changeSegment(event: Segment) {
+    if (event.value === 'contacts' && this.contacts.length === 0) {
+      this.fetch();
+    } else if (event.value === 'call logs' && this.callLogs.length === 0) {
+
+    }
+  }
 
   statusColor(status) {
-    if (status === 'Called') {
+    if (status === 'Call back') {
       return { color: ContactStatus.called, fontWeight: 'bold' };
     } else if (status === 'Appointment secured') {
       return { color: ContactStatus.appointmentSecured, fontWeight: 'bold' };
@@ -51,10 +71,8 @@ export class ContactsPage {
       return { color: ContactStatus.rejected, fontWeight: 'bold' };
     } else if (status === 'None') {
       return { color: ContactStatus.none, fontWeight: 'bold' };
-    } else if (status === 'Client' || status === 'Customer') {
+    } else if (status === 'Client') {
       return { color: ContactStatus.client, fontWeight: 'bold' };
-    } else {
-      return { color: ContactStatus.other, fontWeight: 'bold' };
     }
   }
 
@@ -92,25 +110,30 @@ export class ContactsPage {
     }
   }
 
-  callLogs() {
-    const modal = this.modalCtrl.create(CallLogsComponent);
-    modal.present();
-  }
-
   addContact() {
     const modal = this.modalCtrl.create(AddContactComponent);
     modal.present();
     modal.onDidDismiss(data => {
       if (data) {
         this.pageStatus = undefined;
-        this.contacts.push(data.newContact);
+        this.contacts.unshift(data.newContact);
       }
+    });
+  }
+
+  fetchCallLogs() {
+    this.pageStatus = 'loading';
+    this.contactProvider.getCallLogs().subscribe(callLogs => {
+      this.pageStatus = undefined;
+      this.callLogs = callLogs;
+    }, () => {
+      this.pageStatus = 'error';
     });
   }
 
   fetch() {
     this.pageStatus = 'loading';
-    this.contactProvider.getContacts('pk,name,status,contact_type,contact_no').subscribe(observe => {
+    this.contactProvider.getContacts('pk,name,status,contact_type,contact_no,email').subscribe(observe => {
       this.pageStatus = undefined;
       this.contacts = observe;
     }, () => {
@@ -160,10 +183,9 @@ export class ContactsPage {
   changeStatus(contact: contact, index: number) {
     const actionSheet = this.actionSheetCtrl.create({
       buttons: [
-        { text: 'Called', handler: () => this.changeStatusHandler(contact, index, 'Called') },
+        { text: 'Call back', handler: () => this.changeStatusHandler(contact, index, 'Call back') },
         { text: 'Appointment secured', handler: () => this.changeStatusHandler(contact, index, 'Appointment secured') },
         { text: 'Rejected', handler: () => this.changeStatusHandler(contact, index, 'Rejected') },
-        { text: 'Other', handler: () => this.changeStatusHandler(contact, index, 'Other') },
         { text: 'Client', handler: () => this.changeStatusHandler(contact, index, 'Client') },
         { text: 'Cancel', role: 'cancel', cssClass: 'danger-alert' }
       ]
@@ -187,6 +209,19 @@ export class ContactsPage {
 
   ionViewWillEnter() {
     this.fetch();
+  }
+
+  logDate(date: string) {
+    return moment(date).calendar();
+  }
+
+  updateLog(event: Toggle, id: number) {
+    this.contactProvider.updateCallLog(id, event.value).subscribe();
+  }
+
+  logStatus(answered: boolean) {
+    const color = answered ? Colors.secondary : Colors.danger;
+    return { color };
   }
 
 }

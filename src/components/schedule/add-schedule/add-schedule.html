@@ -12,7 +12,7 @@
 <ion-content padding-vertical>
   <ion-list no-lines class="form-list">
     <ion-item>
-      <ion-label stacked>TITLE</ion-label>
+      <ion-label stacked>Title</ion-label>
       <ion-input
         type="text"
         placeholder="Insert title"
@@ -22,21 +22,21 @@
       ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>Date and time</ion-label>
+      <ion-label>Select date and time</ion-label>
       <ion-datetime required ngModel #date="ngModel" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
     </ion-item>
     <ion-item>
-      <ion-label stacked>LOCATION</ion-label>
+      <ion-label stacked>Location</ion-label>
       <ion-input
         type="text"
-        placeholder="Insert location"
+        placeholder="eg: Starbucks, Sek. 9, Shah Alam"
         ngModel
         #location="ngModel"
         required
       ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label stacked>REMARK (OPTIONAL)</ion-label>
+      <ion-label stacked>Remark (Optional)</ion-label>
       <ion-input
         type="text"
         placeholder="Insert remark"
@@ -45,17 +45,6 @@
       ></ion-input>
     </ion-item>
   </ion-list>
-  <!-- <ion-list>
-    <ion-item-divider>Reminder</ion-item-divider>
-    <ion-item>
-      <ion-label color="grey">Reminds every 3 months</ion-label>
-      <ion-toggle [(ngModel)]="reminderEvery3Month"></ion-toggle>
-    </ion-item>
-    <ion-item (tap)="createCustomReminder()">
-      <p item-start class="custom" color="grey">Custom</p>
-      <p *ngIf="customReminder" item-end class="custom" ion-text color="dark">{{customReminderText()}}</p>
-    </ion-item>
-  </ion-list> -->
   <ion-row justify-content-center>
     <button ion-button clear strong (tap)="addSchedule(title, date, location, remark)">Add schedule</button>
   </ion-row>

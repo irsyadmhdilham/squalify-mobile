@@ -4,11 +4,14 @@
       <img img-title src="../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
   </ion-navbar>
-  <ion-row padding-horizontal padding-bottom>
-    <div header-button [activeButton]="false" (tap)="callLogs()">
-      <p ion-text color="dark" class="header-button-bold" no-margin>Call logs</p>
-    </div>
-  </ion-row>
+  <ion-segment padding [(ngModel)]="segment" (ionChange)="changeSegment($event)">
+    <ion-segment-button value="contacts">
+      Contacts
+    </ion-segment-button>
+    <ion-segment-button value="call logs">
+      Call logs
+    </ion-segment-button>
+  </ion-segment>
 </ion-header>
 
 <ion-content padding [ngSwitch]="pageStatus">
@@ -19,30 +22,41 @@
     <ng-template #contactWithContent>
       <ion-row justify-content-between id="top-container">
         <h5 title>Contacts</h5>
-        <ion-chip (tap)="addContact()" color="primary">
-          <ion-label color="white">Add contact</ion-label>
-        </ion-chip>
+        <button ion-button (tap)="addContact()" no-padding clear>Add contact</button>
       </ion-row>
-      <ion-list>
-        <ion-item no-padding *ngFor="let contact of contacts; index as i">
-          <ion-row justify-content-between>
-            <div class="contact-content">
-              <div (tap)="showDetail(contact, i)" class="contact-background"></div>
-              <h6>{{contact.name}}</h6>
-              <p>{{contact.contact_type}}</p>
-              <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
-            </div>
-            <div>
-              <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
-                <ion-icon no-padding name="call"></ion-icon>
-              </button>
-              <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">
-                <ion-icon no-padding name="more"></ion-icon>
-              </button>
-            </div>
-          </ion-row>
-        </ion-item>
-      </ion-list>
+      <ng-container [ngSwitch]="segment">
+        <ion-list *ngSwitchCase="'contacts'">
+          <ion-item no-padding *ngFor="let contact of contacts; index as i">
+            <ion-row justify-content-between>
+              <div class="contact-content">
+                <div (tap)="showDetail(contact, i)" class="contact-background"></div>
+                <h6>{{contact.name}}</h6>
+                <p>{{contact.contact_type}}</p>
+                <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+              </div>
+              <div>
+                <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
+                  <ion-icon no-padding name="call"></ion-icon>
+                </button>
+                <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">
+                  <ion-icon no-padding name="more"></ion-icon>
+                </button>
+              </div>
+            </ion-row>
+          </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'call logs'">
+          <ion-item *ngFor="let log of callLogs">
+            <ion-label>
+              <h6>{{log.name}}</h6>
+              <p>{{logDate(log.date)}}</p>
+              <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
+            </ion-label>
+            <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
+          </ion-item>
+        </ion-list>
+      </ng-container>
     </ng-template>
     <ng-template #contactWithoutContent>
       <empty-content

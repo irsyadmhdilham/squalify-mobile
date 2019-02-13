@@ -3,12 +3,14 @@ import {
   AlertController,
   LoadingController,
   ModalController,
-  ToastController
+  ToastController,
+  Platform
 } from "ionic-angular";
 import { CallNumber } from "@ionic-native/call-number";
 import { Store } from "@ngrx/store";
 
 import { PointProvider } from "../../../providers/point/point";
+import { ContactProvider } from "../../../providers/contact/contact";
 import { AttributeFeatures } from "./attribute-features";
 import { PointIncrement } from "../../../store/actions/points.action";
 
@@ -43,7 +45,9 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     public modalCtrl: ModalController,
     private toastCtrl: ToastController,
     private callNumber: CallNumber,
-    private store: Store<store>
+    private store: Store<store>,
+    private platform: Platform,
+    private contactProvider: ContactProvider
   ) {
     super(modalCtrl);
   }
@@ -90,10 +94,13 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
       case 'Calls/Email/Socmed':
         this.addCalls().then(data => {
           if (data) {
-            this.callNumber.callNumber(data.contact_no, true).then(() => {
-              addPoint();
-              this.addAction();
-            });
+            const isCordova = this.platform.is('cordova'),
+                  isMobile = this.platform.is('mobile');
+            if (isCordova && isMobile) {
+              this.callNumber.callNumber(data.contact_no, true).then(() => {
+                this.contactProvider.createCallLog(data.name).subscribe();
+              });
+            }
           }
         });
       break;

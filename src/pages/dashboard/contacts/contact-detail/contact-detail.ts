@@ -4,8 +4,10 @@ import {
   NavParams,
   ModalController,
   AlertController,
-  LoadingController
+  LoadingController,
+  Platform
 } from 'ionic-angular';
+import { CallNumber } from "@ionic-native/call-number";
 
 import { EditContactComponent } from "../../../../components/contact/edit-contact/edit-contact";
 import { ScheduleDetailPage } from "../../schedules/schedule-detail/schedule-detail";
@@ -35,7 +37,9 @@ export class ContactDetailPage {
     private modalCtrl: ModalController,
     private contactProvider: ContactProvider,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private platform: Platform,
+    private callNumber: CallNumber
   ) { }
 
   statusColor(status) {
@@ -135,6 +139,16 @@ export class ContactDetailPage {
       scheduleId: id,
       from: 'contact'
     });
+  }
+
+  call() {
+    const isCordova = this.platform.is('cordova'),
+          isMobile = this.platform.is('mobile');
+    if (isCordova && isMobile) {
+      this.callNumber.callNumber(this.contactNo, true).then(() => {
+        this.contactProvider.createCallLog(this.name).subscribe();
+      });
+    }
   }
 
 }

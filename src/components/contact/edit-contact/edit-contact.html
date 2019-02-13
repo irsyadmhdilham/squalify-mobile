@@ -36,6 +36,7 @@
         <ion-option [disabled]="previousContactType === 'Nesting'">Nesting</ion-option>
         <ion-option [disabled]="previousContactType === 'Booth'">Booth</ion-option>
         <ion-option [disabled]="previousContactType === 'Table to table'">Table to table</ion-option>
+        <ion-option [disabled]="previousContactType === 'Social media'">Social media</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -47,12 +48,10 @@
         required
       >
         <ion-option [disabled]="previousStatus === 'None'">None</ion-option>
-        <ion-option [disabled]="previousStatus === 'Called'">Called</ion-option>
+        <ion-option [disabled]="previousStatus === 'Call back'">Call back</ion-option>
         <ion-option [disabled]="previousStatus === 'Appointment secured'">Appointment secured</ion-option>
         <ion-option [disabled]="previousStatus === 'Rejected'">Rejected</ion-option>
-        <ion-option [disabled]="previousStatus === 'Other'">Other</ion-option>
         <ion-option [disabled]="previousStatus === 'Client'">Client</ion-option>
-        <ion-option [disabled]="previousStatus === 'Customer'">Customer</ion-option>
       </ion-select>
     </ion-item>
     <ion-item>
