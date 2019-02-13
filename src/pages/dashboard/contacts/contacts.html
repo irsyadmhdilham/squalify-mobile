@@ -20,43 +20,49 @@
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="contacts.length > 0; then contactWithContent; else contactWithoutContent"></ng-container>
     <ng-template #contactWithContent>
-      <ion-row justify-content-between id="top-container">
-        <h5 title>Contacts</h5>
-        <button ion-button (tap)="addContact()" no-padding clear>Add contact</button>
+      <ion-row [ngStyle]="topContent()" id="top-container">
+        <button *ngIf="segment === 'contacts'" ion-button (tap)="addContact()" no-padding clear class="remove-margin-button">Add contact</button>
+        <button (tap)="filter()" ion-button no-padding clear class="remove-margin-button">Filter</button>
       </ion-row>
-      <ng-container [ngSwitch]="segment">
-        <ion-list *ngSwitchCase="'contacts'">
-          <ion-item no-padding *ngFor="let contact of contacts; index as i">
-            <ion-row justify-content-between>
-              <div class="contact-content">
-                <div (tap)="showDetail(contact, i)" class="contact-background"></div>
-                <h6>{{contact.name}}</h6>
-                <p>{{contact.contact_type}}</p>
-                <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
-              </div>
-              <div>
-                <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
-                  <ion-icon no-padding name="call"></ion-icon>
-                </button>
-                <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">
-                  <ion-icon no-padding name="more"></ion-icon>
-                </button>
-              </div>
-            </ion-row>
-          </ion-item>
-        </ion-list>
-
-        <ion-list *ngSwitchCase="'call logs'">
-          <ion-item *ngFor="let log of callLogs">
-            <ion-label>
-              <h6>{{log.name}}</h6>
-              <p>{{logDate(log.date)}}</p>
-              <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
-            </ion-label>
-            <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
-          </ion-item>
-        </ion-list>
-      </ng-container>
+      <ng-container *ngIf="notFound; then notFoundTemplate; else foundTemplate"></ng-container>
+      <ng-template #foundTemplate>
+        <ng-container [ngSwitch]="segment">
+          <ion-list *ngSwitchCase="'contacts'">
+            <ion-item no-padding *ngFor="let contact of contacts; index as i">
+              <ion-row justify-content-between>
+                <div class="contact-content">
+                  <div (tap)="showDetail(contact, i)" class="contact-background"></div>
+                  <h6>{{contact.name}}</h6>
+                  <p>{{contact.contact_type}}</p>
+                  <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+                </div>
+                <div>
+                  <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
+                    <ion-icon no-padding name="call"></ion-icon>
+                  </button>
+                  <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">
+                    <ion-icon no-padding name="more"></ion-icon>
+                  </button>
+                </div>
+              </ion-row>
+            </ion-item>
+          </ion-list>
+  
+          <ion-list *ngSwitchCase="'call logs'">
+            <ion-item *ngFor="let log of callLogs">
+              <ion-label>
+                <h6>{{log.name}}</h6>
+                <p>{{logDate(log.date)}}</p>
+                <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
+              </ion-label>
+              <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+      </ng-template>
+      <ng-template #notFoundTemplate>
+        <not-found></not-found>
+      </ng-template>
     </ng-template>
     <ng-template #contactWithoutContent>
       <empty-content

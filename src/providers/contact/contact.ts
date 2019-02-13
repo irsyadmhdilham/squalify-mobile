@@ -23,6 +23,24 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
+  contactFilter(contactType: string, contactStatus: string, name: string): Observable<contact[]> {
+    const url = this.profileUrl(`contact/filter/?n=${name}&ct=${contactType}&cs=${contactStatus}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<contact[]>(url, httpOptions);
+      }));
+    }));
+  }
+
+  callLogsFilter(answered: boolean, from: string, until: string, name: string): Observable<logs[]> {
+    const url = this.profileUrl(`contact/call-logs/filter/?a=${answered}&f=${from}&u=${until}&n=${name}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<logs[]>(url, httpOptions);
+      }));
+    }));
+  }
+
   createCallLog(name: string): Observable<logs> {
     const url = this.profileUrl('contact/call-logs/'),
           data: logs = {

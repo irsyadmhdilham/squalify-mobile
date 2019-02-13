@@ -17,10 +17,20 @@ import { ContactDetailPage } from "./contact-detail/contact-detail";
 
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+import { ContactFilterComponent } from "../../../components/contact/contact-filter/contact-filter";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact, logs } from "../../../models/contact";
 import { ContactStatus, Colors } from "../../../functions/colors";
+
+interface filterData {
+  segment: string;
+  contactStatus?: string;
+  contactType?: string;
+  date?: { from: string; until: string; };
+  name: string;
+  answered?: string;
+}
 
 @Component({
   selector: 'page-contacts',
@@ -33,6 +43,8 @@ export class ContactsPage {
   pageStatus: string;
   userId: number;
   segment = 'contacts';
+  filterData: filterData;
+  notFound: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -57,8 +69,8 @@ export class ContactsPage {
   changeSegment(event: Segment) {
     if (event.value === 'contacts' && this.contacts.length === 0) {
       this.fetch();
-    } else if (event.value === 'call logs' && this.callLogs.length === 0) {
-
+    } else if (event.value === 'call logs') {
+      this.fetchCallLogs();
     }
   }
 
@@ -116,6 +128,7 @@ export class ContactsPage {
     modal.onDidDismiss(data => {
       if (data) {
         this.pageStatus = undefined;
+        this.notFound = false;
         this.contacts.unshift(data.newContact);
       }
     });
@@ -222,6 +235,63 @@ export class ContactsPage {
   logStatus(answered: boolean) {
     const color = answered ? Colors.secondary : Colors.danger;
     return { color };
+  }
+
+  topContent() {
+    if (this.segment === 'contacts') {
+      return { justifyContent: 'space-between' };
+    }
+    return { justifyContent: 'flex-end' };
+  }
+
+  filter() {
+    let data: { segment: string; data: filterData; };
+    if (this.segment === 'contacts') {
+      data = { segment:'contacts', data: this.filterData };
+    } else {
+      data = { segment: 'call logs', data: this.filterData };
+    }
+    const modal = this.modalCtrl.create(ContactFilterComponent, data);
+    modal.present();
+    modal.onDidDismiss((data: filterData) => {
+      this.filterData = data;
+      if (data) {
+        const segment = data.segment;
+        if (segment === 'contacts') {
+          this.pageStatus = 'loading';
+          this.contactProvider.contactFilter(data.contactType, data.contactStatus, data.name).subscribe(contacts => {
+            this.pageStatus = undefined;
+            if (contacts.length === 0) {
+              this.notFound = true;
+            } else {
+              this.notFound = false;
+              this.contacts = contacts;
+            }
+          }, () => {
+            this.pageStatus = undefined;
+          });
+        } else {
+          const from = moment(data.date.from, 'YYYY-MM-DD HH:mm:ss').toISOString(),
+                until = moment(data.date.until, 'YYYY-MM-DD HH:mm:ss').toISOString();
+          let answered: boolean;
+          if (data.answered !== undefined) {
+            answered = data.answered === 'answered' ? true : false;
+          }
+          this.pageStatus = 'loading';
+          this.contactProvider.callLogsFilter(answered, from, until, data.name).subscribe(logs => {
+            this.pageStatus = undefined;
+            if (logs.length === 0) {
+              this.notFound = true;
+            } else {
+              this.notFound = false;
+              this.callLogs = logs;
+            }
+          }, () => {
+            this.pageStatus = undefined;
+          });
+        }
+      }
+    });
   }
 
 }

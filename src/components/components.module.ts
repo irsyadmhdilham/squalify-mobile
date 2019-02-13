@@ -4,12 +4,14 @@ import { IonicModule } from "ionic-angular";
 import { loadingComponents } from './loading/loading-components'
 import { FetchErrorComponent } from './fetch-error/fetch-error';
 import { EmptyContentComponent } from './empty-content/empty-content';
+import { NotFoundComponent } from './not-found/not-found';
 
 @NgModule({
 	declarations: [
 		...loadingComponents,
     FetchErrorComponent,
-    EmptyContentComponent
+    EmptyContentComponent,
+    NotFoundComponent
 	],
 	imports: [
 		IonicModule,
@@ -18,7 +20,8 @@ import { EmptyContentComponent } from './empty-content/empty-content';
 	exports: [
 		...loadingComponents,
     FetchErrorComponent,
-    EmptyContentComponent
+    EmptyContentComponent,
+    NotFoundComponent
 	]
 })
 export class ComponentsModule {}

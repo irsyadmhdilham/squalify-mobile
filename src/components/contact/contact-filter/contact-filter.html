@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="dismiss()" color="dark" ion-button icon-only clear>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Filter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row justify-content-end>
+    <button class="remove-margin-button" (tap)="clear()" ion-button clear no-padding>Clear</button>
+  </ion-row>
+  <ng-container *ngIf="segment === 'contacts'; then contactsTemplate; else callLogsTemplate"></ng-container>
+  <ng-template #contactsTemplate>
+    <ion-list>
+      <ion-item no-padding>
+        <ion-label stacked>Name</ion-label>
+        <ion-input [(ngModel)]="name" placeholder="Write name here"></ion-input>
+      </ion-item>
+      <ion-item no-padding>
+        <ion-label>Contact types</ion-label>
+        <ion-select [(ngModel)]="contactType">
+          <ion-option>Referral</ion-option>
+          <ion-option>Face to face</ion-option>
+          <ion-option>Nesting</ion-option>
+          <ion-option>Booth</ion-option>
+          <ion-option>Table to table</ion-option>
+          <ion-option>Social media</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item no-padding>
+        <ion-label>Contact status</ion-label>
+        <ion-select [(ngModel)]="contactStatus">
+          <ion-option>None</ion-option>
+          <ion-option>Call back</ion-option>
+          <ion-option>Appointment secured</ion-option>
+          <ion-option>Rejected</ion-option>
+          <ion-option>Client</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+  <ng-template #callLogsTemplate>
+    <ion-list>
+      <ion-item no-padding>
+        <ion-label stacked>Name</ion-label>
+        <ion-input [(ngModel)]="name" placeholder="Write name here"></ion-input>
+      </ion-item>
+      <ion-item no-padding>
+        <ion-label>Answer status</ion-label>
+        <ion-select [(ngModel)]="answerStatus">
+          <ion-option value="answered">Answered</ion-option>
+          <ion-option value="not answer">Not answer</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item-divider no-padding>Date and time</ion-item-divider>
+      <ion-item no-padding>
+        <ion-label>Select date from</ion-label>
+        <ion-datetime [(ngModel)]="dateFrom" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
+      </ion-item>
+      <ion-item no-padding>
+        <ion-label>Select date until</ion-label>
+        <ion-datetime [(ngModel)]="dateUntil" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
+      </ion-item>
+    </ion-list>
+  </ng-template>
+  <ion-row justify-content-center>
+    <button (tap)="filter()" ion-button strong clear>Filter</button>
+  </ion-row>
+</ion-content>
