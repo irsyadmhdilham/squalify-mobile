@@ -10,6 +10,7 @@ export interface contact {
   scheduleId?: number;
   schedules?: schedule[];
   referrerId?: number;
+  email?: string;
 };
 
 export interface logs {

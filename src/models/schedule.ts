@@ -9,3 +9,10 @@ export interface schedule {
   reminder?: any;
   contact?: contact;
 };
+
+export interface filterData {
+  title: string;
+  location: string;
+  remark: string;
+  date: { from: string; until: string; };
+}

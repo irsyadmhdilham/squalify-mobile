@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button ion-button clear icon-only color="dark" (tap)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Schedule filter</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row justify-content-end>
+    <button ion-button clear no-padding class="remove-margin-button" (tap)="clear()">Clear</button>
+  </ion-row>
+  <ion-list>
+    <ion-item no-padding>
+      <ion-label stacked>Title</ion-label>
+      <ion-input [(ngModel)]="title" type="text" placeholder="Write title here"></ion-input>
+    </ion-item>
+    <ion-item no-padding>
+      <ion-label stacked>Location</ion-label>
+      <ion-input [(ngModel)]="location" type="text" placeholder="Write location here"></ion-input>
+    </ion-item>
+    <ion-item no-padding>
+      <ion-label stacked>Remark</ion-label>
+      <ion-input [(ngModel)]="remark" type="text" placeholder="Write remark here"></ion-input>
+    </ion-item>
+    <ion-item-divider no-padding>Date and time</ion-item-divider>
+    <ion-item no-padding>
+      <ion-label>Select date from</ion-label>
+      <ion-datetime [(ngModel)]="dateFrom" displayFormat="D MMM YYYY, h:mma" max="2021"></ion-datetime>
+    </ion-item>
+    <ion-item no-padding>
+      <ion-label>Select date until</ion-label>
+      <ion-datetime [(ngModel)]="dateUntil" displayFormat="D MMM YYYY, h:mma" max="2021"></ion-datetime>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button ion-button clear strong (tap)="filter()">Filter</button>
+  </ion-row>
+</ion-content>

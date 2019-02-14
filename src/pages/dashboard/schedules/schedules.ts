@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from 'ionic-angular';
+import * as moment from "moment";
 
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
+import { ScheduleFilterComponent } from "../../../components/schedule/schedule-filter/schedule-filter";
 import { ScheduleDetailPage } from "./schedule-detail/schedule-detail";
 import { ScheduleProvider } from "../../../providers/schedule/schedule";
 
-import { schedule } from "../../../models/schedule";
+import { schedule, filterData } from "../../../models/schedule";
 
 @Component({
   selector: 'page-schedules',
@@ -15,6 +17,8 @@ export class SchedulesPage {
 
   schedules: schedule[] = [];
   pageStatus: string;
+  filterData: filterData;
+  notFound: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -55,6 +59,31 @@ export class SchedulesPage {
 
   showDetail(schedule) {
     this.navCtrl.push(ScheduleDetailPage, { scheduleId: schedule.pk });
+  }
+
+  filter() {
+    const modal = this.modalCtrl.create(ScheduleFilterComponent, { data: this.filterData });
+    modal.present();
+    modal.onDidDismiss((data: filterData) => {
+      if (data) {
+        this.filterData = data;
+        this.pageStatus = 'loading';
+        const from = moment(data.date.from, 'YYYY-MM-DD HH:mm:ss').toISOString(),
+              until = moment(data.date.until, 'YYYY-MM-DD HH:mm:ss').toISOString();
+        this.scheduleProvider.filterSchedule(data.title, data.location, data.remark, from, until).subscribe(schedules => {
+          this.pageStatus = undefined;
+          if (schedules.length === 0) {
+            this.notFound = true;
+          } else {
+            this.notFound = false;
+            this.schedules = schedules;
+          }
+        }, () => {
+          this.pageStatus = undefined;
+          this.notFound = false;
+        });
+      }
+    });
   }
 
 }

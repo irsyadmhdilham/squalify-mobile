@@ -34,6 +34,10 @@
         <h5>Remark</h5>
         <p>{{remark === '' || remark === null ? 'No remark' : remark }}</p>
       </ion-item>
+      <ion-item no-padding>
+        <h5>Email</h5>
+        <p>{{email === '' || email === null ? 'No email' : email }}</p>
+      </ion-item>
     </ion-list>
     <ng-container *ngIf="from === 'contact' && schedules.length > 0">
       <h5 no-margin ion-text color="dark">Schedules</h5>

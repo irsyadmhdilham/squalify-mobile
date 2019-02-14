@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { NgModel } from "@angular/forms";
 import {
   ViewController,
   Select,
@@ -28,6 +29,7 @@ export class EditContactComponent {
   name: string;
   previousStatus: string;
   status: string;
+  email: string;
   contactType: string;
   previousContactType: string;
   contactNo: string;
@@ -72,7 +74,7 @@ export class EditContactComponent {
     });
   }
 
-  updateContact(nameNgModel, statusNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel) {
+  updateContact(nameNgModel: NgModel, statusNgModel: NgModel, contactTypeNgModel: NgModel, contactNoNgModel: NgModel, remarkNgModel: NgModel, emailNgModel: NgModel) {
     try {
       if (!nameNgModel.valid) {
         throw 'Please insert name';
@@ -90,13 +92,15 @@ export class EditContactComponent {
             status = statusNgModel.value,
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value,
-            remark = remarkNgModel.value;
+            remark = remarkNgModel.value,
+            email = emailNgModel.value;
       const data: contact = {
         name,
         status,
         contact_type,
         contact_no,
-        remark: remark === '' ? null : remark
+        remark: remark === '' ? null : remark,
+        email: email === '' ? null : email
       };
       const loading = this.loadingCtrl.create({content: 'Please wait...'});
       if (statusNgModel.value === 'Appointment secured' && statusNgModel.dirty && this.point) {
@@ -140,7 +144,8 @@ export class EditContactComponent {
         contact_type: observe.contact_type,
         contact_no: observe.contact_no,
         remark: observe.remark,
-        edited: true
+        edited: true,
+        email: observe.email
       }
       if (type) {
         toast.present();
@@ -178,6 +183,7 @@ export class EditContactComponent {
     this.previousContactType = contact.contact_type;
     this.contactNo = contact.contact_no;
     this.remark = contact.remark;
+    this.email = contact.email;
   }
 
 }

@@ -59,4 +59,13 @@ export class ScheduleProvider extends ApiUrlModules {
     }));
   }
 
+  filterSchedule(title: string, location: string, remark: string, from: string, until: string): Observable<schedule[]> {
+    const url = this.profileUrl(`schedule/filter/?t=${title}&l=${location}&r=${remark}&f=${from}&u=${until}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<schedule[]>(url, httpOptions);
+      }));
+    }));
+  }
+
 }

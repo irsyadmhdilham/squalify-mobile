@@ -12,7 +12,7 @@
 <ion-content padding-vertical>
   <ion-list no-lines class="form-list">
     <ion-item>
-      <ion-label stacked>NAME</ion-label>
+      <ion-label stacked>Name</ion-label>
       <ion-input
         type="text"
         placeholder="Insert contact name"
@@ -40,7 +40,7 @@
       </ion-select>
     </ion-item>
     <ion-item>
-      <ion-label stacked>CONTACT NO</ion-label>
+      <ion-label stacked>Contact no</ion-label>
       <ion-input
         type="text"
         placeholder="Insert contact no"
@@ -50,7 +50,7 @@
       ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label stacked>REMARK (OPTIONAL)</ion-label>
+      <ion-label stacked>Remark (Optional)</ion-label>
       <ion-input
         type="text"
         placeholder="Insert remark"
@@ -58,8 +58,17 @@
         #remark="ngModel"
       ></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label stacked>Email (Optional)</ion-label>
+      <ion-input
+        type="email"
+        placeholder="Insert email"
+        ngModel
+        #email="ngModel"
+      ></ion-input>
+    </ion-item>
   </ion-list>
   <ion-row justify-content-center>
-    <button ion-button clear strong (tap)="addContact(name, contactType, contactNo, remark)">Add contact</button>
+    <button ion-button clear strong (tap)="addContact(name, contactType, contactNo, remark, email)">Add contact</button>
   </ion-row>
 </ion-content>

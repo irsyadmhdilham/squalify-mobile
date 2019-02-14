@@ -25,6 +25,7 @@ export class ContactDetailPage {
   status: string;
   contactType: string;
   contactNo: string;
+  email: string;
   remark: string;
   edited = false;
   pageStatus: string;
@@ -44,7 +45,7 @@ export class ContactDetailPage {
 
   statusColor(status) {
     switch (status) {
-      case 'Called':
+      case 'Call back':
         return 'called';
       case 'Appointment secured':
         return 'appointmentSecured';
@@ -68,6 +69,7 @@ export class ContactDetailPage {
       this.contactType = observe.contact_type;
       this.contactNo = observe.contact_no;
       this.remark = observe.remark;
+      this.email = observe.email;
       if (observe.schedules) {
         this.schedules = observe.schedules.map(val => {
           return {
@@ -99,7 +101,8 @@ export class ContactDetailPage {
         status: this.status,
         contact_type: this.contactType,
         contact_no: this.contactNo,
-        remark: this.remark
+        remark: this.remark,
+        email: this.email
       }
     });
     modal.present();
@@ -110,7 +113,8 @@ export class ContactDetailPage {
         this.contactType = contact.contact_type;
         this.contactNo = contact.contact_no;
         this.remark = contact.remark;
-        this.edited = contact.edited
+        this.edited = contact.edited;
+        this.email = contact.email;
       }
     });
   }

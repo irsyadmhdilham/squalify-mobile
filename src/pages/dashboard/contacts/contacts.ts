@@ -254,8 +254,8 @@ export class ContactsPage {
     const modal = this.modalCtrl.create(ContactFilterComponent, data);
     modal.present();
     modal.onDidDismiss((data: filterData) => {
-      this.filterData = data;
       if (data) {
+        this.filterData = data;
         const segment = data.segment;
         if (segment === 'contacts') {
           this.pageStatus = 'loading';

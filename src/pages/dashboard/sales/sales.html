@@ -28,9 +28,7 @@
       <h5 title no-margin>Sales report</h5>
       <button *ngIf="showSummaryCondition()" (tap)="showSummary()" ion-button clear strong small no-padding no-margin>Show summary</button>
     </section>
-    <ion-chip (tap)="addSales()" *ngIf="segment === 'personal' && personalSales.length !== 0" color="primary">
-      <ion-label color="white">Add sales</ion-label>
-    </ion-chip>
+    <button *ngIf="segment === 'personal' && personalSales.length !== 0" ion-button clear class="remove-margin-button" (tap)="addSales()" no-padding>Add Sales</button>
   </ion-row>
   <ng-container *ngSwitchCase="'personal'">
     <ng-container [ngSwitch]="pageStatus">

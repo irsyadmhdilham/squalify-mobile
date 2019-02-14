@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { NgModel } from "@angular/forms";
 import { NavParams } from "ionic-angular";
 import { take } from "rxjs/operators";
 import {
@@ -52,7 +53,7 @@ export class AddContactComponent {
     }
   }
 
-  addContact(nameNgModel, contactTypeNgModel, contactNoNgModel, remarkNgModel) {
+  addContact(nameNgModel: NgModel, contactTypeNgModel: NgModel, contactNoNgModel: NgModel, remarkNgModel: NgModel, emailNgModel: NgModel) {
     try {
       if (!nameNgModel.valid) {
         throw 'Please insert name';
@@ -66,12 +67,14 @@ export class AddContactComponent {
       const name = nameNgModel.value,
             contact_type = contactTypeNgModel.value,
             contact_no = contactNoNgModel.value,
-            remark = remarkNgModel.value;
+            remark = remarkNgModel.value,
+            email = emailNgModel.value;
       const data: contact = {
         name,
         contact_type,
         contact_no,
-        remark: remark === '' ? null : remark
+        remark: remark === '' ? null : remark,
+        email: email === '' ? null : email
       };
       if (this.point) {
         if (contact_type === 'Referral') {
