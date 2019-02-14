@@ -16,7 +16,6 @@
     <ion-row justify-content-between>
       <div id="top">
         <h5 no-margin>{{name}}</h5>
-        <p ion-text color="grey">{{contactType}}</p>
       </div>
       <button ion-button clear icon-only>
         <ion-icon name="call"></ion-icon>
@@ -26,6 +25,10 @@
       <ion-label>{{status}}</ion-label>
     </ion-chip>
     <ion-list margin-top>
+      <ion-item no-padding>
+        <h5>Contact type</h5>
+        <p>{{contactType}}</p>
+      </ion-item>
       <ion-item no-padding>
         <h5>Contact no</h5>
         <p>{{contactNo}}</p>

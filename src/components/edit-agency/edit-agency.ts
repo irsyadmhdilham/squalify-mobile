@@ -52,7 +52,7 @@ export class EditAgencyComponent {
   }
 
   uploadImage(): Observable<uploadImage> {
-    return (Observable.create((observer: Observer<uploadImage>) => {
+    return (Observable.create(async (observer: Observer<uploadImage>) => {
       const isCordova = this.platform.is('cordova');
       if (isCordova && this.imageToUpload) {
         const fileTransfer: FileTransferObject = this.transfer.create(),
@@ -61,7 +61,9 @@ export class EditAgencyComponent {
           chunkedMode: false,
           mimeType: 'image/jpeg',
           httpMethod: 'PUT',
-          headers: {}
+          headers: {
+            'Authorization': `Token ${await this.agencyProvider.apiToken()}`
+          }
         };
         this.platform.ready().then(async () => {
           const agencyURL = await this.agencyProvider.agencyUrl('agency-image/').toPromise();

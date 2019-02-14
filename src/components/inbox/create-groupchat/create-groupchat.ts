@@ -89,7 +89,9 @@ export class CreateGroupchatComponent {
             title: this.title,
             userId: await this.inboxProvider.userId().toPromise()
           },
-          headers: {}
+          headers: {
+            'Authorization': `Token ${await this.inboxProvider.apiToken()}`
+          }
         };
         this.platform.ready().then(async () => {
           const profileURL = await this.inboxProvider.profileUrl('inbox/create-group-image/').toPromise();

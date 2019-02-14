@@ -75,6 +75,11 @@ export class Ids {
     });
   }
 
+  apiToken(): Promise<string> {
+    const token = this.storage.get('apiToken');
+    return token;
+  }
+
   httpOptions(): Observable<{headers: HttpHeaders}> {
     const token = this.storage.get('apiToken');
     return Observable.fromPromise<token>(token).pipe(switchMap(token => {

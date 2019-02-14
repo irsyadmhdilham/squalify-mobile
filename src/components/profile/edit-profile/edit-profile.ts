@@ -65,7 +65,7 @@ export class EditProfileComponent {
   }
 
   uploadImage(): Observable<uploadImage> {
-    return (Observable.create((observer: Observer<uploadImage>) => {
+    return (Observable.create(async (observer: Observer<uploadImage>) => {
       const isCordova = this.platform.is('cordova');
       if (isCordova && this.imageToUpload) {
         const fileTransfer: FileTransferObject = this.transfer.create(),
@@ -74,7 +74,9 @@ export class EditProfileComponent {
           chunkedMode: false,
           mimeType: 'image/jpeg',
           httpMethod: 'PUT',
-          headers: {}
+          headers: {
+            'Authorization': `Token ${await this.profileProvider.apiToken()}`
+          }
         };
         this.platform.ready().then(async () => {
           const profileURL = await this.profileProvider.profileUrl('profile-image/').toPromise();
