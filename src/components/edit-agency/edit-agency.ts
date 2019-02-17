@@ -4,7 +4,7 @@ import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { Camera, CameraOptions } from "@ionic-native/camera";
 import { FileTransfer, FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer";
 import { Observable, Observer } from "rxjs";
-import { first, switchMap, map } from "rxjs/operators";
+import { first, switchMap, map, catchError } from "rxjs/operators";
 import { AgencyProvider } from "../../providers/agency/agency";
 import { Store } from "@ngrx/store";
 
@@ -129,11 +129,14 @@ export class EditAgencyComponent {
       });
       loading.present();
       this.uploadImage().pipe(
+        catchError(err => {
+          return Observable.throw(err);
+        }),
         switchMap((upload: uploadImage) => {
           return this.agencyProvider.updateAgency({name: this.agencyName}).pipe(map(data => {
             return { agencyName: data.name, agencyImage: upload.image };
           }));
-        })
+        }),
       ).subscribe(observe => {
         loading.dismiss();
         const agencyImage = observe.agencyImage ? observe.agencyImage : this.agencyImage;

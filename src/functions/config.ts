@@ -118,7 +118,7 @@ export class Ids {
 
 export class ApiUrlModules extends Ids {
 
-  devIpAddress = 'http://localhost';
+  devIpAddress = 'http://192.168.1.7';
 
   constructor(public storage: Storage) {
     super(storage);

@@ -13,18 +13,17 @@
   <loading type="form" *ngSwitchCase="'loading'"></loading>
   <fetch-error *ngSwitchCase="'error'" message="Failed to retrieve data" [retry]="getContact.bind(this)"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <ion-row justify-content-between>
-      <div id="top">
-        <h5 no-margin>{{name}}</h5>
-      </div>
-      <button ion-button clear icon-only>
+    <ion-row justify-content-between align-items-center>
+      <h5 no-margin>{{name}}</h5>
+      <button ion-button clear icon-only no-padding>
         <ion-icon name="call"></ion-icon>
       </button>
     </ion-row>
-    <ion-chip [color]="statusColor(status)">
-      <ion-label>{{status}}</ion-label>
-    </ion-chip>
-    <ion-list margin-top>
+    <ion-list>
+      <ion-item no-padding>
+        <h5>Status</h5>
+        <p>{{status}}</p>
+      </ion-item>
       <ion-item no-padding>
         <h5>Contact type</h5>
         <p>{{contactType}}</p>

@@ -18,6 +18,7 @@ import { ContactDetailPage } from "./contact-detail/contact-detail";
 import { AddContactComponent } from "../../../components/contact/add-contact/add-contact";
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
 import { ContactFilterComponent } from "../../../components/contact/contact-filter/contact-filter";
+import { LogRemarkComponent } from "../../../components/contact/log-remark/log-remark";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact, logs } from "../../../models/contact";
@@ -72,6 +73,16 @@ export class ContactsPage {
     } else if (event.value === 'call logs') {
       this.fetchCallLogs();
     }
+  }
+
+  addRemark(logs: logs, index: number) {
+    const modal = this.modalCtrl.create(LogRemarkComponent, { logs, index });
+    modal.present();
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.callLogs[data.index] = data.logs;
+      }
+    });
   }
 
   statusColor(status) {

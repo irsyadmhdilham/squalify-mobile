@@ -10,7 +10,7 @@ import { Camera, CameraOptions } from "@ionic-native/camera";
 import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { FileTransfer, FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer";
 import { Observable, Observer } from "rxjs";
-import { first, switchMap, map } from "rxjs/operators";
+import { first, switchMap, map, catchError } from "rxjs/operators";
 
 import { ProfileProvider } from "../../../providers/profile/profile";
 
@@ -105,6 +105,7 @@ export class EditProfileComponent {
       });
       loading.present();
       this.uploadImage().pipe(
+        catchError(err => Observable.throw(err)),
         switchMap((upload: uploadImage) => {
           return this.profileProvider.updateProfile({name: this.name}).pipe(map(data => {
             return { name: data.name, profileImage: upload.image };

@@ -111,4 +111,13 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
+  callLogRemark(data: logs): Observable<logs> {
+    const url = this.profileUrl('contact/call-logs/remark');
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<logs>(url, data, httpOptions);
+      }));
+    }));
+  }
+
 }
