@@ -5,9 +5,10 @@ import {
   AlertController,
   LoadingController,
   ToastController,
-  NavParams
+  NavParams,
+  Platform
 } from "ionic-angular";
-import { take } from "rxjs/operators";
+import { LocalNotifications } from "@ionic-native/local-notifications";
 import * as moment from "moment";
 
 import { CustomReminderComponent } from "../custom-reminder/custom-reminder";
@@ -27,6 +28,8 @@ export class AddScheduleComponent {
   reminderEvery3Month: boolean;
   appointmentSecured: boolean;
   points: contactPoints;
+  reminder: string;
+  reminderDate: string;
 
   constructor(
     private viewCtrl: ViewController,
@@ -36,7 +39,9 @@ export class AddScheduleComponent {
     private scheduleProvider: ScheduleProvider,
     private toastCtrl: ToastController,
     private pointProvider: PointProvider,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private localNotifications: LocalNotifications,
+    private platform: Platform
   ) { }
 
   dismiss() {
@@ -101,7 +106,13 @@ export class AddScheduleComponent {
         title: title.value,
         date: moment(date.value, 'YYYY-MM-DD HH:mm:ss').toISOString(),
         location: location.value,
-        remark: remark.value === '' ? null : remark.value
+        remark: remark.value === '' ? null : remark.value,
+        reminderDate: (() => {
+          if (this.reminder !== 'Other') {
+            return this.reminder;
+          }
+          return moment(this.reminderDate, 'YYYY-MM-DD HH:mm:ss').toISOString()
+        })()
       };
       if (this.appointmentSecured) {
         this.updatePoint().then(() => {
@@ -121,8 +132,11 @@ export class AddScheduleComponent {
   }
 
   addScheduleAction(data, loading, toast?) {
-    this.scheduleProvider.addSchedule(data).pipe(take(1)).subscribe(observe => {
+    this.scheduleProvider.addSchedule(data).subscribe(observe => {
       loading.dismiss();
+      if (observe.reminder) {
+        this.setNotification(observe.pk, observe.title, observe.date, observe.reminder);
+      }
       if (toast) {
         const toast = this.toastCtrl.create({
           message: `Point added, Total Appointment secured point: ${this.points.app_sec.point + 2}`,
@@ -173,6 +187,22 @@ export class AddScheduleComponent {
     const appSec = this.navParams.get('appointmentSecured');
     if (appSec) {
       this.appointmentSecured = appSec;
+    }
+  }
+
+  setNotification(id: number, title: string, date: string, triggerAt: string) {
+    const isMobile = this.platform.is('mobile'),
+          isCordova = this.platform.is('cordova');
+    if (isMobile && isCordova) {
+      const text = moment(date).format('ddd, D MMM YYYY, h:mma');
+      this.platform.ready().then(() => {
+        this.localNotifications.schedule({
+          id,
+          title: `Reminder: ${title}`,
+          text,
+          trigger: { at: moment(triggerAt).toDate() }
+        });
+      });
     }
   }
 

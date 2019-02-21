@@ -8,7 +8,8 @@ import {
   LoadingController,
   Platform,
   Segment,
-  Toggle
+  Toggle,
+  ToastController
 } from 'ionic-angular';
 import { CallNumber } from "@ionic-native/call-number";
 import * as moment from "moment";
@@ -56,7 +57,8 @@ export class ContactsPage {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private callNumber: CallNumber,
-    private platform: Platform
+    private platform: Platform,
+    private toastCtrl: ToastController
   ) {
     moment.updateLocale('en', {
       calendar: {
@@ -240,7 +242,16 @@ export class ContactsPage {
   }
 
   updateLog(event: Toggle, id: number) {
-    this.contactProvider.updateCallLog(id, event.value).subscribe();
+    this.contactProvider.updateCallLog(id, event.value).subscribe(() => {
+      if (event.value) {
+        const toast = this.toastCtrl.create({
+          message: `Call point added`,
+          position: 'top',
+          duration: 1500
+        });
+        toast.present();
+      }
+    });
   }
 
   logStatus(answered: boolean) {

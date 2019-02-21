@@ -8,6 +8,7 @@ import { Camera } from "@ionic-native/camera";
 import { FileTransfer } from "@ionic-native/file-transfer";
 import { Badge } from "@ionic-native/badge";
 import { AndroidPermissions } from "@ionic-native/android-permissions";
+import { LocalNotifications } from "@ionic-native/local-notifications";
 
 export const NativeModules = [
   StatusBar,
@@ -19,5 +20,6 @@ export const NativeModules = [
   Camera,
   FileTransfer,
   Badge,
-  AndroidPermissions
+  AndroidPermissions,
+  LocalNotifications
 ];

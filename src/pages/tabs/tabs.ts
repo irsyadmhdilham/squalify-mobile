@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Events, Platform, NavController, ModalController } from "ionic-angular";
+import * as moment from "moment";
 import { Storage } from "@ionic/storage";
 import { Network } from "@ionic-native/network";
 import { Firebase } from "@ionic-native/firebase";
 import { StatusBar } from "@ionic-native/status-bar";
 import { SplashScreen } from "@ionic-native/splash-screen";
+import { LocalNotifications, ILocalNotification } from "@ionic-native/local-notifications";
 
 import { Store, select } from "@ngrx/store";
 import * as socketio from "socket.io-client";
@@ -18,6 +20,8 @@ import { ApplicationsPage } from "../applications/applications";
 import { InboxPage } from "../inbox/inbox";
 import { ChatroomPage } from "../inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../inbox/group-chatroom/group-chatroom";
+import { ScheduleDetailPage } from "../dashboard/schedules/schedule-detail/schedule-detail";
+
 import { NoConnectionComponent } from "../../components/no-connection/no-connection";
 
 import { ApiUrlModules } from "../../functions/config";
@@ -25,6 +29,7 @@ import { InboxProvider, newMessage, newGroupMessage } from "../../providers/inbo
 import { PostProvider, commentPost, likePost, unlikePost } from "../../providers/post/post";
 import { PointProvider } from "../../providers/point/point";
 import { SalesProvider } from "../../providers/sales/sales";
+import { ScheduleProvider } from "../../providers/schedule/schedule";
 
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
@@ -65,7 +70,9 @@ export class TabsPage extends ApiUrlModules {
     private statusBar: StatusBar,
     private splashScreen: SplashScreen,
     private network: Network,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private localNotifications: LocalNotifications,
+    private scheduleProvider: ScheduleProvider
   ) {
     super(storage);
   }
@@ -74,6 +81,7 @@ export class TabsPage extends ApiUrlModules {
     this.signedIn = value;
     this.statusBarConfig();
     this.grantNotificationPermission();
+    this.getScheduleReminders();
     const profileInit$ = new Subject<boolean>(),
           profile$: Observable<profile> = this.store.pipe(select('profile'));
     this.listenWsEvents(profile$, profileInit$);
@@ -81,6 +89,7 @@ export class TabsPage extends ApiUrlModules {
 
   ionViewWillEnter() {
     this.onOpenNotification();
+    this.onLocalNotifications();
   }
 
   ionViewDidLoad() {
@@ -124,6 +133,41 @@ export class TabsPage extends ApiUrlModules {
         } else {
           this.statusBar.styleDefault();
         }
+      });
+    }
+  }
+
+  onLocalNotifications() {
+    const isMobile = this.platform.is('mobile'),
+          isCordova = this.platform.is('cordova');
+    if (isMobile && isCordova) {
+      this.platform.ready().then(() => {
+        this.localNotifications.on('click').pipe(first()).subscribe((response: ILocalNotification) => {
+          this.navCtrl.push(ScheduleDetailPage, { scheduleId: response.id });
+        });
+      });
+    }
+  }
+
+  getScheduleReminders() {
+    const isMobile = this.platform.is('mobile'),
+          isCordova = this.platform.is('cordova');
+    if (isMobile && isCordova) {
+      this.platform.ready().then(() => {
+        this.scheduleProvider.getReminders().subscribe(schedules => {
+          if (schedules.length > 0) {
+            const setSchedules = schedules.map(val => {
+              const text = moment(val.date).format('ddd, D MMM YYYY, h:mma');
+              return {
+                id: val.pk,
+                title: `Reminder: ${val.title}`,
+                text,
+                trigger: { at: moment(val.reminder).toDate() }
+              }
+            });
+            this.localNotifications.schedule(setSchedules);
+          }
+        });
       });
     }
   }

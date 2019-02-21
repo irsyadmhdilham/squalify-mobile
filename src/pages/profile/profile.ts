@@ -5,11 +5,13 @@ import {
   ModalController,
   AlertController,
   LoadingController,
-  Events
+  Events,
+  Platform
 } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { Store, select } from "@ngrx/store";
 import { take } from "rxjs/operators";
+import { LocalNotifications } from "@ionic-native/local-notifications";
 
 import { ChangePasswordComponent } from "../../components/profile/change-password/change-password";
 import { ChangeEmailComponent } from "../../components/profile/change-email/change-email";
@@ -52,9 +54,17 @@ export class ProfilePage extends Ids {
     public storage: Storage,
     private loadingCtrl: LoadingController,
     private events: Events,
-    private store: Store<store>
+    private store: Store<store>,
+    private platform: Platform,
+    private localNotifications: LocalNotifications
   ) {
     super(storage);
+  }
+
+  clearLocalNotif() {
+    this.platform.ready().then(() => {
+      this.localNotifications.clearAll();
+    });
   }
 
   navToNotifications() {
@@ -100,6 +110,7 @@ export class ProfilePage extends Ids {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
     this.authProvider.signOut().subscribe(() => {
+      this.clearLocalNotif();
       this.removeAllCredentials().then(value => {
         if (value) {
           loading.dismiss();
