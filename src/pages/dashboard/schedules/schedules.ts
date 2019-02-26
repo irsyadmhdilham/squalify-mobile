@@ -42,12 +42,7 @@ export class SchedulesPage {
     this.pageStatus = 'loading';
     this.scheduleProvider.getSchedules().subscribe(observe => {
       this.pageStatus = undefined;
-      this.schedules = observe.map(val => {
-        return {
-          ...val,
-          date: new Date(val.date)
-        }
-      });
+      this.schedules = observe;
     }, () => {
       this.pageStatus = 'error';
     });

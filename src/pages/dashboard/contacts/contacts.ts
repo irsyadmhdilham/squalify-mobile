@@ -106,7 +106,7 @@ export class ContactsPage {
           isMobile = this.platform.is('mobile');
     if (isCordova && isMobile) {
       this.callNumber.callNumber(contact.contact_no, true).then(() => {
-        this.contactProvider.createCallLog(contact.name).subscribe(() => {
+        this.contactProvider.createCallLog(contact.pk).subscribe(() => {
           const actionSheet = this.actionSheetCtrl.create({
             title: 'Get an appointment?',
             buttons: [

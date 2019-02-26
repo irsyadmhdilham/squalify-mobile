@@ -6,7 +6,7 @@ export interface schedule {
   title: string;
   remark?: string;
   location: string;
-  reminder?: string;
+  reminder?: any;
   contact?: contact;
 };
 

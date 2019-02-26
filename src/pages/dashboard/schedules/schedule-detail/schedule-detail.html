@@ -41,9 +41,13 @@
           </ion-row>
         </section>
       </ion-item>
-      <ion-item *ngIf="remark" no-lines no-padding>
+      <ion-item no-lines no-padding>
         <h5>Remark</h5>
-        <p>{{remark}}</p>
+        <p>{{remark ? remark : 'No remark'}}</p>
+      </ion-item>
+      <ion-item no-lines no-padding>
+        <h5>Reminder</h5>
+        <p>{{reminder ? reminder : 'None'}}</p>
       </ion-item>
     </ion-list>
     <button (tap)="remove()" no-padding ion-button clear color="danger">Remove schedule</button>

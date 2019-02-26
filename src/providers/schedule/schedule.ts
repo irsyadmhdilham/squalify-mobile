@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from "@ionic/storage";
 import { Observable } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { switchMap, map } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
 import { schedule } from "../../models/schedule";
@@ -18,7 +18,11 @@ export class ScheduleProvider extends ApiUrlModules {
     const url = this.profileUrl('schedule/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.post<schedule>(url, data, httpOptions)
+        return this.http.post<schedule>(url, data, httpOptions).pipe(map(response => ({
+          ...response,
+          date: new Date(response.date),
+          reminder: response.reminder ? new Date(response.reminder) : response.reminder
+        })))
       }));
     }));
   }
@@ -27,7 +31,13 @@ export class ScheduleProvider extends ApiUrlModules {
     const url = this.profileUrl('schedule/?fields=pk,title,date,location');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<schedule[]>(url, httpOptions);
+        return this.http.get<schedule[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            date: new Date(value.date),
+            reminder: value.reminder ? new Date(value.reminder) : value.reminder
+          }));
+        }));
       }));
     }));
   }
@@ -36,7 +46,11 @@ export class ScheduleProvider extends ApiUrlModules {
     const url = this.profileUrl(`schedule/${scheduleId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<schedule>(url, httpOptions);
+        return this.http.get<schedule>(url, httpOptions).pipe(map(response => ({
+          ...response,
+          date: new Date(response.date),
+          reminder: response.reminder ? new Date(response.reminder) : response.reminder
+        })));
       }));
     }));
   }
@@ -54,7 +68,11 @@ export class ScheduleProvider extends ApiUrlModules {
     const url = this.profileUrl(`schedule/${scheduleId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.put<schedule>(url, data, httpOptions);
+        return this.http.put<schedule>(url, data, httpOptions).pipe(map(response => ({
+          ...response,
+          date: new Date(response.date),
+          reminder: response.reminder ? new Date(response.reminder) : response.reminder
+        })));
       }));
     }));
   }

@@ -41,16 +41,11 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
-  createCallLog(name: string): Observable<logs> {
-    const url = this.profileUrl('contact/call-logs/'),
-          data: logs = {
-            date: new Date(),
-            name,
-            answered: false
-          };
+  createCallLog(contactId: number): Observable<logs> {
+    const url = this.profileUrl('contact/call-logs/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.post<logs>(url, data, httpOptions);
+        return this.http.post<logs>(url, { contactId }, httpOptions);
       }));
     }));
   }
@@ -111,11 +106,11 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
-  callLogRemark(data: logs): Observable<logs> {
-    const url = this.profileUrl('contact/call-logs/remark');
+  callLogRemark(logId: number, remark: string): Observable<logs> {
+    const url = this.profileUrl(`contact/call-logs/${logId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.put<logs>(url, data, httpOptions);
+        return this.http.put<logs>(url, { remark }, httpOptions);
       }));
     }));
   }

@@ -98,7 +98,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
                   isMobile = this.platform.is('mobile');
             if (isCordova && isMobile) {
               this.callNumber.callNumber(data.contact_no, true).then(() => {
-                this.contactProvider.createCallLog(data.name).subscribe();
+                this.contactProvider.createCallLog(data.pk).subscribe();
               });
             }
           }

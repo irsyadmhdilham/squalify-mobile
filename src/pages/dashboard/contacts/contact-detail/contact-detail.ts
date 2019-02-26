@@ -150,7 +150,7 @@ export class ContactDetailPage {
           isMobile = this.platform.is('mobile');
     if (isCordova && isMobile) {
       this.callNumber.callNumber(this.contactNo, true).then(() => {
-        this.contactProvider.createCallLog(this.name).subscribe();
+        this.contactProvider.createCallLog(this.pk).subscribe();
       });
     }
   }

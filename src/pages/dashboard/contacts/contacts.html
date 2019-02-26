@@ -47,21 +47,33 @@
               </ion-row>
             </ion-item>
           </ion-list>
-  
-          <ion-list *ngSwitchCase="'call logs'">
-            <ion-item *ngFor="let log of callLogs; index as i">
-              <ion-label>
-                <h6>{{log.name}}</h6>
-                <p>{{logDate(log.date)}}</p>
-                <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
-                <p *ngIf="log.remark">Remark: {{log.remark}}</p>
-                <button (tap)="addRemark(log, i)" no-padding class="remove-margin-button" ion-button clear small>
-                  {{!log.remark ? 'Add' : 'Edit'}} remark
-                </button>
-              </ion-label>
-              <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
-            </ion-item>
-          </ion-list>
+          
+          <ng-container *ngSwitchCase="'call logs'">
+            <ng-container *ngIf="callLogs.length > 0; then callLogsBlock; else noCallLogsBlock"></ng-container>
+            <ng-template #callLogsBlock>
+              <ion-list>
+                <ion-item *ngFor="let log of callLogs; index as i">
+                  <ion-label>
+                    <h6>{{log.contact.name}}</h6>
+                    <p>{{logDate(log.date)}}</p>
+                    <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
+                    <p *ngIf="log.remark">Remark: {{log.remark}}</p>
+                    <button (tap)="addRemark(log, i)" no-padding class="remove-margin-button" ion-button clear small>
+                      {{!log.remark ? 'Add' : 'Edit'}} remark
+                    </button>
+                  </ion-label>
+                  <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
+                </ion-item>
+              </ion-list>
+            </ng-template>
+            <ng-template #noCallLogsBlock>
+              <section id="call-logs-empty-container">
+                <img src="../../../assets/imgs/empty.png" alt="empty">
+                <h5>Oopss...</h5>
+                <p>No call log</p>
+              </section>
+            </ng-template>
+          </ng-container>
         </ng-container>
       </ng-template>
       <ng-template #notFoundTemplate>

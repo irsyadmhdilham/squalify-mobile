@@ -6,6 +6,7 @@ import {
   AlertController,
   ModalController
 } from 'ionic-angular';
+import * as moment from "moment";
 
 import { schedule } from "../../../../models/schedule";
 import { contact } from "../../../../models/contact";
@@ -20,11 +21,12 @@ import { ContactDetailPage } from "../../contacts/contact-detail/contact-detail"
 export class ScheduleDetailPage {
 
   pk: number;
-  date: Date;
+  date: Date | string;
   title: string;
   location: string;
   remark?: string;
-  reminder: any;
+  reminder: string;
+  reminderDate: Date;
   pageStatus: string;
   contact: contact;
   from = 'schedule';
@@ -36,7 +38,26 @@ export class ScheduleDetailPage {
     private alertCtrl: AlertController,
     private scheduleProvider: ScheduleProvider,
     private modalCtrl: ModalController
-  ) { }
+  ) {
+    moment.updateLocale('en', {
+      relativeTime: {
+        future: "%s before",
+        past: "%s ago",
+        s  : 'a few seconds',
+        ss : '%d seconds',
+        m:  "a minute",
+        mm: "%d minutes",
+        h:  "An hour",
+        hh: "%d hours",
+        d:  "A day",
+        dd: "%d days",
+        M:  "a month",
+        MM: "%d months",
+        y:  "a year",
+        yy: "%d years"
+      }
+    });
+  }
 
   editSchedule() {
     const modal = this.modalCtrl.create(EditScheduleComponent, {
@@ -45,7 +66,9 @@ export class ScheduleDetailPage {
         title: this.title,
         location: this.location,
         remark: this.remark,
-        date: this.date
+        date: this.date,
+        reminder: this.reminder,
+        reminderDate: this.reminderDate
       }
     });
     modal.present();
@@ -55,6 +78,32 @@ export class ScheduleDetailPage {
         this.title = schedule.title;
         this.location = schedule.location;
         this.remark = schedule.remark;
+        if (schedule.reminder) {
+          this.reminderDate = schedule.reminder;
+          const difference = moment(schedule.reminder).to(this.date);
+          switch(difference) {
+            case '30 minutes before':
+              this.reminder = difference;
+            case 'An hour before':
+              this.reminder = difference;
+            case '2 hours before':
+              this.reminder = difference;
+            case 'A day before':
+              this.reminder = difference;
+            case '2 days before':
+              this.reminder = difference;
+            break;
+            case '7 days before':
+              this.reminder = 'A week before';
+            break;
+            default:
+              this.reminder = moment(schedule.reminder).format('ddd, DD MMM YYYY, hh:mma');
+            break;
+          }
+        } else {
+          this.reminder = null;
+          this.reminderDate = null;
+        }
       }
     });
   }
@@ -63,11 +112,34 @@ export class ScheduleDetailPage {
     this.pageStatus = 'loading';
     this.scheduleProvider.getScheduleDetail(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
-      this.date = new Date(observe.date);
+      this.date = observe.date;
       this.title = observe.title;
       this.location = observe.location;
       this.remark = observe.remark;
-      this.reminder = observe.reminder;
+      this.reminderDate = observe.reminder;
+      this.reminder = (() => {
+        const reminder = observe.reminder;
+        if (reminder) {
+          const difference = moment(reminder).to(this.date);
+          switch(difference) {
+            case '30 minutes before':
+              return difference;
+            case 'An hour before':
+              return difference;
+            case '2 hours before':
+              return difference;
+            case 'A day before':
+              return difference;
+            case '2 days before':
+              return difference;
+            case '7 days before':
+              return 'A week before';
+            default:
+              return moment(reminder).format('ddd, DD MMM YYYY, hh:mma');
+          }
+        }
+        return null;
+      })();
       if (observe.contact) {
         this.contact = observe.contact;
       }

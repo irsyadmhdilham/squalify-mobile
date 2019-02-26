@@ -44,6 +44,25 @@
         #remarkNgModel="ngModel"
       ></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label>Reminder</ion-label>
+      <ion-select [(ngModel)]="reminderSelect">
+        <ion-option>30 minutes before</ion-option>
+        <ion-option>An hour before</ion-option>
+        <ion-option>2 hours before</ion-option>
+        <ion-option>A day before</ion-option>
+        <ion-option>2 days before</ion-option>
+        <ion-option>A week before</ion-option>
+        <ion-option>Other</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="reminderSelect === 'Other'">
+      <ion-label>Pick reminder date</ion-label>
+      <ion-datetime required [(ngModel)]="reminderDate" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <button no-padding ion-button clear (tap)="clearReminder()">Clear reminder</button>
+    </ion-item>
   </ion-list>
   <ion-row justify-content-center>
     <button ion-button clear strong (tap)="updateSchedule(titleNgModel, locationNgModel, remarkNgModel, dateNgModel)">Update schedule</button>

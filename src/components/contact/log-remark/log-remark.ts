@@ -45,7 +45,7 @@ export class LogRemarkComponent {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
     this.logs.remark = this.remark;
-    this.contactProvider.callLogRemark(this.logs).subscribe(logs => {
+    this.contactProvider.callLogRemark(this.logs.pk, this.remark).subscribe(logs => {
       loading.dismiss();
       this.viewCtrl.dismiss({
         index: this.index,

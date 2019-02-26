@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import {
   ViewController,
-  ModalController,
   AlertController,
   LoadingController,
   ToastController,
@@ -11,7 +10,6 @@ import {
 import { LocalNotifications } from "@ionic-native/local-notifications";
 import * as moment from "moment";
 
-import { CustomReminderComponent } from "../custom-reminder/custom-reminder";
 import { ScheduleProvider } from "../../../providers/schedule/schedule";
 import { PointProvider } from "../../../providers/point/point";
 import { UpdatePoint } from "../../../providers/point/update-point";
@@ -24,8 +22,6 @@ import { contactPoints } from "../../../models/point";
 })
 export class AddScheduleComponent {
 
-  customReminder: { period: string; datetime: string; interval: string; };
-  reminderEvery3Month: boolean;
   appointmentSecured: boolean;
   points: contactPoints;
   reminder: string;
@@ -33,7 +29,6 @@ export class AddScheduleComponent {
 
   constructor(
     private viewCtrl: ViewController,
-    private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private scheduleProvider: ScheduleProvider,
@@ -46,47 +41,6 @@ export class AddScheduleComponent {
 
   dismiss() {
     this.viewCtrl.dismiss();
-  }
-
-  customReminderText() {
-    if (this.customReminder) {
-      const period = this.customReminder.period,
-            datetime = this.customReminder.datetime,
-            interval = this.customReminder.interval;
-      const th = (date) => {
-        date = parseInt(date);
-        if (date === 1) {
-          return 'st';
-        } else if (date === 2) {
-          return 'nd';
-        } else if (date === 3) {
-          return 'rd';
-        } else {
-          return 'th';
-        }
-      };
-      if (period === 'Year') {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const date = datetime.match(/^\d{1,2}/).toString(),
-              month = parseInt(datetime.match(/\/\d{1,2}\//g).toString().replace(/\//g, ''));
-        return `Every ${interval} ${period.toLowerCase()}, ${date}${th(datetime)} ${months[month]}`;
-      } else if (period === 'Month') {
-        return `Every ${interval} ${period.toLowerCase()}, on ${datetime}${th(datetime)}`
-      } else if (period === 'Week') {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        return `Every ${days[parseInt(datetime)]} of the week`;
-      } else {
-        return `Every time: ${datetime}`;
-      }
-    }
-  }
-
-  createCustomReminder() {
-    const modal = this.modalCtrl.create(CustomReminderComponent);
-    modal.present();
-    modal.onDidDismiss(reminder => {
-      this.customReminder = reminder
-    });
   }
 
   async addSchedule(title, date, location, remark) {
@@ -104,14 +58,19 @@ export class AddScheduleComponent {
       loading.present();
       const data = {
         title: title.value,
-        date: moment(date.value, 'YYYY-MM-DD HH:mm:ss').toISOString(),
+        date: moment(date.value, 'YYYY-MM-DD HH:mm:ss').toDate(),
         location: location.value,
         remark: remark.value === '' ? null : remark.value,
         reminderDate: (() => {
           if (this.reminder !== 'Other') {
             return this.reminder;
           }
-          return moment(this.reminderDate, 'YYYY-MM-DD HH:mm:ss').toISOString()
+          if (!this.reminderDate || this.reminderDate === '') {
+            const alert = this.alertCtrl.create({title: 'Required field', subTitle: 'Please pick date', buttons: ['Ok']});
+            alert.present();
+            return;
+          }
+          return moment(this.reminderDate, 'YYYY-MM-DD HH:mm:ss').toDate()
         })()
       };
       if (this.appointmentSecured) {
@@ -190,7 +149,7 @@ export class AddScheduleComponent {
     }
   }
 
-  setNotification(id: number, title: string, date: string, triggerAt: string) {
+  setNotification(id: number, title: string, date: Date, triggerAt: Date) {
     const isMobile = this.platform.is('mobile'),
           isCordova = this.platform.is('cordova');
     if (isMobile && isCordova) {
@@ -200,7 +159,7 @@ export class AddScheduleComponent {
           id,
           title: `Reminder: ${title}`,
           text,
-          trigger: { at: moment(triggerAt).toDate() }
+          trigger: { at: triggerAt }
         });
       });
     }
