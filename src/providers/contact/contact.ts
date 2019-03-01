@@ -41,6 +41,15 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
+  callLogsMonthFilter(month: string): Observable<logs[]> {
+    const url = this.profileUrl(`contact/call-logs/filter/month/?m=${month}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<logs[]>(url, httpOptions);
+      }));
+    }));
+  }
+
   createCallLog(contactId: number): Observable<logs> {
     const url = this.profileUrl('contact/call-logs/');
     return url.pipe(switchMap(url => {

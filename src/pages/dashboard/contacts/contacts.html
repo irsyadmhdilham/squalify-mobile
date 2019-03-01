@@ -21,8 +21,15 @@
     <ng-container *ngIf="contacts.length > 0; then contactWithContent; else contactWithoutContent"></ng-container>
     <ng-template #contactWithContent>
       <ion-row [ngStyle]="topContent()" id="top-container">
-        <button *ngIf="segment === 'contacts'" ion-button (tap)="addContact()" no-padding clear class="remove-margin-button">Add contact</button>
-        <button (tap)="filter()" ion-button no-padding clear class="remove-margin-button">Filter</button>
+        <button
+          *ngIf="segment === 'contacts'"
+          ion-button
+          (tap)="addContact()"
+          no-padding
+          clear
+          class="remove-margin-button"
+        >Add contact</button>
+        <button (tap)="filter()" clear no-padding class="remove-margin-button" ion-button>Filter</button>
       </ion-row>
       <ng-container *ngIf="notFound; then notFoundTemplate; else foundTemplate"></ng-container>
       <ng-template #foundTemplate>

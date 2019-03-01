@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 import { ApiUrlModules } from "../../functions/config";
 import { Store, select } from "@ngrx/store";
 
-import { comment, like, post } from "../../models/post";
+import { comment, like, post, memo } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 
@@ -157,6 +157,22 @@ export class PostProvider extends ApiUrlModules {
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<post>(url, httpOptions);
+      }));
+    }));
+  }
+
+  postMemo(data: any): Observable<memo> {
+    const url = this.agencyUrl('post/memo/');
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.post<memo>(url, data, httpOptions).pipe(map(response => {
+          return {
+            ...response,
+            date_start: new Date(response.date_start),
+            date_end: new Date(response.date_end),
+            countdown: response.countdown ? new Date(response.countdown) : null
+          };
+        }));
       }));
     }));
   }

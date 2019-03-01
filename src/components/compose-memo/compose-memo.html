@@ -1,0 +1,29 @@
+<main>
+  <button id="close-button" (tap)="dismiss()" large ion-button clear color="white" icon-only>
+    <ion-icon name="close"></ion-icon>
+  </button>
+  <section>
+    <div padding id="content">
+      <small [ngStyle]="characters()" id="memo-count" no-margin>{{200 - text.length}} characters</small>
+      <ion-textarea [(ngModel)]="text" type="text" placeholder="Write something" maxLength="200"></ion-textarea>
+      <ion-list id="period-list" margin-top>
+        <ion-list-header no-padding>Memo showing period</ion-list-header>
+        <ion-item no-padding>
+          <ion-label>Start date</ion-label>
+          <ion-datetime placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+        </ion-item>
+        <ion-item no-padding>
+          <ion-label>End date</ion-label>
+          <ion-datetime placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-list-header no-padding>Event date and time (optional)</ion-list-header>
+        <ion-item no-padding>
+          <ion-datetime no-padding placeholder="Pick date and time" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+        </ion-item>
+      </ion-list>
+    </div>
+    <button margin-top round ion-button>Post</button>
+  </section>
+</main>

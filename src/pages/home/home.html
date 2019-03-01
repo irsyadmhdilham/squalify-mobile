@@ -26,53 +26,32 @@
         <h6>{{agencyName}}</h6>
       </div>
     </ion-row>
-    <div id="create-container" margin-top>
-      <h6>Create</h6>
-      <ion-row justify-content-around>
-        <div class="create-wrapper">
-          <button (tap)="createPost('sales')" ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/add-sales.png"></ion-img>
-          </button>
-          <p>Sales</p>
-        </div>
-        <div class="create-wrapper">
-          <button (tap)="createPost('contact')" ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/referral.png"></ion-img>
-          </button>
-          <p>Contact</p>
-        </div>
-        <div class="create-wrapper">
-          <button (tap)="createPost('schedule')" ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/appointment.png"></ion-img>
-          </button>
-          <p>Schedule</p>
-        </div>
-        <div class="create-wrapper">
-          <button ion-button icon-only clear small="true">
-            <ion-img width="28" height="28" src="../../assets/imgs/points/field-work.png"></ion-img>
-          </button>
-          <p>Field work</p>
-        </div>
-      </ion-row>
-    </div>
-  </ion-grid>
-  <ion-grid padding id="points-container" class="container">
-    <h6 no-margin>Today points</h6>
-    <ion-row>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.personal | async}}</button>
-        <p text-center no-margin>Personal</p>
-      </ion-col>
-      <ion-col class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.agency | async}}</button>
-        <p text-center no-margin>Agency</p>
-      </ion-col>
-      <ion-col *ngIf="(points.group | async) !== null" class="points-wrapper">
-        <button class="points-button" ion-button clear outline small="true" no-padding no-margin>{{points.group | async}}</button>
-        <p text-center no-margin>Group</p>
-      </ion-col>
+    <ion-row margin-top>
+      <div (tap)="composeMemo()" id="write-memo-wrapper">
+        <p ion-text color="dark">Write memo here</p>
+      </div>
     </ion-row>
   </ion-grid>
+  <div padding-vertical id="menus-container">
+    <ion-row id="menus">
+      <ion-col (tap)="navigate('points')">
+        <img src="../../assets/imgs/dashboard/points.png">
+        <p no-margin>Points</p>
+      </ion-col>
+      <ion-col (tap)="navigate('sales')">
+        <img src="../../assets/imgs/dashboard/sales-report.png">
+        <p no-margin>Sales report</p>
+      </ion-col>
+      <ion-col (tap)="navigate('schedules')">
+        <img src="../assets/imgs/dashboard/schedules.png">
+        <p no-margin>Schedules</p>
+      </ion-col>
+      <ion-col (tap)="navigate('contacts')">
+        <img src="../../assets/imgs/dashboard/referrals.png">
+        <p no-margin>Contacts</p>
+      </ion-col>
+    </ion-row>
+  </div>
   <ion-list *ngIf="posts.length > 0">
     <post
       *ngFor="let post of posts; index as i"

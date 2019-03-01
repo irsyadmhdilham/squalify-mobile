@@ -86,6 +86,15 @@ export class ScheduleProvider extends ApiUrlModules {
     }));
   }
 
+  scheduleFilterMonth(month: string): Observable<schedule[]> {
+    const url = this.profileUrl(`schedule/filter/month/?m=${month}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<schedule[]>(url, httpOptions);
+      }));
+    }));
+  }
+
   getReminders(): Observable<schedule[]> {
     const url = this.profileUrl('schedule/reminders/');
     return url.pipe(switchMap(url => {

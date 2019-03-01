@@ -2,6 +2,26 @@ page-home
   #new-post-button
     background: white
     border-bottom: solid 0.55px color($colors, lightGrey)
+  
+  #write-memo-wrapper
+    padding: 0 1em
+    width: 100%
+    background: rgba(color($colors, lightGrey), .2)
+    border: solid 1px color($colors, grey)
+    border-radius: 100px
+  
+  #menus-container
+    background: white
+    margin: .5em 0 0
+
+    #menus
+      ion-col
+        display: flex
+        align-items: center
+        flex-direction: column
+        
+        img
+          width: 45px !important
 
   #main
     .container
@@ -26,36 +46,3 @@ page-home
         h6
           margin: 0
           font-weight: 600
-      
-      #create-container
-        h6
-          margin: 0 0 5px 0
-          font-size: 1em
-          font-weight: bold
-        
-        .create-wrapper
-          display: flex
-          flex-direction: column
-
-          p
-            margin: 2px 0 0 0
-            font-size: 0.95em
-
-    #points-container
-      margin-top: 8px
-
-      h6
-        font-weight: bold
-        font-size: 1em
-      
-      .points-wrapper
-        display: flex
-        flex-direction: column
-
-        .points-button
-          font-size: 2.7em
-          font-weight: 300
-          height: 1.1em
-        
-        p
-          font-size: 0.95em

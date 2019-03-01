@@ -8,21 +8,21 @@ import {
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
-import { map } from "rxjs/operators";
 
 import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
 import { post, comment } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
-import { allPoints } from "../../models/point";
 
 import { PointInit } from "../../store/actions/points.action";
-
-import { AddSalesComponent } from "../../components/sales/add-sales/add-sales";
-import { AddContactComponent } from "../../components/contact/add-contact/add-contact";
-import { AddScheduleComponent } from "../../components/schedule/add-schedule/add-schedule";
 import { NotificationsPage } from '../notifications/notifications';
+import { ComposeMemoComponent } from "../../components/compose-memo/compose-memo";
+
+import { ContactsPage } from "../../pages/dashboard/contacts/contacts";
+import { SchedulesPage } from "../../pages/dashboard/schedules/schedules";
+import { PointsPage } from "../../pages/dashboard/points/points";
+import { SalesPage } from "../../pages/dashboard/sales/sales";
 
 @Component({
   selector: 'page-home',
@@ -40,12 +40,6 @@ export class HomePage {
   newPost = 0;
   posts: post[] = [];
   likeStatus: { index: number, status: boolean; };
-  points$: Observable<allPoints> = this.store.pipe(select('points'));
-  points = {
-    personal: this.points$.pipe(map(value => value.personal)),
-    agency: this.points$.pipe(map(value => value.agency)),
-    group: this.points$.pipe(map(value => value.group))
-  }
   io: any;
   storeListener: Subscription;
   ioListener: Subscription;
@@ -65,6 +59,28 @@ export class HomePage {
     private store: Store<store>,
     private events: Events
   ) { }
+
+  composeMemo() {
+    const modal = this.modalCtrl.create(ComposeMemoComponent);
+    modal.present();
+  }
+
+  navigate(section) {
+    switch (section) {
+      case 'contacts':
+        this.navCtrl.push(ContactsPage);
+      break;
+      case 'schedules':
+        this.navCtrl.push(SchedulesPage);
+      break;
+      case 'points':
+        this.navCtrl.push(PointsPage);
+      break;
+      case 'sales':
+        this.navCtrl.push(SalesPage);
+      break;
+    }
+  }
 
   navToDetailListener(value: boolean) {
     this.navToDetail = value;
@@ -88,35 +104,6 @@ export class HomePage {
       this.newPost = 0;
       this.posts = observe;
     });
-  }
-
-  createPost(attribute) {
-    const createModal = (component) => {
-      return this.modalCtrl.create(component);
-    };
-    const newPost = () => {
-      this.postProvider.newPostEmit();
-    }
-    switch (attribute) {
-      case 'sales':
-        const sales = createModal(AddSalesComponent);
-        sales.present();
-        sales.onDidDismiss(data => {
-          if (data) {
-            newPost();
-            this.fetchPosts();
-          }
-        });
-      break;
-      case 'contact':
-        const contact = createModal(AddContactComponent);
-        contact.present();
-      break;
-      case 'schedule':
-        const schedule = createModal(AddScheduleComponent);
-        schedule.present();
-      break;
-    }
   }
 
   homeWs() {

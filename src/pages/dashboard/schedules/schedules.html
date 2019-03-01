@@ -10,13 +10,16 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve schedules" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
+    <h5 title>Schedules</h5>
+    <ion-row margin-bottom justify-content-between id="top-container">
+      <button ion-button clear class="remove-margin-button" no-padding (tap)="addSchedule()">Add schedule</button>
+      <div>
+        <button ion-button outline small (tap)="filterMonth()">{{month ? month : 'By month'}}</button>
+        <button ion-button outline small (tap)="filter()">Filter</button>
+      </div>
+    </ion-row>
     <ng-container *ngIf="schedules.length > 0; then schedulesContent; else schedulesNoContent"></ng-container>
     <ng-template #schedulesContent>
-      <h5 title>Schedules</h5>
-      <ion-row margin-bottom justify-content-between id="top-container">
-        <button ion-button clear class="remove-margin-button" no-padding (tap)="addSchedule()">Add schedule</button>
-        <button ion-button clear class="remove-margin-button" no-padding (tap)="filter()">Filter</button>
-      </ion-row>
       <ng-container *ngIf="notFound; then notFoundTemplate; else scheduleTemplate"></ng-container>
       <ng-template #scheduleTemplate>
         <ion-list>

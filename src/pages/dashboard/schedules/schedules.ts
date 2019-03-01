@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, AlertController } from 'ionic-angular';
 import * as moment from "moment";
 
 import { AddScheduleComponent } from "../../../components/schedule/add-schedule/add-schedule";
@@ -19,12 +19,16 @@ export class SchedulesPage {
   pageStatus: string;
   filterData: filterData;
   notFound: boolean;
+  months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  month: string;
+  filtering: boolean;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
-    private scheduleProvider: ScheduleProvider
+    private scheduleProvider: ScheduleProvider,
+    private alertCtrl: AlertController
   ) { }
 
   addSchedule() {
@@ -79,6 +83,43 @@ export class SchedulesPage {
         });
       }
     });
+  }
+
+  filterMonth() {
+    const monthSelect = this.alertCtrl.create({
+      title: 'Select below',
+      inputs: this.months.map((val, i) => {
+        return {
+          type: 'radio',
+          label: val,
+          value: i.toString(),
+          checked: this.month === val
+        };
+      }),
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Select',
+          handler: (value: string) => {
+            if (value) {
+              this.month = this.months[parseInt(value)];
+              this.pageStatus = 'loading';
+              this.scheduleProvider.scheduleFilterMonth(value).subscribe(schedules => {
+                this.pageStatus = undefined;
+                this.filtering = true;
+                this.schedules = schedules;
+              }, () => {
+                this.pageStatus = undefined;
+              });
+            }
+          }
+        }
+      ]
+    });
+    monthSelect.present();
   }
 
 }

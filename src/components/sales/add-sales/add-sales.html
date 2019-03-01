@@ -27,20 +27,29 @@
           <ion-option *ngFor="let type of salesTypes()">{{type}}</ion-option>
         </ion-select>
       </ion-item>
-      <ion-item *ngIf="company === 'CWA'">
+      <!-- <ion-item *ngIf="company === 'CWA'">
         <ion-label>Surcharge</ion-label>
         <ion-select [(ngModel)]="surchargeVal">
           <ion-option *ngFor="let surcharge of surcharges()" value="{{surcharge}}">{{surcharge}}%</ion-option>
         </ion-select>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
+        <ion-label>Sales status</ion-label>
+        <ion-select>
+          <ion-option>In hand</ion-option>
+          <ion-option>Submitted</ion-option>
+          <ion-option>Disbursed (approved)</ion-option>
+          <ion-option>Rejected</ion-option>
+        </ion-select>
+      </ion-item>
+      <!-- <ion-item>
         <ion-label color="dark" class="toggle-label">New sales</ion-label>
         <ion-toggle [(ngModel)]="newSales"></ion-toggle>
       </ion-item>
       <ion-item>
         <ion-label color="dark" class="toggle-label">Repeat sales</ion-label>
         <ion-toggle [(ngModel)]="repeatSales"></ion-toggle>
-      </ion-item>
+      </ion-item> -->
     </ion-list>
     <ion-row justify-content-center>
       <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, locationNgModel)">Add sales</button>

@@ -23,3 +23,11 @@ export interface post {
   likes: like[];
   monthly_sales: string;
 };
+
+export interface memo {
+  pk: number;
+  date_start: Date;
+  date_end: Date;
+  text: string;
+  countdown: Date;
+}
