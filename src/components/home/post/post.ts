@@ -1,10 +1,21 @@
-import { Component, Input, ViewChild, ElementRef, OnChanges, Output, EventEmitter } from '@angular/core';
-import { NavController } from "ionic-angular";
+import {
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnChanges,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { NavController, ModalController } from "ionic-angular";
 import * as moment from "moment";
+const countdownjs = require('countdown');
 
 import { PostProvider } from "../../../providers/post/post";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
 import { post, comment } from "../../../models/post";
+
+import { ComposeMemoComponent } from "../../compose-memo/compose-memo";
 
 @Component({
   selector: 'post',
@@ -30,10 +41,17 @@ export class PostComponent implements OnChanges {
   likes = [];
   liked = false;
   likeId: number;
+  memo = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
 
   constructor(
     private postProvider: PostProvider,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private modalCtrl: ModalController
   ) { }
 
   profileImageView() {
@@ -41,6 +59,19 @@ export class PostComponent implements OnChanges {
       return { background: `url('${this.profileImage}') no-repeat center center / cover` };
     }
     return false;
+  }
+
+  countdown() {
+    if (this.data.memo) {
+      if (this.data.memo.countdown) {
+        countdownjs(new Date(this.data.memo.countdown), data => {
+          this.memo.days = data.days;
+          this.memo.hours = data.hours;
+          this.memo.minutes = data.minutes;
+          this.memo.seconds = data.seconds;
+        });
+      }
+    }
   }
 
   dateDisplay() {
@@ -100,7 +131,12 @@ export class PostComponent implements OnChanges {
     this.postType = this.data.post_type;
     this.name = this.data.posted_by.name;
     this.profileImage = this.data.posted_by.profile_image;
-    this.totalSales = this.data.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
+    this.totalSales = (() => {
+      if (!this.data.memo) {
+        return this.data.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
+      }
+      return 0;
+    })();
     this.date = new Date(this.data.timestamp);
     this.monthlySales = parseFloat(this.data.monthly_sales)
     this.comments = this.data.comments;
@@ -113,6 +149,18 @@ export class PostComponent implements OnChanges {
         this.liked = likeStats.status;
       }
     }
+    this.countdown();
+  }
+
+  editMemo() {
+    const modal = this.modalCtrl.create(ComposeMemoComponent, { edit: true, memo: this.data.memo, postId: this.pk });
+    modal.present();
+    modal.onDidDismiss((data: post) => {
+      if (data) {
+        const memo = data.memo;
+        this.data.memo = memo;
+      }
+    });
   }
 
 }

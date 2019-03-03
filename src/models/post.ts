@@ -22,12 +22,13 @@ export interface post {
   comments: comment[];
   likes: like[];
   monthly_sales: string;
+  memo: memo;
 };
 
 export interface memo {
   pk: number;
-  date_start: Date;
-  date_end: Date;
+  start_date: Date;
+  end_date: Date;
   text: string;
   countdown: Date;
 }

@@ -63,6 +63,12 @@ export class HomePage {
   composeMemo() {
     const modal = this.modalCtrl.create(ComposeMemoComponent);
     modal.present();
+    modal.onDidDismiss((post: post) => {
+      if (post) {
+        console.log(post);
+        // this.posts.unshift(post);
+      }
+    });
   }
 
   navigate(section) {

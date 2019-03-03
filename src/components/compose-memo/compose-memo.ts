@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { ViewController, AlertController } from "ionic-angular";
+import { ViewController, AlertController, LoadingController, NavParams } from "ionic-angular";
 import * as moment from "moment";
+import { Observable } from 'rxjs';
 
 import { Colors } from "../../functions/colors";
 
-import { PostProvider } from "../../providers/post/post";
+import { PostProvider, memoData as data } from "../../providers/post/post";
+import { memo, post } from "../../models/post";
 
 @Component({
   selector: 'compose-memo',
@@ -13,11 +15,37 @@ import { PostProvider } from "../../providers/post/post";
 export class ComposeMemoComponent {
 
   text = '';
-  dateStart: string;
-  dateEnd: string;
+  startDate: string;
+  endDate: string;
   countdown: string;
+  edit = false;
+  postId: number;
 
-  constructor(private viewCtrl: ViewController, private alertCtrl: AlertController, private postProvider: PostProvider) { }
+  constructor(
+    private viewCtrl: ViewController,
+    private alertCtrl: AlertController,
+    private postProvider: PostProvider,
+    private loadingCtrl: LoadingController,
+    private navParams: NavParams
+  ) { }
+
+  ionViewDidLoad() {
+    const edit = this.navParams.get('edit'),
+          memo: memo = this.navParams.get('memo'),
+          postId: number = this.navParams.get('postId');
+    if (edit) {
+      this.edit = true;
+      const dateFormat = 'YYYY-MM-DDTHH:mm'
+      const startDate = moment(memo.start_date).format(dateFormat),
+            endDate = moment(memo.end_date).format(dateFormat),
+            countdown = memo.countdown ? moment(memo.countdown).format(dateFormat) : undefined;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.countdown = countdown;
+      this.text = memo.text;
+      this.postId = postId;
+    }
+  }
 
   characters() {
     const text = 200 - this.text.length;
@@ -31,9 +59,14 @@ export class ComposeMemoComponent {
     this.viewCtrl.dismiss();
   }
 
-  post() {
-    if (!this.dateEnd || this.dateEnd === '') {
+  postUpdate() {
+    if (!this.endDate || this.endDate === '') {
       this.alertCtrl.create({title: 'Error', subTitle: 'Please pick end date & time', buttons: ['Ok']})
+      .present();
+      return;
+    }
+    if (!this.startDate || this.startDate === '') {
+      this.alertCtrl.create({title: 'Error', subTitle: 'Please pick start date & time', buttons: ['Ok']})
       .present();
       return;
     }
@@ -42,14 +75,28 @@ export class ComposeMemoComponent {
       .present();
       return;
     }
-    const data = {
+    const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+    const data: data = {
       text: this.text,
-      dateStart: this.dateStart ? moment(this.dateStart).toDate() : null,
-      dateEnd: moment(this.dateEnd).toDate(),
-      countdown: this.countdown ? moment(this.countdown).toDate() : null
+      startDate: this.startDate ? moment(this.startDate, dateFormat).toDate() : null,
+      endDate: moment(this.endDate, dateFormat).toDate(),
+      countdown: this.countdown ? moment(this.countdown, dateFormat).toDate() : null
     }
-    this.postProvider.postMemo(data).subscribe(memo => {
-
+    const loading = this.loadingCtrl.create({content: 'Please wait...'});
+    loading.present();
+    const httpRequest = (): Observable<post> => {
+      if (this.edit) {
+        return this.postProvider.updateMemo(data, this.postId);
+      }
+      return this.postProvider.postMemo(data);
+    };
+    httpRequest().subscribe(post => {
+      loading.dismiss();
+      this.viewCtrl.dismiss(post);
+    }, () => {
+      loading.dismiss();
+      this.alertCtrl.create({title: 'Error', subTitle: 'Failed to post memo', buttons: ['Ok']})
+      .present();
     });
   }
 

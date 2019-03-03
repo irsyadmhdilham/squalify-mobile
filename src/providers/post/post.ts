@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 import { ApiUrlModules } from "../../functions/config";
 import { Store, select } from "@ngrx/store";
 
-import { comment, like, post, memo } from "../../models/post";
+import { comment, like, post } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 
@@ -23,6 +23,14 @@ export interface likePost {
 export interface unlikePost {
   postId: number;
   unliker: number;
+}
+
+export interface memoData {
+  userId?: number;
+  startDate: Date;
+  endDate: Date;
+  countdown: Date;
+  text: string;
 }
 
 @Injectable()
@@ -161,16 +169,41 @@ export class PostProvider extends ApiUrlModules {
     }));
   }
 
-  postMemo(data: any): Observable<memo> {
-    const url = this.agencyUrl('post/memo/');
+  postMemo(data: memoData): Observable<post> {
+    const url = this.agencyUrl('post/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.post<memo>(url, data, httpOptions).pipe(map(response => {
+        return this.userId().pipe(switchMap((userId: number) => {
+          data.userId = userId;
+          return this.http.post<post>(url, data, httpOptions).pipe(map(response => {
+            return {
+              ...response,
+              memo: {
+                ...response.memo,
+                start_date: new Date(response.memo.start_date),
+                end_date: new Date(response.memo.end_date),
+                countdown: response.memo.countdown ? new Date(response.memo.countdown) : null
+              }
+            };
+          }));
+        }))
+      }));
+    }));
+  }
+
+  updateMemo(data: memoData, postId: number): Observable<post> {
+    const url = this.agencyUrl(`post/${postId}/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<post>(url, data, httpOptions).pipe(map(response => {
           return {
             ...response,
-            date_start: new Date(response.date_start),
-            date_end: new Date(response.date_end),
-            countdown: response.countdown ? new Date(response.countdown) : null
+            memo: {
+              ...response.memo,
+              start_date: new Date(response.memo.start_date),
+              end_date: new Date(response.memo.end_date),
+              countdown: response.memo.countdown ? new Date(response.memo.countdown) : null
+            }
           };
         }));
       }));

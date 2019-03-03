@@ -10,20 +10,22 @@
         <ion-list-header no-padding>Memo showing period</ion-list-header>
         <ion-item no-padding>
           <ion-label>Start date</ion-label>
-          <ion-datetime placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+          <ion-datetime [(ngModel)]="startDate" placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
         </ion-item>
         <ion-item no-padding>
           <ion-label>End date</ion-label>
-          <ion-datetime placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+          <ion-datetime [(ngModel)]="endDate" placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
         </ion-item>
       </ion-list>
       <ion-list>
         <ion-list-header no-padding>Event date and time (optional)</ion-list-header>
         <ion-item no-padding>
-          <ion-datetime no-padding placeholder="Pick date and time" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
+          <ion-datetime [(ngModel)]="countdown" no-padding placeholder="Pick date and time" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
         </ion-item>
       </ion-list>
     </div>
-    <button margin-top round ion-button>Post</button>
+    <button (tap)="postUpdate()" margin-top round ion-button>
+      {{edit ? 'Update' : 'Post'}}
+    </button>
   </section>
 </main>
