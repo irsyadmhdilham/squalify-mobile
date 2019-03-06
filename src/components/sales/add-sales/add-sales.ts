@@ -89,17 +89,8 @@ export class AddSalesComponent {
         amount: parseFloat(amountNgModel.value),
         sales_type: salesTypeNgModel.value
       };
-      if (this.company === 'CWA' && salesTypeNgModel.value === 'EPF' || salesTypeNgModel.value === 'Cash') {
-        if (!this.surchargeVal || this.surchargeVal === '') {
-          throw 'Please select surcharge';
-        }
-        data.surcharge = parseFloat(this.surchargeVal);
-      }
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
-      }
-      if (this.repeatSales) {
-        data.repeat_sales = true;
       }
       if (this.tips) {
         data.tips = this.tips;

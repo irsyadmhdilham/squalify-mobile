@@ -18,10 +18,10 @@ export interface post {
   posted_by: owner;
   post_type: string;
   sales_rel: sales[];
-  timestamp: string;
+  timestamp: Date;
   comments: comment[];
   likes: like[];
-  monthly_sales: string;
+  monthly_sales: number;
   memo: memo;
 };
 

@@ -6,7 +6,8 @@ import { Storage } from "@ionic/storage";
 import { ApiUrlModules } from "../../functions/config";
 import { Store, select } from "@ngrx/store";
 
-import { comment, like, post } from "../../models/post";
+import { comment, like, post, memo } from "../../models/post";
+import { owner } from "../../models/agency";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
 
@@ -32,6 +33,28 @@ export interface memoData {
   countdown: Date;
   text: string;
 }
+
+interface salesResponse {
+  pk?: number;
+  timestamp?: string;
+  amount: string;
+  sales_type: string;
+  sales_status?: string;
+  location?: string;
+  commission?: string;
+};
+
+interface postResponse {
+  pk: number,
+  posted_by: owner;
+  post_type: string;
+  sales_rel: salesResponse[];
+  timestamp: string;
+  comments: comment[];
+  likes: like[];
+  monthly_sales: string;
+  memo: memo;
+};
 
 @Injectable()
 export class PostProvider extends ApiUrlModules {
@@ -122,6 +145,27 @@ export class PostProvider extends ApiUrlModules {
         postedBy
       });
     });
+  }
+
+  getPosts(): Observable<post[]> {
+    const url = this.agencyUrl('post/');
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<postResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            timestamp: new Date(value.timestamp),
+            monthly_sales: parseFloat(value.monthly_sales),
+            sales_rel: value.sales_rel.map(val => ({
+              ...val,
+              amount: parseFloat(val.amount),
+              commission: parseFloat(val.commission),
+              timestamp: new Date(val.timestamp)
+            }))
+          }));
+        }));
+      }));
+    }));
   }
 
   postComment(postId: number, data: any): Observable<comment> {

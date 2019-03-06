@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams } from "ionic-angular";
+import { ViewController, NavParams, ActionSheetController } from "ionic-angular";
 
 import { SalesProvider } from "../../../providers/sales/sales";
-
-interface output {
-  sales: number;
-  income?: number;
-}
+import { salesStatus } from "../../../models/sales";
 
 @Component({
   selector: 'sales-summary',
@@ -14,33 +10,70 @@ interface output {
 })
 export class SalesSummaryComponent {
 
-  today: output = { sales: 0, income: 0 };
-  week: output = { sales: 0, income: 0 };
-  month: output = { sales: 0, income: 0 };
-  year: output = { sales: 0, income: 0 };
+  salesStatus = {
+    submitted: 0,
+    rejected: 0,
+    disburst: 0,
+    in_hand: 0
+  };
+  today: salesStatus = this.salesStatus;
+  week: salesStatus = this.salesStatus;
+  month: salesStatus = this.salesStatus;
+  year: salesStatus = this.salesStatus;
   screenStatus: string;
   segment: string;
+  salesType = 'sales type';
+  salesTypeActive = false
+  cancel = false;
 
   constructor(
     private salesProvider: SalesProvider,
     private viewCtrl: ViewController,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private actionSheetCtrl: ActionSheetController
   ) { }
-
-  type: string;
 
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
+  selectSalesType() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select sales type',
+      buttons: [
+        { text: 'All', handler: () => { this.salesType = 'All'; this.salesTypeActive = true; } },
+        { text: 'EPF', handler: () => { this.salesType = 'EPF'; this.salesTypeActive = true; } },
+        { text: 'Cash', handler: () => { this.salesType = 'Cash'; this.salesTypeActive = true; } },
+        { text: 'ASB', handler: () => { this.salesType = 'ASB'; this.salesTypeActive = true; } },
+        { text: 'PRS', handler: () => { this.salesType = 'PRS'; this.salesTypeActive = true; } },
+        { text: 'Cancel', role: 'cancel', handler: () => {
+          this.cancel = true;
+          setTimeout(() => {
+            this.cancel = false;
+          }, 2000);
+        }}
+      ]
+    });
+    actionSheet.present();
+    actionSheet.onDidDismiss(() => {
+      if (!this.cancel) {
+        if (this.segment === 'personal') {
+          
+        } else {
+          this.fetchGroup();
+        }
+      }
+    });
+  }
+
   fetch() {
     this.screenStatus = 'loading';
-    this.salesProvider.getPersonalSummary(this.type).subscribe(observe => {
+    this.salesProvider.getPersonalSummary(this.salesType).subscribe(summary => {
       this.screenStatus = undefined;
-      this.today = { sales: parseFloat(observe.today.sales), income: parseFloat(observe.today.income) };
-      this.month = { sales: parseFloat(observe.month.sales), income: parseFloat(observe.month.income) };
-      this.year = { sales: parseFloat(observe.year.sales), income: parseFloat(observe.year.income) };
-      this.week = { sales: parseFloat(observe.week.sales), income: parseFloat(observe.week.income) };
+      this.today = summary.today;
+      this.month = summary.month;
+      this.year = summary.year;
+      this.week = summary.week;
     }, () => {
       this.screenStatus = 'error';
     });
@@ -48,21 +81,19 @@ export class SalesSummaryComponent {
 
   fetchGroup() {
     this.screenStatus = 'loading';
-    this.salesProvider.getGroupSummary(this.type).subscribe(observe => {
+    this.salesProvider.getGroupSummary(this.salesType).subscribe(summary => {
       this.screenStatus = undefined;
-      this.today = { sales: parseFloat(observe.today)};
-      this.month = { sales: parseFloat(observe.month)};
-      this.year = { sales: parseFloat(observe.year)};
-      this.week = { sales: parseFloat(observe.week)};
+      this.today = summary.today;
+      this.month = summary.month;
+      this.year = summary.year;
+      this.week = summary.week;
     }, () => {
       this.screenStatus = 'error';
     });
   }
 
   ionViewDidLoad() {
-    const type = this.navParams.get('type'),
-          segment = this.navParams.get('segment');
-    this.type = type;
+    const segment = this.navParams.get('segment');
     this.segment = segment;
     if (segment === 'personal') {
       this.fetch();

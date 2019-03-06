@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ActionSheetController } from 'ionic-angular';
 
 import { SalesProvider } from "../../../../providers/sales/sales";
+import { groupSales } from "../../../../models/sales";
 
 @Component({
   selector: 'page-sales-downlines',
@@ -9,18 +10,16 @@ import { SalesProvider } from "../../../../providers/sales/sales";
 })
 export class SalesDownlinesPage {
 
-  pk: number;
+  member: groupSales = this.navParams.get('member');
   pageStatus: string;
   period = 'period';
   salesType = 'sales type';
+  salesStatus = 'status';
   cancel = false;
   periodActive = false;
   salesTypeActive = false;
-  downlines = [];
-  name: string;
-  designation: string;
-  profileImage: string;
-  downline: number;
+  salesStatusActive = false;
+  downlines: groupSales[] = [];
 
   constructor(
     public navCtrl: NavController,
@@ -47,16 +46,8 @@ export class SalesDownlinesPage {
     });
     actionSheet.present();
     actionSheet.onDidDismiss(() => {
-      let period = this.period,
-          salesType = this.salesType;
-      if (period === 'period') {
-        period = 'year';
-      }
-      if (salesType === 'sales type') {
-        period = 'total';
-      }
       if (!this.cancel) {
-        this.fetch(period, salesType);
+        this.filter();
       }
     });
   }
@@ -80,35 +71,52 @@ export class SalesDownlinesPage {
     });
     actionSheet.present();
     actionSheet.onDidDismiss(() => {
-      let period = this.period,
-          salesType = this.salesType;
-      if (period === 'period') {
-        period = 'year';
-      }
-      if (salesType === 'sales type') {
-        period = 'total';
-      }
       if (!this.cancel) {
-        this.fetch(period, salesType);
+        this.filter();
       }
     });
   }
 
-  fetch(period: string, salesType: string) {
+  selectSalesStatus() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Select sales type',
+      buttons: [
+        { text: 'Total', handler: () => { this.salesStatus = 'total'; this.salesStatusActive = true; } },
+        { text: 'In hand', handler: () => { this.salesStatus = 'In hand'; this.salesStatusActive = true; } },
+        { text: 'Submitted', handler: () => { this.salesStatus = 'Submitted'; this.salesStatusActive = true; } },
+        { text: 'Rejected', handler: () => { this.salesStatus = 'Rejected'; this.salesStatusActive = true; } },
+        { text: 'Disburst/approved', handler: () => { this.salesStatus = 'Disburst'; this.salesStatusActive = true; } },
+        { text: 'Cancel', role: 'cancel', handler: () => {
+          this.cancel = true;
+          setTimeout(() => {
+            this.cancel = false;
+          }, 2000);
+        }}
+      ]
+    });
+    actionSheet.present();
+    actionSheet.onDidDismiss(() => {
+      if (!this.cancel) {
+        this.filter();
+      }
+    });
+  }
+
+  fetch() {
     this.pageStatus = 'loading';
-    this.salesProvider.getGroupDownlineSales(this.pk, period, salesType).subscribe(observe => {
+    this.salesProvider.getGroupDownlineSales(this.member.pk).subscribe(downlines => {
       this.pageStatus = undefined;
-      const downlines = observe.downlines.map(val => {
-        return {
-          ...val,
-          amount: parseFloat(val.amount)
-        };
-      });
       this.downlines = downlines;
-      this.name = observe.name;
-      this.profileImage = observe.profile_image;
-      this.designation = observe.designation;
-      this.downline = observe.downlines.length;
+    }, () => {
+      this.pageStatus = 'error';
+    });
+  }
+
+  filter() {
+    this.pageStatus = 'loading';
+    this.salesProvider.downlinesSalesFilter(this.member.pk, this.period, this.salesType, this.salesStatus).subscribe(downlines => {
+      this.pageStatus = undefined;
+      this.downlines = downlines;
     }, () => {
       this.pageStatus = 'error';
     });
@@ -124,13 +132,13 @@ export class SalesDownlinesPage {
   }
 
   ionViewDidLoad() {
-    const memberId = this.navParams.get('memberId');
-    this.pk = memberId;
-    this.fetch('year', 'total');
+    this.fetch();
   }
 
-  navDownline(member) {
-    this.navCtrl.push(SalesDownlinesPage, { memberId: member.pk });
+  navDownline(member: groupSales) {
+    if (member.downlines && member.downlines > 0) {
+      this.navCtrl.push(SalesDownlinesPage, { member });
+    }
   }
 
 }

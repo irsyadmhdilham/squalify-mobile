@@ -6,8 +6,42 @@ import { Observable, Subject } from "rxjs";
 import { switchMap, map, take } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales, summary, groupSales, downlineSales, salesIo } from "../../models/sales";
+import { sales, summary, groupSales, salesIo } from "../../models/sales";
 import { store } from "../../models/store";
+
+interface salesResponse {
+  pk?: number;
+  timestamp?: string;
+  amount: string;
+  sales_type: string;
+  sales_status?: string;
+  location?: string;
+  commission?: string;
+};
+
+interface groupResponse {
+  pk: number;
+  name: string;
+  profile_image: string;
+  designation: string;
+  personal: string;
+  group: string;
+  downline?: number;
+}
+
+interface salesStatus {
+  in_hand: string;
+  submitted: string;
+  rejected: string;
+  disburst: string;
+};
+
+interface summaryResponse {
+  year: salesStatus;
+  month: salesStatus;
+  week: salesStatus;
+  today: salesStatus;
+};
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {
@@ -43,11 +77,18 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  getSales(period: string, salesType: string): Observable<sales[]> {
-    const url = this.profileUrl(`sales/?p=${period}&t=${salesType}`);
+  getSales(period: string, salesType: string, salesStatus: string): Observable<sales[]> {
+    const url = this.profileUrl(`sales/?p=${period}&st=${salesType}&=${salesStatus}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<sales[]>(url, httpOptions);
+        return this.http.get<salesResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            timestamp: new Date(value.timestamp),
+            amount: parseFloat(value.amount),
+            commission: value.commission ? parseFloat(value.commission) : null
+          }));
+        }));
       }));
     }));
   }
@@ -70,29 +111,113 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  getGroupSales(period: string, type?: string): Observable<groupSales[]> {
-    const url = this.profileUrl(`sales/group/${period}/${type ? `?q=${type}` : ''}`);
+  getGroupSales(): Observable<groupSales[]> {
+    const url = this.profileUrl('sales/group/');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<groupSales[]>(url, httpOptions);
+        return this.http.get<groupResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            personal: parseFloat(value.personal),
+            group: parseFloat(value.group)
+          }));
+        }));
       }));
     }));
   }
 
-  getGroupSummary(type: string): Observable<any> {
-    const url = this.profileUrl(`sales/group/summary/?q=${type}`);
+  groupSalesFilter(period: string, type: string, status: string): Observable<groupSales[]> {
+    const url = this.profileUrl(`sales/group/filter/?p=${period}&st=${type}&s=${status}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<any>(url, httpOptions);
+        return this.http.get<groupResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            personal: parseFloat(value.personal),
+            group: parseFloat(value.group)
+          }));
+        }));
       }));
     }));
   }
 
-  getGroupDownlineSales(memberId: number, period: string, type?: string): Observable<downlineSales> {
-    const url = this.profileUrl(`sales/group/${memberId}/year/?q=total`);
+  summarySerializer(value: summaryResponse): summary {
+    const year = value.year,
+          month = value.month,
+          week = value.week,
+          today = value.today;
+    return {
+      year: {
+        in_hand: parseFloat(year.in_hand),
+        rejected: parseFloat(year.rejected),
+        disburst: parseFloat(year.disburst),
+        submitted: parseFloat(year.submitted)
+      },
+      month: {
+        in_hand: parseFloat(month.in_hand),
+        rejected: parseFloat(month.rejected),
+        disburst: parseFloat(month.disburst),
+        submitted: parseFloat(month.submitted)
+      },
+      week: {
+        in_hand: parseFloat(week.in_hand),
+        rejected: parseFloat(week.rejected),
+        disburst: parseFloat(week.disburst),
+        submitted: parseFloat(week.submitted)
+      },
+      today: {
+        in_hand: parseFloat(today.in_hand),
+        rejected: parseFloat(today.rejected),
+        disburst: parseFloat(today.disburst),
+        submitted: parseFloat(today.submitted)
+      }
+    };
+  }
+
+  getGroupSummary(type: string): Observable<summary> {
+    const url = this.profileUrl(`sales/group/summary/?st=${type}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<downlineSales>(url, httpOptions);
+        return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => this.summarySerializer(response)));
+      }));
+    }));
+  }
+
+  getGroupDownlineSales(memberId: number): Observable<groupSales[]> {
+    const url = this.profileUrl(`sales/group/downlines/${memberId}/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<groupResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            personal: parseFloat(value.personal),
+            group: parseFloat(value.group)
+          }));
+        }));
+      }));
+    }));
+  }
+
+  downlinesSalesFilter(memberId: number, period: string, type: string, status: string): Observable<groupSales[]> {
+    const url = this.profileUrl(`sales/group/downlines/${memberId}/filter/?p=${period}&st=${type}&s=${status}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<groupResponse[]>(url, httpOptions).pipe(map(response => {
+          return response.map(value => ({
+            ...value,
+            personal: parseFloat(value.personal),
+            group: parseFloat(value.group)
+          }));
+        }));
+      }));
+    }));
+  }
+
+  downlinesSummary(memberId: number, type: string): Observable<summary> {
+    const url = this.profileUrl(`sales/group/downlines/${memberId}/summary/?st=${type}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => this.summarySerializer(response)));
       }));
     }));
   }

@@ -133,7 +133,7 @@ export class PostComponent implements OnChanges {
     this.profileImage = this.data.posted_by.profile_image;
     this.totalSales = (() => {
       if (!this.data.memo) {
-        return this.data.sales_rel.map(val => parseFloat(val.amount)).reduce((a, b) => a + b);
+        return this.data.sales_rel.map(val => val.amount).reduce((a, b) => a + b);
       }
       return 0;
     })();

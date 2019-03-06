@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-toolbar>
     <ion-buttons>
       <button (tap)="dismiss()" ion-button icon-only clear color="dark">
@@ -7,6 +7,11 @@
     </ion-buttons>
     <ion-title>Sales summary</ion-title>
   </ion-toolbar>
+  <ion-row padding-bottom>
+    <div class="header-button-left-margin" (tap)="selectSalesType()" header-button [activeButton]="salesTypeActive">
+      <p class="header-button-bold" ion-text [color]="salesTypeActive ? 'white': 'dark'" no-margin>{{salesType}}</p>
+    </div>
+  </ion-row>
 </ion-header>
 
 <ion-content padding [ngSwitch]="screenStatus">
@@ -21,6 +26,24 @@
       <h3 title>Today</h3>
       <section>
         <div>
+          <h2 ion-text color="primary">RM{{today.in_hand | numCommas}}</h2>
+          <p>In hand</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{today.rejected | numCommas}}</h2>
+          <p>Rejected</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{today.disburst | numCommas}}</h2>
+          <p>Disburst/approved</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{today.submitted | numCommas}}</h2>
+          <p>Submitted</p>
+        </div>
+      </section>
+      <!-- <section>
+        <div>
           <h2 ion-text color="primary">RM{{today.sales | numCommas}}</h2>
           <p>Sales</p>
         </div>
@@ -28,11 +51,29 @@
           <h2 ion-text color="primary">RM{{today.income | numCommas}}</h2>
           <p>Income</p>
         </div>
-      </section>
+      </section> -->
     </ion-item>
     <ion-item no-padding>
       <h3 title>This week</h3>
       <section>
+        <div>
+          <h2 ion-text color="primary">RM{{week.in_hand | numCommas}}</h2>
+          <p>In hand</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{week.rejected | numCommas}}</h2>
+          <p>Rejected</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{week.disburst | numCommas}}</h2>
+          <p>Disburst/approved</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{week.submitted | numCommas}}</h2>
+          <p>Submitted</p>
+        </div>
+      </section>
+      <!-- <section>
         <div>
           <h2 ion-text color="primary">RM{{week.sales | numCommas}}</h2>
           <p>Sales</p>
@@ -41,11 +82,29 @@
           <h2 ion-text color="primary">RM{{week.income | numCommas}}</h2>
           <p>Income</p>
         </div>
-      </section>
+      </section> -->
     </ion-item>
     <ion-item no-padding>
       <h3 title>This month</h3>
       <section>
+        <div>
+          <h2 ion-text color="primary">RM{{month.in_hand | numCommas}}</h2>
+          <p>In hand</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{month.rejected | numCommas}}</h2>
+          <p>Rejected</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{month.disburst | numCommas}}</h2>
+          <p>Disburst/approved</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{month.submitted | numCommas}}</h2>
+          <p>Submitted</p>
+        </div>
+      </section>
+      <!-- <section>
         <div>
           <h2 ion-text color="primary">RM{{month.sales | numCommas}}</h2>
           <p>Sales</p>
@@ -54,11 +113,29 @@
           <h2 ion-text color="primary">RM{{month.income | numCommas}}</h2>
           <p>Income</p>
         </div>
-      </section>
+      </section> -->
     </ion-item>
     <ion-item no-padding>
       <h3 title>This year</h3>
       <section>
+        <div>
+          <h2 ion-text color="primary">RM{{year.in_hand | numCommas}}</h2>
+          <p>In hand</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{year.rejected | numCommas}}</h2>
+          <p>Rejected</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{year.disburst | numCommas}}</h2>
+          <p>Disburst/approved</p>
+        </div>
+        <div>
+          <h2 ion-text color="primary">RM{{year.submitted | numCommas}}</h2>
+          <p>Submitted</p>
+        </div>
+      </section>
+      <!-- <section>
         <div>
           <h2 ion-text color="primary">RM{{year.sales | numCommas}}</h2>
           <p>Sales</p>
@@ -67,7 +144,7 @@
           <h2 ion-text color="primary">RM{{year.income | numCommas}}</h2>
           <p>Income</p>
         </div>
-      </section>
+      </section> -->
     </ion-item>
   </ion-list>
 </ion-content>

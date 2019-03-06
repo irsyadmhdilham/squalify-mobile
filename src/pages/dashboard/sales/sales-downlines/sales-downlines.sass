@@ -1,4 +1,38 @@
 page-sales-downlines
+
+  #table-header
+    display: grid
+    grid-template-columns: 1.7fr 1fr 1fr
+    grid-column-gap: .5em
+    margin-bottom: .3em
+  
+  .item-container
+    display: grid
+    grid-template-columns: 1.7fr 1fr 1fr
+    align-items: center
+    grid-column-gap: .5em
+
+    + .item-container
+      margin-top: 1em
+      padding-top: 1em
+      border-top: solid 1px color($colors, lightGrey)
+
+    .group-amount
+      font-size: 1.4rem
+
+    .item-user-detail-container
+      display: flex
+
+      .item-user-detail-wrapper
+        display: flex
+        flex-direction: column
+        justify-content: center
+        margin-left: .7em
+
+        h5
+          font-weight: normal
+          font-size: 1.4rem
+
   .profile-image
     width: 2.2em
     height: 2.2em
@@ -7,3 +41,7 @@ page-sales-downlines
   
   .partition
     border-bottom: solid 8px color($colors, light)
+
+    h3
+      font-size: 1.6rem
+      font-weight: 600
