@@ -10,6 +10,7 @@ import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
 
 import { sales } from "../../../models/sales";
+type data = sales & { tips?: string };
 
 @Component({
   selector: 'add-sales',
@@ -19,10 +20,8 @@ export class AddSalesComponent {
 
   screenStatus: string;
   company: string;
-  repeatSales = false;
-  newSales = false;
-  surchargeVal: string
   tips: string;
+  status = 'Submitted'
 
   constructor(
     private viewCtrl: ViewController,
@@ -75,7 +74,7 @@ export class AddSalesComponent {
     this.getCompany();
   }
 
-  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel) {
+  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel, statusNgModel: NgModel) {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
       if (!amountNgModel.valid) {
@@ -84,10 +83,10 @@ export class AddSalesComponent {
       if (!salesTypeNgModel.valid) {
         throw 'Please select sales type';
       }
-      type data = sales & { tips?: string };
       let data: data  = {
         amount: parseFloat(amountNgModel.value),
-        sales_type: salesTypeNgModel.value
+        sales_type: salesTypeNgModel.value,
+        sales_status: this.status
       };
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
@@ -96,12 +95,10 @@ export class AddSalesComponent {
         data.tips = this.tips;
       }
       loading.present();
-      this.salesProvider.createSales(data).subscribe(observe => {
+      this.salesProvider.createSales(data).subscribe(sales => {
         loading.dismiss();
-        this.salesProvider.addSalesEmit(observe.amount);
-        this.viewCtrl.dismiss({
-          sales: observe
-        });
+        this.salesProvider.addSalesEmit(sales.amount);
+        this.viewCtrl.dismiss({ sales });
       }, () => {
         loading.dismiss();
         const alert = this.alertCtrl.create({

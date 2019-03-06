@@ -168,8 +168,8 @@ export class PostDetailPage {
       this.profileImage = post.posted_by.profile_image;
       this.postType = post.post_type;
       this.totalSales = post.sales_rel.map(val => val.amount).reduce((a, b) => a + b);
-      this.monthlySales = parseFloat(post.monthly_sales);
-      this.date = new Date(post.timestamp);
+      this.monthlySales = post.monthly_sales;
+      this.date = post.timestamp;
       this.likes = post.likes;
       this.comments = post.comments;
     });

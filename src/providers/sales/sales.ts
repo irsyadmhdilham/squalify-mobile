@@ -102,11 +102,13 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  getPersonalSummary(type: string): Observable<summary> {
-    const url = this.profileUrl(`sales/personal-summary/?q=${type}`);
+  getPersonalSummary(salesType: string): Observable<summary> {
+    const url = this.profileUrl(`sales/summary/?st=${salesType}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<summary>(url, httpOptions);
+        return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {
+          return this.summarySerializer(response);
+        }));
       }));
     }));
   }

@@ -9,7 +9,6 @@ import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
 
-import { AgencyProvider } from "../../providers/agency/agency";
 import { PostProvider } from "../../providers/post/post";
 import { post, comment } from "../../models/post";
 import { profile } from "../../models/profile";
@@ -52,7 +51,6 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    private agencyProvider: AgencyProvider,
     private modalCtrl: ModalController,
     private postProvider: PostProvider,
     private navParams: NavParams,
@@ -106,7 +104,7 @@ export class HomePage {
   }
 
   fetchPosts() {
-    this.agencyProvider.getPosts().subscribe(observe => {
+    this.postProvider.getPosts().subscribe(observe => {
       this.newPost = 0;
       this.posts = observe;
     });

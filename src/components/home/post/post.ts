@@ -34,7 +34,7 @@ export class PostComponent implements OnChanges {
   profileImage: string;
   totalSales: number;
   monthlySales: number;
-  date: Date = new Date();
+  date: Date;
   location: string;
   taggedUsers = [];
   comments: comment[];
@@ -137,8 +137,8 @@ export class PostComponent implements OnChanges {
       }
       return 0;
     })();
-    this.date = new Date(this.data.timestamp);
-    this.monthlySales = parseFloat(this.data.monthly_sales)
+    this.date = this.data.timestamp;
+    this.monthlySales = this.data.monthly_sales
     this.comments = this.data.comments;
     this.likes = this.data.likes;
     this.pk = this.data.pk;

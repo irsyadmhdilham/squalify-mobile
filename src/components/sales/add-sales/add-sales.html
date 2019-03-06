@@ -35,21 +35,13 @@
       </ion-item> -->
       <ion-item>
         <ion-label>Sales status</ion-label>
-        <ion-select>
+        <ion-select [(ngModel)]="status" placeholder="Select here">
           <ion-option>In hand</ion-option>
           <ion-option>Submitted</ion-option>
-          <ion-option>Disbursed (approved)</ion-option>
+          <ion-option value="Disburst">Disbursed (approved)</ion-option>
           <ion-option>Rejected</ion-option>
         </ion-select>
       </ion-item>
-      <!-- <ion-item>
-        <ion-label color="dark" class="toggle-label">New sales</ion-label>
-        <ion-toggle [(ngModel)]="newSales"></ion-toggle>
-      </ion-item>
-      <ion-item>
-        <ion-label color="dark" class="toggle-label">Repeat sales</ion-label>
-        <ion-toggle [(ngModel)]="repeatSales"></ion-toggle>
-      </ion-item> -->
     </ion-list>
     <ion-row justify-content-center>
       <button ion-button clear strong (tap)="addSales(amountNgModel, typeNgModel, locationNgModel)">Add sales</button>

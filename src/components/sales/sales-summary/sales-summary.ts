@@ -21,7 +21,7 @@ export class SalesSummaryComponent {
   month: salesStatus = this.salesStatus;
   year: salesStatus = this.salesStatus;
   screenStatus: string;
-  segment: string;
+  segment: string = this.navParams.get('segment');
   salesType = 'sales type';
   salesTypeActive = false
   cancel = false;
@@ -58,7 +58,7 @@ export class SalesSummaryComponent {
     actionSheet.onDidDismiss(() => {
       if (!this.cancel) {
         if (this.segment === 'personal') {
-          
+          this.fetch();
         } else {
           this.fetchGroup();
         }
@@ -93,9 +93,7 @@ export class SalesSummaryComponent {
   }
 
   ionViewDidLoad() {
-    const segment = this.navParams.get('segment');
-    this.segment = segment;
-    if (segment === 'personal') {
+    if (this.segment === 'personal') {
       this.fetch();
     } else {
       this.fetchGroup();
