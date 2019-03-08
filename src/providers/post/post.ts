@@ -6,7 +6,7 @@ import { Storage } from "@ionic/storage";
 import { ApiUrlModules } from "../../functions/config";
 import { Store, select } from "@ngrx/store";
 
-import { comment, like, post, memo } from "../../models/post";
+import { comment, like, post } from "../../models/post";
 import { owner } from "../../models/agency";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
@@ -24,14 +24,6 @@ export interface likePost {
 export interface unlikePost {
   postId: number;
   unliker: number;
-}
-
-export interface memoData {
-  userId?: number;
-  startDate: Date;
-  endDate: Date;
-  countdown: Date;
-  text: string;
 }
 
 interface salesResponse {
@@ -53,7 +45,6 @@ interface postResponse {
   comments: comment[];
   likes: like[];
   monthly_sales: string;
-  memo: memo;
 };
 
 @Injectable()
@@ -209,47 +200,6 @@ export class PostProvider extends ApiUrlModules {
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<post>(url, httpOptions);
-      }));
-    }));
-  }
-
-  postMemo(data: memoData): Observable<post> {
-    const url = this.agencyUrl('post/');
-    return url.pipe(switchMap(url => {
-      return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.userId().pipe(switchMap((userId: number) => {
-          data.userId = userId;
-          return this.http.post<post>(url, data, httpOptions).pipe(map(response => {
-            return {
-              ...response,
-              memo: {
-                ...response.memo,
-                start_date: new Date(response.memo.start_date),
-                end_date: new Date(response.memo.end_date),
-                countdown: response.memo.countdown ? new Date(response.memo.countdown) : null
-              }
-            };
-          }));
-        }))
-      }));
-    }));
-  }
-
-  updateMemo(data: memoData, postId: number): Observable<post> {
-    const url = this.agencyUrl(`post/${postId}/`);
-    return url.pipe(switchMap(url => {
-      return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.put<post>(url, data, httpOptions).pipe(map(response => {
-          return {
-            ...response,
-            memo: {
-              ...response.memo,
-              start_date: new Date(response.memo.start_date),
-              end_date: new Date(response.memo.end_date),
-              countdown: response.memo.countdown ? new Date(response.memo.countdown) : null
-            }
-          };
-        }));
       }));
     }));
   }

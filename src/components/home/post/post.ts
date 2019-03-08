@@ -7,15 +7,13 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { NavController, ModalController } from "ionic-angular";
+import { NavController } from "ionic-angular";
 import * as moment from "moment";
-const countdownjs = require('countdown');
 
 import { PostProvider } from "../../../providers/post/post";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
 import { post, comment } from "../../../models/post";
-
-import { ComposeMemoComponent } from "../../compose-memo/compose-memo";
+import { Memo } from "../memo";
 
 @Component({
   selector: 'post',
@@ -41,42 +39,26 @@ export class PostComponent implements OnChanges {
   likes = [];
   liked = false;
   likeId: number;
-  memo = {
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  };
+  memos: Memo[];
 
   constructor(
     private postProvider: PostProvider,
-    private navCtrl: NavController,
-    private modalCtrl: ModalController
+    private navCtrl: NavController
   ) { }
 
-  profileImageView() {
-    if (this.profileImage) {
-      return { background: `url('${this.profileImage}') no-repeat center center / cover` };
+  profileImageView(img: string) {
+    if (this.profileImage || img) {
+      const image = img ? img : this.profileImage;
+      return { background: `url('${image}') no-repeat center center / cover` };
     }
     return false;
   }
 
-  countdown() {
-    if (this.data.memo) {
-      if (this.data.memo.countdown) {
-        countdownjs(new Date(this.data.memo.countdown), data => {
-          this.memo.days = data.days;
-          this.memo.hours = data.hours;
-          this.memo.minutes = data.minutes;
-          this.memo.seconds = data.seconds;
-        });
-      }
+  dateDisplay(date: Date) {
+    if (date) {
+      return moment(date).fromNow();
     }
-  }
-
-  dateDisplay() {
-    const timestamp = moment(this.date).fromNow();
-    return timestamp;
+    return moment(this.date).fromNow();
   }
 
   async like() {
@@ -128,39 +110,35 @@ export class PostComponent implements OnChanges {
   }
 
   async ngOnChanges() {
-    this.postType = this.data.post_type;
-    this.name = this.data.posted_by.name;
-    this.profileImage = this.data.posted_by.profile_image;
-    this.totalSales = (() => {
-      if (!this.data.memo) {
-        return this.data.sales_rel.map(val => val.amount).reduce((a, b) => a + b);
+    let memos = this.data.memos;
+    if (!memos) {
+      this.postType = this.data.post_type;
+      this.name = this.data.posted_by.name;
+      this.profileImage = this.data.posted_by.profile_image;
+      this.totalSales = this.data.sales_rel.map(val => val.amount).reduce((a, b) => a + b);
+      this.date = this.data.timestamp;
+      this.monthlySales = this.data.monthly_sales
+      this.comments = this.data.comments;
+      this.likes = this.data.likes;
+      this.pk = this.data.pk;
+      this.checkLiked();
+      const likeStats = this.likeStatus;
+      if (likeStats) {
+        if (likeStats.index === this.index) {
+          this.liked = likeStats.status;
+        }
       }
-      return 0;
-    })();
-    this.date = this.data.timestamp;
-    this.monthlySales = this.data.monthly_sales
-    this.comments = this.data.comments;
-    this.likes = this.data.likes;
-    this.pk = this.data.pk;
-    this.checkLiked();
-    const likeStats = this.likeStatus;
-    if (likeStats) {
-      if (likeStats.index === this.index) {
-        this.liked = likeStats.status;
+    } else {
+      if (memos.length > 3) {
+        this.memos = memos.slice(0, 3).map(value => {
+          return new Memo(value);
+        });
+      } else {
+        this.memos = memos.map(value => {
+          return new Memo(value);
+        });
       }
     }
-    this.countdown();
-  }
-
-  editMemo() {
-    const modal = this.modalCtrl.create(ComposeMemoComponent, { edit: true, memo: this.data.memo, postId: this.pk });
-    modal.present();
-    modal.onDidDismiss((data: post) => {
-      if (data) {
-        const memo = data.memo;
-        this.data.memo = memo;
-      }
-    });
   }
 
 }

@@ -1,89 +1,105 @@
-<ion-grid>
-  <ng-container [ngSwitch]="postType">
-    <ng-container *ngSwitchCase="'sales closed'">
-      <section padding class="title-container">
-        <div [ngStyle]="profileImageView()" class="profile-image"></div>
-        <div class="title-wrapper">
-          <h6 no-margin ion-text color="dark"><span>{{name}}</span> closed sales</h6>
-          <p class="timestamp">{{dateDisplay()}}</p>
-        </div>
-      </section>
-      <section padding-horizontal class="content">
-        <div class="sales-closed-content">
-          <ion-row justify-content-between align-items-center>
-            <p no-margin class="total-label">Total sales</p>
-            <div>
-              <h3 ion-text color="primary" no-margin>RM{{totalSales | numCommas}}</h3>
-            </div>
-          </ion-row>
-          <ion-row [ngStyle]="likes.length > 0 || comments > 0 ? { marginBottom: '1em' } : false">
-            <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
-          </ion-row>
-        </div>
-      </section>
-    </ng-container>
-    <ng-container *ngSwitchCase="'memo'">
-      <ion-row justify-content-between align-items-center>
-        <h6 id="memo-title">Memo</h6>
-        <button (tap)="editMemo()" ion-button small clear no-padding margin-right class="remove-margin-button">Edit</button>
-      </ion-row>
-      <section padding class="title-container">
-        <div [ngStyle]="profileImageView()" class="profile-image"></div>
-        <div class="title-wrapper">
-          <h6 no-margin ion-text color="dark"><span>{{name}}</span> publish a memo</h6>
-          <p class="timestamp">{{dateDisplay()}}</p>
-        </div>
-      </section>
-      <section padding-horizontal class="content">
-        <div *ngIf="data.memo.countdown" id="countdown-container">
-          <div class="countdown-counter">
-            <h2 ion-text color="primary" text-center no-margin>{{memo.days}}</h2>
-            <p ion-text color="grey" text-center>DAYS</p>
+<ng-container *ngIf="data.memos; then memosBlock; else postBlock"></ng-container>
+<ng-template #postBlock>
+  <ion-grid>
+    <section padding class="title-container">
+      <div [ngStyle]="profileImageView()" class="profile-image"></div>
+      <div class="title-wrapper">
+        <h6 no-margin ion-text color="dark"><span>{{name}}</span> closed sales</h6>
+        <p class="timestamp">{{dateDisplay()}}</p>
+      </div>
+    </section>
+    <section padding-horizontal class="content">
+      <div class="sales-closed-content">
+        <ion-row justify-content-between align-items-center>
+          <p no-margin class="total-label">Total sales</p>
+          <div>
+            <h3 ion-text color="primary" no-margin>RM{{totalSales | numCommas}}</h3>
           </div>
-          <p ion-text color="grey" no-margin>:</p>
-          <div class="countdown-counter">
-            <h2 ion-text color="primary" text-center no-margin>{{memo.hours}}</h2>
-            <p ion-text color="grey" text-center>HOURS</p>
-          </div>
-          <p ion-text color="grey" no-margin>:</p>
-          <div class="countdown-counter">
-            <h2 ion-text color="primary" text-center no-margin>{{memo.minutes}}</h2>
-            <p ion-text color="grey" text-center>MINUTES</p>
-          </div>
-          <p ion-text color="grey" no-margin>:</p>
-          <div class="countdown-counter">
-            <h2 ion-text color="primary" text-center no-margin>{{memo.seconds}}</h2>
-            <p ion-text color="grey" text-center>SECONDS</p>
-          </div>
-        </div>
-        <ion-row justify-content-center>
-          <h4 no-margin>{{data.memo.text}}</h4>
         </ion-row>
+        <ion-row [ngStyle]="likes.length > 0 || comments > 0 ? { marginBottom: '1em' } : false">
+          <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
+        </ion-row>
+      </div>
+    </section>
+    <ion-row margin-left margin-bottom>
+      <p ion-text class="likes-total total" color="grey" *ngIf="likes.length > 0">{{likes.length}} likes</p>
+      <p (tap)="comment()" no-margin class="total" ion-text color="grey" *ngIf="comments.length > 0">{{comments.length}} comments</p>
+    </ion-row>
+    <ion-row class="top-border">
+      <ion-col>
+        <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
+          <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
+          Like
+        </button>
+      </ion-col>
+      <ion-col>
+        <button (tap)="comment()" no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="chatbubbles"></ion-icon>
+          Comments
+        </button>
+      </ion-col>
+      <ion-col>
+        <button no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="share-alt"></ion-icon>
+          Share
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ng-template>
+
+<ng-template #memosBlock>
+  <section padding-top id="content">
+    <h6 id="memo-title">Memos</h6>
+    <section class="memo-content" *ngFor="let memo of memos">
+      <section padding class="title-container">
+        <div [ngStyle]="profileImageView(memo.posted_by.profile_image)" class="profile-image"></div>
+        <div class="title-wrapper">
+          <h6 no-margin ion-text color="dark"><span>{{memo.posted_by.name}}</span> publish a memo</h6>
+          <p class="timestamp">{{dateDisplay(memo.posted_date)}}</p>
+        </div>
       </section>
-    </ng-container>
-  </ng-container>
-  <ion-row margin-left margin-bottom>
-    <p ion-text class="likes-total total" color="grey" *ngIf="likes.length > 0">{{likes.length}} likes</p>
-    <p (tap)="comment()" no-margin class="total" ion-text color="grey" *ngIf="comments.length > 0">{{comments.length}} comments</p>
-  </ion-row>
-  <ion-row class="top-border">
-    <ion-col>
-      <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
-        <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
-        Like
-      </button>
-    </ion-col>
-    <ion-col>
-      <button (tap)="comment()" no-margin ion-button icon-start clear color="grey">
-        <ion-icon name="chatbubbles"></ion-icon>
-        Comments
-      </button>
-    </ion-col>
-    <ion-col>
-      <button no-margin ion-button icon-start clear color="grey">
-        <ion-icon name="share-alt"></ion-icon>
-        Share
-      </button>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+      <div *ngIf="memo.gotCountdown" id="countdown-container">
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.days}}</h2>
+          <p ion-text color="grey" text-center>DAYS</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.hours}}</h2>
+          <p ion-text color="grey" text-center>HOURS</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.minutes}}</h2>
+          <p ion-text color="grey" text-center>MINUTES</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.seconds}}</h2>
+          <p ion-text color="grey" text-center>SECONDS</p>
+        </div>
+      </div>
+      <ion-row justify-content-center>
+        <h4 no-margin>{{memo.text}}</h4>
+      </ion-row>
+      <ion-row margin-top class="memo-like-comment-container">
+        <ion-col class="socmed-button">
+          <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
+            <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
+            Like
+          </button>
+        </ion-col>
+        <ion-col class="socmed-button">
+          <button (tap)="comment()" no-margin ion-button icon-start clear color="grey">
+            <ion-icon name="chatbubbles"></ion-icon>
+            Comments
+          </button>
+        </ion-col>
+      </ion-row>
+    </section>
+    <ion-row *ngIf="data.memos.length > 3" justify-content-center>
+      <button ion-button clear>See more memos</button>
+    </ion-row>
+  </section>
+</ng-template>

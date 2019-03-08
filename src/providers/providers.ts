@@ -10,6 +10,7 @@ import { GroupProvider } from "./group/group";
 import { ScoreboardProvider } from "./scoreboard/scoreboard";
 import { InboxProvider } from "./inbox/inbox";
 import { NotificationProvider } from "./notification/notification";
+import { MemoProvider } from "./memo/memo";
 
 export const Providers = [
   ContactProvider,
@@ -23,5 +24,6 @@ export const Providers = [
   GroupProvider,
   ScoreboardProvider,
   InboxProvider,
-  NotificationProvider
+  NotificationProvider,
+  MemoProvider
 ];

@@ -12,6 +12,11 @@
       Call logs
     </ion-segment-button>
   </ion-segment>
+  <ion-row padding-horizontal padding-bottom>
+    <div (tap)="filter()" header-button [activeButton]="false">
+      <p class="header-button-bold" ion-text color="dark" no-margin>Filter</p>
+    </div>
+  </ion-row>
 </ion-header>
 
 <ion-content padding [ngSwitch]="pageStatus">
@@ -29,7 +34,6 @@
           clear
           class="remove-margin-button"
         >Add contact</button>
-        <button (tap)="filter()" clear no-padding class="remove-margin-button" ion-button>Filter</button>
       </ion-row>
       <ng-container *ngIf="notFound; then notFoundTemplate; else foundTemplate"></ng-container>
       <ng-template #foundTemplate>

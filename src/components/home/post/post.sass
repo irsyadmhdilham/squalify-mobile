@@ -1,7 +1,19 @@
 post
 
+  #content
+    background: white
+    margin-top: .5em
+  
   #memo-title
     margin: .5em 0 0 1em
+  
+  .memo-like-comment-container
+    border-top: solid 1px color($colors, lightGrey)
+    border-bottom: solid 1px color($colors, lightGrey)
+  
+    .socmed-button
+      display: flex
+      justify-content: center
   
   #countdown-container
     display: flex
@@ -34,12 +46,12 @@ post
   
   .title-container
     display: grid
-    grid-template-columns: 3em auto
+    grid-template-columns: 2.6em auto
     grid-column-gap: 0.8em
 
     .profile-image
-      height: 3em
-      width: 3em
+      height: 2.6em
+      width: 2.6em
       background: color($colors, lightGrey)
       border-radius: 100%
 

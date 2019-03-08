@@ -21,6 +21,7 @@ export class SchedulesPage {
   notFound: boolean;
   months = ['All', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   month: string;
+  monthActive = false;
   filtering: boolean;
 
   constructor(
@@ -110,6 +111,7 @@ export class SchedulesPage {
               this.scheduleProvider.scheduleFilterMonth(value).subscribe(schedules => {
                 this.pageStatus = undefined;
                 this.filtering = true;
+                this.monthActive = true;
                 this.schedules = schedules;
               }, () => {
                 this.pageStatus = undefined;

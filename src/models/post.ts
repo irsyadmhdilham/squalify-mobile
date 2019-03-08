@@ -1,5 +1,6 @@
 import { sales } from "./sales";
 import { owner } from "./agency";
+import { memo } from "./memo";
 
 export interface comment {
   pk: number;
@@ -14,21 +15,13 @@ export interface like {
 };
 
 export interface post {
-  pk: number,
-  posted_by: owner;
-  post_type: string;
-  sales_rel: sales[];
-  timestamp: Date;
-  comments: comment[];
-  likes: like[];
-  monthly_sales: number;
-  memo: memo;
+  pk?: number,
+  posted_by?: owner;
+  post_type?: string;
+  sales_rel?: sales[];
+  timestamp?: Date;
+  comments?: comment[];
+  likes?: like[];
+  monthly_sales?: number;
+  memos?: memo[];
 };
-
-export interface memo {
-  pk: number;
-  start_date: Date;
-  end_date: Date;
-  text: string;
-  countdown: Date;
-}

@@ -1,9 +1,17 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-navbar>
     <ion-title>
       <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
     </ion-title>
   </ion-navbar>
+  <ion-row padding-horizontal padding-bottom>
+    <div (tap)="filterMonth()" header-button [activeButton]="monthActive">
+      <p class="header-button-bold" ion-text [color]="monthActive ? 'white': 'dark'" no-margin>{{month ? month : 'Month'}}</p>
+    </div>
+    <div class="header-button-left-margin" (tap)="filter()" header-button [activeButton]="false">
+      <p class="header-button-bold" ion-text color="dark" no-margin>Filter</p>
+    </div>
+  </ion-row>
 </ion-header>
 
 <ion-content padding [ngSwitch]="pageStatus">
@@ -13,10 +21,6 @@
     <h5 title>Schedules</h5>
     <ion-row margin-bottom justify-content-between id="top-container">
       <button ion-button clear class="remove-margin-button" no-padding (tap)="addSchedule()">Add schedule</button>
-      <div>
-        <button ion-button outline small (tap)="filterMonth()">{{month ? month : 'By month'}}</button>
-        <button ion-button outline small (tap)="filter()">Filter</button>
-      </div>
     </ion-row>
     <ng-container *ngIf="schedules.length > 0; then schedulesContent; else schedulesNoContent"></ng-container>
     <ng-template #schedulesContent>

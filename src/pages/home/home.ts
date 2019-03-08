@@ -7,9 +7,11 @@ import {
 } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
+import { mergeMap, map } from "rxjs/operators";
 import { Subscription } from "rxjs/Subscription";
 
 import { PostProvider } from "../../providers/post/post";
+import { MemoProvider } from "../../providers/memo/memo";
 import { post, comment } from "../../models/post";
 import { profile } from "../../models/profile";
 import { store } from "../../models/store";
@@ -55,7 +57,8 @@ export class HomePage {
     private postProvider: PostProvider,
     private navParams: NavParams,
     private store: Store<store>,
-    private events: Events
+    private events: Events,
+    private memoProvider: MemoProvider
   ) { }
 
   composeMemo() {
@@ -63,8 +66,7 @@ export class HomePage {
     modal.present();
     modal.onDidDismiss((post: post) => {
       if (post) {
-        console.log(post);
-        // this.posts.unshift(post);
+
       }
     });
   }
@@ -103,10 +105,17 @@ export class HomePage {
     return false;
   }
 
-  fetchPosts() {
-    this.postProvider.getPosts().subscribe(observe => {
+  fetch() {
+    this.memoProvider.getMemos().pipe(mergeMap(memos => {
+      return this.postProvider.getPosts().pipe(map(posts => {
+        return { posts: posts, memos: memos };
+      }));
+    })).subscribe(response => {
+      const posts = response.posts,
+            memos = response.memos;
       this.newPost = 0;
-      this.posts = observe;
+      this.posts.push({ memos });
+      this.posts.push(...posts);
     });
   }
 
@@ -169,7 +178,7 @@ export class HomePage {
   ionViewDidLoad() {
     this.postProvider.userId().subscribe(userId => {
       if (userId) {
-        this.fetchPosts();
+        this.fetch();
         this.store.dispatch(new PointInit());
       }
     });

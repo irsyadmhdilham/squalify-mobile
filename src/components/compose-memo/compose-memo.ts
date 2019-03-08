@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 
 import { Colors } from "../../functions/colors";
 
-import { PostProvider, memoData as data } from "../../providers/post/post";
-import { memo, post } from "../../models/post";
+import { MemoProvider, memoData } from "../../providers/memo/memo";
+import { memo } from "../../models/memo";
 
 @Component({
   selector: 'compose-memo',
@@ -24,9 +24,9 @@ export class ComposeMemoComponent {
   constructor(
     private viewCtrl: ViewController,
     private alertCtrl: AlertController,
-    private postProvider: PostProvider,
     private loadingCtrl: LoadingController,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private memoProvider: MemoProvider
   ) { }
 
   ionViewDidLoad() {
@@ -76,7 +76,7 @@ export class ComposeMemoComponent {
       return;
     }
     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-    const data: data = {
+    const data: memoData = {
       text: this.text,
       startDate: this.startDate ? moment(this.startDate, dateFormat).toDate() : null,
       endDate: moment(this.endDate, dateFormat).toDate(),
@@ -84,11 +84,11 @@ export class ComposeMemoComponent {
     }
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     loading.present();
-    const httpRequest = (): Observable<post> => {
+    const httpRequest = (): Observable<any> => {
       if (this.edit) {
-        return this.postProvider.updateMemo(data, this.postId);
+        return this.memoProvider.updateMemo(data, this.postId);
       }
-      return this.postProvider.postMemo(data);
+      return this.memoProvider.postMemo(data);
     };
     httpRequest().subscribe(post => {
       loading.dismiss();

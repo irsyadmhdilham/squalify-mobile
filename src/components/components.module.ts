@@ -11,7 +11,7 @@ import { NotFoundComponent } from './not-found/not-found';
 		...loadingComponents,
     FetchErrorComponent,
     EmptyContentComponent,
-    NotFoundComponent
+		NotFoundComponent
 	],
 	imports: [
 		IonicModule,
@@ -21,7 +21,7 @@ import { NotFoundComponent } from './not-found/not-found';
 		...loadingComponents,
     FetchErrorComponent,
     EmptyContentComponent,
-    NotFoundComponent
+		NotFoundComponent
 	]
 })
 export class ComponentsModule {}

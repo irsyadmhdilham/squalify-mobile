@@ -10,7 +10,6 @@ import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
 
 import { sales } from "../../../models/sales";
-type data = sales & { tips?: string };
 
 @Component({
   selector: 'add-sales',
@@ -20,7 +19,6 @@ export class AddSalesComponent {
 
   screenStatus: string;
   company: string;
-  tips: string;
   status = 'Submitted'
 
   constructor(
@@ -66,15 +64,11 @@ export class AddSalesComponent {
     });
   }
 
-  removeTips() {
-    this.tips = undefined;
-  }
-
   ionViewDidLoad() {
     this.getCompany();
   }
 
-  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel, statusNgModel: NgModel) {
+  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel) {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
       if (!amountNgModel.valid) {
@@ -83,16 +77,13 @@ export class AddSalesComponent {
       if (!salesTypeNgModel.valid) {
         throw 'Please select sales type';
       }
-      let data: data  = {
+      let data: sales  = {
         amount: parseFloat(amountNgModel.value),
         sales_type: salesTypeNgModel.value,
         sales_status: this.status
       };
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
-      }
-      if (this.tips) {
-        data.tips = this.tips;
       }
       loading.present();
       this.salesProvider.createSales(data).subscribe(sales => {
