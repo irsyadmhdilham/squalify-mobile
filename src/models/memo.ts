@@ -1,3 +1,17 @@
+import { owner } from "./agency";
+
+export interface comment {
+  pk: number;
+  commented_by: owner;
+  text: string;
+  timestamp: Date;
+};
+
+export interface like {
+  pk: number;
+  liker: any;
+};
+
 export interface memo {
   pk: number;
   start_date: Date;
@@ -6,7 +20,10 @@ export interface memo {
   countdown: Date;
   posted_date: Date;
   posted_by: {
+    pk?: number;
     name: string;
     profile_image: string;
-  }
+  },
+  likes: like[];
+  comments: comment[];
 }

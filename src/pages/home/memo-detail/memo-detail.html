@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <section padding class="title-container">
+      <div [ngStyle]="profileImageView()" class="profile-image"></div>
+      <div class="title-wrapper">
+        <h6 no-margin ion-text color="dark"><span>{{name}}</span> published memo</h6>
+        <p class="timestamp">{{postedDate | date:'d MMM yyyy, HH:mma' | lowercase}}</p>
+      </div>
+    </section>
+    <section padding-horizontal margin-bottom class="content">
+      <div *ngIf="countdown" id="countdown-container">
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{counting.days}}</h2>
+          <p ion-text color="grey" text-center>DAYS</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{counting.hours}}</h2>
+          <p ion-text color="grey" text-center>HOURS</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{counting.minutes}}</h2>
+          <p ion-text color="grey" text-center>MINUTES</p>
+        </div>
+        <p ion-text color="grey" no-margin>:</p>
+        <div class="countdown-counter">
+          <h2 ion-text color="primary" text-center no-margin>{{counting.seconds}}</h2>
+          <p ion-text color="grey" text-center>SECONDS</p>
+        </div>
+      </div>
+      <h3 no-margin text-center>{{text}}</h3>
+    </section>
+    <ion-row margin-horizontal>
+      <p ion-text *ngIf="likes > 0" color="grey">{{likes}} likes</p>
+    </ion-row>
+    <ion-row class="like-comment-share">
+      <ion-col>
+        <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
+          <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
+          Like
+        </button>
+      </ion-col>
+      <ion-col>
+        <button no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="chatbubbles"></ion-icon>
+          Comments
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-list no-lines>
+    <ion-item class="comment-container" *ngFor="let comment of comments">
+      <div item-start [ngStyle]="commentProfileImage(comment.commented_by.profile_image)" class="commenter-image"></div>
+      <ion-row>
+        <div class="comment-wrapper">
+          <h6 ion-text color="dark">{{comment.commented_by.name}}</h6>
+          <p ion-text color="dark">{{comment.text}}</p>
+        </div>
+      </ion-row>
+      <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <section>
+    <div id="chatroom-input-wrapper">
+      <ion-textarea #textMessageArea no-margin type="text" [(ngModel)]="message" placeholder="write something here"></ion-textarea>
+    </div>
+    <ion-buttons end>
+      <button (tap)="postComment()" id="send-button" ion-button color="primary" clear icon-only>
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-buttons>
+  </section>
+</ion-footer>
+  

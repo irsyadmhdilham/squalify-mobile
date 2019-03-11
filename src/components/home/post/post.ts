@@ -11,7 +11,9 @@ import { NavController } from "ionic-angular";
 import * as moment from "moment";
 
 import { PostProvider } from "../../../providers/post/post";
+import { MemoProvider } from "../../../providers/memo/memo";
 import { PostDetailPage } from "../../../pages/home/post-detail/post-detail";
+import { MemoDetailPage } from "../../../pages/home/memo-detail/memo-detail";
 import { post, comment } from "../../../models/post";
 import { Memo } from "../memo";
 
@@ -43,7 +45,8 @@ export class PostComponent implements OnChanges {
 
   constructor(
     private postProvider: PostProvider,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private memoProvider: MemoProvider
   ) { }
 
   profileImageView(img: string) {
@@ -109,6 +112,11 @@ export class PostComponent implements OnChanges {
     });
   }
 
+  memoComment(memo) {
+    this.navToDetail.next(true);
+    this.navCtrl.push(MemoDetailPage, { memo })
+  }
+
   async ngOnChanges() {
     let memos = this.data.memos;
     if (!memos) {
@@ -131,11 +139,11 @@ export class PostComponent implements OnChanges {
     } else {
       if (memos.length > 3) {
         this.memos = memos.slice(0, 3).map(value => {
-          return new Memo(value);
+          return new Memo(value, this.memoProvider);
         });
       } else {
         this.memos = memos.map(value => {
-          return new Memo(value);
+          return new Memo(value, this.memoProvider);
         });
       }
     }

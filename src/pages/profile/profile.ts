@@ -18,6 +18,9 @@ import { ChangeEmailComponent } from "../../components/profile/change-email/chan
 import { EditProfileComponent } from "../../components/profile/edit-profile/edit-profile";
 import { SettingsPage } from "./settings/settings";
 import { NotificationsPage } from "../notifications/notifications";
+import { AgencyPage } from "../dashboard/agency/agency";
+import { GroupPage } from "../dashboard/group/group";
+import { ScoreboardPage } from "../dashboard/scoreboard/scoreboard";
 
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
@@ -90,6 +93,18 @@ export class ProfilePage extends Ids {
   changeEmail() {
     const modal = this.modalCtrl.create(ChangeEmailComponent);
     modal.present();
+  }
+
+  toScoreboard() {
+    this.navCtrl.push(ScoreboardPage);
+  }
+
+  toAgency() {
+    this.navCtrl.push(AgencyPage);
+  }
+
+  toGroup() {
+    this.navCtrl.push(GroupPage);
   }
 
   editProfile() {

@@ -199,7 +199,19 @@ export class PostProvider extends ApiUrlModules {
     const url = this.agencyUrl(`post/${postId}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.get<post>(url, httpOptions);
+        return this.http.get<postResponse>(url, httpOptions).pipe(map(response => {
+          return {
+            ...response,
+            sales_rel: response.sales_rel.map(value => ({
+              ...value,
+              amount: parseFloat(value.amount),
+              timestamp: new Date(value.timestamp),
+              commission: parseFloat(value.commission)
+            })),
+            timestamp: new Date(response.timestamp),
+            monthly_sales: parseFloat(response.monthly_sales)
+          }
+        }));
       }));
     }));
   }

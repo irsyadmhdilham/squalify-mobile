@@ -1,0 +1,129 @@
+page-memo-detail
+
+  #countdown-container
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 80%
+    margin: 0 10% 1em
+
+    > p
+      font-size: 2rem
+
+    .countdown-counter
+      h2
+        font-weight: 300
+        font-size: 2.9rem
+
+      p
+        margin: .3em 0 0
+        font-size: 1rem
+
+  ion-grid
+    background: white
+
+  ion-col button
+    height: 2em !important
+  
+  .like-comment-share
+    border-top: solid 0.55px rgba(black, 0.3)
+    border-bottom: solid 0.55px rgba(black, 0.3)
+  
+  .title-container
+    display: grid
+    grid-template-columns: 3em auto
+    grid-column-gap: 0.8em
+
+    .profile-image
+      height: 3em
+      width: 3em
+      background: color($colors, lightGrey)
+      border-radius: 100%
+
+    .title-wrapper
+
+      .timestamp
+        margin: .3em 0 0
+
+      h6 
+        font-weight: normal
+        font-size: 1.5rem
+
+        span
+          font-weight: bold
+
+  .sales-closed-content
+    
+    .total-label
+      font-size: 1.8rem
+      font-weight: 300
+    
+    .monthly-sales
+      margin: .5em 0 0 0
+
+      span
+        font-weight: bold
+    
+    .sales-type
+      font-size: 1.3rem
+  
+  .like-button
+    animation: like-animate 0.5s ease-in-out
+  
+  #loading-comments-container
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 30%
+    width: 100%
+  
+  ion-footer
+    border-top: solid 0.55px color($colors, lightGrey)
+
+    section
+      display: grid
+      grid-template-columns: auto 10%
+      align-items: center
+      padding: 0 0.6em
+
+      #chatroom-input-wrapper
+        padding: 0.5em 1em
+        border: solid 1px color($colors, lightGrey)
+        border-radius: 100em
+        height: 2.6em
+        overflow: auto
+      
+      #send-button
+        width: 100%
+  
+  @keyframes like-animate
+    0%, 100%
+      transform: scale(1)
+
+    50%
+      transform: scale(1.3)
+    
+    70%
+      transform: scale(0.8)
+    
+  .comment-container
+    align-items: flex-start
+
+    .commenter-image
+      width: 2em
+      height: 2em
+      background: color($colors, lightGrey)
+      border-radius: 100%
+      margin-top: 1em
+    
+    .comment-wrapper
+      background: lighten(black, 95%)
+      padding: .7em 1em
+      border-radius: 20px
+
+      h6
+        font-weight: bold
+    
+    .comment-date
+      font-size: 1.2rem
+      margin: .3em 1em 0

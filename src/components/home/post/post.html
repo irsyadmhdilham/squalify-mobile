@@ -80,18 +80,22 @@
           <p ion-text color="grey" text-center>SECONDS</p>
         </div>
       </div>
-      <ion-row justify-content-center>
+      <ion-row margin-bottom justify-content-center>
         <h4 no-margin>{{memo.text}}</h4>
+      </ion-row>
+      <ion-row margin-left margin-bottom>
+        <p ion-text class="likes-total total" color="grey" *ngIf="memo.likes.length > 0">{{memo.likes.length}} likes</p>
+        <p (tap)="memoComment(memo.memo)" no-margin class="total" ion-text color="grey" *ngIf="memo.comments.length > 0">{{memo.comments.length}} comments</p>
       </ion-row>
       <ion-row margin-top class="memo-like-comment-container">
         <ion-col class="socmed-button">
-          <button (tap)="like()" no-margin ion-button icon-start clear color="grey">
-            <ion-icon #likeIcon [color]="liked ? 'primary': 'grey'" name="thumbs-up"></ion-icon>
+          <button (tap)="memo.like(true)" no-margin ion-button icon-start clear color="grey">
+            <ion-icon #likeIcon [color]="memo.liked ? 'primary' : 'grey'" name="thumbs-up"></ion-icon>
             Like
           </button>
         </ion-col>
         <ion-col class="socmed-button">
-          <button (tap)="comment()" no-margin ion-button icon-start clear color="grey">
+          <button (tap)="memoComment(memo.memo)" no-margin ion-button icon-start clear color="grey">
             <ion-icon name="chatbubbles"></ion-icon>
             Comments
           </button>
