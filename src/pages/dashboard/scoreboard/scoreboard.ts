@@ -16,7 +16,7 @@ export class ScoreboardPage {
   segment = 'sales';
   pageStatus: string;
   periodActive = false;
-  salesType = 'Sales type';
+  salesType = 'sales type';
   salesTypeActive = false;
   period = 'period';
   salesScorer: salesScore[] = [];
@@ -48,12 +48,8 @@ export class ScoreboardPage {
     });
     actionSheet.present();
     actionSheet.onDidDismiss(() => {
-      let period = this.period;
-      if (period === 'period') {
-        period = 'year';
-      }
       if (this.segment === 'sales') {
-        this.fetchSalesScore(period, this.salesType);
+        this.fetchSalesScore();
       }
     });
   }
@@ -71,36 +67,20 @@ export class ScoreboardPage {
     });
     actionSheet.present();
     actionSheet.onDidDismiss(() => {
-      let period = this.period;
-      if (period === 'period') {
-        period = 'year';
-      }
       if (this.segment === 'sales') {
-        let salesType = this.salesType;
-        if (salesType === 'Sales type') {
-          salesType = 'total';
-        }
-        this.fetchSalesScore(period, salesType);
+        this.fetchSalesScore();
       } else {
-        this.fetchPointScore(period);
+        this.fetchPointScore();
       }
     });
   }
 
   segmentChanged(event) {
     const value = event.value;
-    let period = this.period;
-    if (period === 'period') {
-      period = 'year';
-    }
     if (value === 'sales') {
-      let salesType = this.salesType;
-      if (salesType === 'Sales type') {
-        salesType = 'total';
-      }
-      this.fetchSalesScore(period, salesType);
+      this.fetchSalesScore();
     } else {
-      this.fetchPointScore(period);
+      this.fetchPointScore();
     }
   }
 
@@ -113,8 +93,10 @@ export class ScoreboardPage {
     };
   }
 
-  fetchSalesScore(period, salesType) {
+  fetchSalesScore() {
     this.pageStatus = 'loading';
+    const period = this.period,
+          salesType = this.salesType;
     this.scoreboardProvider.getSalesScore(period, salesType).subscribe(sales => {
       this.pageStatus = undefined;
       this.salesScorer = sales;
@@ -123,8 +105,9 @@ export class ScoreboardPage {
     });
   }
 
-  fetchPointScore(period) {
+  fetchPointScore() {
     this.pageStatus = 'loading';
+    const period = this.period;
     this.scoreboardProvider.getPointScore(period).subscribe(observe => {
       this.pageStatus = undefined;
       this.pointScorer = observe;
@@ -159,7 +142,7 @@ export class ScoreboardPage {
   }
 
   ionViewDidLoad() {
-    this.fetchSalesScore('year', 'total');
+    this.fetchSalesScore();
     this.pointMutation();
     this.salesMutatation();
   }
