@@ -66,7 +66,7 @@ export class HomePage {
     modal.present();
     modal.onDidDismiss((post: post) => {
       if (post) {
-
+        this.newPost += 1;
       }
     });
   }

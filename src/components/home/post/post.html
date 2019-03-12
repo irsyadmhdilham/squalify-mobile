@@ -103,7 +103,7 @@
       </ion-row>
     </section>
     <ion-row *ngIf="data.memos.length > 3" justify-content-center>
-      <button ion-button clear>See more memos</button>
+      <button (tap)="navToMemos()" ion-button clear>See more memos</button>
     </ion-row>
   </section>
 </ng-template>

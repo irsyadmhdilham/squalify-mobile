@@ -17,6 +17,8 @@ import { MemoDetailPage } from "../../../pages/home/memo-detail/memo-detail";
 import { post, comment } from "../../../models/post";
 import { Memo } from "../memo";
 
+import { MemosPage } from "../../../pages/memos/memos";
+
 @Component({
   selector: 'post',
   templateUrl: 'post.html'
@@ -147,6 +149,10 @@ export class PostComponent implements OnChanges {
         });
       }
     }
+  }
+
+  navToMemos() {
+    this.navCtrl.push(MemosPage);
   }
 
 }

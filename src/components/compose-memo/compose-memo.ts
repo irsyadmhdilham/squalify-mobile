@@ -78,8 +78,8 @@ export class ComposeMemoComponent {
     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
     const data: memoData = {
       text: this.text,
-      startDate: this.startDate ? moment(this.startDate, dateFormat).toDate() : null,
-      endDate: moment(this.endDate, dateFormat).toDate(),
+      start_date: this.startDate ? moment(this.startDate, dateFormat).toDate() : null,
+      end_date: moment(this.endDate, dateFormat).toDate(),
       countdown: this.countdown ? moment(this.countdown, dateFormat).toDate() : null
     }
     const loading = this.loadingCtrl.create({content: 'Please wait...'});

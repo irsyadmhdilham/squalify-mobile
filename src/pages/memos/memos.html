@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      <img img-title src="../../assets/imgs/squalify.png" alt="squalify">
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <section class="memo-content" *ngFor="let memo of memos">
+    <section padding class="title-container">
+      <div [ngStyle]="profileImageView(memo.posted_by.profile_image)" class="profile-image"></div>
+      <div class="title-wrapper">
+        <h6 no-margin ion-text color="dark"><span>{{memo.posted_by.name}}</span> publish a memo</h6>
+        <p class="timestamp">{{dateDisplay(memo.posted_date)}}</p>
+      </div>
+    </section>
+    <div *ngIf="memo.gotCountdown" id="countdown-container">
+      <div class="countdown-counter">
+        <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.days}}</h2>
+        <p ion-text color="grey" text-center>DAYS</p>
+      </div>
+      <p ion-text color="grey" no-margin>:</p>
+      <div class="countdown-counter">
+        <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.hours}}</h2>
+        <p ion-text color="grey" text-center>HOURS</p>
+      </div>
+      <p ion-text color="grey" no-margin>:</p>
+      <div class="countdown-counter">
+        <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.minutes}}</h2>
+        <p ion-text color="grey" text-center>MINUTES</p>
+      </div>
+      <p ion-text color="grey" no-margin>:</p>
+      <div class="countdown-counter">
+        <h2 ion-text color="primary" text-center no-margin>{{memo.countdown.seconds}}</h2>
+        <p ion-text color="grey" text-center>SECONDS</p>
+      </div>
+    </div>
+    <ion-row margin-bottom justify-content-center>
+      <h4 no-margin>{{memo.text}}</h4>
+    </ion-row>
+    <ion-row margin-left margin-bottom>
+      <p ion-text class="likes-total total" color="grey" *ngIf="memo.likes.length > 0">{{memo.likes.length}} likes</p>
+      <p (tap)="comment(memo.memo)" no-margin class="total" ion-text color="grey" *ngIf="memo.comments.length > 0">{{memo.comments.length}} comments</p>
+    </ion-row>
+    <ion-row margin-top class="memo-like-comment-container">
+      <ion-col class="socmed-button">
+        <button (tap)="memo.like(true)" no-margin ion-button icon-start clear color="grey">
+          <ion-icon #likeIcon [color]="memo.liked ? 'primary' : 'grey'" name="thumbs-up"></ion-icon>
+          Like
+        </button>
+      </ion-col>
+      <ion-col class="socmed-button">
+        <button (tap)="comment(memo.memo)" no-margin ion-button icon-start clear color="grey">
+          <ion-icon name="chatbubbles"></ion-icon>
+          Comments
+        </button>
+      </ion-col>
+    </ion-row>
+  </section>
+</ion-content>

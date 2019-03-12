@@ -15,7 +15,7 @@
 </ion-header>
 
 <ion-content content-bg id="main">
-  <ion-row (tap)="fetchPosts()" *ngIf="newPost > 0" justify-content-center id="new-post-button">
+  <ion-row (tap)="fetch()" *ngIf="newPost > 0" justify-content-center id="new-post-button">
     <button ion-button clear>You got {{newPost}} new posts</button>
   </ion-row>
   <ion-grid padding id="top-container" class="container">

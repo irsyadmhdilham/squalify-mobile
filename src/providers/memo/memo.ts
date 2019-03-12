@@ -10,8 +10,8 @@ import { owner } from "../../models/agency";
 
 export interface memoData {
   userId?: number;
-  startDate: Date;
-  endDate: Date;
+  start_date: Date;
+  end_date: Date;
   countdown: Date;
   text: string;
 
