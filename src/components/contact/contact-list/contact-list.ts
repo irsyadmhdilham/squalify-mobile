@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ViewController } from "ionic-angular";
+import { AlertController, ViewController, NavParams } from "ionic-angular";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact } from "../../../models/contact";
@@ -13,11 +13,13 @@ export class ContactListComponent {
 
   pageStatus: string;
   contacts: contact[];
+  sales = false;
 
   constructor(
     private contactProvider: ContactProvider,
     private alertCtrl: AlertController,
-    private viewCtrl: ViewController
+    private viewCtrl: ViewController,
+    private navParams: NavParams
   ) { }
 
   dismiss() {
@@ -64,6 +66,9 @@ export class ContactListComponent {
   }
 
   ionViewDidLoad() {
+    if (this.navParams.get('sales')) {
+      this.sales = true;
+    }
     this.fetch();
   }
 

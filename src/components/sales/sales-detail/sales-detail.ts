@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams, LoadingController, AlertController } from "ionic-angular";
+import { ViewController, NavParams, LoadingController, AlertController, ModalController } from "ionic-angular";
 
-import { Colors } from "../../../functions/colors";
 import { sales } from "../../../models/sales";
 
 import { SalesProvider } from "../../../providers/sales/sales";
+import { EditSalesComponent } from "../edit-sales/edit-sales";
 
 @Component({
   selector: 'sales-detail',
@@ -19,6 +19,7 @@ export class SalesDetailComponent {
   amount: number;
   salesStatus: string;
   salesType: string;
+  client: string;
   removed = false;
 
   constructor(
@@ -26,19 +27,17 @@ export class SalesDetailComponent {
     private viewCtrl: ViewController,
     private salesProvider: SalesProvider,
     private loadingCtrl: LoadingController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
     this.viewCtrl.dismiss();
   }
 
-  salesStatusStyle() {
-    if (this.salesStatus === 'Submitted') {
-      return { color: Colors.orange };
-    } else if (this.salesStatus === 'Disbursed') {
-      return { color: Colors.secondary };
-    }
+  edit() {
+    const modal = this.modalCtrl.create(EditSalesComponent, { sales: this.navParams.get('sales') });
+    modal.present();
   }
 
   ionViewDidLoad() {
@@ -50,6 +49,14 @@ export class SalesDetailComponent {
     this.index = index;
     this.pk = sales.pk;
     this.salesType = sales.sales_type;
+    this.salesStatus = sales.sales_status;
+    if (sales.client_name) {
+      this.client = sales.client_name;
+    } else if (sales.contact) {
+      this.client = sales.contact.name;
+    } else {
+      this.client = 'No client name';
+    }
   }
 
   removeSales() {

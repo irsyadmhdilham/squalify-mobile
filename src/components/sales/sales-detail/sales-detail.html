@@ -6,28 +6,38 @@
       </button>
     </ion-buttons>
     <ion-title>Sales detail</ion-title>
+    <ion-buttons end>
+      <button (tap)="edit()" ion-button>Edit</button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <p no-margin ion-text color="grey">{{timestamp | date:'d MMM yyyy, HH:mma'}}</p>
-  <div *ngIf="location" id="location-wrapper">
-    <ion-icon name="pin" color="grey"></ion-icon>
-    <p ion-text color="grey">{{location}}</p>
-  </div>
-  <ion-list margin-top>
+  <ion-list>
     <ion-item no-padding>
-      <h2 ion-text color="primary" id="amount">RM{{amount | numCommas}}</h2>
-      <p ion-text color="grey" no-margin>Total sales</p>
+      <p>Date and time</p>
+      <h3>{{timestamp | date:'d MMM yyyy, HH:mma'}}</h3>
+    </ion-item>
+    <ion-item *ngIf="location" no-padding>
+      <p>Location</p>
+      <h3>{{location}}</h3>
+    </ion-item>
+    <ion-item no-padding>
+      <p>Amount</p>
+      <h3 ion-text>RM{{amount | numCommas}}</h3>
+    </ion-item>
+    <ion-item no-padding>
+      <p>Sales type</p>
+      <h3 ion-text>{{salesType}}</h3>
+    </ion-item>
+    <ion-item no-padding>
+      <p>Sales status</p>
+      <h3>{{salesStatus}}</h3>
+    </ion-item>
+    <ion-item no-padding>
+      <p>Client</p>
+      <h3>{{client}}</h3>
     </ion-item>
   </ion-list>
-  <!-- <div id="sales-status-wrapper">
-    <h6>Sales status</h6>
-    <p [ngStyle]="salesStatusStyle()">{{salesStatus}}</p>
-  </div> -->
-  <div id="sales-type">
-    <h6 ion-text no-margin color="grey">Sales type</h6>
-    <p no-margin>{{salesType}}</p>
-  </div>
   <button no-padding ion-button clear color="danger" (tap)="removeSales()">Remove</button>
 </ion-content>

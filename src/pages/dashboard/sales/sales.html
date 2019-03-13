@@ -52,8 +52,9 @@
         <ng-template #personalSalesContent>
           <ion-list>
             <ion-item (tap)="showDetail(sales, i)" no-padding *ngFor="let sales of personalSales; index as i">
-              <h3 color="primary" ion-text>{{sales.timestamp | date:'d MMM yyyy'}}, {{sales.timestamp | date:'HH:mma'}}</h3>
-              <p>{{sales.sales_status}}</p>
+              <h3 ion-text>{{clientName(sales)}}</h3>
+              <p class="timestamp" ion-text>{{timestamp(sales.timestamp)}}</p>
+              <p ion-text color="primary">{{sales.sales_status}}</p>
               <h3 item-end ion-text color="dark">RM{{sales.amount | numCommas}}</h3>
             </ion-item>
           </ion-list>

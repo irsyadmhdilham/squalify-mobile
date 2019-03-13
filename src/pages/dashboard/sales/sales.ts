@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ActionSheetController, Segment } from 'ionic-angular';
+import * as moment from "moment";
 
 import { SalesProvider } from "../../../providers/sales/sales";
 import { agency } from "../../../models/agency";
@@ -36,6 +37,27 @@ export class SalesPage {
     private salesProvider: SalesProvider,
     private actionSheetCtrl: ActionSheetController
   ) { }
+
+  timestamp(timestamp: Date) {
+    const fromNow = moment(timestamp).fromNow();
+    const output = fromNow.match(/(seconds|minute|minutes|hour|hours)/);
+    if (output) {
+      return fromNow;
+    }
+    return moment(timestamp).format('D MMM YYYY, h:mma');
+  }
+
+  clientName(sales: sales) {
+    const clientName = sales.client_name,
+          contact = sales.contact;
+    if (clientName) {
+      return clientName;
+    } else if (contact) {
+      return contact.name;
+    } else {
+      return 'No client name';
+    }
+  }
 
   selectPeriod() {
     const actionSheet = this.actionSheetCtrl.create({

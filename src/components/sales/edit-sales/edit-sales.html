@@ -5,7 +5,7 @@
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>Add sales</ion-title>
+    <ion-title>Edit sales</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -15,15 +15,15 @@
     <ion-list no-lines class="form-list">
       <ion-item>
         <ion-label stacked>SALES AMOUNT</ion-label>
-        <ion-input ngModel #amountNgModel="ngModel" required type="number" placeholder="Insert amount here"></ion-input>
+        <ion-input [(ngModel)]="amount" type="number" placeholder="Insert amount here"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label stacked>LOCATION (OPTIONAL)</ion-label>
-        <ion-input type="text" ngModel #locationNgModel="ngModel" placeholder="Insert location"></ion-input>
+        <ion-input type="text" [(ngModel)]="location" placeholder="Insert location"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Sales type</ion-label>
-        <ion-select ngModel #typeNgModel="ngModel" required>
+        <ion-select [(ngModel)]="salesType">
           <ion-option *ngFor="let type of salesTypes()">{{type}}</ion-option>
         </ion-select>
       </ion-item>

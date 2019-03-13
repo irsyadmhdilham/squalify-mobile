@@ -6,6 +6,11 @@ export interface sales {
   sales_status?: string;
   location?: string;
   commission?: number;
+  contact?: {
+    pk: number;
+    name: string;
+  }
+  client_name?: string;
 };
 
 export interface salesStatus {

@@ -9,9 +9,9 @@ import { NotFoundComponent } from './not-found/not-found';
 @NgModule({
 	declarations: [
 		...loadingComponents,
-    FetchErrorComponent,
-    EmptyContentComponent,
-		NotFoundComponent
+		FetchErrorComponent,
+		EmptyContentComponent,
+		NotFoundComponent,
 	],
 	imports: [
 		IonicModule,
@@ -19,8 +19,8 @@ import { NotFoundComponent } from './not-found/not-found';
 	],
 	exports: [
 		...loadingComponents,
-    FetchErrorComponent,
-    EmptyContentComponent,
+		FetchErrorComponent,
+		EmptyContentComponent,
 		NotFoundComponent
 	]
 })

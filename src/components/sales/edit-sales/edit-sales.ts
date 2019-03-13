@@ -5,24 +5,29 @@ import {
   AlertController,
   LoadingController,
   ModalController,
-  ActionSheetController
+  ActionSheetController,
+  NavParams
 } from "ionic-angular";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
 
 import { contact } from "../../../models/contact";
+import { sales } from "../../../models/sales";
 import { ContactListComponent } from "../../contact/contact-list/contact-list";
 
 @Component({
-  selector: 'add-sales',
-  templateUrl: 'add-sales.html'
+  selector: 'edit-sales',
+  templateUrl: 'edit-sales.html'
 })
-export class AddSalesComponent {
+export class EditSalesComponent {
 
   screenStatus: string;
   company: string;
-  status = 'Submitted'
+  amount: string;
+  salesType: string;
+  location: string;
+  status: string;
   contact: string;
   contactId: number;
   clientMethod: string;
@@ -34,7 +39,8 @@ export class AddSalesComponent {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private navParams: NavParams
   ) { }
 
   dismiss() {
@@ -74,6 +80,19 @@ export class AddSalesComponent {
 
   ionViewDidLoad() {
     this.getCompany();
+    const sales: sales = this.navParams.get('sales');
+    this.amount = sales.amount.toString();
+    this.location = sales.location;
+    this.salesType = sales.sales_type;
+    this.status = sales.sales_status;
+    if (sales.contact) {
+      this.contact = sales.contact.name;
+      this.contactId = sales.contact.pk;
+      this.clientMethod = 'contact';
+    } else if (sales.client_name) {
+      this.contact = sales.client_name;
+      this.clientMethod = 'write';
+    }
   }
 
   clientMethodHandler() {
@@ -99,21 +118,21 @@ export class AddSalesComponent {
     })
   }
 
-  async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel) {
+  async addSales() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
-      if (!amountNgModel.valid) {
+      if (this.amount === '') {
         throw 'Please insert sales amount';
       }
-      if (!salesTypeNgModel.valid) {
+      if (this.salesType === '') {
         throw 'Please select sales type';
       }
       if (!this.contact || this.contact === '') {
         throw 'Please insert client name';
       }
       let data: any  = {
-        amount: parseFloat(amountNgModel.value),
-        sales_type: salesTypeNgModel.value,
+        amount: parseFloat(this.amount),
+        sales_type: this.salesType,
         sales_status: this.status
       };
       if (this.clientMethod === 'contact') {
@@ -121,8 +140,8 @@ export class AddSalesComponent {
       } else if (this.clientMethod === 'write') {
         data.client_name = this.contact;
       }
-      if (locationNgModel.value !== '') {
-        data.location = locationNgModel.value;
+      if (this.location !== '') {
+        data.location = this.location;
       }
       loading.present();
       this.salesProvider.createSales(data).subscribe(sales => {

@@ -17,6 +17,11 @@ interface salesResponse {
   sales_status?: string;
   location?: string;
   commission?: string;
+  contact?: {
+    pk: number;
+    name: string;
+  }
+  client_name?: string;
 };
 
 interface groupResponse {
