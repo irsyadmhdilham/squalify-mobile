@@ -2,8 +2,11 @@ import * as countdownjs from 'countdown';
 import { memo as model, like, comment } from "../../models/memo";
 import { MemoProvider } from "../../providers/memo/memo";
 import { mergeMap, map } from 'rxjs/operators';
+import { Observable } from "rxjs";
+import * as moment from "moment";
 
 export class Memo {
+
   countdown = {
     days: 0,
     hours: 0,
@@ -11,8 +14,8 @@ export class Memo {
     seconds: 0
   }
   text = this.memo.text;
-  start_date = this.memo.start_date;
-  end_date = this.memo.end_date;
+  owner: Observable<boolean> = this.memoProvider.userId().pipe(map(userId => userId === this.memo.posted_by.pk));
+  expiryDate = moment(this.memo.expiry_date).format('D MMM YYYY, h:mma');
   posted_by = this.memo.posted_by;
   posted_date = this.memo.posted_date;
   gotCountdown = this.memo.countdown;

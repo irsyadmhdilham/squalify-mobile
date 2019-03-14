@@ -15,8 +15,6 @@ import { memo } from "../../models/memo";
 export class ComposeMemoComponent {
 
   text = '';
-  startDate: string;
-  endDate: string;
   countdown: string;
   edit = false;
   postId: number;
@@ -36,11 +34,7 @@ export class ComposeMemoComponent {
     if (edit) {
       this.edit = true;
       const dateFormat = 'YYYY-MM-DDTHH:mm'
-      const startDate = moment(memo.start_date).format(dateFormat),
-            endDate = moment(memo.end_date).format(dateFormat),
-            countdown = memo.countdown ? moment(memo.countdown).format(dateFormat) : undefined;
-      this.startDate = startDate;
-      this.endDate = endDate;
+      const countdown = memo.countdown ? moment(memo.countdown).format(dateFormat) : undefined;
       this.countdown = countdown;
       this.text = memo.text;
       this.postId = postId;
@@ -60,16 +54,6 @@ export class ComposeMemoComponent {
   }
 
   postUpdate() {
-    if (!this.endDate || this.endDate === '') {
-      this.alertCtrl.create({title: 'Error', subTitle: 'Please pick end date & time', buttons: ['Ok']})
-      .present();
-      return;
-    }
-    if (!this.startDate || this.startDate === '') {
-      this.alertCtrl.create({title: 'Error', subTitle: 'Please pick start date & time', buttons: ['Ok']})
-      .present();
-      return;
-    }
     if (!this.text || this.text === '') {
       this.alertCtrl.create({title: 'No memo written', subTitle: 'Please write something', buttons: ['Ok']})
       .present();
@@ -78,8 +62,6 @@ export class ComposeMemoComponent {
     const dateFormat = 'YYYY-MM-DD HH:mm:ss';
     const data: memoData = {
       text: this.text,
-      start_date: this.startDate ? moment(this.startDate, dateFormat).toDate() : null,
-      end_date: moment(this.endDate, dateFormat).toDate(),
       countdown: this.countdown ? moment(this.countdown, dateFormat).toDate() : null
     }
     const loading = this.loadingCtrl.create({content: 'Please wait...'});

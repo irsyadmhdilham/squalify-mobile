@@ -7,7 +7,12 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { NavController } from "ionic-angular";
+import {
+  NavController,
+  ActionSheetController,
+  AlertController,
+  LoadingController
+} from "ionic-angular";
 import * as moment from "moment";
 
 import { PostProvider } from "../../../providers/post/post";
@@ -48,7 +53,10 @@ export class PostComponent implements OnChanges {
   constructor(
     private postProvider: PostProvider,
     private navCtrl: NavController,
-    private memoProvider: MemoProvider
+    private memoProvider: MemoProvider,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) { }
 
   profileImageView(img: string) {
@@ -153,6 +161,65 @@ export class PostComponent implements OnChanges {
 
   navToMemos() {
     this.navCtrl.push(MemosPage);
+  }
+
+  memoMore(expiryDate: Date, memoId: number, index: number) {
+    const action = this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Extend another week',
+          handler: () => {
+            const extendedDate = moment(expiryDate).add(1, 'weeks').format('D MMM YYYY, h:mma');
+            const prompt = this.alertCtrl.create({
+              title: 'Are you sure',
+              subTitle: `New expiry date: ${extendedDate}`,
+              buttons: [
+                { text: 'Cancel', role: 'cancel' },
+                { text: 'Confirm', handler: () => {
+                  const loading = this.loadingCtrl.create({content: 'Please wait...'});
+                  loading.present();
+                  this.memoProvider.extendMemo(memoId).subscribe(expiryDate => {
+                    loading.dismiss();
+                    this.memos[index].expiryDate = moment(expiryDate).format('D MMM YYYY, h:mma');
+                  }, () => {
+                    loading.dismiss();
+                  });
+                }}
+              ]
+            });
+            prompt.present();
+          }
+        },
+        {
+          text: 'Remove',
+          handler: () => {
+            const prompt = this.alertCtrl.create({
+              title: 'Are you sure',
+              buttons: [
+                { text: 'Cancel', role: 'cancel' },
+                { text: 'Confirm', handler: () => {
+                  const loading = this.loadingCtrl.create({content: 'Please wait...'});
+                  loading.present();
+                  this.memoProvider.removeMemo(memoId).subscribe(() => {
+                    loading.dismiss();
+                    this.memos.splice(index, 1);
+                  }, () => {
+                    loading.dismiss();
+                  });
+                }}
+              ]
+            });
+            prompt.present();
+          },
+          cssClass: 'danger-alert'
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    action.present();
   }
 
 }

@@ -105,9 +105,9 @@ export class TabsPage extends ApiUrlModules {
         this.store.dispatch(new Fetch());
         this.store.dispatch(new NotifInit());
         this.statusBarConfig();
-        const profileInit$ = new Subject<boolean>(),
-              profile$: Observable<profile> = this.store.pipe(select('profile'));
-        this.listenWsEvents(profile$, profileInit$);
+        // const profileInit$ = new Subject<boolean>(),
+        //       profile$: Observable<profile> = this.store.pipe(select('profile'));
+        // this.listenWsEvents(profile$, profileInit$);
       } else {
         this.signedIn = 'not sign in';
       }

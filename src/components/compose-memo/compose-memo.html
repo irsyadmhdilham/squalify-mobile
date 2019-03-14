@@ -6,17 +6,6 @@
     <div padding id="content">
       <small [ngStyle]="characters()" id="memo-count" no-margin>{{200 - text.length}} characters</small>
       <ion-textarea [(ngModel)]="text" type="text" placeholder="Write something" maxLength="200"></ion-textarea>
-      <ion-list id="period-list" margin-top>
-        <ion-list-header no-padding>Memo showing period</ion-list-header>
-        <ion-item no-padding>
-          <ion-label>Start date</ion-label>
-          <ion-datetime [(ngModel)]="startDate" placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
-        </ion-item>
-        <ion-item no-padding>
-          <ion-label>End date</ion-label>
-          <ion-datetime [(ngModel)]="endDate" placeholder="Pick here" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
-        </ion-item>
-      </ion-list>
       <ion-list>
         <ion-list-header no-padding>Event date and time (optional)</ion-list-header>
         <ion-item no-padding>

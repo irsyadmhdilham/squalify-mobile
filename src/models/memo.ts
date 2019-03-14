@@ -14,8 +14,7 @@ export interface like {
 
 export interface memo {
   pk: number;
-  start_date: Date;
-  end_date: Date;
+  expiry_date: Date;
   text: string;
   countdown: Date;
   posted_date: Date;

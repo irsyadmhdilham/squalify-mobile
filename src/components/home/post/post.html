@@ -51,13 +51,26 @@
 <ng-template #memosBlock>
   <section padding-top id="content">
     <h6 id="memo-title">Memos</h6>
-    <section class="memo-content" *ngFor="let memo of memos">
-      <section padding class="title-container">
+    <section class="memo-content" *ngFor="let memo of memos; index as i">
+      <section padding class="memo-title-container">
         <div [ngStyle]="profileImageView(memo.posted_by.profile_image)" class="profile-image"></div>
         <div class="title-wrapper">
           <h6 no-margin ion-text color="dark"><span>{{memo.posted_by.name}}</span> publish a memo</h6>
           <p class="timestamp">{{dateDisplay(memo.posted_date)}}</p>
+          <p *ngIf="memo.owner | async" ion-text class="expiry-date" color="grey">Expire on: {{memo.expiryDate}}</p>
         </div>
+        <button
+          *ngIf="memo.owner | async"
+          color="dark"
+          ion-button
+          icon-only
+          clear
+          no-padding
+          class="remove-margin-button"
+          (tap)="memoMore(memo.memo.expiry_date, memo.memo.pk, i)"
+        >
+          <ion-icon no-padding name="more"></ion-icon>
+        </button>
       </section>
       <div *ngIf="memo.gotCountdown" id="countdown-container">
         <div class="countdown-counter">

@@ -10,11 +10,8 @@ import { owner } from "../../models/agency";
 
 export interface memoData {
   userId?: number;
-  start_date: Date;
-  end_date: Date;
   countdown: Date;
   text: string;
-
 }
 
 interface comment {
@@ -31,8 +28,7 @@ interface like {
 
 interface memoResponse {
   pk: number;
-  start_date: string;
-  end_date: string;
+  expiry_date: string;
   text: string;
   countdown: string;
   posted_date: string;
@@ -59,8 +55,7 @@ export class MemoProvider extends ApiUrlModules {
           return response.map(value => ({
             ...value,
             posted_date: new Date(value.posted_date),
-            start_date: new Date(value.start_date),
-            end_date: new Date(value.end_date),
+            expiry_date: new Date(value.expiry_date),
             countdown: value.countdown ? new Date(value.countdown) : null,
             comments: value.comments.map(val => ({...val, timestamp: new Date(val.timestamp)}))
           }));
@@ -79,8 +74,7 @@ export class MemoProvider extends ApiUrlModules {
             return {
               ...response,
               posted_date: new Date(response.posted_date),
-              start_date: new Date(response.start_date),
-              end_date: new Date(response.end_date),
+              expiry_date: new Date(response.expiry_date),
               countdown: response.countdown ? new Date(response.countdown) : null,
               comments: response.comments.map(val => ({...val, timestamp: new Date(val.timestamp)}))
             }
@@ -98,8 +92,7 @@ export class MemoProvider extends ApiUrlModules {
           return {
             ...response,
             posted_date: new Date(response.posted_date),
-            start_date: new Date(response.start_date),
-            end_date: new Date(response.end_date),
+            expiry_date: new Date(response.expiry_date),
             countdown: response.countdown ? new Date(response.countdown) : null,
             comments: response.comments.map(val => ({...val, timestamp: new Date(val.timestamp)}))
           }
@@ -147,13 +140,51 @@ export class MemoProvider extends ApiUrlModules {
           return {
             ...response,
             posted_date: new Date(response.posted_date),
-            start_date: new Date(response.start_date),
-            end_date: new Date(response.end_date),
+            expiry_date: new Date(response.expiry_date),
             countdown: response.countdown ? new Date(response.countdown) : null,
             comments: response.comments.map(val => ({...val, timestamp: new Date(val.timestamp)}))
           };
         }));
       }));
+    }));
+  }
+
+  extendMemo(memoId: number): Observable<string> {
+    const url = this.agencyUrl(`memo/${memoId}/extend/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<string>(url, null, httpOptions);
+      }));
+    }));
+  }
+
+  removeMemo(memoId: number): Observable<null> {
+    const url = this.agencyUrl(`memo/${memoId}/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
+      }));
+    }));
+  }
+
+  personalMemos(): Observable<memo[]> {
+    const url = this.agencyUrl('memo/');
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.userId().pipe(switchMap(userId => {
+          return this.http.get<memoResponse[]>(`${url}?uid=${userId}&q=true`, httpOptions).pipe(map(response => {
+            return response.map(value => {
+              return {
+                ...value,
+                posted_date: new Date(value.posted_date),
+                expiry_date: new Date(value.expiry_date),
+                countdown: value.countdown ? new Date(value.countdown) : null,
+                comments: value.comments.map(val => ({...val, timestamp: new Date(val.timestamp)}))
+              }
+            });
+          }));
+        }));
+      }))
     }));
   }
 

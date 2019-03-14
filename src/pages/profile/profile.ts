@@ -21,6 +21,7 @@ import { NotificationsPage } from "../notifications/notifications";
 import { AgencyPage } from "../dashboard/agency/agency";
 import { GroupPage } from "../dashboard/group/group";
 import { ScoreboardPage } from "../dashboard/scoreboard/scoreboard";
+import { MemosPage } from "../memos/memos";
 
 import { Ids } from "../../functions/config";
 import { ProfileProvider } from "../../providers/profile/profile";
@@ -105,6 +106,10 @@ export class ProfilePage extends Ids {
 
   toGroup() {
     this.navCtrl.push(GroupPage);
+  }
+
+  toMemos() {
+    this.navCtrl.push(MemosPage, { personal: true });
   }
 
   editProfile() {

@@ -12,6 +12,7 @@ import { EditSalesComponent } from "../edit-sales/edit-sales";
 })
 export class SalesDetailComponent {
 
+  editedSales: sales;
   pk: number;
   index: number;
   timestamp: Date;
@@ -33,7 +34,7 @@ export class SalesDetailComponent {
   ) { }
 
   dismiss() {
-    this.viewCtrl.dismiss({edited: this.edited, index: this.index, sales: this.navParams.get('sales') });
+    this.viewCtrl.dismiss({edited: this.edited, index: this.index, sales: this.editedSales });
   }
 
   edit() {
@@ -43,6 +44,7 @@ export class SalesDetailComponent {
       if (data) {
         this.edited = data.edited;
         const sales: sales = data.sales;
+        this.editedSales = sales;
         this.timestamp = sales.timestamp;
         this.location = sales.location;
         this.amount = sales.amount;
