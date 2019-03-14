@@ -82,8 +82,24 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
+  updateSales(salesId: number, data: any): Observable<sales> {
+    const url = this.profileUrl(`sales/${salesId}/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.put<salesResponse>(url, data, httpOptions).pipe(map(response => {
+          return {
+            ...response,
+            timestamp: new Date(response.timestamp),
+            amount: parseFloat(response.amount),
+            commission: response.commission ? parseFloat(response.commission) : null
+          }
+        }));
+      }));
+    }));
+  }
+
   getSales(period: string, salesType: string, salesStatus: string): Observable<sales[]> {
-    const url = this.profileUrl(`sales/?p=${period}&st=${salesType}&=${salesStatus}`);
+    const url = this.profileUrl(`sales/?p=${period}&st=${salesType}&s=${salesStatus}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<salesResponse[]>(url, httpOptions).pipe(map(response => {

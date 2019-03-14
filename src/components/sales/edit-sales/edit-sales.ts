@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NgModel } from "@angular/forms";
 import {
   ViewController,
   AlertController,
@@ -23,6 +22,7 @@ import { ContactListComponent } from "../../contact/contact-list/contact-list";
 export class EditSalesComponent {
 
   screenStatus: string;
+  pk: number;
   company: string;
   amount: string;
   salesType: string;
@@ -85,6 +85,7 @@ export class EditSalesComponent {
     this.location = sales.location;
     this.salesType = sales.sales_type;
     this.status = sales.sales_status;
+    this.pk = sales.pk;
     if (sales.contact) {
       this.contact = sales.contact.name;
       this.contactId = sales.contact.pk;
@@ -99,8 +100,8 @@ export class EditSalesComponent {
     const action = this.actionSheetCtrl.create({
       title: 'Select method',
       buttons: [
-        { text: 'Select from contact', handler: () => {this.clientMethod = 'contact'}},
-        { text: 'Write client name', handler: () => {{this.clientMethod = 'write'}} },
+        { text: 'Select from contact', handler: () => {this.clientMethod = 'contact'; this.contact = '';}},
+        { text: 'Write client name', handler: () => {{this.clientMethod = 'write'; this.contact = '';}} },
         { text: 'Cancel', role: 'cancel' }
       ]
     });
@@ -118,7 +119,7 @@ export class EditSalesComponent {
     })
   }
 
-  async addSales() {
+  update() {
     const loading = this.loadingCtrl.create({content: 'Please wait...'});
     try {
       if (this.amount === '') {
@@ -144,10 +145,9 @@ export class EditSalesComponent {
         data.location = this.location;
       }
       loading.present();
-      this.salesProvider.createSales(data).subscribe(sales => {
+      this.salesProvider.updateSales(this.pk, data).subscribe(sales => {
         loading.dismiss();
-        this.salesProvider.addSalesEmit(sales.amount);
-        this.viewCtrl.dismiss({ sales });
+        this.viewCtrl.dismiss({ sales, edited: true });
       }, () => {
         loading.dismiss();
         const alert = this.alertCtrl.create({

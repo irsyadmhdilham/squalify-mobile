@@ -21,6 +21,7 @@ export class SalesDetailComponent {
   salesType: string;
   client: string;
   removed = false;
+  edited = false;
 
   constructor(
     private navParams: NavParams,
@@ -32,12 +33,31 @@ export class SalesDetailComponent {
   ) { }
 
   dismiss() {
-    this.viewCtrl.dismiss();
+    this.viewCtrl.dismiss({edited: this.edited, index: this.index, sales: this.navParams.get('sales') });
   }
 
   edit() {
     const modal = this.modalCtrl.create(EditSalesComponent, { sales: this.navParams.get('sales') });
     modal.present();
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.edited = data.edited;
+        const sales: sales = data.sales;
+        this.timestamp = sales.timestamp;
+        this.location = sales.location;
+        this.amount = sales.amount;
+        this.pk = sales.pk;
+        this.salesType = sales.sales_type;
+        this.salesStatus = sales.sales_status;
+        if (sales.client_name) {
+          this.client = sales.client_name;
+        } else if (sales.contact) {
+          this.client = sales.contact.name;
+        } else {
+          this.client = 'No client name';
+        }
+      }
+    });
   }
 
   ionViewDidLoad() {

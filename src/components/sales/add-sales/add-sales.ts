@@ -80,8 +80,8 @@ export class AddSalesComponent {
     const action = this.actionSheetCtrl.create({
       title: 'Select method',
       buttons: [
-        { text: 'Select from contact', handler: () => {this.clientMethod = 'contact'}},
-        { text: 'Write client name', handler: () => {{this.clientMethod = 'write'}} },
+        { text: 'Select from contact', handler: () => {this.clientMethod = 'contact'; this.contact = '';}},
+        { text: 'Write client name', handler: () => {{this.clientMethod = 'write'; this.contact = '';}} },
         { text: 'Cancel', role: 'cancel' }
       ]
     });

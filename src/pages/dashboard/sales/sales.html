@@ -12,20 +12,42 @@
       Group
     </ion-segment-button>
   </ion-segment>
-  <ion-row padding-horizontal padding-bottom>
-    <div (tap)="selectPeriod()" header-button [activeButton]="periodActive">
-      <p class="header-button-bold" ion-text [color]="periodActive ? 'white': 'dark'" no-margin>{{period | titlecase}}</p>
-    </div>
-    <div class="header-button-left-margin" (tap)="selectSalesType()" header-button [activeButton]="salesTypeActive">
-      <p class="header-button-bold" ion-text [color]="salesTypeActive ? 'white': 'dark'" no-margin>{{salesType}}</p>
-    </div>
-    <div class="header-button-left-margin" (tap)="selectSalesStatus()" header-button [activeButton]="salesStatusActive">
-      <p class="header-button-bold" ion-text [color]="salesStatusActive ? 'white': 'dark'" no-margin>{{salesStatus | titlecase}}</p>
-    </div>
-  </ion-row>
 </ion-header>
 
-<ion-content [ngSwitch]="segment" padding>
+<ion-content [ngSwitch]="segment" padding-horizontal>
+  <section id="filter-container" margin-bottom>
+    <ion-item no-lines no-padding>
+      <ion-label stacked>Period</ion-label>
+      <ion-select (ionChange)="selectPeriod()" [(ngModel)]="period">
+        <ion-option value="all">All</ion-option>
+        <ion-option value="year">Year</ion-option>
+        <ion-option value="month">Month</ion-option>
+        <ion-option value="week">Week</ion-option>
+        <ion-option value="today">Today</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines no-padding>
+      <ion-label stacked>Sales type</ion-label>
+      <ion-select (ionChange)="selectSalesType()" [(ngModel)]="salesType">
+        <ion-option value="all">All</ion-option>
+        <ion-option>EPF</ion-option>
+        <ion-option>Cash</ion-option>
+        <ion-option>ASB</ion-option>
+        <ion-option>PRS</ion-option>
+        <ion-option>Takaful</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines no-padding>
+      <ion-label stacked>Sales status</ion-label>
+      <ion-select (ionChange)="selectSalesStatus()" [(ngModel)]="salesStatus">
+        <ion-option value="all">All</ion-option>
+        <ion-option>Submitted</ion-option>
+        <ion-option>Disburst</ion-option>
+        <ion-option>Rejected</ion-option>
+        <ion-option>In hand</ion-option>
+      </ion-select>
+    </ion-item>
+  </section>
   <ion-row justify-content-between align-items-start>
     <section>
       <h5 title no-margin>Sales report</h5>

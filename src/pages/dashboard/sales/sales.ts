@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, ActionSheetController, Segment } from 'ionic-angular';
+import { NavController, NavParams, ModalController, Segment } from 'ionic-angular';
 import * as moment from "moment";
 
 import { SalesProvider } from "../../../providers/sales/sales";
@@ -18,12 +18,9 @@ import { SalesDownlinesPage } from "./sales-downlines/sales-downlines";
 export class SalesPage {
 
   segment = 'personal';
-  period = 'period';
-  periodActive = false;
-  salesType = 'sales type';
-  salesStatus = 'status';
-  salesTypeActive = false;
-  salesStatusActive = false;
+  period = 'all';
+  salesType = 'all';
+  salesStatus = 'all';
   agency: agency;
   pageStatus: string;
   personalSales: sales[] = [];
@@ -34,9 +31,32 @@ export class SalesPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private modalCtrl: ModalController,
-    private salesProvider: SalesProvider,
-    private actionSheetCtrl: ActionSheetController
+    private salesProvider: SalesProvider
   ) { }
+
+  selectPeriod() {
+    if (this.segment === 'personal') {
+      this.fetchPersonalSales();
+    } else if (this.segment === 'group') {
+      this.filterGroupSales();
+    }
+  }
+
+  selectSalesType() {
+    if (this.segment === 'personal') {
+      this.fetchPersonalSales();
+    } else if (this.segment === 'group') {
+      this.filterGroupSales();
+    }
+  }
+
+  selectSalesStatus() {
+    if (this.segment === 'personal') {
+      this.fetchPersonalSales();
+    } else if (this.segment === 'group') {
+      this.filterGroupSales();
+    }
+  }
 
   timestamp(timestamp: Date) {
     const fromNow = moment(timestamp).fromNow();
@@ -59,93 +79,6 @@ export class SalesPage {
     }
   }
 
-  selectPeriod() {
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Select period',
-      buttons: [
-        { text: 'All', handler: () => { this.period = 'all'; this.periodActive = true; }},
-        { text: 'Year', handler: () => { this.period = 'year'; this.periodActive = true; }},
-        { text: 'Month', handler: () => { this.period = 'month'; this.periodActive = true; }},
-        { text: 'Week', handler: () => { this.period = 'week'; this.periodActive = true; }},
-        { text: 'Today', handler: () => { this.period = 'today'; this.periodActive = true; }},
-        { text: 'Cancel', role: 'cancel', handler: () => {
-          this.cancel = true;
-          setTimeout(() => {
-            this.cancel = false;
-          }, 2000);
-        }}
-      ]
-    });
-    actionSheet.present();
-    actionSheet.onDidDismiss(() => {
-      if (!this.cancel) {
-        if (this.segment === 'personal') {
-          this.fetchPersonalSales();
-        } else {
-          this.filterGroupSales();
-        }
-      }
-    });
-  }
-
-  selectSalesType() {
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Select sales type',
-      buttons: [
-        { text: 'Total', handler: () => { this.salesType = 'total'; this.salesTypeActive = true; } },
-        { text: 'EPF', handler: () => { this.salesType = 'EPF'; this.salesTypeActive = true; } },
-        { text: 'Cash', handler: () => { this.salesType = 'Cash'; this.salesTypeActive = true; } },
-        { text: 'ASB', handler: () => { this.salesType = 'ASB'; this.salesTypeActive = true; } },
-        { text: 'PRS', handler: () => { this.salesType = 'PRS'; this.salesTypeActive = true; } },
-        { text: 'Cancel', role: 'cancel', handler: () => {
-          this.cancel = true;
-          setTimeout(() => {
-            this.cancel = false;
-          }, 2000);
-        }}
-      ]
-    });
-    actionSheet.present();
-    actionSheet.onDidDismiss(() => {
-      if (!this.cancel) {
-        if (this.segment === 'personal') {
-          this.fetchPersonalSales();
-        } else {
-          this.filterGroupSales();
-        }
-      }
-    });
-  }
-
-  selectSalesStatus() {
-    const actionSheet = this.actionSheetCtrl.create({
-      title: 'Select sales type',
-      buttons: [
-        { text: 'All', handler: () => { this.salesStatus = 'all'; this.salesStatusActive = true; } },
-        { text: 'In hand', handler: () => { this.salesStatus = 'In hand'; this.salesStatusActive = true; } },
-        { text: 'Submitted', handler: () => { this.salesStatus = 'Submitted'; this.salesStatusActive = true; } },
-        { text: 'Rejected', handler: () => { this.salesStatus = 'Rejected'; this.salesStatusActive = true; } },
-        { text: 'Disburst/approved', handler: () => { this.salesStatus = 'Disburst'; this.salesStatusActive = true; } },
-        { text: 'Cancel', role: 'cancel', handler: () => {
-          this.cancel = true;
-          setTimeout(() => {
-            this.cancel = false;
-          }, 2000);
-        }}
-      ]
-    });
-    actionSheet.present();
-    actionSheet.onDidDismiss(() => {
-      if (!this.cancel) {
-        if (this.segment === 'personal') {
-          this.fetchPersonalSales();
-        } else {
-          this.filterGroupSales();
-        }
-      }
-    });
-  }
-
   showSummaryCondition() {
     if (this.personalSales.length !== 0 && this.segment === 'personal') {
       return true;
@@ -165,8 +98,9 @@ export class SalesPage {
 
   segmentChanged(event: Segment) {
     const value = event.value;
-    this.period = 'period';
-    this.salesType = 'sales type';
+    this.period = 'all';
+    this.salesType = 'all';
+    this.period = 'all';
     if (value === 'personal') {
       this.fetchPersonalSales();
     } else {
@@ -234,6 +168,9 @@ export class SalesPage {
     modal.present();
     modal.onDidDismiss(cb => {
       if (cb) {
+        if (cb.edited) {
+          this.personalSales[cb.index] = cb.sales;
+        }
         if (cb.removed) {
           this.personalSales.splice(cb.index, 1);
         }
