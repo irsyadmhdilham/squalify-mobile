@@ -1,8 +1,6 @@
 <ion-header class="header-bottom-line">
   <ion-navbar>
-    <ion-title>
-      <img style="width: 5em" src="../../../assets/imgs/squalify.png" alt="squalify">
-    </ion-title>
+    <ion-title>Sales report</ion-title>
   </ion-navbar>
   <ion-segment padding [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
     <ion-segment-button value="personal">
@@ -50,7 +48,6 @@
   </section>
   <ion-row justify-content-between align-items-start>
     <section>
-      <h5 title no-margin>Sales report</h5>
       <button *ngIf="showSummaryCondition()" (tap)="showSummary()" ion-button clear strong small no-padding no-margin>Show summary</button>
     </section>
     <button *ngIf="segment === 'personal' && personalSales.length !== 0" ion-button clear class="remove-margin-button" (tap)="addSales()" no-padding>Add Sales</button>

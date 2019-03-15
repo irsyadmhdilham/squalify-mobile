@@ -1,8 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      <img img-title src="../../../assets/imgs/squalify.png" alt="squalify">
-    </ion-title>
+    <ion-title>Agency</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -10,7 +8,6 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve data" [retry]="fetch.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <h5 title>Agency</h5>
     <section id="agency-image-wrapper">
       <div [ngStyle]="agencyImageView()" id="agency-image"></div>
       <h6 no-margin ion-text color="dark">{{agencyName}}</h6>

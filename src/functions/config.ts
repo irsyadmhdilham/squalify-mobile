@@ -83,7 +83,9 @@ export class Ids {
   httpOptions(): Observable<{headers: HttpHeaders}> {
     const token = this.storage.get('apiToken');
     return Observable.fromPromise<token>(token).pipe(switchMap(token => {
-      const headers = new HttpHeaders().set('Authorization', `Token ${token}`);
+      const headers = new HttpHeaders()
+      .set('Authorization', `Token ${token}`)
+      .append('Accept', 'application/json; version=1.0');
       const httpOptions = { headers };
       return Observable.of(httpOptions);
     }));
@@ -134,10 +136,10 @@ export class ApiUrlModules extends Ids {
 
   apiBaseUrl() {
     if (isDevMode()) {
-      return `${this.devIpAddress}:8030/v1`;
-      // return 'https://api.squalify.com/v1';
+      return `${this.devIpAddress}:8030`;
+      // return 'https://api.squalify.com;
     }
-    return 'https://api.squalify.com/v1';
+    return 'https://api.squalify.com';
   }
 
   profileUrl(url?: string, userId?: number) {

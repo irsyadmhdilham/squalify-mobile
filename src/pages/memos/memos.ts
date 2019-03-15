@@ -19,6 +19,7 @@ import { MemoDetailPage } from "../../pages/home/memo-detail/memo-detail";
 export class MemosPage {
 
   memos: Memo[] = [];
+  screenStatus: string;
 
   constructor(
     public navCtrl: NavController,
@@ -31,12 +32,15 @@ export class MemosPage {
 
   ionViewDidLoad() {
     const personal = this.navParams.get('personal');
+    this.screenStatus = 'loading';
     if (personal) {
       this.memoProvider.personalMemos().subscribe(memos => {
+        this.screenStatus = undefined;
         this.memos = memos.map(value => new Memo(value, this.memoProvider));
       })
     } else {
       this.memoProvider.getMemos().subscribe(memos => {
+        this.screenStatus = undefined;
         this.memos = memos.map(value => new Memo(value, this.memoProvider));
       });
     }
