@@ -67,4 +67,14 @@ export class AttributeFeatures {
       });
     });
   }
+
+  servicing() {
+    return new Promise<contact>(resolve => {
+      const modal = this.modal(ContactListComponent);
+      modal.present();
+      modal.onDidDismiss(data => {
+        resolve(data);
+      });
+    });
+  }
 }

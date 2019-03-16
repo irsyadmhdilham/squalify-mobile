@@ -34,11 +34,16 @@ interface groupResponse {
   downline?: number;
 }
 
+interface summaryOutput {
+  cases: number;
+  total: string;
+}
+
 interface salesStatus {
-  in_hand: string;
-  submitted: string;
-  rejected: string;
-  disburst: string;
+  in_hand: summaryOutput;
+  submitted: summaryOutput;
+  rejected: summaryOutput;
+  disburst: summaryOutput;
 };
 
 interface summaryResponse {
@@ -171,28 +176,76 @@ export class SalesProvider extends ApiUrlModules {
           today = value.today;
     return {
       year: {
-        in_hand: parseFloat(year.in_hand),
-        rejected: parseFloat(year.rejected),
-        disburst: parseFloat(year.disburst),
-        submitted: parseFloat(year.submitted)
+        in_hand: {
+          ...year.in_hand,
+          total: parseFloat(year.in_hand.total)
+        },
+        rejected: {
+          ...year.rejected,
+          total: parseFloat(year.rejected.total)
+        },
+        disburst: {
+          ...year.disburst,
+          total: parseFloat(year.disburst.total)
+        },
+        submitted: {
+          ...year.submitted,
+          total: parseFloat(year.submitted.total)
+        }
       },
       month: {
-        in_hand: parseFloat(month.in_hand),
-        rejected: parseFloat(month.rejected),
-        disburst: parseFloat(month.disburst),
-        submitted: parseFloat(month.submitted)
+        in_hand: {
+          ...month.in_hand,
+          total: parseFloat(month.in_hand.total)
+        },
+        rejected: {
+          ...month.rejected,
+          total: parseFloat(month.rejected.total)
+        },
+        disburst: {
+          ...month.disburst,
+          total: parseFloat(month.disburst.total)
+        },
+        submitted: {
+          ...month.submitted,
+          total: parseFloat(month.submitted.total)
+        }
       },
       week: {
-        in_hand: parseFloat(week.in_hand),
-        rejected: parseFloat(week.rejected),
-        disburst: parseFloat(week.disburst),
-        submitted: parseFloat(week.submitted)
+        in_hand: {
+          ...week.in_hand,
+          total: parseFloat(week.in_hand.total)
+        },
+        rejected: {
+          ...week.rejected,
+          total: parseFloat(week.rejected.total)
+        },
+        disburst: {
+          ...week.disburst,
+          total: parseFloat(week.disburst.total)
+        },
+        submitted: {
+          ...week.submitted,
+          total: parseFloat(week.submitted.total)
+        }
       },
       today: {
-        in_hand: parseFloat(today.in_hand),
-        rejected: parseFloat(today.rejected),
-        disburst: parseFloat(today.disburst),
-        submitted: parseFloat(today.submitted)
+        in_hand: {
+          ...today.in_hand,
+          total: parseFloat(today.in_hand.total)
+        },
+        rejected: {
+          ...today.rejected,
+          total: parseFloat(today.rejected.total)
+        },
+        disburst: {
+          ...today.disburst,
+          total: parseFloat(today.disburst.total)
+        },
+        submitted: {
+          ...today.submitted,
+          total: parseFloat(today.submitted.total)
+        }
       }
     };
   }

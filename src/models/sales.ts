@@ -13,11 +13,16 @@ export interface sales {
   client_name?: string;
 };
 
+interface summaryOutput {
+  cases: number;
+  total: number;
+}
+
 export interface salesStatus {
-  in_hand: number;
-  submitted: number;
-  rejected: number;
-  disburst: number;
+  in_hand: summaryOutput;
+  submitted: summaryOutput;
+  rejected: summaryOutput;
+  disburst: summaryOutput;
 };
 
 export interface summary {

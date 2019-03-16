@@ -104,6 +104,19 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
           }
         });
       break;
+      case 'Servicing/Follow up':
+        this.servicing().then(data => {
+          if (data) {
+            const isCordova = this.platform.is('cordova'),
+                  isMobile = this.platform.is('mobile');
+            if (isCordova && isMobile) {
+              this.callNumber.callNumber(data.contact_no, true).then(() => {
+                this.contactProvider.createCallLog(data.pk).subscribe();
+              });
+            }
+          }
+        });
+      break;
       default:
         addPoint();
         this.addAction();

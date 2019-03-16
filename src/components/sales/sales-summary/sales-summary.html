@@ -21,130 +21,103 @@
     message="Failed to retrive sales summary"
     [retry]="segment === 'personal' ? fetch.bind(this) : fetchGroup.bind(this)"
   ></fetch-error>
-  <ion-list *ngSwitchDefault>
-    <ion-item no-padding>
-      <h3 title>Today</h3>
-      <section>
-        <div>
-          <h2 ion-text color="primary">RM{{today.in_hand | numCommas}}</h2>
-          <p>In hand</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{today.rejected | numCommas}}</h2>
-          <p>Rejected</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{today.disburst | numCommas}}</h2>
-          <p>Disburst/approved</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{today.submitted | numCommas}}</h2>
-          <p>Submitted</p>
-        </div>
-      </section>
-      <!-- <section>
-        <div>
-          <h2 ion-text color="primary">RM{{today.sales | numCommas}}</h2>
-          <p>Sales</p>
-        </div>
-        <div *ngIf="segment === 'personal'">
-          <h2 ion-text color="primary">RM{{today.income | numCommas}}</h2>
-          <p>Income</p>
-        </div>
-      </section> -->
-    </ion-item>
-    <ion-item no-padding>
-      <h3 title>This week</h3>
-      <section>
-        <div>
-          <h2 ion-text color="primary">RM{{week.in_hand | numCommas}}</h2>
-          <p>In hand</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{week.rejected | numCommas}}</h2>
-          <p>Rejected</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{week.disburst | numCommas}}</h2>
-          <p>Disburst/approved</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{week.submitted | numCommas}}</h2>
-          <p>Submitted</p>
-        </div>
-      </section>
-      <!-- <section>
-        <div>
-          <h2 ion-text color="primary">RM{{week.sales | numCommas}}</h2>
-          <p>Sales</p>
-        </div>
-        <div *ngIf="segment === 'personal'">
-          <h2 ion-text color="primary">RM{{week.income | numCommas}}</h2>
-          <p>Income</p>
-        </div>
-      </section> -->
-    </ion-item>
-    <ion-item no-padding>
-      <h3 title>This month</h3>
-      <section>
-        <div>
-          <h2 ion-text color="primary">RM{{month.in_hand | numCommas}}</h2>
-          <p>In hand</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{month.rejected | numCommas}}</h2>
-          <p>Rejected</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{month.disburst | numCommas}}</h2>
-          <p>Disburst/approved</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{month.submitted | numCommas}}</h2>
-          <p>Submitted</p>
-        </div>
-      </section>
-      <!-- <section>
-        <div>
-          <h2 ion-text color="primary">RM{{month.sales | numCommas}}</h2>
-          <p>Sales</p>
-        </div>
-        <div *ngIf="segment === 'personal'">
-          <h2 ion-text color="primary">RM{{month.income | numCommas}}</h2>
-          <p>Income</p>
-        </div>
-      </section> -->
-    </ion-item>
-    <ion-item no-padding>
-      <h3 title>This year</h3>
-      <section>
-        <div>
-          <h2 ion-text color="primary">RM{{year.in_hand | numCommas}}</h2>
-          <p>In hand</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{year.rejected | numCommas}}</h2>
-          <p>Rejected</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{year.disburst | numCommas}}</h2>
-          <p>Disburst/approved</p>
-        </div>
-        <div>
-          <h2 ion-text color="primary">RM{{year.submitted | numCommas}}</h2>
-          <p>Submitted</p>
-        </div>
-      </section>
-      <!-- <section>
-        <div>
-          <h2 ion-text color="primary">RM{{year.sales | numCommas}}</h2>
-          <p>Sales</p>
-        </div>
-        <div *ngIf="segment === 'personal'">
-          <h2 ion-text color="primary">RM{{year.income | numCommas}}</h2>
-          <p>Income</p>
-        </div>
-      </section> -->
-    </ion-item>
-  </ion-list>
+  <section *ngSwitchDefault margin-bottom>
+    <section id="table-header">
+      <div></div>
+      <p ion-text color="grey" no-margin text-center>Cases</p>
+      <p ion-text color="grey" no-margin>Total</p>
+    </section>
+    <section class="table-item-container">
+      <h6 no-margin>Today</h6>
+      <div class="table-item">
+        <p no-margin>In hand</p>
+        <p no-margin text-center>{{today.in_hand.cases}}</p>
+        <p no-margin>RM{{today.in_hand.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Submitted</p>
+        <p no-margin text-center>{{today.submitted.cases}}</p>
+        <p no-margin>RM{{today.submitted.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Rejected</p>
+        <p no-margin text-center>{{today.rejected.cases}}</p>
+        <p no-margin>RM{{today.rejected.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Disburst/approved</p>
+        <p no-margin text-center>{{today.disburst.cases}}</p>
+        <p no-margin>RM{{today.disburst.total | numCommas}}</p>
+      </div>
+    </section>
+    <section class="table-item-container">
+      <h6 no-margin>Week</h6>
+      <div class="table-item">
+        <p no-margin>In hand</p>
+        <p no-margin text-center>{{week.in_hand.cases}}</p>
+        <p no-margin>RM{{week.in_hand.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Submitted</p>
+        <p no-margin text-center>{{week.submitted.cases}}</p>
+        <p no-margin>RM{{week.submitted.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Rejected</p>
+        <p no-margin text-center>{{week.rejected.cases}}</p>
+        <p no-margin>RM{{week.rejected.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Disburst/approved</p>
+        <p no-margin text-center>{{week.disburst.cases}}</p>
+        <p no-margin>RM{{week.disburst.total | numCommas}}</p>
+      </div>
+    </section>
+    <section class="table-item-container">
+      <h6 no-margin>Month</h6>
+      <div class="table-item">
+        <p no-margin>In hand</p>
+        <p no-margin text-center>{{month.in_hand.cases}}</p>
+        <p no-margin>RM{{month.in_hand.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Submitted</p>
+        <p no-margin text-center>{{month.submitted.cases}}</p>
+        <p no-margin>RM{{month.submitted.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Rejected</p>
+        <p no-margin text-center>{{month.rejected.cases}}</p>
+        <p no-margin>RM{{month.rejected.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Disburst/approved</p>
+        <p no-margin text-center>{{month.disburst.cases}}</p>
+        <p no-margin>RM{{month.disburst.total | numCommas}}</p>
+      </div>
+    </section>
+    <section class="table-item-container">
+      <h6 no-margin>Year</h6>
+      <div class="table-item">
+        <p no-margin>In hand</p>
+        <p no-margin text-center>{{year.in_hand.cases}}</p>
+        <p no-margin>RM{{year.in_hand.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Submitted</p>
+        <p no-margin text-center>{{year.submitted.cases}}</p>
+        <p no-margin>RM{{year.submitted.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Rejected</p>
+        <p no-margin text-center>{{year.rejected.cases}}</p>
+        <p no-margin>RM{{year.rejected.total | numCommas}}</p>
+      </div>
+      <div class="table-item">
+        <p no-margin>Disburst/approved</p>
+        <p no-margin text-center>{{year.disburst.cases}}</p>
+        <p no-margin>RM{{year.disburst.total | numCommas}}</p>
+      </div>
+    </section>
+  </section>
 </ion-content>

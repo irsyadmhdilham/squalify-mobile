@@ -11,10 +11,10 @@ import { salesStatus } from "../../../models/sales";
 export class SalesSummaryComponent {
 
   salesStatus = {
-    submitted: 0,
-    rejected: 0,
-    disburst: 0,
-    in_hand: 0
+    submitted: { cases: 0, total: 0 },
+    rejected: { cases: 0, total: 0 },
+    disburst: { cases: 0, total: 0 },
+    in_hand: { cases: 0, total: 0 }
   };
   today: salesStatus = this.salesStatus;
   week: salesStatus = this.salesStatus;
