@@ -42,13 +42,14 @@
                 <div class="contact-content">
                   <div (tap)="showDetail(contact, i)" class="contact-background"></div>
                   <h6>{{contact.name}}</h6>
-                  <p>{{contact.contact_type}}</p>
-                  <h6 [ngStyle]="statusColor(contact.status)">{{contact.status}}</h6>
+                  <p>Type: {{contact.contact_type}}</p>
+                  <h6 ion-text color="grey">Status: {{contact.status}}</h6>
                 </div>
                 <div>
-                  <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
+                  <!-- <button margin-right ion-button clear icon-only color="primary" (tap)="call(contact, index)">
                     <ion-icon no-padding name="call"></ion-icon>
-                  </button>
+                  </button> -->
+                  <button class="contact-button" ion-button round small>Contact</button>
                   <button ion-button clear icon-only (tap)="viewMore(contact, i)" color="dark">
                     <ion-icon no-padding name="more"></ion-icon>
                   </button>
@@ -62,14 +63,11 @@
             <ng-template #callLogsBlock>
               <ion-list>
                 <ion-item *ngFor="let log of callLogs; index as i">
-                  <ion-label>
+                  <ion-label (tap)="showDetail(log.contact)">
                     <h6>{{log.contact.name}}</h6>
+                    <p>{{log.contact.status}}</p>
                     <p>{{logDate(log.date)}}</p>
-                    <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered' : 'Not answer'}}</h6>
-                    <p *ngIf="log.remark">Remark: {{log.remark}}</p>
-                    <button (tap)="addRemark(log, i)" no-padding class="remove-margin-button" ion-button clear small>
-                      {{!log.remark ? 'Add' : 'Edit'}} remark
-                    </button>
+                    <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered, 1 point added' : 'Not answer'}}</h6>
                   </ion-label>
                   <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
                 </ion-item>

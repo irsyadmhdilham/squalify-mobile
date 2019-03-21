@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="header-bottom-line">
   <ion-toolbar>
     <ion-buttons start>
       <button (tap)="dismiss()" ion-button icon-only clear color="dark">
@@ -7,6 +7,11 @@
     </ion-buttons>
     <ion-title>Contact list</ion-title>
   </ion-toolbar>
+  <ion-row padding-horizontal padding-bottom>
+    <div (tap)="filter()" header-button [activeButton]="false">
+      <p class="header-button-bold" ion-text color="dark" no-margin>Filter</p>
+    </div>
+  </ion-row>
 </ion-header>
 
 <ion-content padding [ngSwitch]="pageStatus">
@@ -15,10 +20,14 @@
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="contacts; then thenBlock; else elseBlock"></ng-container>
     <ng-template #thenBlock>
-      <h6 title>Select contact below</h6>
+      <ion-row justify-content-between>
+        <h6 title>Select contact below</h6>
+        <button (tap)="addContact()" ion-button clear class="remove-margin-button" no-padding>Add contact</button>
+      </ion-row>
       <ion-list>
         <ion-item (tap)="select(contact)" *ngFor="let contact of contacts" no-padding>
           <h6 ion-text color="dark">{{contact.name}}</h6>
+          <p ion-text color="grey">{{contact.contact_type}}</p>
           <p [ngStyle]="statusStyle(contact)">{{contact.status}}</p>
           <p ion-text color="grey" *ngIf="contact.remark">Remark: {{contact.remark}}</p>
           <ion-icon *ngIf="!sales" item-end no-padding color="primary" name="call"></ion-icon>

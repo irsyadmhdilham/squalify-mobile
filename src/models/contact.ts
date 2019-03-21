@@ -19,4 +19,5 @@ export interface logs {
   name: string;
   answered: boolean;
   remark?: string;
+  contact: contact;
 };

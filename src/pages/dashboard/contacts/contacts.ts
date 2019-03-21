@@ -107,26 +107,26 @@ export class ContactsPage {
     if (isCordova && isMobile) {
       this.callNumber.callNumber(contact.contact_no, true).then(() => {
         this.contactProvider.createCallLog(contact.pk).subscribe(() => {
-          const actionSheet = this.actionSheetCtrl.create({
-            title: 'Get an appointment?',
-            buttons: [
-              { text: 'Yes, I got', handler: () => {
-                const modal = this.modalCtrl.create(AddScheduleComponent, {
-                  appointmentSecured: true
-                });
-                modal.present();
-                modal.onDidDismiss(data => {
-                  if (data) {
-                    contact.status = 'Appointment secured';
-                    contact.scheduleId = data.schedule.pk;
-                    this.updateContact(contact, index);
-                  }
-                });
-              }},
-              { text: "No, I don't get" }
-            ]
-          });
-          actionSheet.present();
+          // const actionSheet = this.actionSheetCtrl.create({
+          //   title: 'Get an appointment?',
+          //   buttons: [
+          //     { text: 'Yes, I got', handler: () => {
+          //       const modal = this.modalCtrl.create(AddScheduleComponent, {
+          //         appointmentSecured: true
+          //       });
+          //       modal.present();
+          //       modal.onDidDismiss(data => {
+          //         if (data) {
+          //           contact.status = 'Appointment secured';
+          //           contact.scheduleId = data.schedule.pk;
+          //           this.updateContact(contact, index);
+          //         }
+          //       });
+          //     }},
+          //     { text: "No, I don't get" }
+          //   ]
+          // });
+          // actionSheet.present();
         }, () => {
           const alert = this.alertCtrl.create({title: 'Error', subTitle: 'Failed to add call log', buttons: ['Ok']});
           alert.present();
@@ -220,9 +220,23 @@ export class ContactsPage {
   }
 
   viewMore(contact, index) {
+    const called = () => {
+      this.contactProvider.createCallLog(contact.pk, true).subscribe(() => {
+        const toast = this.toastCtrl.create({
+          message: 'Call log added',
+          position: 'top',
+          duration: 1500
+        });
+        toast.present();
+      });
+    };
     const actionSheet = this.actionSheetCtrl.create({
       buttons: [
-        { text: 'Change status', handler: () => this.changeStatus(contact, index) },
+        { text: 'Contacted via Call', handler: () => called()},
+        { text: 'Contacted via Whatsapp', handler: () => called()},
+        { text: 'Contacted via Social media', handler: () => called()},
+        { text: 'Contacted via Telegram', handler: () => called()},
+        { text: 'Contacted via Email', handler: () => called()},
         { text: 'Cancel', cssClass: 'danger-alert', role: 'cancel' }
       ]
     });

@@ -61,3 +61,63 @@ export interface pointIo {
   uplineId: number;
   sender: number;
 }
+
+export interface summary {
+  total: {
+    current: number;
+    previous: number;
+    diff_percentage: number;
+  }
+  contacts: {
+    ftf: number;
+    referrals: number;
+    new_contacts: number;
+    new_contacts_percentage: number;
+    client_conversion: number;
+    client_conversion_percentage: number;
+    contacts: {
+      referrals: number;
+      ftf: number;
+      booth: number;
+      socmed: number;
+      nesting: number;
+      other: number;
+      ttt: number;
+      client: number;
+    }
+  }
+  engagement: {
+    calls: number;
+    servicing: number;
+    appointment: number;
+    new_calls: number;
+    new_calls_percentage: number;
+    new_servicing: number;
+    new_servicing_percentage: number;
+    new_appointment: number;
+    new_appointment_percentage: number;
+  }
+  sales: {
+    sales_presentation: number;
+    case_closed: number;
+    new_sales_presentation: number;
+    new_sales_presentation_percentage: number;
+    new_cases: number;
+    new_cases_percentage: number;
+    total_new_sales: number;
+  }
+  recruitment: {
+    career_presentation: number;
+    recruitment: number;
+    new_career_presentation: number;
+    new_career_presentation_percentage: number;
+    new_recruitment: number;
+    new_recruitment_percentage: number;
+  }
+  career: {
+    millionaire_suit: number;
+    update_upline: number;
+    personal_coaching: number;
+    training: number;
+  }
+}

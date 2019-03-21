@@ -1,9 +1,20 @@
 import { Component } from '@angular/core';
-import { AlertController, ViewController, NavParams } from "ionic-angular";
+import { AlertController, ViewController, NavParams, ModalController } from "ionic-angular";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact } from "../../../models/contact";
 import { ContactStatus } from "../../../functions/colors";
+import { ContactFilterComponent } from "../contact-filter/contact-filter";
+import { AddContactComponent } from "../add-contact/add-contact";
+
+interface filterData {
+  segment: string;
+  contactStatus?: string;
+  contactType?: string;
+  date?: { from: string; until: string; };
+  name: string;
+  answered?: string;
+}
 
 @Component({
   selector: 'contact-list',
@@ -14,12 +25,15 @@ export class ContactListComponent {
   pageStatus: string;
   contacts: contact[];
   sales = false;
+  filterData: filterData;
+  notFound: boolean;
 
   constructor(
     private contactProvider: ContactProvider,
     private alertCtrl: AlertController,
     private viewCtrl: ViewController,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
@@ -28,7 +42,7 @@ export class ContactListComponent {
 
   fetch() {
     this.pageStatus = 'loading';
-    this.contactProvider.getContacts('pk,name,contact_no,status,remark').subscribe(observe => {
+    this.contactProvider.getContacts('pk,name,contact_no,status,remark,contact_type').subscribe(observe => {
       this.pageStatus = undefined;
       this.contacts = observe;
     }, () => {
@@ -70,6 +84,41 @@ export class ContactListComponent {
       this.sales = true;
     }
     this.fetch();
+  }
+
+  addContact() {
+    const modal = this.modalCtrl.create(AddContactComponent);
+    modal.present();
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.pageStatus = undefined;
+        this.notFound = false;
+        this.contacts.unshift(data.newContact);
+      }
+    });
+  }
+
+  filter() {
+    let data = { segment:'contacts', data: this.filterData };
+    const modal = this.modalCtrl.create(ContactFilterComponent, data);
+    modal.present();
+    modal.onDidDismiss((data: filterData) => {
+      if (data) {
+        this.filterData = data;
+        this.pageStatus = 'loading';
+        this.contactProvider.contactFilter(data.contactType, data.contactStatus, data.name).subscribe(contacts => {
+          this.pageStatus = undefined;
+          if (contacts.length === 0) {
+            this.notFound = true;
+          } else {
+            this.notFound = false;
+            this.contacts = contacts;
+          }
+        }, () => {
+          this.pageStatus = undefined;
+        });
+      }
+    });
   }
 
 }
