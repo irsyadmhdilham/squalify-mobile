@@ -19,3 +19,14 @@ export class ContactStatus {
   static other = '#F5A623';
   static none = '#DF48E1';
 }
+
+export class ContactType {
+  static referrals = '#7ED321';
+  static booth = '#50E3C2';
+  static ftf = '#0000FF';
+  static socmed = '#63ACFF';
+  static nesting = '#F5A623';
+  static other = '#DF48E1';
+  static client = '#17BFB9';
+  static ttt = '#FF1493';
+}

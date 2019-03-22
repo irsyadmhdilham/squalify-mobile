@@ -11,21 +11,22 @@
 
 <ion-content padding [ngSwitch]="load">
   <ng-container *ngSwitchCase="true">
-    <ion-row>
-      <ion-col>
-        <p>Period: {{period}}</p>
-      </ion-col>
-      <ion-col>
-        <button ion-button round small>Change period</button>
-      </ion-col>
+    <ion-row justify-content-between align-items-center>
+      <h6 no-margin>This {{period}}</h6>
+      <button (tap)="changePeriod()" ion-button clear no-padding>Change period</button>
     </ion-row>
     <section id="total-container">
-  
+      <ion-row>
+        <div>
+          <h4>2323 points</h4>
+          <p>This {{period}}</p>
+        </div>
+      </ion-row>
     </section>
   
     <section id="contacts-container">
       <ion-row>
-        <button ion-button icon-only clear color="dark" no-padding>
+        <button ion-button icon-only clear color="grey" no-padding>
           <ion-icon no-padding name="contacts"></ion-icon>
         </button>
         <h6 class="title">Contacts</h6>
@@ -33,19 +34,19 @@
       <ion-list no-lines>
         <ion-item no-padding>
           <p>FTF/Booth/Nesting</p>
-          <p item-end>{{contacts.ftf}} pt</p>
+          <p ion-text color="primary" item-end>{{contacts.ftf}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Referrals</p>
-          <p item-end>{{contacts.referrals}} pt</p>
+          <p ion-text color="primary" item-end>{{contacts.referrals}} points</p>
         </ion-item>
       </ion-list>
       <ion-row>
         <div class="percentage-container">
           <div class="percentage-top">
-            <h3 no-margin>{{contacts.new_contacts}}</h3>
+            <h5 no-margin>{{numberPercentage(contacts.new_contacts)}}</h5>
             <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(contacts.new_contacts_percentage)">
-              <p ion-text color="secondaryDark" no-margin>{{contacts.new_contacts_percentage}}%</p>
+              <p ion-text color="secondaryDark" no-margin>{{percentage(contacts.new_contacts_percentage)}}%</p>
               <button
                 class="remove-margin-button"
                 [color]="percentageIconStyle(contacts.new_contacts_percentage)"
@@ -63,10 +64,18 @@
         </div>
         <div margin-left class="percentage-container">
           <div class="percentage-top">
-            <h3 no-margin>{{contacts.client_conversion}}</h3>
+            <h5 no-margin>{{numberPercentage(contacts.client_conversion)}}</h5>
             <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(contacts.client_conversion_percentage)">
-              <p ion-text color="secondaryDark" no-margin>{{contacts.client_conversion_percentage}}%</p>
-              <button class="remove-margin-button" [color]="percentageIconStyle(contacts.client_conversion_percentage)" ion-button icon-only small clear no-padding>
+              <p ion-text color="secondaryDark" no-margin>{{percentage(contacts.client_conversion_percentage)}}%</p>
+              <button
+                class="remove-margin-button"
+                [color]="percentageIconStyle(contacts.client_conversion_percentage)"
+                ion-button
+                icon-only
+                small
+                clear
+                no-padding
+              >
                 <ion-icon no-padding name="arrow-round-forward"></ion-icon>
               </button>
             </div>
@@ -75,42 +84,68 @@
         </div>
       </ion-row>
       <ion-grid margin-top>
+        <p no-margin>Contacts</p>
+        <canvas #contactCanvas></canvas>
         <ion-row>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.referrals}}</h6>
-            <p ion-text color="grey" no-margin>Referrals</p>
+            <div [ngStyle]="contactBullet('Referrals')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.referrals}}</h6>
+              <p ion-text color="grey" no-margin>Referrals</p>
+            </section>
           </ion-col>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.booth}}</h6>
-            <p ion-text color="grey" no-margin>Booth</p>
+            <div [ngStyle]="contactBullet('Booth')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.booth}}</h6>
+              <p ion-text color="grey" no-margin>Booth</p>
+            </section>
           </ion-col>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.ftf}}</h6>
-            <p ion-text color="grey" no-margin>Face to face</p>
+            <div [ngStyle]="contactBullet('Face to face')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.ftf}}</h6>
+              <p ion-text color="grey" no-margin>Face to face</p>
+            </section>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.socmed}}</h6>
-            <p ion-text color="grey" no-margin>Social media</p>
+            <div [ngStyle]="contactBullet('Social media')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.socmed}}</h6>
+              <p ion-text color="grey" no-margin>Social media</p>
+            </section>
           </ion-col>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.nesting}}</h6>
-            <p ion-text color="grey" no-margin>Nesting</p>
+            <div [ngStyle]="contactBullet('Nesting')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.nesting}}</h6>
+              <p ion-text color="grey" no-margin>Nesting</p>
+            </section>
           </ion-col>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.other}}</h6>
-            <p ion-text color="grey" no-margin>Other</p>
+            <div [ngStyle]="contactBullet('Other')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.other}}</h6>
+              <p ion-text color="grey" no-margin>Other</p>
+            </section>
           </ion-col>
         </ion-row>
         <ion-row>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.ttt}}</h6>
-            <p ion-text color="grey" no-margin>Table to table/Door to door</p>
+            <div [ngStyle]="contactBullet('Table to table/Door to door')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.ttt}}</h6>
+              <p ion-text color="grey" no-margin>Table to table/Door to door</p>
+            </section>
           </ion-col>
           <ion-col>
-            <h6 no-margin>{{contacts.contacts.client}}</h6>
-            <p ion-text color="grey" no-margin>Client</p>
+            <div [ngStyle]="contactBullet('Client')" class="contact-bullet"></div>
+            <section>
+              <h6 no-margin>{{contacts.contacts.client}}</h6>
+              <p ion-text color="grey" no-margin>Client</p>
+            </section>
           </ion-col>
           <ion-col></ion-col>
         </ion-row>
@@ -119,7 +154,7 @@
   
     <section id="engagement-container" margin-top>
       <ion-row>
-        <button ion-button icon-only clear color="dark" no-padding>
+        <button ion-button icon-only clear color="grey" no-padding>
           <ion-icon no-padding name="chatboxes"></ion-icon>
         </button>
         <h6 class="title">Engagement</h6>
@@ -127,25 +162,33 @@
       <ion-list no-lines>
         <ion-item no-padding>
           <p>Calls/Email/Socmed</p>
-          <p item-end>{{engagement.calls}} pt</p>
+          <p ion-text color="primary" item-end>{{engagement.calls}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Servicing/Follow up</p>
-          <p item-end>{{engagement.servicing}} pt</p>
+          <p ion-text color="primary" item-end>{{engagement.servicing}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Appointment secured</p>
-          <p item-end>{{engagement.appointment}} pt</p>
+          <p ion-text color="primary" item-end>{{engagement.appointment}} points</p>
         </ion-item>
       </ion-list>
       <ion-row>
         <ion-col>
           <div class="percentage-container">
             <div class="percentage-top">
-              <h3 no-margin>{{engagement.new_calls}}</h3>
+              <h5 no-margin>{{numberPercentage(engagement.new_calls)}}</h5>
               <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(engagement.new_calls_percentage)">
-                <p no-margin>{{engagement.new_calls_percentage}}%</p>
-                <button class="remove-margin-button" [color]="percentageIconStyle(engagement.new_calls_percentage)" ion-button icon-only small clear no-padding>
+                <p no-margin>{{percentage(engagement.new_calls_percentage)}}%</p>
+                <button
+                  class="remove-margin-button"
+                  [color]="percentageIconStyle(engagement.new_calls_percentage)"
+                  ion-button
+                  icon-only
+                  small
+                  clear
+                  no-padding
+                >
                   <ion-icon no-padding name="arrow-round-forward"></ion-icon>
                 </button>
               </div>
@@ -156,10 +199,18 @@
         <ion-col>
           <div class="percentage-container">
             <div class="percentage-top">
-              <h3 no-margin>{{engagement.new_servicing}}</h3>
+              <h5 no-margin>{{numberPercentage(engagement.new_servicing)}}</h5>
               <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(engagement.new_servicing_percentage)">
-                <p no-margin>{{engagement.new_servicing_percentage}}%</p>
-                <button class="remove-margin-button" [color]="percentageIconStyle(engagement.new_servicing_percentage)" ion-button icon-only small clear no-padding>
+                <p no-margin>{{percentage(engagement.new_servicing_percentage)}}%</p>
+                <button
+                  class="remove-margin-button"
+                  [color]="percentageIconStyle(engagement.new_servicing_percentage)"
+                  ion-button
+                  icon-only
+                  small
+                  clear
+                  no-padding
+                >
                   <ion-icon no-padding name="arrow-round-forward"></ion-icon>
                 </button>
               </div>
@@ -170,10 +221,18 @@
         <ion-col>
           <div class="percentage-container">
             <div class="percentage-top">
-              <h3 no-margin>{{engagement.new_appointment}}</h3>
+              <h5 no-margin>{{numberPercentage(engagement.new_appointment)}}</h5>
               <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(engagement.new_appointment_percentage)">
-                <p no-margin>{{engagement.new_appointment_percentage}}%</p>
-                <button class="remove-margin-button" [color]="percentageIconStyle(engagement.new_appointment_percentage)" ion-button icon-only small clear no-padding>
+                <p no-margin>{{percentage(engagement.new_appointment_percentage)}}%</p>
+                <button
+                  class="remove-margin-button"
+                  [color]="percentageIconStyle(engagement.new_appointment_percentage)"
+                  ion-button
+                  icon-only
+                  small
+                  clear
+                  no-padding
+                >
                   <ion-icon no-padding name="arrow-round-forward"></ion-icon>
                 </button>
               </div>
@@ -186,7 +245,7 @@
   
     <section id="sales-container" margin-top>
       <ion-row>
-        <button ion-button icon-only clear color="dark" no-padding>
+        <button ion-button icon-only clear color="grey" no-padding>
           <ion-icon no-padding name="cash"></ion-icon>
         </button>
         <h6 class="title">Sales</h6>
@@ -194,21 +253,29 @@
       <ion-list no-lines>
         <ion-item no-padding>
           <p>Sales presentation</p>
-          <p item-end>{{sales.sales_presentation}} pt</p>
+          <p ion-text color="primary" item-end>{{sales.sales_presentation}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Add sales (Case closed)</p>
-          <p item-end>{{sales.case_closed}} pt</p>
+          <p ion-text color="primary" item-end>{{sales.case_closed}} points</p>
         </ion-item>
       </ion-list>
       <ion-row>
         <ion-col>
           <div class="percentage-container">
             <div class="percentage-top">
-              <h3 no-margin>{{sales.new_sales_presentation}}</h3>
+              <h5 no-margin>{{numberPercentage(sales.new_sales_presentation)}}</h5>
               <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(sales.new_sales_presentation_percentage)">
-                <p no-margin>{{sales.new_sales_presentation_percentage}}%</p>
-                <button class="remove-margin-button" [color]="percentageIconStyle(sales.new_sales_presentation_percentage)" ion-button icon-only small clear no-padding>
+                <p no-margin>{{percentage(sales.new_sales_presentation_percentage)}}%</p>
+                <button
+                  class="remove-margin-button"
+                  [color]="percentageIconStyle(sales.new_sales_presentation_percentage)"
+                  ion-button
+                  icon-only
+                  small
+                  clear
+                  no-padding
+                >
                   <ion-icon no-padding name="arrow-round-forward"></ion-icon>
                 </button>
               </div>
@@ -219,10 +286,18 @@
         <ion-col>
           <div class="percentage-container">
             <div class="percentage-top">
-              <h3 no-margin>{{sales.new_cases}}</h3>
+              <h5 no-margin>{{numberPercentage(sales.new_cases)}}</h5>
               <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(sales.new_cases_percentage)">
-                <p no-margin>{{sales.new_cases_percentage}}%</p>
-                <button class="remove-margin-button" [color]="percentageIconStyle(sales.new_cases_percentage)" ion-button icon-only small clear no-padding>
+                <p no-margin>{{percentage(sales.new_cases_percentage)}}%</p>
+                <button
+                  class="remove-margin-button"
+                  [color]="percentageIconStyle(sales.new_cases_percentage)"
+                  ion-button
+                  icon-only
+                  small
+                  clear
+                  no-padding
+                >
                   <ion-icon no-padding name="arrow-round-forward"></ion-icon>
                 </button>
               </div>
@@ -231,7 +306,7 @@
           </div>
         </ion-col>
         <ion-col>
-          <h3 no-margin>RM{{sales.total_new_sales | numCommas}}</h3>
+          <h5 no-margin>RM{{sales.total_new_sales | numCommas}}</h5>
           <p class="total-new-sales" no-margin ion-text color="grey">Total new sales</p>
         </ion-col>
       </ion-row>
@@ -239,7 +314,7 @@
     
     <section id="recruitment-container" margin-top>
       <ion-row>
-        <button ion-button icon-only clear color="dark" no-padding>
+        <button ion-button icon-only clear color="grey" no-padding>
           <ion-icon no-padding name="people"></ion-icon>
         </button>
         <h6 class="title">Recruitment</h6>
@@ -247,20 +322,28 @@
       <ion-list no-lines>
         <ion-item no-padding>
           <p>Career presentation</p>
-          <p item-end>{{recruitment.career_presentation}} pt</p>
+          <p ion-text color="primary" item-end>{{recruitment.career_presentation}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>New recruitment</p>
-          <p item-end>{{recruitment.recruitment}} pt</p>
+          <p ion-text color="primary" item-end>{{recruitment.recruitment}} points</p>
         </ion-item>
       </ion-list>
       <ion-row>
         <div class="percentage-container">
           <div class="percentage-top">
-            <h3 no-margin>{{recruitment.new_career_presentation}}</h3>
+            <h5 no-margin>{{numberPercentage(recruitment.new_career_presentation)}}</h5>
             <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(recruitment.new_career_presentation)">
-              <p no-margin>{{recruitment.new_career_presentation_percentage}}%</p>
-              <button class="remove-margin-button" [color]="percentageIconStyle(recruitment.new_career_presentation)" ion-button icon-only small clear no-padding>
+              <p no-margin>{{percentage(recruitment.new_career_presentation_percentage)}}%</p>
+              <button
+                class="remove-margin-button"
+                [color]="percentageIconStyle(recruitment.new_career_presentation)"
+                ion-button
+                icon-only
+                small
+                clear
+                no-padding
+              >
                 <ion-icon no-padding name="arrow-round-forward"></ion-icon>
               </button>
             </div>
@@ -269,10 +352,18 @@
         </div>
         <div margin-left class="percentage-container">
           <div class="percentage-top">
-            <h3 no-margin>{{recruitment.new_recruitment}}</h3>
+            <h5 no-margin>{{numberPercentage(recruitment.new_recruitment)}}</h5>
             <div class="percentage-wrapper" [ngClass]="percentageContainerStyle(recruitment.new_recruitment_percentage)">
-              <p no-margin>{{recruitment.new_recruitment_percentage}}%</p>
-              <button class="remove-margin-button" [color]="percentageIconStyle(recruitment.new_recruitment_percentage)" ion-button icon-only small clear no-padding>
+              <p no-margin>{{percentage(recruitment.new_recruitment_percentage)}}%</p>
+              <button
+                class="remove-margin-button"
+                [color]="percentageIconStyle(recruitment.new_recruitment_percentage)"
+                ion-button
+                icon-only
+                small
+                clear
+                no-padding
+              >
                 <ion-icon no-padding name="arrow-round-forward"></ion-icon>
               </button>
             </div>
@@ -284,7 +375,7 @@
   
     <section id="career-container" margin-top>
       <ion-row>
-        <button ion-button icon-only clear color="dark" no-padding>
+        <button ion-button icon-only clear color="grey" no-padding>
           <ion-icon no-padding name="briefcase"></ion-icon>
         </button>
         <h6 class="title">Career</h6>
@@ -292,19 +383,19 @@
       <ion-list no-lines>
         <ion-item no-padding>
           <p>Millionaire suit</p>
-          <p item-end>{{career.millionaire_suit}} pt</p>
+          <p ion-text color="primary" item-end>{{career.millionaire_suit}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Update upline</p>
-          <p item-end>{{career.update_upline}} pt</p>
+          <p ion-text color="primary" item-end>{{career.update_upline}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Personal coaching</p>
-          <p item-end>{{career.personal_coaching}} pt</p>
+          <p ion-text color="primary" item-end>{{career.personal_coaching}} points</p>
         </ion-item>
         <ion-item no-padding>
           <p>Training</p>
-          <p item-end>{{career.training}} pt</p>
+          <p ion-text color="primary" item-end>{{career.training}} points</p>
         </ion-item>
       </ion-list>
     </section>
