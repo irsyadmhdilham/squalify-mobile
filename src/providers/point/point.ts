@@ -7,7 +7,7 @@ import { Storage } from "@ionic/storage";
 
 import { ApiUrlModules } from "../../functions/config";
 
-import { point, contactPoints, groupPoint, allPoints, pointIo } from "../../models/point";
+import { point, contactPoints, groupPoint, allPoints, pointIo, summary, summaryResponse } from "../../models/point";
 import { store } from "../../models/store";
 import { profile } from "../../models/profile";
 
@@ -183,6 +183,23 @@ export class PointProvider extends ApiUrlModules {
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<allPoints>(url, httpOptions);
+      }));
+    }));
+  }
+
+  personalSummary(period: string): Observable<summary> {
+    const url = this.profileUrl(`point/summary/?p=${period}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {
+          return {
+            ...response,
+            sales: {
+              ...response.sales,
+              total_new_sales: parseFloat(response.sales.total_new_sales)
+            }
+          };
+        }));
       }));
     }));
   }

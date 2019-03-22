@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, InfiniteScroll } from 'ionic-angular';
+import { NavController, NavParams, InfiniteScroll, ModalController } from 'ionic-angular';
 
 import { PointProvider } from "../../../providers/point/point";
 import { point } from "../../../models/point";
 
 import { PointDetailPage } from "./point-detail/point-detail";
 import { PointGroupMemberPage } from "./point-group-member/point-group-member";
+import { PointDetailSummaryComponent } from "../../../components/point/point-detail-summary/point-detail-summary";
 
 @Component({
   selector: 'page-points',
@@ -20,7 +21,8 @@ export class PointsPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private pointProvider: PointProvider
+    private pointProvider: PointProvider,
+    private modalCtrl: ModalController
   ) { }
 
   changeSegment(value) {
@@ -85,5 +87,10 @@ export class PointsPage {
 
   navToMember(date: string) {
     this.navCtrl.push(PointGroupMemberPage, { date });
+  }
+
+  summary() {
+    const modal = this.modalCtrl.create(PointDetailSummaryComponent);
+    modal.present();
   }
 }
