@@ -25,12 +25,20 @@
         <button (tap)="addContact()" ion-button clear class="remove-margin-button" no-padding>Add contact</button>
       </ion-row>
       <ion-list>
-        <ion-item (tap)="select(contact)" *ngFor="let contact of contacts" no-padding>
+        <ion-item *ngFor="let contact of contacts" no-padding>
           <h6 ion-text color="dark">{{contact.name}}</h6>
           <p ion-text color="grey">{{contact.contact_type}}</p>
           <p [ngStyle]="statusStyle(contact)">{{contact.status}}</p>
-          <p ion-text color="grey" *ngIf="contact.remark">Remark: {{contact.remark}}</p>
-          <ion-icon *ngIf="!sales" item-end no-padding color="primary" name="call"></ion-icon>
+          <div *ngIf="!sales" item-end>
+            <ion-row align-items-center>
+              <button icon-only clear ion-button (tap)="select(contact)">
+                <ion-icon no-padding color="primary" name="call"></ion-icon>
+              </button>
+              <button margin-left ion-button clear icon-only (tap)="viewMore(contact)" color="dark">
+                <ion-icon no-padding name="more"></ion-icon>
+              </button>
+            </ion-row>
+          </div>
         </ion-item>
       </ion-list>
     </ng-template>

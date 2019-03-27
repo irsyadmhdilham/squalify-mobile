@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, ActionSheetController } from "ionic-angular";
+import { ViewController, ActionSheetController, NavParams } from "ionic-angular";
 import { Chart } from "chart.js";
 import { Subject } from "rxjs";
 import { first } from "rxjs/operators";
@@ -22,6 +22,7 @@ import { ContactType as contactColor } from "../../../functions/colors";
 export class PointDetailSummaryComponent {
 
   @ViewChild('contactCanvas') contactCanvas: any;
+  section: string = this.navParams.get('section');
   period = 'year';
   total: totalSummary;
   engagement: engagementSummary;
@@ -29,6 +30,7 @@ export class PointDetailSummaryComponent {
   contacts: contactsSummary;
   recruitment: recruitmentSummary;
   career: careerSummary;
+  pageStatus: string;
   load = false;
   fireChart = new Subject<boolean>();
   colors = contactColor;
@@ -36,7 +38,8 @@ export class PointDetailSummaryComponent {
   constructor(
     private viewCtrl: ViewController,
     private pointProvider: PointProvider,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private navParams: NavParams
   ) { }
 
   dismiss() {
@@ -44,13 +47,22 @@ export class PointDetailSummaryComponent {
   }
 
   fetch() {
-    this.pointProvider.personalSummary(this.period).subscribe(summary => {
+    const fetch = () => {
+      if (this.section === 'personal') {
+        return this.pointProvider.personalSummary(this.period);
+      } else {
+        return this.pointProvider.groupSummary(this.period);
+      }
+    };
+    this.pageStatus = 'loading';
+    fetch().subscribe(summary => {
       this.total = summary.total;
       this.contacts = summary.contacts;
       this.engagement = summary.engagement;
       this.sales = summary.sales;
       this.recruitment = summary.recruitment;
       this.career = summary.career;
+      this.pageStatus = undefined;
       this.load = true;
     });
   }

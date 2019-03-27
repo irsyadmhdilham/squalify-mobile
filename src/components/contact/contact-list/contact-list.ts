@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
-import { AlertController, ViewController, NavParams, ModalController } from "ionic-angular";
+import {
+  AlertController,
+  ViewController,
+  NavParams,
+  ModalController,
+  ActionSheetController,
+  ToastController
+} from "ionic-angular";
 
 import { ContactProvider } from "../../../providers/contact/contact";
 import { contact } from "../../../models/contact";
@@ -33,7 +40,9 @@ export class ContactListComponent {
     private alertCtrl: AlertController,
     private viewCtrl: ViewController,
     private navParams: NavParams,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private actionSheetCtrl: ActionSheetController,
+    private toastCtrl: ToastController
   ) { }
 
   dismiss() {
@@ -96,6 +105,30 @@ export class ContactListComponent {
         this.contacts.unshift(data.newContact);
       }
     });
+  }
+
+  viewMore(contact: contact) {
+    const called = () => {
+      this.contactProvider.createCallLog(contact.pk, contact.status, true).subscribe(() => {
+        const toast = this.toastCtrl.create({
+          message: 'Call log and point added',
+          position: 'top',
+          duration: 1500
+        });
+        toast.present();
+      });
+    };
+    const actionSheet = this.actionSheetCtrl.create({
+      buttons: [
+        { text: 'Contacted via Call', handler: () => called()},
+        { text: 'Contacted via Whatsapp', handler: () => called()},
+        { text: 'Contacted via Social media', handler: () => called()},
+        { text: 'Contacted via Telegram', handler: () => called()},
+        { text: 'Contacted via Email', handler: () => called()},
+        { text: 'Cancel', cssClass: 'danger-alert', role: 'cancel' }
+      ]
+    });
+    actionSheet.present();
   }
 
   filter() {

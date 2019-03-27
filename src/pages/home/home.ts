@@ -115,7 +115,9 @@ export class HomePage {
             memos = response.memos;
       this.newPost = 0;
       this.posts = [];
-      this.posts.push({ memos });
+      if (memos.length > 0) {
+        this.posts.push({ memos });
+      }
       this.posts.push(...posts);
     });
   }

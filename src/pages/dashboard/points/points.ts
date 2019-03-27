@@ -90,7 +90,9 @@ export class PointsPage {
   }
 
   summary() {
-    const modal = this.modalCtrl.create(PointDetailSummaryComponent);
+    const modal = this.modalCtrl.create(PointDetailSummaryComponent, {
+      segment: this.segment
+    });
     modal.present();
   }
 }

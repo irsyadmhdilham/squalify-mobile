@@ -4,7 +4,8 @@ import {
   LoadingController,
   ModalController,
   ToastController,
-  Platform
+  Platform,
+  Events
 } from "ionic-angular";
 import { CallNumber } from "@ionic-native/call-number";
 import { Store } from "@ngrx/store";
@@ -47,7 +48,8 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     private callNumber: CallNumber,
     private store: Store<store>,
     private platform: Platform,
-    private contactProvider: ContactProvider
+    private contactProvider: ContactProvider,
+    private events: Events
   ) {
     super(modalCtrl);
   }
@@ -93,6 +95,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
       break;
       case 'Calls/Email/Socmed':
         this.addCalls().then(data => {
+          this.events.publish('refresh points');
           if (data) {
             const isCordova = this.platform.is('cordova'),
                   isMobile = this.platform.is('mobile');
@@ -106,6 +109,7 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
       break;
       case 'Servicing/Follow up':
         this.servicing().then(data => {
+          this.events.publish('refresh points');
           if (data) {
             const isCordova = this.platform.is('cordova'),
                   isMobile = this.platform.is('mobile');

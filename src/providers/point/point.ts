@@ -204,4 +204,21 @@ export class PointProvider extends ApiUrlModules {
     }));
   }
 
+  groupSummary(period: string): Observable<summary> {
+    const url = this.profileUrl(`point/group/summary/?p=${period}`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {
+          return {
+            ...response,
+            sales: {
+              ...response.sales,
+              total_new_sales: parseFloat(response.sales.total_new_sales)
+            }
+          };
+        }));
+      }));
+    }));
+  }
+
 }

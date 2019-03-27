@@ -50,11 +50,11 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
-  createCallLog(contactId: number, called=false): Observable<logs> {
+  createCallLog(contactId: number, status?: string, called=false): Observable<logs> {
     const url = this.profileUrl(`contact/call-logs/?c=${called}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.post<logs>(url, { contactId }, httpOptions);
+        return this.http.post<logs>(url, { contactId, status }, httpOptions);
       }));
     }));
   }

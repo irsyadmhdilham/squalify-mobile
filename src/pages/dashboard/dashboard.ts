@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, Events } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 
@@ -28,13 +28,15 @@ export class DashboardPage {
   profile: Observable<profile> = this.store.pipe(select('profile'));
   dontShowToast = true;
   notifications$ = this.store.pipe(select('notifications'));
+  refreshPoints: () => void;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private pointProvider: PointProvider,
     private alertCtrl: AlertController,
-    private store: Store<profile>
+    private store: Store<profile>,
+    private events: Events
   ) { }
 
   navToNotifications() {
@@ -67,8 +69,20 @@ export class DashboardPage {
     }
   }
 
+  eventListener() {
+    this.refreshPoints = () => {
+      this.fetchTodayPoint();
+    };
+    this.events.subscribe('refresh points', this.refreshPoints);
+  }
+
   ionViewWillEnter() {
     this.fetchTodayPoint();
+    this.eventListener();
+  }
+
+  ionViewWillLeave() {
+    this.events.unsubscribe('refresh points', this.refreshPoints);
   }
 
   fetchTodayPoint() {

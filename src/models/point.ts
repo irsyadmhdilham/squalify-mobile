@@ -64,7 +64,7 @@ export interface pointIo {
 
 export interface totalSummary {
   current: number;
-  previous: number;
+  difference: number;
   diff_percentage: number;
 }
 
@@ -137,7 +137,7 @@ export interface summary {
 export interface summaryResponse {
   total: {
     current: number;
-    previous: number;
+    difference: number;
     diff_percentage: number;
   }
   contacts: {

@@ -16,7 +16,7 @@
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve points" [retry]="segment === 'personal' ? fetch.bind(this) : fetchGroup.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <button (tap)="summary()" ion-button clear class="remove-margin-button">Show summary</button>
+    <button (tap)="summary()" ion-button clear no-padding class="remove-margin-button">Show summary</button>
     <ng-container [ngSwitch]="segment">
       <ion-list *ngSwitchCase="'personal'">
         <ion-item (tap)="navigate(point)" no-padding *ngFor="let point of points">
