@@ -137,7 +137,7 @@ export class ApiUrlModules extends Ids {
   apiBaseUrl() {
     if (isDevMode()) {
       return `${this.devIpAddress}:8030`;
-      // return 'https://api.squalify.com;
+      // return 'https://api.squalify.com';
     }
     return 'https://api.squalify.com';
   }

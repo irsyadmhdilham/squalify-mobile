@@ -108,8 +108,8 @@ export class ContactListComponent {
   }
 
   viewMore(contact: contact) {
-    const called = () => {
-      this.contactProvider.createCallLog(contact.pk, contact.status, true).subscribe(() => {
+    const called = (contactVia: string) => {
+      this.contactProvider.createCallLog(contact.pk, contactVia, contact.status, true).subscribe(() => {
         const toast = this.toastCtrl.create({
           message: 'Call log and point added',
           position: 'top',
@@ -120,11 +120,11 @@ export class ContactListComponent {
     };
     const actionSheet = this.actionSheetCtrl.create({
       buttons: [
-        { text: 'Contacted via Call', handler: () => called()},
-        { text: 'Contacted via Whatsapp', handler: () => called()},
-        { text: 'Contacted via Social media', handler: () => called()},
-        { text: 'Contacted via Telegram', handler: () => called()},
-        { text: 'Contacted via Email', handler: () => called()},
+        { text: 'Contacted via Call', handler: () => called('Call')},
+        { text: 'Contacted via Whatsapp', handler: () => called('Whatsapp')},
+        { text: 'Contacted via Social media', handler: () => called('Social media')},
+        { text: 'Contacted via Telegram', handler: () => called('Telegram')},
+        { text: 'Contacted via Email', handler: () => called('Email')},
         { text: 'Cancel', cssClass: 'danger-alert', role: 'cancel' }
       ]
     });

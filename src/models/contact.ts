@@ -20,4 +20,5 @@ export interface logs {
   answered: boolean;
   remark?: string;
   contact: contact;
+  contact_via: string;
 };

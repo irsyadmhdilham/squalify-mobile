@@ -67,7 +67,13 @@
                     <h6>{{log.contact.name}}</h6>
                     <p>{{log.contact.status}}</p>
                     <p>{{logDate(log.date)}}</p>
-                    <h6 [ngStyle]="logStatus(log.answered)">{{log.answered ? 'Answered, 1 point added' : 'Not answer'}}</h6>
+                    <ng-container *ngIf="log.answered; then answeredBlock; else unansweredBlock"></ng-container>
+                    <ng-template #answeredBlock>
+                      <h6 [ngStyle]="logStatus(log.answered)">{{log.contact_via}} answered, 1 point added</h6>
+                    </ng-template>
+                    <ng-template #unansweredBlock>
+                      <h6 [ngStyle]="logStatus(log.answered)">Call not answer</h6>
+                    </ng-template>
                   </ion-label>
                   <ion-toggle [(ngModel)]="log.answered" (ionChange)="updateLog($event, log.pk)"></ion-toggle>
                 </ion-item>

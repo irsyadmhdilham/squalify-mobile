@@ -50,20 +50,20 @@ export class ContactProvider extends ApiUrlModules {
     }));
   }
 
-  createCallLog(contactId: number, status?: string, called=false): Observable<logs> {
+  createCallLog(contactId: number, contactVia='Call', status?: string, called=false): Observable<logs> {
     const url = this.profileUrl(`contact/call-logs/?c=${called}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.post<logs>(url, { contactId, status }, httpOptions);
+        return this.http.post<logs>(url, { contactId, status, contactVia }, httpOptions);
       }));
     }));
   }
 
-  updateCallLog(id: number, value: boolean): Observable<null> {
+  updateCallLog(id: number, value: boolean, contactVia='Call'): Observable<null> {
     const url = this.profileUrl(`contact/call-logs/${id}/`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
-        return this.http.put<null>(url, { answered: value }, httpOptions);
+        return this.http.put<null>(url, { answered: value, contactVia }, httpOptions);
       }));
     }));
   }

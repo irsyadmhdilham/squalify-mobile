@@ -118,7 +118,9 @@ export class HomePage {
       if (memos.length > 0) {
         this.posts.push({ memos });
       }
-      this.posts.push(...posts);
+      if (posts.length > 0) {
+        this.posts.push(...posts);
+      }
     });
   }
 
