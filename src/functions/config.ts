@@ -128,8 +128,8 @@ export class ApiUrlModules extends Ids {
 
   wsBaseUrl(namespace: string) {
     if (isDevMode()) {
-      return `${this.devIpAddress}:8040/${namespace}`;
-      // return `https://ws.squalify.com/${namespace}`;
+      // return `${this.devIpAddress}:8040/${namespace}`;
+      return `https://ws.squalify.com/${namespace}`;
     }
     return `https://ws.squalify.com/${namespace}`;
   }

@@ -60,6 +60,18 @@
       <ion-label>Pick reminder date</ion-label>
       <ion-datetime [(ngModel)]="reminderDate" displayFormat="D MMM YYYY, h:mma"></ion-datetime>
     </ion-item>
+    <ion-item>
+      <ion-label>Assign to others (Optional)</ion-label>
+      <ion-select [(ngModel)]="multiAssign" (ionChange)="assignChange($event)" interface="action-sheet">
+        <ion-option value="agency">Agency members</ion-option>
+        <ion-option value="group">Group members</ion-option>
+        <ion-option value="select">Select members</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="multiAssign === 'select'">
+      <p>Assigned to</p>
+      <p id="asign-members">{{assignedTo(assignedMembers)}}</p>
+    </ion-item>
   </ion-list>
   <ion-row justify-content-center>
     <button ion-button clear strong (tap)="addSchedule(title, date, location, remark)">Add schedule</button>

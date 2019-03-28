@@ -111,7 +111,7 @@ export class HomePage {
         return { posts: posts, memos: memos };
       }));
     })).subscribe(response => {
-      const posts = response.posts,
+      const posts = response.posts.filter(val => val.sales_rel.length > 0),
             memos = response.memos;
       this.newPost = 0;
       this.posts = [];

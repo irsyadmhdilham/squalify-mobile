@@ -58,7 +58,7 @@
     </ion-row>
   </ion-grid>
   <ion-list no-lines>
-    <ion-item class="comment-container" *ngFor="let comment of comments">
+    <ion-item class="comment-container" *ngFor="let comment of comments; index as i">
       <div item-start [ngStyle]="commentProfileImage(comment.commented_by.profile_image)" class="commenter-image"></div>
       <ion-row>
         <div class="comment-wrapper">
@@ -66,7 +66,21 @@
           <p ion-text color="dark">{{comment.text}}</p>
         </div>
       </ion-row>
-      <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+      <ion-row>
+        <button
+          clear
+          small
+          no-padding
+          ion-button
+          color="danger"
+          (tap)="removeComment(comment.pk, i)"
+          class="remove-margin-button"
+          *ngIf="canRemove(comment.commented_by.pk)"
+        >
+          Remove
+        </button>
+        <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+      </ion-row>
     </ion-item>
   </ion-list>
 </ion-content>

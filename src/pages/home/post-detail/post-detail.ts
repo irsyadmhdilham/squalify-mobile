@@ -7,11 +7,13 @@ import {
   LoadingController,
   Events
 } from 'ionic-angular';
+import { Store, select } from "@ngrx/store";
 import * as moment from "moment";
 import { Subscription } from "rxjs/Subscription";
 
 import { post } from "../../../models/post";
 import { notification } from "../../../models/notification";
+import { store } from "../../../models/store";
 
 import { PostProvider } from "../../../providers/post/post";
 import { NotificationProvider } from "../../../providers/notification/notification";
@@ -43,6 +45,7 @@ export class PostDetailPage {
   likeListener: Subscription;
   unlikeListener: Subscription;
   commentListener: Subscription;
+  userId: number;
 
   constructor(
     public navCtrl: NavController,
@@ -51,7 +54,8 @@ export class PostDetailPage {
     private notificationProvider: NotificationProvider,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private events: Events
+    private events: Events,
+    private store: Store<store>
   ) { }
 
   profileImageView() {
@@ -159,6 +163,9 @@ export class PostDetailPage {
   }
 
   ionViewDidLoad() {
+    this.store.pipe(select('profile')).subscribe((profile: any) => {
+      this.userId = profile.pk;
+    });
     const post: post = this.navParams.get('post');
     this.readNotif();
     this.postProvider.getPostDetail(post.pk).subscribe(post => {
@@ -211,6 +218,26 @@ export class PostDetailPage {
     }
   }
 
+  removeComment(commentId: number, i: number) {
+    const confirm = this.alertCtrl.create({
+      title: 'Are you sure',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Remove', handler: () => {
+          const loading = this.loadingCtrl.create({content: 'Please wait...'});
+          loading.present();
+          this.postProvider.removeComment(commentId).subscribe(() => {
+            this.comments.splice(i, 1);
+            loading.dismiss();
+          }, () => {
+            loading.dismiss();
+          });
+        }, cssClass: 'danger-alert'}
+      ]
+    });
+    confirm.present();
+  }
+
   ionViewWillLeave() {
     this.navCtrl.getPrevious().data.likeStatus = {
       status: this.liked
@@ -219,6 +246,10 @@ export class PostDetailPage {
     this.likeListener.unsubscribe();
     this.unlikeListener.unsubscribe();
     this.commentListener.unsubscribe();
+  }
+
+  canRemove(id: number) {
+    return this.userId === id;
   }
 
 }

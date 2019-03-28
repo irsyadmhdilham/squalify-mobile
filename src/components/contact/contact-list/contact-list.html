@@ -25,7 +25,7 @@
         <button (tap)="addContact()" ion-button clear class="remove-margin-button" no-padding>Add contact</button>
       </ion-row>
       <ion-list>
-        <ion-item *ngFor="let contact of contacts" no-padding>
+        <ion-item (tap)="selectClient(contact)" *ngFor="let contact of contacts" no-padding>
           <h6 ion-text color="dark">{{contact.name}}</h6>
           <p ion-text color="grey">{{contact.contact_type}}</p>
           <p [ngStyle]="statusStyle(contact)">{{contact.status}}</p>

@@ -31,15 +31,22 @@
       <ng-container *ngIf="inboxes.length !== 0; then conversations; else empty"></ng-container>
       <ng-template #conversations>
         <ion-list>
-          <ion-item (tap)="toChatroom(inbox)" *ngFor="let inbox of inboxes | inboxDuplicate; index as i" no-padding>
+          <ion-item *ngFor="let inbox of inboxes | inboxDuplicate; index as i" no-padding>
             <ion-avatar class="avatar-margin-top" item-start>
               <div [ngStyle]="avatarImage(inbox)" class="profile-image"></div>
             </ion-avatar>
-            <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false" class="ion-item-top-padding">
-              {{inbox.chat_with ? inbox.chat_with.name : inbox.group_chat.title}}
-            </h6>
-            <p>{{lastMessage(inbox)}}</p>
-            <ion-badge *ngIf="inbox.unread > 0" item-end>{{inbox.unread}}</ion-badge>
+            <div (tap)="toChatroom(inbox)">
+              <h6 [ngStyle]="inbox.unread > 0 ? { fontWeight: 'bold' } : false" class="ion-item-top-padding">
+                {{inbox.chat_with ? inbox.chat_with.name : inbox.group_chat.title}}
+              </h6>
+              <p>{{lastMessage(inbox)}}</p>
+            </div>
+            <div item-end>
+              <ion-badge *ngIf="inbox.unread > 0">{{inbox.unread}}</ion-badge>
+              <button ion-button color="dark" icon-only clear (tap)="remove(inbox.pk, i)">
+                <ion-icon name="more"></ion-icon>
+              </button>
+            </div>
           </ion-item>
         </ion-list>
       </ng-template>

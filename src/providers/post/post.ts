@@ -168,6 +168,15 @@ export class PostProvider extends ApiUrlModules {
     }));
   }
 
+  removeComment(commentId: number): Observable<null> {
+    const url = this.agencyUrl(`post/comment/${commentId}/remove/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
+      }));
+    }));
+  }
+
   getComments(postId: number): Observable<comment[]> {
     const url = this.agencyUrl(`post/${postId}/comment/`);
     return url.pipe(switchMap(url => {

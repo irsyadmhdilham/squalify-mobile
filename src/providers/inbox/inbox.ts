@@ -119,4 +119,13 @@ export class InboxProvider extends ApiUrlModules {
     }))
   }
 
+  removeInbox(inboxId: number): Observable<null> {
+    const url = this.profileUrl(`inbox/${inboxId}/remove/`);
+    return url.pipe(switchMap(url => {
+      return this.httpOptions().pipe(switchMap(httpOptions => {
+        return this.http.delete<null>(url, httpOptions);
+      }));
+    }));
+  }
+
 }

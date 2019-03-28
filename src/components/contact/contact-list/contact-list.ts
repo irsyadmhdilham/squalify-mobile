@@ -88,6 +88,12 @@ export class ContactListComponent {
     alert.present();
   }
 
+  selectClient(contact: contact) {
+    if (this.sales) {
+      this.select(contact);
+    }
+  }
+
   ionViewDidLoad() {
     if (this.navParams.get('sales')) {
       this.sales = true;

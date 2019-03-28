@@ -5,7 +5,8 @@ import {
   LoadingController,
   ToastController,
   NavParams,
-  Platform
+  Platform,
+  ModalController
 } from "ionic-angular";
 import { LocalNotifications } from "@ionic-native/local-notifications";
 import * as moment from "moment";
@@ -15,6 +16,8 @@ import { PointProvider } from "../../../providers/point/point";
 import { UpdatePoint } from "../../../providers/point/update-point";
 
 import { contactPoints } from "../../../models/point";
+import { member } from "../../../models/agency";
+import { AssignSchedulesComponent, Member } from "../assign-schedules/assign-schedules";
 
 @Component({
   selector: 'add-schedule',
@@ -26,6 +29,8 @@ export class AddScheduleComponent {
   points: contactPoints;
   reminder: string;
   reminderDate: string;
+  multiAssign: string;
+  assignedMembers: member[];
 
   constructor(
     private viewCtrl: ViewController,
@@ -36,7 +41,8 @@ export class AddScheduleComponent {
     private pointProvider: PointProvider,
     private navParams: NavParams,
     private localNotifications: LocalNotifications,
-    private platform: Platform
+    private platform: Platform,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
@@ -162,6 +168,24 @@ export class AddScheduleComponent {
           trigger: { at: triggerAt }
         });
       });
+    }
+  }
+
+  assignChange(value: string) {
+    if (value === 'select') {
+      const modal = this.modalCtrl.create(AssignSchedulesComponent);
+      modal.present();
+      modal.onDidDismiss((members: Member[]) => {
+        if (members) {
+          this.assignedMembers = members;
+        }
+      });
+    }
+  }
+
+  assignedTo(members: member[]) {
+    if (members) {
+      return members.map(val => val.name).join(', ');
     }
   }
 

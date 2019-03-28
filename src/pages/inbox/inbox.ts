@@ -1,5 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, Events } from 'ionic-angular';
+import {
+  NavController,
+  NavParams,
+  ModalController,
+  Events,
+  ActionSheetController,
+  AlertController,
+  LoadingController
+} from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 import { Store, select } from "@ngrx/store";
 
@@ -42,7 +50,10 @@ export class InboxPage {
     private modalCtrl: ModalController,
     private inboxProvider: InboxProvider,
     private events: Events,
-    private store: Store<store>
+    private store: Store<store>,
+    private actionSheetCtrl: ActionSheetController,
+    private alertCtrl: AlertController,
+    private loadingCtrl: LoadingController
   ) { }
 
   navToNotifications() {
@@ -219,6 +230,35 @@ export class InboxPage {
       const splicedInbox = this.inboxes.splice(i, 1);
       this.inboxes.unshift(splicedInbox[0]);
     });
+  }
+
+  remove(inboxId: number, i: number) {
+    const action = this.actionSheetCtrl.create({
+      buttons: [
+        { text: 'Remove', role: 'destructive', handler: () => {
+          const alert = this.alertCtrl.create({
+            title: 'Are you sure',
+            buttons: [
+              { text: 'Cancel', role: 'cancel' },
+              { text: 'Remove', cssClass: 'danger-alert', handler: () => {
+                const loading = this.loadingCtrl.create({content: 'Please wait...'});
+                loading.present();
+                this.inboxProvider.removeInbox(inboxId).subscribe(() => {
+                  const inboxes = [...this.inboxes];
+                  inboxes.splice(i, 1);
+                  this.inboxes = inboxes;
+                  loading.dismiss();
+                }, () => {
+                  loading.dismiss();
+                });
+              }}
+            ]
+          });
+          alert.present();
+        }}
+      ]
+    });
+    action.present();
   }
 
 }
