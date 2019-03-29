@@ -28,7 +28,7 @@ export class ScheduleProvider extends ApiUrlModules {
   }
 
   getSchedules(): Observable<schedule[]> {
-    const url = this.profileUrl('schedule/?fields=pk,title,date,location');
+    const url = this.profileUrl('schedule/?fields=pk,title,date,location,created_by');
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<schedule[]>(url, httpOptions).pipe(map(response => {

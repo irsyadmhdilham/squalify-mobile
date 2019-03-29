@@ -32,6 +32,31 @@ export class SchedulesPage {
     private alertCtrl: AlertController
   ) { }
 
+  showDate(item: schedule, i: number) {
+    if (i > 0) {
+      const upper = moment(this.schedules[i - 1].date).format('YYYY-MM-DD'),
+            present = moment(item.date).format('YYYY-MM-DD');
+      if (upper === present) {
+        return { visibility: 'hidden' };
+      }
+      return false
+    }
+    return false
+  }
+
+  addMargin(item: schedule, i: number) {
+    const x = this.schedules.length;
+    if (i < x && i > 0) {
+      const upper = moment(this.schedules[i - 1].date).format('YYYY-MM-DD'),
+            present = moment(item.date).format('YYYY-MM-DD');
+      if (upper !== present) {
+        return { marginTop: '.7em' };
+      }
+      return false
+    }
+    return false
+  }
+
   addSchedule() {
     const modal = this.modalCtrl.create(AddScheduleComponent);
     modal.present();
@@ -41,6 +66,23 @@ export class SchedulesPage {
         this.schedules.push(data.schedule);
       }
     });
+  }
+
+  monthPartition(item: schedule, i: number) {
+    if (i > 0) {
+      const upper = moment(this.schedules[i - 1].date).format('MMMM'),
+            present = moment(item.date).format('MMMM');
+      if (upper !== present) {
+        return true
+      }
+      return false
+    }
+    return false
+  }
+
+  monthName(item: schedule) {
+    const present = moment(item.date).format('MMMM');
+    return present;
   }
 
   fetch() {

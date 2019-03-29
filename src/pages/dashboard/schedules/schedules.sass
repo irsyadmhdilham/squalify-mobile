@@ -1,7 +1,14 @@
 page-schedules
 
-  ion-list
-    section
+  .item-inner
+    padding: 0 !important
+
+  .item-schedule
+    display: grid
+    grid-template-columns: .7fr 4fr
+    grid-column-gap: .3em
+
+    > div:first-child
       display: flex
       flex-direction: column
       align-items: center
@@ -11,3 +18,7 @@ page-schedules
 
         &:first-child
           font-size: 2.3rem !important
+  
+  .month-divider
+    padding: .3em 0 .8em 0
+    border-bottom: solid 1px color($colors, lightGrey)

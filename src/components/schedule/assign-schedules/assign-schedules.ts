@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewController } from "ionic-angular";
+import { map, mergeMap } from "rxjs/operators";
 
 import { member } from "../../../models/agency";
 import { AgencyProvider } from "../../../providers/agency/agency";
@@ -53,7 +54,11 @@ export class AssignSchedulesComponent {
   }
 
   fetch() {
-    this.agencyProvider.getAgencyMembers().subscribe(members => {
+    this.agencyProvider.userId().pipe(mergeMap(userId => {
+      return this.agencyProvider.getAgencyMembers().pipe(map(value => {
+        return value.filter(member => member.pk !== userId);
+      }))
+    })).subscribe(members => {
       this.members = members.map(member => new Member(member));
     });
   }

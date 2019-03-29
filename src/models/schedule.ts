@@ -8,6 +8,10 @@ export interface schedule {
   location: string;
   reminder?: any;
   contact?: contact;
+  created_by?: {
+    pk: number;
+    name: string;
+  }
 };
 
 export interface filterData {

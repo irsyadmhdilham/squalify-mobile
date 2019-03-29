@@ -77,7 +77,9 @@ export class AddScheduleComponent {
             return;
           }
           return moment(this.reminderDate, 'YYYY-MM-DD HH:mm:ss').toDate()
-        })()
+        })(),
+        multiAssign: this.multiAssign ? this.multiAssign : null,
+        assignedMembers: this.assignedMembers ? this.assignedMembers.map(val => val.pk) : null
       };
       if (this.appointmentSecured) {
         this.updatePoint().then(() => {
