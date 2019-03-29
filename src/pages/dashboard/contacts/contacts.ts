@@ -219,9 +219,9 @@ export class ContactsPage {
     actionSheet.present();
   }
 
-  viewMore(contact: contact, index) {
+  viewMore(contact: contact) {
     const called = (contactVia: string) => {
-      this.contactProvider.createCallLog(contact.pk,contactVia, contact.status, true).subscribe(() => {
+      this.contactProvider.createCallLog(contact.pk, contactVia, contact.status, true).subscribe(() => {
         const toast = this.toastCtrl.create({
           message: 'Call log added',
           position: 'top',

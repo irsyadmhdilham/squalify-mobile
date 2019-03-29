@@ -50,7 +50,7 @@ export class SchedulesPage {
       const upper = moment(this.schedules[i - 1].date).format('YYYY-MM-DD'),
             present = moment(item.date).format('YYYY-MM-DD');
       if (upper !== present) {
-        return { marginTop: '.7em' };
+        return { marginTop: '.8em' };
       }
       return false
     }
