@@ -132,6 +132,16 @@ export interface summary {
   sales: salesSummary;
   recruitment: recruitmentSummary;
   career: careerSummary;
+  consultant_perf_range: consultantPerfRange;
+}
+
+export interface consultantPerfRange {
+  _0_20: number;
+  _21_40: number;
+  _41_60: number;
+  _61_80: number;
+  _81_100: number;
+  _100: number;
 }
 
 export interface summaryResponse {
@@ -191,5 +201,13 @@ export interface summaryResponse {
     update_upline: number;
     personal_coaching: number;
     training: number;
+  }
+  consultant_perf_range: {
+    _0_20: number;
+    _21_40: number;
+    _41_60: number;
+    _61_80: number;
+    _81_100: number;
+    _100: number;
   }
 }

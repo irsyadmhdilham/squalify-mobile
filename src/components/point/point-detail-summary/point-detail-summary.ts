@@ -11,9 +11,10 @@ import {
   salesSummary,
   contactsSummary,
   recruitmentSummary,
-  careerSummary
+  careerSummary,
+  consultantPerfRange
 } from "../../../models/point";
-import { ContactType as contactColor } from "../../../functions/colors";
+import { ContactType as contactColor, Colors } from "../../../functions/colors";
 
 @Component({
   selector: 'point-detail-summary',
@@ -22,7 +23,8 @@ import { ContactType as contactColor } from "../../../functions/colors";
 export class PointDetailSummaryComponent {
 
   @ViewChild('contactCanvas') contactCanvas: any;
-  section: string = this.navParams.get('section');
+  @ViewChild('consultantPerfCanvas') consultantPerfCanvas: any;
+  section: string = this.navParams.get('segment');
   period = 'year';
   total: totalSummary;
   engagement: engagementSummary;
@@ -30,6 +32,7 @@ export class PointDetailSummaryComponent {
   contacts: contactsSummary;
   recruitment: recruitmentSummary;
   career: careerSummary;
+  consultantPerfRange: consultantPerfRange;
   pageStatus: string;
   load = false;
   fireChart = new Subject<boolean>();
@@ -62,6 +65,7 @@ export class PointDetailSummaryComponent {
       this.sales = summary.sales;
       this.recruitment = summary.recruitment;
       this.career = summary.career;
+      this.consultantPerfRange = summary.consultant_perf_range;
       this.pageStatus = undefined;
       this.load = true;
     });
@@ -129,6 +133,58 @@ export class PointDetailSummaryComponent {
     });
   }
 
+  consultantPerfChart() {
+    if (this.section === 'group') {
+      new Chart(this.consultantPerfCanvas.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: ['0-20', '21-40', '41-60', '61-80', '80-100', '100+'],
+          datasets: [{
+            data: [
+              this.consultantPerfRange._0_20,
+              this.consultantPerfRange._21_40,
+              this.consultantPerfRange._41_60,
+              this.consultantPerfRange._61_80,
+              this.consultantPerfRange._81_100,
+              this.consultantPerfRange._100
+            ],
+            backgroundColor: [
+              Colors.primary,
+              Colors.primary,
+              Colors.primary,
+              Colors.primary,
+              Colors.primary,
+              Colors.primary
+            ]
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              },
+              scaleLabel: {
+                display: true,
+                labelString: 'Num of consultants'
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: `Points/${this.period}`
+              },
+              barPercentage: 0.6
+            }]
+          }
+        }
+      });
+    }
+  }
+
 ngDoCheck() {
   if (this.load) {
     setTimeout(() => {
@@ -142,6 +198,7 @@ ngDoCheck() {
     this.fireChart.pipe(first()).subscribe(value => {
       if (value) {
         this.contactsChart();
+        this.consultantPerfChart();
       }
     });
   }

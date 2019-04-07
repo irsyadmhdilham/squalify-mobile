@@ -33,11 +33,19 @@
               <h5 ion-text color="grey">{{monthName(schedule)}}</h5>
             </ion-row>
             <section [ngStyle]="addMargin(schedule, i)" class="item-schedule">
-              <div [ngStyle]="showDate(schedule, i)">
-                <h2 ion-text color="primary">{{schedule.date | date:'dd' | uppercase}}</h2>
-                <h2 ion-text color="grey">{{schedule.date | date:'MMM' | uppercase}}</h2>
-              </div>
-              <div>
+              <ng-container *ngIf="!showDate(schedule, i); then showDateBlock else showLineBlock"></ng-container>
+              <ng-template #showDateBlock>
+                <div [ngStyle]="showDate(schedule, i)">
+                  <h2 ion-text color="primary">{{schedule.date | date:'dd' | uppercase}}</h2>
+                  <h2 ion-text color="grey">{{schedule.date | date:'MMM' | uppercase}}</h2>
+                </div>
+              </ng-template>
+              <ng-template #showLineBlock>
+                <div class="show-line-wrapper">
+                  <div></div>
+                </div>
+              </ng-template>
+              <div [ngStyle]="showDate(schedule, i) ? {marginTop: '.7em'} : false">
                 <h5>{{schedule.title}}</h5>
                 <p>{{schedule.date | date:'hh:mma'}}, {{schedule.location}}</p>
               </div>
