@@ -34,6 +34,7 @@ export class ContactListComponent {
   sales = false;
   filterData: filterData;
   notFound: boolean;
+  section: string = this.navParams.get('section');
 
   constructor(
     private contactProvider: ContactProvider,
@@ -53,7 +54,13 @@ export class ContactListComponent {
     this.pageStatus = 'loading';
     this.contactProvider.getContacts('pk,name,contact_no,status,remark,contact_type').subscribe(observe => {
       this.pageStatus = undefined;
-      this.contacts = observe;
+      if (this.section === 'call') {
+        this.contacts = observe.filter(value => value.status === 'None');
+      } else if (this.section === 'servicing') {
+        this.contacts = observe.filter(value => value.status !== 'None');;
+      } else {
+        this.contacts = observe;
+      }
     }, () => {
       this.pageStatus = 'error';
     });

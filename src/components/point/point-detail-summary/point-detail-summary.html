@@ -104,7 +104,18 @@
         </ion-row>
         <ion-grid margin-top>
           <p no-margin>Contacts</p>
-          <canvas #contactCanvas></canvas>
+          <ng-container *ngIf="showContactChart(); then contactCanvasBlock; else contactCanvasNoShow"></ng-container>
+          <ng-template #contactCanvasBlock>
+            <canvas #contactCanvas></canvas>
+          </ng-template>
+          <ng-template #contactCanvasNoShow>
+            <ion-row justify-content-center margin-vertical>
+              <div>
+                <h6 ion-text color="grey" text-center no-margin>Graph not showing</h6>
+                <p ion-text color="grey" text-center no-margin>zero value data</p>
+              </div>
+            </ion-row>
+          </ng-template>
           <ion-row>
             <ion-col>
               <div [ngStyle]="contactBullet('Referrals')" class="contact-bullet"></div>
@@ -426,7 +437,18 @@
           </button>
           <h6 class="title">Consultants performance range</h6>
         </ion-row>
-        <canvas #consultantPerfCanvas></canvas>
+        <ng-container *ngIf="showConsultantPerfChart(); then consultantPerfCanvasBlock; else consultantPerfCanvasNoShow"></ng-container>
+        <ng-template #consultantPerfCanvasBlock>
+          <canvas #consultantPerfCanvas></canvas>
+        </ng-template>
+        <ng-template #consultantPerfCanvasNoShow>
+          <ion-row justify-content-center margin-vertical padding-bottom>
+            <div>
+              <h6 ion-text color="grey" text-center no-margin>Graph not showing</h6>
+              <p ion-text color="grey" text-center no-margin>zero value data</p>
+            </div>
+          </ion-row>
+        </ng-template>
       </section>
     </ng-container>
   </ng-container>

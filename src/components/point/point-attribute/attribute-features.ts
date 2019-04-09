@@ -60,7 +60,7 @@ export class AttributeFeatures {
 
   addCalls() {
     return new Promise<contact>(resolve => {
-      const modal = this.modal(ContactListComponent);
+      const modal = this.modal(ContactListComponent, { section: 'call' });
       modal.present();
       modal.onDidDismiss(data => {
         resolve(data);
@@ -70,7 +70,7 @@ export class AttributeFeatures {
 
   servicing() {
     return new Promise<contact>(resolve => {
-      const modal = this.modal(ContactListComponent);
+      const modal = this.modal(ContactListComponent, { section: 'servicing' });
       modal.present();
       modal.onDidDismiss(data => {
         resolve(data);

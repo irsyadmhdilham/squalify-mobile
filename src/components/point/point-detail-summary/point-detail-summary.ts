@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ViewController, ActionSheetController, NavParams } from "ionic-angular";
 import { Chart } from "chart.js";
 import { Subject } from "rxjs";
-import { first } from "rxjs/operators";
+import { Subscription } from "rxjs/Subscription";
 
 import { PointProvider } from "../../../providers/point/point";
 import {
@@ -35,8 +35,9 @@ export class PointDetailSummaryComponent {
   consultantPerfRange: consultantPerfRange;
   pageStatus: string;
   load = false;
-  fireChart = new Subject<boolean>();
   colors = contactColor;
+  loadData = new Subject<boolean>();
+  loadDataSubscription: Subscription;
 
   constructor(
     private viewCtrl: ViewController,
@@ -68,6 +69,7 @@ export class PointDetailSummaryComponent {
       this.consultantPerfRange = summary.consultant_perf_range;
       this.pageStatus = undefined;
       this.load = true;
+      this.loadData.next(true);
     });
   }
 
@@ -108,33 +110,53 @@ export class PointDetailSummaryComponent {
     }
   }
 
+  showContactChart() {
+    const contacts = Object.keys(this.contacts.contacts).map(value => this.contacts.contacts[value]);
+    const total = contacts.reduce((a, b) => a + b);
+    if (total === 0) {
+      return false;
+    }
+    return true;
+  }
+
+  showConsultantPerfChart() {
+    const consultants = Object.keys(this.consultantPerfRange).map(value => this.consultantPerfRange[value]);
+    const total = consultants.reduce((a, b) => a + b);
+    if (total === 0) {
+      return false;
+    }
+    return true;
+  }
+
   contactsChart() {
     const contacts = this.contacts.contacts,
           colors = this.colors;
-    new Chart(this.contactCanvas.nativeElement, {
-      type: 'doughnut',
-      data: {
-        labels: ['Referrals', 'Booth', 'Face to face', 'Social media', 'Nesting', 'Other', 'Table to table/Door to door', 'Client'],
-        datasets: [{
-          label: 'Contacts list',
-          data: [
-            contacts.referrals, contacts.booth, contacts.ftf, contacts.socmed, contacts.nesting, contacts.other, contacts.ttt, contacts.client
-          ],
-          backgroundColor: [
-            colors.referrals, colors.booth, colors.ftf, colors.socmed, colors.nesting, colors.other, colors.ttt, colors.client
-          ]
-        }]
-      },
-      options: {
-        legend: {
-          display: false
+    if (this.showContactChart()) {
+      new Chart(this.contactCanvas.nativeElement, {
+        type: 'doughnut',
+        data: {
+          labels: ['Referrals', 'Booth', 'Face to face', 'Social media', 'Nesting', 'Other', 'Table to table/Door to door', 'Client'],
+          datasets: [{
+            label: 'Contacts list',
+            data: [
+              contacts.referrals, contacts.booth, contacts.ftf, contacts.socmed, contacts.nesting, contacts.other, contacts.ttt, contacts.client
+            ],
+            backgroundColor: [
+              colors.referrals, colors.booth, colors.ftf, colors.socmed, colors.nesting, colors.other, colors.ttt, colors.client
+            ]
+          }]
+        },
+        options: {
+          legend: {
+            display: false
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   consultantPerfChart() {
-    if (this.section === 'group') {
+    if (this.section === 'group' && this.showConsultantPerfChart()) {
       new Chart(this.consultantPerfCanvas.nativeElement, {
         type: 'bar',
         data: {
@@ -185,22 +207,18 @@ export class PointDetailSummaryComponent {
     }
   }
 
-ngDoCheck() {
-  if (this.load) {
-    setTimeout(() => {
-      this.fireChart.next(true);
-    }, 300);
-  }
-}
-
   ionViewDidLoad() {
     this.fetch();
-    this.fireChart.pipe(first()).subscribe(value => {
-      if (value) {
+    this.loadDataSubscription = this.loadData.subscribe(() => {
+      setTimeout(() => {
         this.contactsChart();
         this.consultantPerfChart();
-      }
+      }, 300);
     });
+  }
+
+  ionViewDidLeave() {
+    this.loadDataSubscription.unsubscribe();
   }
 
   numberPercentage(value: number) {
