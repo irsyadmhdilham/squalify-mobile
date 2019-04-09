@@ -28,6 +28,8 @@
             no-padding
             (tap)="showDetail(schedule)"
             *ngFor="let schedule of schedules; index as i"
+            no-lines
+            [ngStyle]="!showDate(schedule, i) && i !== 0 ? { borderTop: 'solid 1px #D9D9D9' } : false"
           >
             <ion-row *ngIf="monthPartition(schedule, i)" class="month-divider" justify-content-center>
               <h5 ion-text color="grey">{{monthName(schedule)}}</h5>
@@ -41,11 +43,11 @@
                 </div>
               </ng-template>
               <ng-template #showLineBlock>
-                <div class="show-line-wrapper">
+                <div class="show-point-wrapper">
                   <div></div>
                 </div>
               </ng-template>
-              <div [ngStyle]="showDate(schedule, i) ? {marginTop: '.7em'} : false">
+              <div>
                 <h5>{{schedule.title}}</h5>
                 <p>{{schedule.date | date:'hh:mma'}}, {{schedule.location}}</p>
               </div>

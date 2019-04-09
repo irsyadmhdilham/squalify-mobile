@@ -9,6 +9,7 @@ import { FileTransfer } from "@ionic-native/file-transfer";
 import { Badge } from "@ionic-native/badge";
 import { AndroidPermissions } from "@ionic-native/android-permissions";
 import { LocalNotifications } from "@ionic-native/local-notifications";
+import { Clipboard } from "@ionic-native/clipboard";
 
 export const NativeModules = [
   StatusBar,
@@ -21,5 +22,6 @@ export const NativeModules = [
   FileTransfer,
   Badge,
   AndroidPermissions,
-  LocalNotifications
+  LocalNotifications,
+  Clipboard
 ];

@@ -3,8 +3,6 @@ import { ViewController, AlertController, LoadingController, NavParams } from "i
 import * as moment from "moment";
 import { Observable } from 'rxjs';
 
-import { Colors } from "../../functions/colors";
-
 import { MemoProvider, memoData } from "../../providers/memo/memo";
 import { memo } from "../../models/memo";
 
@@ -39,14 +37,6 @@ export class ComposeMemoComponent {
       this.text = memo.text;
       this.postId = postId;
     }
-  }
-
-  characters() {
-    const text = 200 - this.text.length;
-    if (text <= 0) {
-      return { color: Colors.danger };
-    }
-    return { color: Colors.primary };
   }
 
   dismiss() {

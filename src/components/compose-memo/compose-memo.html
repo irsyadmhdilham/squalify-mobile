@@ -4,8 +4,7 @@
   </button>
   <section>
     <div padding id="content">
-      <small [ngStyle]="characters()" id="memo-count" no-margin>{{200 - text.length}} characters</small>
-      <ion-textarea [(ngModel)]="text" type="text" placeholder="Write something" maxLength="200"></ion-textarea>
+      <ion-textarea [(ngModel)]="text" type="text" placeholder="Write something"></ion-textarea>
       <ion-list>
         <ion-list-header no-padding>Event date and time (optional)</ion-list-header>
         <ion-item no-padding>

@@ -53,7 +53,18 @@ import { effectsModule } from "./effects-module";
     PipesModule,
     ComponentsModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      platforms: {
+        ios: {
+          scrollAssist: false,
+          autoFocusAssist: false
+        },
+        android: {
+          scrollAssist: false,
+          autoFocusAssist: false
+        }
+      }
+    }),
     IonicStorageModule.forRoot({
       name: 'db',
       driverOrder: ['indexeddb', 'sqlite', 'localstorage', 'websql'],

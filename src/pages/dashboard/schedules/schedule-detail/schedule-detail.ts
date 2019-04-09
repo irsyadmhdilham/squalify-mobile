@@ -4,9 +4,11 @@ import {
   NavParams,
   LoadingController,
   AlertController,
-  ModalController
+  ModalController,
+  Platform
 } from 'ionic-angular';
 import * as moment from "moment";
+import { Clipboard } from "@ionic-native/clipboard";
 
 import { schedule } from "../../../../models/schedule";
 import { contact } from "../../../../models/contact";
@@ -37,7 +39,9 @@ export class ScheduleDetailPage {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private scheduleProvider: ScheduleProvider,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private clipboard: Clipboard,
+    private platform: Platform
   ) {
     moment.updateLocale('en', {
       relativeTime: {
@@ -180,6 +184,14 @@ export class ScheduleDetailPage {
       contactId: id,
       from: 'schedule'
     });
+  }
+
+  copyClipboard(text: string) {
+    const isMobile = this.platform.is('mobile'),
+          isCordova = this.platform.is('cordova');
+    if (isCordova && isMobile) {
+      this.clipboard.copy(text);
+    }
   }
 
 }
