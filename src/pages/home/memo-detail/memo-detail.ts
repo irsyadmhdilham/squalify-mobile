@@ -6,11 +6,14 @@ import {
   LoadingController,
   AlertController
 } from 'ionic-angular';
+import { Store, select } from "@ngrx/store";
 import { mergeMap, map } from "rxjs/operators";
 import { MemoProvider } from "../../../providers/memo/memo";
+import { PostProvider } from "../../../providers/post/post";
 import * as countdownjs from "countdown";
 
 import { memo } from "../../../models/memo";
+import { store } from "../../../models/store";
 
 @Component({
   selector: 'page-memo-detail',
@@ -39,13 +42,16 @@ export class MemoDetailPage {
     minutes: 0,
     seconds: 0
   }
+  userId: number;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private memoProvider: MemoProvider
+    private memoProvider: MemoProvider,
+    private store: Store<store>,
+    private postProvider: PostProvider
   ) { }
 
   countingHandler() {
@@ -60,6 +66,9 @@ export class MemoDetailPage {
   }
 
   ionViewDidLoad() {
+    this.store.pipe(select('profile')).subscribe((profile: any) => {
+      this.userId = profile.pk;
+    });
     const memo: memo = this.navParams.get('memo');
     this.memoProvider.memoDetail(memo.pk).subscribe(memo => {
       this.postedBy = memo.posted_by.pk;
@@ -149,6 +158,30 @@ export class MemoDetailPage {
     } else {
       this.textarea.setFocus();
     }
+  }
+
+  removeComment(commentId: number, i: number) {
+    const confirm = this.alertCtrl.create({
+      title: 'Are you sure',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Remove', handler: () => {
+          const loading = this.loadingCtrl.create({content: 'Please wait...'});
+          loading.present();
+          this.postProvider.removeComment(commentId).subscribe(() => {
+            this.comments.splice(i, 1);
+            loading.dismiss();
+          }, () => {
+            loading.dismiss();
+          });
+        }, cssClass: 'danger-alert'}
+      ]
+    });
+    confirm.present();
+  }
+
+  canRemove(id: number) {
+    return this.userId === id;
   }
 
 }

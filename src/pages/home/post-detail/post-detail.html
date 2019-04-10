@@ -67,18 +67,9 @@
         </div>
       </ion-row>
       <ion-row>
-        <button
-          clear
-          small
-          no-padding
-          ion-button
-          color="danger"
-          (tap)="removeComment(comment.pk, i)"
-          class="remove-margin-button"
-          *ngIf="canRemove(comment.commented_by.pk)"
-        >
+        <p class="remove-comment" (tap)="removeComment(comment.pk, i)" *ngIf="canRemove(comment.commented_by.pk)">
           Remove
-        </button>
+        </p>
         <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
       </ion-row>
     </ion-item>

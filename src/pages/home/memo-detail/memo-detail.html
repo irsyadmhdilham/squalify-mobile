@@ -37,7 +37,7 @@
           <p ion-text color="grey" text-center>SECONDS</p>
         </div>
       </div>
-      <p margin-horizontal no-margin text-center class="memo-text">{{text}}</p>
+      <p margin-horizontal no-margin class="memo-text">{{text}}</p>
     </section>
     <ion-row margin-horizontal>
       <p ion-text *ngIf="likes > 0" color="grey">{{likes}} likes</p>
@@ -66,7 +66,12 @@
           <p ion-text color="dark">{{comment.text}}</p>
         </div>
       </ion-row>
-      <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+      <ion-row>
+        <p class="remove-comment" (tap)="removeComment(comment.pk, i)" *ngIf="canRemove(comment.commented_by.pk)">
+          Remove
+        </p>
+        <p class="comment-date">{{comment.timestamp | date:'d MMM, h:mma' | lowercase}}</p>
+      </ion-row>
     </ion-item>
   </ion-list>
 </ion-content>
