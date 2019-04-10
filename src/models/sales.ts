@@ -11,6 +11,7 @@ export interface sales {
     name: string;
   }
   client_name?: string;
+  tips?: string;
 };
 
 interface summaryOutput {

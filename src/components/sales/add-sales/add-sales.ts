@@ -26,6 +26,7 @@ export class AddSalesComponent {
   contact: string;
   contactId: number;
   clientMethod: string;
+  tips: string;
 
   constructor(
     private viewCtrl: ViewController,
@@ -123,6 +124,9 @@ export class AddSalesComponent {
       }
       if (locationNgModel.value !== '') {
         data.location = locationNgModel.value;
+      }
+      if (this.tips !== '' && this.tips) {
+        data.tips = this.tips;
       }
       loading.present();
       this.salesProvider.createSales(data).subscribe(sales => {

@@ -14,7 +14,7 @@ import {
   careerSummary,
   consultantPerfRange
 } from "../../../models/point";
-import { ContactType as contactColor, Colors } from "../../../functions/colors";
+import { ContactType as contactColor } from "../../../functions/colors";
 
 @Component({
   selector: 'point-detail-summary',
@@ -155,64 +155,64 @@ export class PointDetailSummaryComponent {
     }
   }
 
-  consultantPerfChart() {
-    if (this.section === 'group' && this.showConsultantPerfChart()) {
-      new Chart(this.consultantPerfCanvas.nativeElement, {
-        type: 'bar',
-        data: {
-          labels: ['0-20', '21-40', '41-60', '61-80', '80-100', '100+'],
-          datasets: [{
-            data: [
-              this.consultantPerfRange._0_20,
-              this.consultantPerfRange._21_40,
-              this.consultantPerfRange._41_60,
-              this.consultantPerfRange._61_80,
-              this.consultantPerfRange._81_100,
-              this.consultantPerfRange._100
-            ],
-            backgroundColor: [
-              Colors.primary,
-              Colors.primary,
-              Colors.primary,
-              Colors.primary,
-              Colors.primary,
-              Colors.primary
-            ]
-          }]
-        },
-        options: {
-          legend: {
-            display: false
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true
-              },
-              scaleLabel: {
-                display: true,
-                labelString: 'Num of consultants'
-              }
-            }],
-            xAxes: [{
-              scaleLabel: {
-                display: true,
-                labelString: `Points/${this.period}`
-              },
-              barPercentage: 0.6
-            }]
-          }
-        }
-      });
-    }
-  }
+  // consultantPerfChart() {
+  //   if (this.section === 'group' && this.showConsultantPerfChart()) {
+  //     new Chart(this.consultantPerfCanvas.nativeElement, {
+  //       type: 'bar',
+  //       data: {
+  //         labels: ['0-20', '21-40', '41-60', '61-80', '80-100', '100+'],
+  //         datasets: [{
+  //           data: [
+  //             this.consultantPerfRange._0_20,
+  //             this.consultantPerfRange._21_40,
+  //             this.consultantPerfRange._41_60,
+  //             this.consultantPerfRange._61_80,
+  //             this.consultantPerfRange._81_100,
+  //             this.consultantPerfRange._100
+  //           ],
+  //           backgroundColor: [
+  //             Colors.primary,
+  //             Colors.primary,
+  //             Colors.primary,
+  //             Colors.primary,
+  //             Colors.primary,
+  //             Colors.primary
+  //           ]
+  //         }]
+  //       },
+  //       options: {
+  //         legend: {
+  //           display: false
+  //         },
+  //         scales: {
+  //           yAxes: [{
+  //             ticks: {
+  //               beginAtZero: true
+  //             },
+  //             scaleLabel: {
+  //               display: true,
+  //               labelString: 'Num of consultants'
+  //             }
+  //           }],
+  //           xAxes: [{
+  //             scaleLabel: {
+  //               display: true,
+  //               labelString: `Points/${this.period}`
+  //             },
+  //             barPercentage: 0.6
+  //           }]
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
   ionViewDidLoad() {
     this.fetch();
     this.loadDataSubscription = this.loadData.subscribe(() => {
       setTimeout(() => {
         this.contactsChart();
-        this.consultantPerfChart();
+        // this.consultantPerfChart();
       }, 300);
     });
   }

@@ -13,6 +13,7 @@ import { EditContactComponent } from "../../../../components/contact/edit-contac
 import { ScheduleDetailPage } from "../../schedules/schedule-detail/schedule-detail";
 import { ContactProvider } from "../../../../providers/contact/contact";
 import { schedule } from "../../../../models/schedule";
+import { AddScheduleComponent } from "../../../../components/schedule/add-schedule/add-schedule";
 
 @Component({
   selector: 'page-contact-detail',
@@ -142,6 +143,33 @@ export class ContactDetailPage {
     this.navCtrl.push(ScheduleDetailPage, {
       scheduleId: id,
       from: 'contact'
+    });
+  }
+
+  addSchedule() {
+    const modal = this.modalCtrl.create(AddScheduleComponent, { appointmentSecured: true });
+    modal.present();
+    modal.onDidDismiss((response: any) => {
+      if (response) {
+        const schedule = response.schedule;
+        const data = {
+          name: this.name,
+          status: 'Appointment secured',
+          scheduleId: schedule.pk,
+          contact_type: this.contactType,
+          contact_no: this.contactNo,
+          remark: this.remark,
+          email: this.email
+        };
+        this.schedules.push(schedule);
+        const loading = this.loadingCtrl.create({content: 'Please wait...'});
+        this.contactProvider.updateContact(this.pk, data).subscribe(() => {
+          loading.dismiss();
+          this.status = 'Appointment secured';
+        }, () => {
+          loading.dismiss();
+        });
+      }
     });
   }
 

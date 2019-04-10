@@ -24,4 +24,6 @@ export interface post {
   likes?: like[];
   monthly_sales?: number;
   memos?: memo[];
+  sales?: string | number[];
+  tips?: string;
 };

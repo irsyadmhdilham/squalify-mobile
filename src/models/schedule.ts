@@ -1,5 +1,10 @@
 import { contact } from "./contact";
 
+export interface createdBy {
+  pk: number;
+  name: string;
+}
+
 export interface schedule {
   pk?: number;
   date: any;
@@ -8,10 +13,7 @@ export interface schedule {
   location: string;
   reminder?: any;
   contact?: contact;
-  created_by?: {
-    pk: number;
-    name: string;
-  }
+  created_by?: createdBy;
 };
 
 export interface filterData {

@@ -10,8 +10,9 @@ import {
 import * as moment from "moment";
 import { Clipboard } from "@ionic-native/clipboard";
 
-import { schedule } from "../../../../models/schedule";
+import { schedule, createdBy } from "../../../../models/schedule";
 import { contact } from "../../../../models/contact";
+
 import { ScheduleProvider } from "../../../../providers/schedule/schedule";
 import { EditScheduleComponent } from "../../../../components/schedule/edit-schedule/edit-schedule";
 import { ContactDetailPage } from "../../contacts/contact-detail/contact-detail";
@@ -32,6 +33,7 @@ export class ScheduleDetailPage {
   pageStatus: string;
   contact: contact;
   from = 'schedule';
+  createdBy: createdBy;
 
   constructor(
     public navCtrl: NavController,
@@ -116,6 +118,7 @@ export class ScheduleDetailPage {
     this.pageStatus = 'loading';
     this.scheduleProvider.getScheduleDetail(this.pk).subscribe(observe => {
       this.pageStatus = undefined;
+      this.createdBy = observe.created_by;
       this.date = observe.date;
       this.title = observe.title;
       this.location = observe.location;

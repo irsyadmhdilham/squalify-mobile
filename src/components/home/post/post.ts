@@ -49,6 +49,8 @@ export class PostComponent implements OnChanges {
   liked = false;
   likeId: number;
   memos: Memo[];
+  sales: string | number[];
+  tips: string;
 
   constructor(
     private postProvider: PostProvider,
@@ -131,6 +133,7 @@ export class PostComponent implements OnChanges {
     let memos = this.data.memos;
     if (!memos) {
       this.postType = this.data.post_type;
+      this.sales = this.data.sales;
       this.name = this.data.posted_by.name;
       this.profileImage = this.data.posted_by.profile_image;
       this.totalSales = this.data.sales_rel.map(val => val.amount).reduce((a, b) => a + b);
@@ -139,6 +142,7 @@ export class PostComponent implements OnChanges {
       this.comments = this.data.comments;
       this.likes = this.data.likes;
       this.pk = this.data.pk;
+      this.tips = this.data.tips;
       this.checkLiked();
       const likeStats = this.likeStatus;
       if (likeStats) {

@@ -11,7 +11,8 @@
   <loading type="form" *ngSwitchCase="'loading'"></loading>
   <fetch-error message="Failed to retrieve data" [retry]="getDetail.bind(this)" *ngSwitchCase="'error'"></fetch-error>
   <ng-container *ngSwitchDefault>
-    <h5 title>{{title}}</h5>
+    <h5 title no-margin>{{title}}</h5>
+    <p *ngIf="createdBy" no-margin ion-text color="grey">Assigned by: {{createdBy.name}}</p>
     <ion-list>
       <ion-item no-padding>
         <p>Date</p>

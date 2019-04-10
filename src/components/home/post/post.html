@@ -10,16 +10,23 @@
     </section>
     <section padding-horizontal class="content">
       <div class="sales-closed-content">
-        <ion-row justify-content-between align-items-center>
-          <p no-margin class="total-label">Total sales</p>
+        <ion-row class="sales-wrapper" justify-content-between align-items-center *ngFor="let s of sales">
+          <!-- <p no-margin class="total-label">Total sales</p>
           <div>
             <h3 ion-text color="primary" no-margin>RM{{totalSales | numCommas}}</h3>
-          </div>
+          </div> -->
+          <ion-col col-9>
+            <p no-margin>{{s[0]}}</p>
+          </ion-col>
+          <ion-col>
+            <p no-margin>RM{{s[1] | numCommas}}</p>
+          </ion-col>
         </ion-row>
-        <ion-row [ngStyle]="likes.length > 0 || comments > 0 ? { marginBottom: '1em' } : false">
+        <!-- <ion-row [ngStyle]="likes.length > 0 || comments > 0 ? { marginBottom: '1em' } : false">
           <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
-        </ion-row>
+        </ion-row> -->
       </div>
+      <p *ngIf="tips">{{tips}}</p>
     </section>
     <ion-row margin-left margin-bottom>
       <p ion-text class="likes-total total" color="grey" *ngIf="likes.length > 0">{{likes.length}} likes</p>

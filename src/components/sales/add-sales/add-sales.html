@@ -36,6 +36,11 @@
           <ion-option>Rejected</ion-option>
         </ion-select>
       </ion-item>
+      <ion-item>
+        <!-- <ion-label stacked>Say some word</ion-label> -->
+        <ion-textarea [(ngModel)]="tips" placeholder="Write anything to share with your collegue on your sales post. eg: How do you do it, Tips, Affirmation"></ion-textarea>
+      </ion-item>
+      <p margin>This information will not be show to others</p>
       <button (tap)="clientMethodHandler()" id="client-label" ion-item large>
         Client name
       </button>
