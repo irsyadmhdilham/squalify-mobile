@@ -4,16 +4,19 @@ import {
   NavParams,
   TextInput,
   LoadingController,
-  AlertController
+  AlertController,
+  Events
 } from 'ionic-angular';
 import { Store, select } from "@ngrx/store";
 import { mergeMap, map } from "rxjs/operators";
 import { MemoProvider } from "../../../providers/memo/memo";
 import { PostProvider } from "../../../providers/post/post";
+import { NotificationProvider } from "../../../providers/notification/notification";
 import * as countdownjs from "countdown";
 
 import { memo } from "../../../models/memo";
 import { store } from "../../../models/store";
+import { notification } from "../../../models/notification";
 
 @Component({
   selector: 'page-memo-detail',
@@ -51,7 +54,9 @@ export class MemoDetailPage {
     private alertCtrl: AlertController,
     private memoProvider: MemoProvider,
     private store: Store<store>,
-    private postProvider: PostProvider
+    private postProvider: PostProvider,
+    private notificationProvider: NotificationProvider,
+    private events: Events
   ) { }
 
   countingHandler() {
@@ -65,11 +70,23 @@ export class MemoDetailPage {
     }
   }
 
+  readNotif() {
+    const notif: notification = this.navParams.get('notif');
+    if (notif) {
+      if (!notif.read) {
+        this.notificationProvider.read(notif.pk).subscribe(() => {
+          this.events.publish('notifications: read', notif.pk);
+        });
+      }
+    }
+  }
+
   ionViewDidLoad() {
     this.store.pipe(select('profile')).subscribe((profile: any) => {
       this.userId = profile.pk;
     });
     const memo: memo = this.navParams.get('memo');
+    this.readNotif();
     this.memoProvider.memoDetail(memo.pk).subscribe(memo => {
       this.postedBy = memo.posted_by.pk;
       this.pk = memo.pk;

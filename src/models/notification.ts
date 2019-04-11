@@ -7,6 +7,7 @@ export interface notification {
   notification_type: string;
   post_rel: number;
   inbox_rel: inbox;
+  memo_rel: any;
   timestamp: Date;
   read: boolean;
   seen: boolean;

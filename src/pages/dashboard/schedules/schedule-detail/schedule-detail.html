@@ -42,7 +42,7 @@
       </ion-item>
       <ion-item no-lines no-padding>
         <h5>Remark</h5>
-        <p>{{remark ? remark : 'No remark'}}</p>
+        <p [ngStyle]="{whiteSpace: 'pre-line'}">{{remark ? remark : 'No remark'}}</p>
       </ion-item>
       <ion-item no-lines no-padding>
         <h5>Reminder</h5>

@@ -21,6 +21,7 @@ import { InboxPage } from "../inbox/inbox";
 import { ChatroomPage } from "../inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../inbox/group-chatroom/group-chatroom";
 import { ScheduleDetailPage } from "../dashboard/schedules/schedule-detail/schedule-detail";
+import { MemoDetailPage } from "../home/memo-detail/memo-detail";
 
 import { NoConnectionComponent } from "../../components/no-connection/no-connection";
 
@@ -191,7 +192,8 @@ export class TabsPage extends ApiUrlModules {
         this.firebase.onNotificationOpen().pipe(first()).subscribe(observe => {
           const title = observe.title;
           const inboxId = parseInt(observe.inbox_id),
-                notifId = parseInt(observe.notif_id);
+                notifId = parseInt(observe.notif_id),
+                memoId = parseInt(observe.memo_id);
           if (title === 'like post' || title === 'comment post' || title === 'closed sales') {
             const postId = parseInt(observe.post_id),
                   notifId = parseInt(observe.notif_id);
@@ -207,6 +209,11 @@ export class TabsPage extends ApiUrlModules {
           } else if (title === 'group inbox') {
             this.navCtrl.push(GroupChatroomPage, {
               inbox: { pk: inboxId, unread: 1 },
+              notif: { pk: notifId, read: false }
+            });
+          } else if (title === 'New memo') {
+            this.navCtrl.push(MemoDetailPage, {
+              memo: { pk: memoId, unread: 1 },
               notif: { pk: notifId, read: false }
             });
           }

@@ -105,6 +105,9 @@ export class ContactListComponent {
     if (this.navParams.get('sales')) {
       this.sales = true;
     }
+    if (this.section === 'select referrer') {
+      this.sales = true;
+    }
     this.fetch();
   }
 

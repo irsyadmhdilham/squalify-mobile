@@ -9,7 +9,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding [ngSwitch]="pageStatus">
+<ion-content padding [ngStyle]="{ marginTop: '2em' }" [ngSwitch]="pageStatus">
   <loading type="list" *ngSwitchCase="'loading'"></loading>
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="load">

@@ -46,6 +46,8 @@ export class PostDetailPage {
   unlikeListener: Subscription;
   commentListener: Subscription;
   userId: number;
+  sales: string | number[];
+  tips: string;
 
   constructor(
     public navCtrl: NavController,
@@ -169,6 +171,8 @@ export class PostDetailPage {
     const post: post = this.navParams.get('post');
     this.readNotif();
     this.postProvider.getPostDetail(post.pk).subscribe(post => {
+      this.sales = post.sales;
+      this.tips = post.tips;
       this.postedBy = post.posted_by.pk;
       this.pk = post.pk;
       this.name = post.posted_by.name;

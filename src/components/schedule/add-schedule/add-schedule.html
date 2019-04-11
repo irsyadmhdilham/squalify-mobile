@@ -37,12 +37,13 @@
     </ion-item>
     <ion-item>
       <ion-label stacked>Remark (Optional)</ion-label>
-      <ion-input
+      <ion-textarea
+        [ngStyle]="{borderBottom: 'solid 1px lightgrey'}"
         type="text"
         placeholder="Insert remark"
         ngModel
         #remark="ngModel"
-      ></ion-input>
+      ></ion-textarea>
     </ion-item>
     <ion-item>
       <ion-label>Reminder (Optional)</ion-label>

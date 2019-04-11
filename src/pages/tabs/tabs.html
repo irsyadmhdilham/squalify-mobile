@@ -3,7 +3,7 @@
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="hq; then hqBlock else normalBlock"></ng-container>
     <ng-template #hqBlock>
-      <page-agencies-summary></page-agencies-summary>
+      <page-agencies-summary [signedIn]="signedIn"></page-agencies-summary>
     </ng-template>
     <ng-template #normalBlock>
       <ion-tabs selectedIndex="0">

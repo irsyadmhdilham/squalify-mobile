@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import {
   NavController,
   NavParams,
@@ -40,6 +40,7 @@ export class AgenciesSummaryPage extends Ids {
 
   @ViewChild('contactCanvas') contactCanvas: any;
   @ViewChild('consultantPerfCanvas') consultantPerfCanvas: any;
+  @Input() signedIn: string;
   period = 'year';
   total: totalSummary;
   engagement: engagementSummary;
@@ -53,6 +54,7 @@ export class AgenciesSummaryPage extends Ids {
   colors = contactColor;
   loadData = new Subject<boolean>();
   loadDataSubscription: Subscription;
+  contentStyle = false;
 
   constructor(
     public navCtrl: NavController,
@@ -260,8 +262,18 @@ export class AgenciesSummaryPage extends Ids {
   //   }
   // }
 
+  contentSetan() {
+    if (this.contentStyle) {
+      return { marginTop: '2em' }
+    }
+    return false;
+  }
+
   ngOnInit() {
     this.fetch();
+    this.events.subscribe('this is hq', () => {
+      this.contentStyle = true;
+    });
     this.loadDataSubscription = this.loadData.subscribe(() => {
       setTimeout(() => {
         this.contactsChart();

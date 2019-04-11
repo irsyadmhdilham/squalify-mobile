@@ -11,6 +11,7 @@ import { ClearNotifications } from "../../store/actions/notifications.action";
 import { ChatroomPage } from "../../pages/inbox/chatroom/chatroom";
 import { GroupChatroomPage } from "../../pages/inbox/group-chatroom/group-chatroom";
 import { PostDetailPage } from "../../pages/home/post-detail/post-detail";
+import { MemoDetailPage } from "../../pages/home/memo-detail/memo-detail";
 
 @Component({
   selector: 'page-notifications',
@@ -110,6 +111,8 @@ export class NotificationsPage {
       this.navCtrl.push(GroupChatroomPage, { inbox: notif.inbox_rel, notif });
     } else if (notif.notification_type === 'like' || notif.notification_type === 'comment') {
       this.navCtrl.push(PostDetailPage, { post: { pk: notif.post_rel }, notif });
+    } else if (notif.notification_type === 'memo') {
+      this.navCtrl.push(MemoDetailPage, { memo: { pk: notif.memo_rel }, notif });
     }
   }
 

@@ -78,11 +78,13 @@ export class AddContactComponent {
       };
       if (this.point) {
         if (contact_type === 'Referral') {
-          const addReferrer = this.modalCtrl.create(ContactListComponent);
+          const addReferrer = this.modalCtrl.create(ContactListComponent, { section: 'select referrer' });
           addReferrer.present();
           addReferrer.onDidDismiss((response: contact) => {
-            data.referrerId = response.pk;
-            this.addContactAction(data);
+            if (response) {
+              data.referrerId = response.pk;
+              this.addContactAction(data);
+            }
           });
         } else {
           this.addContactAction(data);
