@@ -67,7 +67,10 @@ export class ProfilePage extends Ids {
 
   clearLocalNotif() {
     this.platform.ready().then(() => {
-      this.localNotifications.clearAll();
+      const isCordova = this.platform.is('cordova');
+      if (isCordova) {
+        this.localNotifications.clearAll();
+      }
     });
   }
 

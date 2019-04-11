@@ -78,8 +78,12 @@ export class SalesProvider extends ApiUrlModules {
     });
   }
 
-  createSales(data: sales): Observable<sales> {
-    const url = this.profileUrl('sales/');
+  createSales(data: sales, timestamp=false): Observable<sales> {
+    let str = 'sales/';
+    if (timestamp) {
+      str = 'sales/?ts=true'
+    }
+    const url = this.profileUrl(str);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.post<sales>(url, data, httpOptions);

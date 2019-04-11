@@ -51,6 +51,8 @@ export class PostComponent implements OnChanges {
   memos: Memo[];
   sales: string | number[];
   tips: string;
+  sales_rel: any[];
+
 
   constructor(
     private postProvider: PostProvider,
@@ -143,6 +145,7 @@ export class PostComponent implements OnChanges {
       this.likes = this.data.likes;
       this.pk = this.data.pk;
       this.tips = this.data.tips;
+      this.sales_rel = this.data.sales_rel;
       this.checkLiked();
       const likeStats = this.likeStatus;
       if (likeStats) {
@@ -151,8 +154,8 @@ export class PostComponent implements OnChanges {
         }
       }
     } else {
-      if (memos.length > 3) {
-        this.memos = memos.slice(0, 3).map(value => {
+      if (memos.length > 1) {
+        this.memos = memos.slice(0, 1).map(value => {
           return new Memo(value, this.memoProvider);
         });
       } else {

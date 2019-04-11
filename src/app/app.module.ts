@@ -14,6 +14,7 @@ import { Inbox } from "./pages/inbox";
 import { Dashboard } from "./pages/dashboard";
 import { HomePages } from "./pages/home";
 import { NotificationsPage } from "../pages/notifications/notifications";
+import { AgenciesSummaryPage } from "../pages/agencies-summary/agencies-summary";
 
 //imported modules
 import { DirectivesModule } from "../directives/directives.module";
@@ -39,6 +40,7 @@ import { effectsModule } from "./effects-module";
     TabsPage,
     SignInPage,
     NotificationsPage,
+    AgenciesSummaryPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,
@@ -78,6 +80,7 @@ import { effectsModule } from "./effects-module";
     TabsPage,
     SignInPage,
     NotificationsPage,
+    AgenciesSummaryPage,
     ...Dashboard,
     ...Inbox,
     ...Profile,

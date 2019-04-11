@@ -55,6 +55,7 @@ export class TabsPage extends ApiUrlModules {
   tab3Root = ApplicationsPage;
   tab4Root = InboxPage;
   tab5Root = ProfilePage;
+  hq = false;
 
   constructor(
     public storage: Storage,
@@ -85,6 +86,10 @@ export class TabsPage extends ApiUrlModules {
     const profileInit$ = new Subject<boolean>(),
           profile$: Observable<profile> = this.store.pipe(select('profile'));
     this.listenWsEvents(profile$, profileInit$);
+    this.events.subscribe('this is hq', value => {
+      this.hq = value;
+      this.storage.set('hq', 'true');
+    });
   }
 
   ionViewWillEnter() {
@@ -97,6 +102,7 @@ export class TabsPage extends ApiUrlModules {
     this.statusBarConfig(true);
     this.events.subscribe('sign out', data => {
       this.signedIn = data;
+      this.hq = false;
     });
     this.splashScreenCtrl();
     this.userId().subscribe(userId => {
@@ -108,6 +114,11 @@ export class TabsPage extends ApiUrlModules {
         const profileInit$ = new Subject<boolean>(),
               profile$: Observable<profile> = this.store.pipe(select('profile'));
         this.listenWsEvents(profile$, profileInit$);
+        this.storage.get('hq').then(hq => {
+          if (hq === 'true') {
+            this.hq = true;
+          }
+        })
       } else {
         this.signedIn = 'not sign in';
       }

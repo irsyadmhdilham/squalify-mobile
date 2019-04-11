@@ -37,11 +37,22 @@
         </ion-select>
       </ion-item>
       <ion-item>
+        <ion-label>Add sales to a different date (OPTIONAL)</ion-label>
+        <ion-select [(ngModel)]="effectiveDate" (ionChange)="effectiveDateChange($event)" interface="action-sheet">
+          <ion-option value="now">Now</ion-option>
+          <ion-option value="pick timestamp">Select date and time</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item *ngIf="pickTimestamp">
+        <ion-label>Sales date and time</ion-label>
+        <ion-datetime [(ngModel)]="timestamp" placeholder="Pick datetime" displayFormat="D MMM YYYY, h:mma" max="2020"></ion-datetime>
+      </ion-item>
+      <ion-item>
         <!-- <ion-label stacked>Say some word</ion-label> -->
         <ion-textarea [(ngModel)]="tips" placeholder="Write anything to share with your collegue on your sales post. eg: How do you do it, Tips, Affirmation"></ion-textarea>
       </ion-item>
       <p margin>This information will not be show to others</p>
-      <button (tap)="clientMethodHandler()" id="client-label" ion-item large>
+      <button (tap)="clientMethodHandler()" class="button-label" ion-item large>
         Client name
       </button>
       <ion-item *ngIf="clientMethod === 'contact'">

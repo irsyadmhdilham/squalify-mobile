@@ -4,7 +4,7 @@
     <section padding class="title-container">
       <div [ngStyle]="profileImageView()" class="profile-image"></div>
       <div class="title-wrapper">
-        <h6 no-margin ion-text color="dark"><span>{{name}}</span> closed sales</h6>
+        <h6 no-margin ion-text color="dark"><span>{{name}}</span> added {{sales_rel.length}} sales</h6>
         <p class="timestamp">{{dateDisplay()}}</p>
       </div>
     </section>
@@ -26,7 +26,7 @@
           <p ion-text color="dark" class="monthly-sales">Monthly sales: <span>RM{{monthlySales | numCommas}}</span></p>
         </ion-row> -->
       </div>
-      <p *ngIf="tips">{{tips}}</p>
+      <p *ngIf="tips" [ngStyle]="{ whiteSpace: 'pre-line' }">{{tips}}</p>
     </section>
     <ion-row margin-left margin-bottom>
       <p ion-text class="likes-total total" color="grey" *ngIf="likes.length > 0">{{likes.length}} likes</p>

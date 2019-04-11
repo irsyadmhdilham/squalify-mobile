@@ -7,6 +7,8 @@ import {
   ModalController,
   ActionSheetController
 } from "ionic-angular";
+import * as moment from "moment";
+import { Storage } from "@ionic/storage";
 
 import { AgencyProvider } from "../../../providers/agency/agency";
 import { SalesProvider } from "../../../providers/sales/sales";
@@ -27,6 +29,9 @@ export class AddSalesComponent {
   contactId: number;
   clientMethod: string;
   tips: string;
+  timestamp: string;
+  pickTimestamp: boolean;
+  effectiveDate = 'now';
 
   constructor(
     private viewCtrl: ViewController,
@@ -35,7 +40,8 @@ export class AddSalesComponent {
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private storage: Storage
   ) { }
 
   dismiss() {
@@ -73,8 +79,23 @@ export class AddSalesComponent {
     });
   }
 
+  lastTips() {
+    this.storage.get('tips').then(tips => {
+      if (tips) {
+        this.tips = tips;
+      }
+    });
+  }
+
+  saveTips() {
+    if (this.tips) {
+      this.storage.set('tips', this.tips);
+    }
+  }
+
   ionViewDidLoad() {
     this.getCompany();
+    this.lastTips();
   }
 
   clientMethodHandler() {
@@ -98,6 +119,14 @@ export class AddSalesComponent {
         this.contactId = data.pk;
       }
     })
+  }
+
+  effectiveDateChange(value: string) {
+    if (value === 'pick timestamp') {
+      this.pickTimestamp = true;
+    } else {
+      this.pickTimestamp = false;
+    }
   }
 
   async addSales(amountNgModel: NgModel, salesTypeNgModel: NgModel, locationNgModel: NgModel) {
@@ -128,9 +157,13 @@ export class AddSalesComponent {
       if (this.tips !== '' && this.tips) {
         data.tips = this.tips;
       }
+      if (this.pickTimestamp) {
+        data.timestamp = moment(this.timestamp, 'YYYY-MM-DD HH:mm:ss').toDate();
+      }
       loading.present();
-      this.salesProvider.createSales(data).subscribe(sales => {
+      this.salesProvider.createSales(data, this.pickTimestamp).subscribe(sales => {
         loading.dismiss();
+        this.saveTips();
         this.salesProvider.addSalesEmit(sales.amount);
         this.viewCtrl.dismiss({ sales });
       }, () => {

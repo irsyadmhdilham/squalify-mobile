@@ -237,7 +237,7 @@ export class ContactsPage {
         { text: 'Contacted via Social media', handler: () => called('Social media')},
         { text: 'Contacted via Telegram', handler: () => called('Telegram')},
         { text: 'Contacted via Email', handler: () => called('Email')},
-        { text: 'Contacted via Face to face', handler: () => called('Face to face')},
+        { text: 'Meeting Face to face', handler: () => called('Face to face')},
         { text: 'Cancel', cssClass: 'danger-alert', role: 'cancel' }
       ]
     });

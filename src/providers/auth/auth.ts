@@ -13,6 +13,7 @@ interface auth {
     agency_id: number;
     token: string;
     fcm_id: number;
+    hq: boolean;
   };
 }
 

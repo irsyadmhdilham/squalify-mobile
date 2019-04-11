@@ -63,10 +63,12 @@ export class PointAttributeComponent extends AttributeFeatures implements OnChan
     };
     switch (this.attribute) {
       case 'Case closed':
-        this.caseClosed().then(data => {
+        this.caseClosed().then((data: any) => {
           if (data) {
-            addPoint();
-            this.addAction();
+            if (!data.timestamp) {
+              addPoint();
+              this.addAction();
+            }
           }
         });
       break;

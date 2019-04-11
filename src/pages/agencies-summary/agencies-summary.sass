@@ -1,0 +1,87 @@
+page-agencies-summary
+  ion-content
+    margin-top: 2em
+
+  .title
+    margin-left: .3em
+  
+  #total-container ion-row
+    > div:first-child
+      p
+        margin-top: .3em
+  
+    div:last-child > p
+      margin-left: .5em
+      margin-top: .3em
+  
+  .total-percentage
+    height: 2em
+
+  .percentage-container
+    > p
+      font-size: 1.2rem
+      margin: .5em 0 0
+
+    .percentage-top
+      display: flex
+      align-items: center
+
+  .percentage-wrapper
+    margin-left: .5em
+    display: flex
+    align-items: center
+    padding: .2em .5em
+    border-radius: 100px
+
+    p
+      font-size: 1.2rem
+
+  .percentage-positive
+    background: rgba(color($colors, secondary), .3)
+
+    ion-icon
+      transform: rotate(-45deg)
+
+    p
+      color: darken(color($colors, secondary), 20%)
+
+  .percentage-negative
+    background: rgba(color($colors, danger), .3)
+
+    ion-icon
+      transform: rotate(45deg)
+
+    p
+      color: darken(color($colors, danger), 20%)
+
+  .percentage-neutral
+    background: rgba(color($colors, primary), .3)
+
+    ion-icon
+      display: none
+
+    p
+      color: darken(color($colors, primary), 20%)
+  
+  .total-new-sales
+    font-size: 1.2rem
+  
+  ion-grid
+    ion-row ion-col
+      display: grid
+      grid-template-columns: 20px auto
+      align-items: center
+
+      .contact-bullet
+        grid-column: 1
+        grid-row: 1 / span 2
+        width: 12px
+        height: 12px
+        border-radius: 100%
+        background: pink
+
+      p
+        font-size: 1.2rem
+  
+  #engagement-container, #sales-container, #recruitment-container, #career-container, #contacts-container
+    border-top: solid 1px color($colors, lightGrey)

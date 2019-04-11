@@ -66,8 +66,9 @@ export class Ids {
       const userId = this.storage.remove('userId'),
             agencyId = this.storage.remove('agencyId'),
             token = this.storage.remove('apiToken'),
-            fcmId = this.storage.remove('fcmId');
-      Promise.all([userId, agencyId, token, fcmId]).then(() => {
+            fcmId = this.storage.remove('fcmId'),
+            hq = this.storage.remove('hq');
+      Promise.all([userId, agencyId, token, fcmId, hq]).then(() => {
         resolve(true);
       }).catch(() => {
         reject(false);
