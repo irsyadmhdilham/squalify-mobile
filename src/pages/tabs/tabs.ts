@@ -194,6 +194,7 @@ export class TabsPage extends ApiUrlModules {
           const inboxId = parseInt(observe.inbox_id),
                 notifId = parseInt(observe.notif_id),
                 memoId = parseInt(observe.memo_id);
+          console.log(JSON.stringify(observe));
           if (title === 'like post' || title === 'comment post' || title === 'closed sales') {
             const postId = parseInt(observe.post_id),
                   notifId = parseInt(observe.notif_id);

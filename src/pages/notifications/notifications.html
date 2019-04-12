@@ -18,6 +18,7 @@
         <h6 *ngSwitchCase="'closed sales'"><span>{{notif.notified_by.name}}</span> closed sales</h6>
         <h6 *ngSwitchCase="'inbox'"><span>{{notif.notified_by.name}}</span> send you a message</h6>
         <h6 *ngSwitchCase="'group inbox'"><span>{{notif.notified_by.name}}</span> send a message in {{inboxGroupText(notif)}}</h6>
+        <h6 *ngSwitchCase="'memo'"><span>{{notif.notified_by.name}}</span> post a memo</h6>
       </ng-container>
       <p>{{timestamp(notif.timestamp)}}</p>
     </ion-item>

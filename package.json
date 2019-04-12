@@ -122,9 +122,9 @@
       "cordova-clipboard": {}
     },
     "platforms": [
-      "ios",
       "android",
-      "browser"
+      "browser",
+      "ios"
     ]
   }
 }
