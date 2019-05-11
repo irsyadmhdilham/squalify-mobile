@@ -5,8 +5,7 @@ import {
   AlertController,
   LoadingController,
   Platform,
-  TextInput,
-  Events
+  TextInput
 } from 'ionic-angular';
 import { Firebase } from "@ionic-native/firebase";
 import { Store } from "@ngrx/store";
@@ -33,8 +32,7 @@ export class SignInPage {
     private LoadingCtrl: LoadingController,
     private firebase: Firebase,
     private platform: Platform,
-    private store: Store<store>,
-    private events: Events
+    private store: Store<store>
   ) { }
 
   alert(title, message) {
@@ -85,9 +83,6 @@ export class SignInPage {
           loading.dismiss();
           this.initializer();
           this.signingIn.emit('signed in');
-          if (observe.data.hq) {
-            this.events.publish('this is hq', true);
-          }
         });
       }
     }, () => {

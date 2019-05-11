@@ -1,18 +1,12 @@
 <ng-container [ngSwitch]="signedIn">
   <page-sign-in *ngSwitchCase="'not sign in'" (signingIn)="signIn($event)"></page-sign-in>
   <ng-container *ngSwitchDefault>
-    <ng-container *ngIf="hq; then hqBlock else normalBlock"></ng-container>
-    <ng-template #hqBlock>
-      <page-agencies-summary [signedIn]="signedIn"></page-agencies-summary>
-    </ng-template>
-    <ng-template #normalBlock>
-      <ion-tabs selectedIndex="0">
-        <ion-tab tabsHideOnSubPages [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
-        <ion-tab tabsHideOnSubPages [root]="tab2Root" tabTitle="Dashboard" tabIcon="stats"></ion-tab>
-        <ion-tab tabsHideOnSubPages [root]="tab3Root" tabTitle="Apps" tabIcon="apps"></ion-tab>
-        <ion-tab tabsHideOnSubPages [root]="tab4Root" tabTitle="Inbox" tabIcon="mail"></ion-tab>
-        <ion-tab tabsHideOnSubPages [root]="tab5Root" tabTitle="Profile" tabIcon="contact"></ion-tab>
-      </ion-tabs>
-    </ng-template>
+    <ion-tabs selectedIndex="0">
+      <ion-tab tabsHideOnSubPages [root]="tab1Root" tabTitle="Home" tabIcon="home"></ion-tab>
+      <ion-tab tabsHideOnSubPages [root]="tab2Root" tabTitle="Dashboard" tabIcon="stats"></ion-tab>
+      <ion-tab tabsHideOnSubPages [root]="tab3Root" tabTitle="Apps" tabIcon="apps"></ion-tab>
+      <ion-tab tabsHideOnSubPages [root]="tab4Root" tabTitle="Inbox" tabIcon="mail"></ion-tab>
+      <ion-tab tabsHideOnSubPages [root]="tab5Root" tabTitle="Profile" tabIcon="contact"></ion-tab>
+    </ion-tabs>
   </ng-container>
 </ng-container>

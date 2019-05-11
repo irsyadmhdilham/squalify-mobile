@@ -87,10 +87,6 @@ export class TabsPage extends ApiUrlModules {
     const profileInit$ = new Subject<boolean>(),
           profile$: Observable<profile> = this.store.pipe(select('profile'));
     this.listenWsEvents(profile$, profileInit$);
-    this.events.subscribe('this is hq', value => {
-      this.hq = value;
-      this.storage.set('hq', 'true');
-    });
   }
 
   ionViewWillEnter() {
