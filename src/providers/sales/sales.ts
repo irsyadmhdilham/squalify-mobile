@@ -107,8 +107,14 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  getSales(period: string, salesType: string, salesStatus: string): Observable<sales[]> {
-    const url = this.profileUrl(`sales/?p=${period}&st=${salesType}&s=${salesStatus}`);
+  getSales(period: string, salesType: string, salesStatus: string, dateSelect?: {from: Date; until: Date}): Observable<sales[]> {
+    const dateSelectFunc = () => {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    };
+    const url = this.profileUrl(`sales/?p=${period}&st=${salesType}&s=${salesStatus}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<salesResponse[]>(url, httpOptions).pipe(map(response => {
@@ -158,8 +164,14 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  groupSalesFilter(period: string, type: string, status: string): Observable<groupSales[]> {
-    const url = this.profileUrl(`sales/group/filter/?p=${period}&st=${type}&s=${status}`);
+  groupSalesFilter(period: string, type: string, status: string, dateSelect?: {from: Date; until: Date}): Observable<groupSales[]> {
+    const dateSelectFunc = () => {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    };
+    const url = this.profileUrl(`sales/group/filter/?p=${period}&st=${type}&s=${status}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<groupResponse[]>(url, httpOptions).pipe(map(response => {

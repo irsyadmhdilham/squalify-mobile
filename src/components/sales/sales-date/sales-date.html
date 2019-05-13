@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (tap)="cancel()" ion-button clear icon-only color="dark">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Select date</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label>Date from</ion-label>
+      <ion-datetime [(ngModel)]="from" displayFormat="D MMM YYYY" placeholder="Select date"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>Date until</ion-label>
+      <ion-datetime [(ngModel)]="until" displayFormat="D MMM YYYY" placeholder="Select date"></ion-datetime>
+    </ion-item>
+  </ion-list>
+  <ion-row justify-content-center>
+    <button clear ion-button (tap)="submit()">Submit</button>
+  </ion-row>
+</ion-content>
