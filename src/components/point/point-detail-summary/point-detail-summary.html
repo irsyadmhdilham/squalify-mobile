@@ -21,7 +21,10 @@
         <ion-row>
           <div>
             <h4 no-margin>{{total.current}} points</h4>
-            <p no-margin ion-text color="grey">This {{period}}</p>
+            <p no-margin ion-text color="grey" [ngSwitch]="period">
+              <span *ngSwitchCase="'year'">This year</span>
+              <span *ngSwitchCase="'select date'">{{dateSelect.from | dateRange}} - {{dateSelect.until | dateRange}}</span>
+            </p>
           </div>
           <div margin-left>
             <div class="percentage-wrapper total-percentage" [ngClass]="percentageContainerStyle(total.diff_percentage)">

@@ -187,8 +187,14 @@ export class PointProvider extends ApiUrlModules {
     }));
   }
 
-  personalSummary(period: string): Observable<summary> {
-    const url = this.profileUrl(`point/summary/?p=${period}`);
+  personalSummary(period: string, dateSelect?: { from: string; until: string }): Observable<summary> {
+    const dateSelectFunc = () => {
+      if (dateSelect) {
+        return `&f=${dateSelect.from}&u=${dateSelect.until}`;
+      }
+      return '';
+    };
+    const url = this.profileUrl(`point/summary/?p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {
@@ -204,8 +210,14 @@ export class PointProvider extends ApiUrlModules {
     }));
   }
 
-  groupSummary(period: string): Observable<summary> {
-    const url = this.profileUrl(`point/group/summary/?p=${period}`);
+  groupSummary(period: string, dateSelect?: { from: string; until: string }): Observable<summary> {
+    const dateSelectFunc = () => {
+      if (dateSelect) {
+        return `&f=${dateSelect.from}&u=${dateSelect.until}`;
+      }
+      return '';
+    };
+    const url = this.profileUrl(`point/group/summary/?p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {

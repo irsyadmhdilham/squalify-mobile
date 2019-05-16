@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ViewController, AlertController } from "ionic-angular";
+import { ViewController, AlertController, NavParams } from "ionic-angular";
 import * as moment from "moment";
 
 @Component({
@@ -11,7 +11,19 @@ export class SalesDateComponent {
   from: string;
   until: string;
 
-  constructor(private viewCtrl: ViewController, private alertCtrl: AlertController) { }
+  constructor(
+    private viewCtrl: ViewController,
+    private alertCtrl: AlertController,
+    private navParams: NavParams
+  ) { }
+
+  ionViewDidLoad() {
+    const dateSelect: {from: Date; until: Date;} = this.navParams.get('dateSelect');
+    if (dateSelect) {
+      this.from = moment(dateSelect.from).format('YYYY-MM-DD');
+      this.until = moment(dateSelect.until).format('YYYY-MM-DD');
+    }
+  }
 
   cancel() {
     this.viewCtrl.dismiss();

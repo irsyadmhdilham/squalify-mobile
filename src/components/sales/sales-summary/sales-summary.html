@@ -22,6 +22,10 @@
     [retry]="segment === 'personal' ? fetch.bind(this) : fetchGroup.bind(this)"
   ></fetch-error>
   <section *ngSwitchDefault margin-bottom>
+    <section [ngSwitch]="period">
+      <p no-margin *ngSwitchCase="'all'">Period : All</p>
+      <p no-margin *ngSwitchCase="'select date'">Period: {{dateSelect.from | date:'d MMM'}} - {{dateSelect.until | date:'d MMM'}}</p>
+    </section>
     <section id="table-header">
       <div></div>
       <p ion-text color="grey" no-margin text-center>Cases</p>

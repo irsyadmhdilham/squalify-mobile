@@ -12,7 +12,11 @@
   </ion-segment>
   <ion-row padding-horizontal padding-bottom>
     <div (tap)="selectPeriod()" header-button [activeButton]="periodActive">
-      <p class="header-button-bold" ion-text [color]="periodActive ? 'white': 'dark'" no-margin>{{period | titlecase}}</p>
+      <p class="header-button-bold" ion-text [color]="periodActive ? 'white': 'dark'" no-margin [ngSwitch]="period">
+        <span *ngSwitchCase="'year'">Year</span>
+        <span *ngSwitchCase="'select date'">{{dateSelect.from | dateRange}} - {{dateSelect.until | dateRange}}</span>
+        <span *ngSwitchDefault>Period</span>
+      </p>
     </div>
     <div class="header-button-left-margin" (tap)="selectSalesType()" header-button [activeButton]="salesTypeActive">
       <p class="header-button-bold" ion-text [color]="salesTypeActive ? 'white': 'dark'" no-margin>{{salesType | titlecase}}</p>

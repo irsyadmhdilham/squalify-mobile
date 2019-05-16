@@ -15,8 +15,14 @@ export class ScoreboardProvider extends ApiUrlModules {
     super(storage);
   }
 
-  getSalesScore(period: string, salesType: string): Observable<salesScore[]> {
-    let url = this.agencyUrl(`scoreboard/?st=${salesType}&p=${period}`);
+  getSalesScore(period: string, salesType: string, dateSelect?: { from: Date; until: Date; }): Observable<salesScore[]> {
+    function dateSelectFunc() {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    }
+    let url = this.agencyUrl(`scoreboard/?st=${salesType}&p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<salesScore[]>(url, httpOptions);
@@ -31,8 +37,14 @@ export class ScoreboardProvider extends ApiUrlModules {
     }));
   }
 
-  getPointScore(period: string): Observable<pointScore[]> {
-    const url = this.profileUrl(`point/scoreboard/?q=${period}`);
+  getPointScore(period: string, dateSelect?: { from: Date; until: Date; }): Observable<pointScore[]> {
+    function dateSelectFunc() {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    }
+    const url = this.profileUrl(`point/scoreboard/?q=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<pointScore[]>(url, httpOptions);

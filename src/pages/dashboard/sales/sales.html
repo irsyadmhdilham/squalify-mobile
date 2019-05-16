@@ -14,7 +14,7 @@
 
 <ion-content [ngSwitch]="segment" padding-horizontal>
   <section id="filter-container" margin-bottom>
-    <ng-container *ngIf="period === 'select date' && dateSelect; then selectDateBlock else selectPeriodBlock"></ng-container>
+    <!-- <ng-container *ngIf="period === 'select date' && dateSelect; then selectDateBlock else selectPeriodBlock"></ng-container>
     <ng-template #selectDateBlock>
       <ion-item no-lines no-padding>
         <p [ngStyle]="{fontSize: '1.2rem'}">Period</p>
@@ -41,14 +41,14 @@
           <ion-option>In hand</ion-option>
         </ion-select>
       </ion-item>
-    </ng-template>
-    <ng-template #selectPeriodBlock>
+    </ng-template> -->
+    <!-- <ng-template #selectPeriodBlock> -->
       <ion-item no-lines no-padding>
-        <ion-label stacked>Period</ion-label>
-        <ion-select interface="action-sheet" (ionChange)="selectPeriod()" [(ngModel)]="period">
-          <ion-option value="all">All</ion-option>
-          <ion-option value="select date">Select date</ion-option>
-        </ion-select>
+        <p [ngStyle]="{fontSize: '1.2rem'}">Period</p>
+        <p (tap)="selectDateAction()" margin-top ion-text color="dark" [ngStyle]="{fontSize: '1.2rem'}" [ngSwitch]="period">
+          <span *ngSwitchCase="'all'">All</span>
+          <span *ngSwitchCase="'select date'">{{dateSelect.from | dateRange}} - {{dateSelect.until | dateRange}}</span>
+        </p>
       </ion-item>
       <ion-item no-lines no-padding>
         <ion-label stacked>Sales type</ion-label>
@@ -71,7 +71,7 @@
           <ion-option>In hand</ion-option>
         </ion-select>
       </ion-item>
-    </ng-template>
+    <!-- </ng-template> -->
   </section>
   <ion-row justify-content-between align-items-start>
     <section>

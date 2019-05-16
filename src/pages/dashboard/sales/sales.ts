@@ -27,7 +27,7 @@ export class SalesPage {
   personalSales: sales[] = [];
   cancel = false;
   groupSales = [];
-  dateSelect: { from: string; until: string; };
+  dateSelect: { from: Date; until: Date; };
 
   constructor(
     public navCtrl: NavController,
@@ -94,7 +94,9 @@ export class SalesPage {
     let salesType = this.salesType;
     const modal = this.modalCtrl.create(SalesSummaryComponent, {
       type: salesType,
-      segment: this.segment
+      segment: this.segment,
+      period: this.period,
+      dateSelect: this.dateSelect
     });
     modal.present();
   }
@@ -132,10 +134,26 @@ export class SalesPage {
         { text: 'All', handler: () => {
           this.period = 'all';
           this.dateSelect = undefined;
-          this.fetchPersonalSales();
+          if (this.segment === 'personal') {
+            this.fetchPersonalSales();
+          } else {
+            this.filterGroupSales();
+          }
         }},
         { text: 'Select date', handler: () => {
-          this.fetchPersonalSales();
+          const selectDate = this.modalCtrl.create(SalesDateComponent, { dateSelect: this.dateSelect });
+          selectDate.present();
+          selectDate.onDidDismiss((data: {from: Date; until: Date}) => {
+            if (data) {
+              this.dateSelect = data;
+              this.period = 'select date';
+              if (this.segment === 'personal') {
+                this.fetchPersonalSales();
+              } else {
+                this.filterGroupSales();
+              }
+            }
+          });
         }}
       ]
     });
@@ -146,36 +164,13 @@ export class SalesPage {
     const period = this.period,
           salesType = this.salesType,
           salesStatus = this.salesStatus;
-    if (period === 'select date') {
-      const selectDate = this.modalCtrl.create(SalesDateComponent);
-      selectDate.present();
-      selectDate.onDidDismiss((data: {from: Date; until: Date}) => {
-        if (data) {
-          this.dateSelect = {
-            from: moment(data.from).format('D MMM'),
-            until: moment(data.until).format('D MMM')
-          }
-          this.pageStatus = 'loading';
-          this.salesProvider.getSales(period, salesType, salesStatus, data).subscribe(sales => {
-            this.pageStatus = undefined;
-            this.personalSales = sales;
-          }, () => {
-            this.pageStatus = 'error';
-          });
-        } else {
-          this.period = 'all'
-        }
-      });
-    } else {
-      this.pageStatus = 'loading';
-      this.dateSelect = undefined;
-      this.salesProvider.getSales(period, salesType, salesStatus).subscribe(sales => {
-        this.pageStatus = undefined;
-        this.personalSales = sales;
-      }, () => {
-        this.pageStatus = 'error';
-      });
-    }
+    this.pageStatus = 'loading';
+    this.salesProvider.getSales(period, salesType, salesStatus, this.dateSelect).subscribe(sales => {
+      this.pageStatus = undefined;
+      this.personalSales = sales;
+    }, () => {
+      this.pageStatus = 'error';
+    });
   }
 
   fetchGroupSales() {
@@ -192,36 +187,13 @@ export class SalesPage {
     const period = this.period,
           salesType = this.salesType,
           salesStatus = this.salesStatus;
-    if (this.period === 'select date') {
-      const selectDate = this.modalCtrl.create(SalesDateComponent);
-      selectDate.present();
-      selectDate.onDidDismiss((data: {from: Date; until: Date}) => {
-        if (data) {
-          this.dateSelect = {
-            from: moment(data.from).format('D MMM'),
-            until: moment(data.until).format('D MMM')
-          }
-          this.pageStatus = 'loading';
-          this.salesProvider.groupSalesFilter(period, salesType, salesStatus, data).subscribe(sales => {
-            this.pageStatus = undefined;
-            this.groupSales = sales;
-          }, () => {
-            this.pageStatus = 'error';
-          });
-        } else {
-          this.period = 'all'
-        }
-      });
-    } else {
-      this.pageStatus = 'loading';
-      this.dateSelect = undefined;
-      this.salesProvider.groupSalesFilter(period, salesType, salesStatus).subscribe(sales => {
-        this.pageStatus = undefined;
-        this.groupSales = sales;
-      }, () => {
-        this.pageStatus = 'error';
-      });
-    }
+    this.pageStatus = 'loading';
+    this.salesProvider.groupSalesFilter(period, salesType, salesStatus, this.dateSelect).subscribe(sales => {
+      this.pageStatus = undefined;
+      this.groupSales = sales;
+    }, () => {
+      this.pageStatus = 'error';
+    });
   }
 
   ionViewDidLoad() {

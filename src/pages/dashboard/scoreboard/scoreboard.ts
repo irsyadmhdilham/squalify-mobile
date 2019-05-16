@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ActionSheetController, ModalController } from 'ionic-angular';
 import { Subscription } from "rxjs/Subscription";
 
 import { ScoreboardProvider } from "../../../providers/scoreboard/scoreboard";
 import { PointProvider } from "../../../providers/point/point";
 import { SalesProvider } from "../../../providers/sales/sales";
 import { pointScore, salesScore } from "../../../models/scoreboard";
+import { SalesDateComponent } from "../../../components/sales/sales-date/sales-date";
 
 @Component({
   selector: 'page-scoreboard',
@@ -24,6 +25,7 @@ export class ScoreboardPage {
   addPointListener: Subscription;
   subtractPointListener: Subscription;
   addSalesListener: Subscription;
+  dateSelect: { from: Date; until: Date; };
 
   constructor(
     public navCtrl: NavController,
@@ -31,7 +33,8 @@ export class ScoreboardPage {
     private scoreboardProvider: ScoreboardProvider,
     private actionSheetCtrl: ActionSheetController,
     private pointProvider: PointProvider,
-    private salesProvider: SalesProvider
+    private salesProvider: SalesProvider,
+    private modalCtrl: ModalController
   ) { }
 
   selectSalesType() {
@@ -58,21 +61,39 @@ export class ScoreboardPage {
     const actionSheet = this.actionSheetCtrl.create({
       title: 'Select period',
       buttons: [
-        { text: 'Year', handler: () => { this.period = 'year'; this.periodActive = true; }},
-        { text: 'Month', handler: () => { this.period = 'month'; this.periodActive = true; }},
-        { text: 'Week', handler: () => { this.period = 'week'; this.periodActive = true; }},
-        { text: 'Today', handler: () => { this.period = 'today'; this.periodActive = true; }},
+        { text: 'Year', handler: () => {
+          this.period = 'year';
+          this.periodActive = true;
+          this.dateSelect = undefined;
+          if (this.segment === 'sales') {
+            this.fetchSalesScore();
+          } else {
+            this.fetchPointScore();
+          }
+        }},
+        { text: 'Select date', handler: () => {
+          const pickDate = this.modalCtrl.create(SalesDateComponent, { dateSelect: this.dateSelect });
+          pickDate.present();
+          pickDate.onDidDismiss((data: { from: Date; until: Date; }) => {
+            if (data) {
+              this.period = 'select date';
+              this.dateSelect = data;
+              this.periodActive = true;
+              if (this.segment === 'sales') {
+                this.fetchSalesScore();
+              } else {
+                this.fetchPointScore();
+              }
+            }
+          });
+        }},
+        // { text: 'Month', handler: () => { this.period = 'month'; this.periodActive = true; }},
+        // { text: 'Week', handler: () => { this.period = 'week'; this.periodActive = true; }},
+        // { text: 'Today', handler: () => { this.period = 'today'; this.periodActive = true; }},
         { text: 'Cancel', role: 'cancel' }
       ]
     });
     actionSheet.present();
-    actionSheet.onDidDismiss(() => {
-      if (this.segment === 'sales') {
-        this.fetchSalesScore();
-      } else {
-        this.fetchPointScore();
-      }
-    });
   }
 
   segmentChanged(event) {
@@ -97,7 +118,7 @@ export class ScoreboardPage {
     this.pageStatus = 'loading';
     const period = this.period,
           salesType = this.salesType;
-    this.scoreboardProvider.getSalesScore(period, salesType).subscribe(sales => {
+    this.scoreboardProvider.getSalesScore(period, salesType, this.dateSelect).subscribe(sales => {
       this.pageStatus = undefined;
       this.salesScorer = sales;
     }, () => {
@@ -108,7 +129,7 @@ export class ScoreboardPage {
   fetchPointScore() {
     this.pageStatus = 'loading';
     const period = this.period;
-    this.scoreboardProvider.getPointScore(period).subscribe(observe => {
+    this.scoreboardProvider.getPointScore(period, this.dateSelect).subscribe(observe => {
       this.pageStatus = undefined;
       this.pointScorer = observe;
     }, () => {

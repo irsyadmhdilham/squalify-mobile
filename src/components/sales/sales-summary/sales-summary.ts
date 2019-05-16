@@ -22,6 +22,8 @@ export class SalesSummaryComponent {
   year: salesStatus = this.salesStatus;
   screenStatus: string;
   segment: string = this.navParams.get('segment');
+  period: string = this.navParams.get('period');
+  dateSelect: { from: Date; until: Date; } = this.navParams.get('dateSelect');
   salesType = 'sales type';
   salesTypeActive = false
   cancel = false;

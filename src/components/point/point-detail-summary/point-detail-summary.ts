@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { ViewController, ActionSheetController, NavParams } from "ionic-angular";
+import { ViewController, ActionSheetController, NavParams, ModalController } from "ionic-angular";
 import { Chart } from "chart.js";
 import { Subject } from "rxjs";
 import { Subscription } from "rxjs/Subscription";
+import * as moment from "moment";
 
 import { PointProvider } from "../../../providers/point/point";
 import {
@@ -15,6 +16,7 @@ import {
   consultantPerfRange
 } from "../../../models/point";
 import { ContactType as contactColor } from "../../../functions/colors";
+import { SalesDateComponent } from "../../sales/sales-date/sales-date";
 
 @Component({
   selector: 'point-detail-summary',
@@ -38,12 +40,14 @@ export class PointDetailSummaryComponent {
   colors = contactColor;
   loadData = new Subject<boolean>();
   loadDataSubscription: Subscription;
+  dateSelect: { from: Date; until: Date };
 
   constructor(
     private viewCtrl: ViewController,
     private pointProvider: PointProvider,
     private actionSheetCtrl: ActionSheetController,
-    private navParams: NavParams
+    private navParams: NavParams,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
@@ -52,10 +56,17 @@ export class PointDetailSummaryComponent {
 
   fetch() {
     const fetch = () => {
+      let dateSelect;
+      if (this.period === 'select date') {
+        dateSelect = {
+          from: moment(this.dateSelect.from).toISOString(),
+          until: moment(this.dateSelect.until).toISOString()
+        };
+      }
       if (this.section === 'personal') {
-        return this.pointProvider.personalSummary(this.period);
+        return this.pointProvider.personalSummary(this.period, dateSelect);
       } else {
-        return this.pointProvider.groupSummary(this.period);
+        return this.pointProvider.groupSummary(this.period, dateSelect);
       }
     };
     this.pageStatus = 'loading';
@@ -261,24 +272,35 @@ export class PointDetailSummaryComponent {
             this.fetch();
           }
         }},
-        { text: 'Month', handler: () => {
-          if (this.period !== 'month') {
-            this.period = 'month';
-            this.fetch();
-          }
-        }},
-        { text: 'Week', handler: () => {
-          if (this.period !== 'week') {
-            this.period = 'week';
-            this.fetch();
-          }
-        }},
-        { text: 'Today', handler: () => {
-          if (this.period !== 'today') {
-            this.period = 'today';
-            this.fetch();
-          }
+        { text: 'Select date', handler: () => {
+          const pickDate = this.modalCtrl.create(SalesDateComponent, { dateSelect: this.dateSelect });
+          pickDate.present();
+          pickDate.onDidDismiss((data: { from: Date; until: Date }) => {
+            if (data) {
+              this.period = 'select date';
+              this.dateSelect = data;
+              this.fetch();
+            }
+          });
         }}
+        // { text: 'Month', handler: () => {
+        //   if (this.period !== 'month') {
+        //     this.period = 'month';
+        //     this.fetch();
+        //   }
+        // }},
+        // { text: 'Week', handler: () => {
+        //   if (this.period !== 'week') {
+        //     this.period = 'week';
+        //     this.fetch();
+        //   }
+        // }},
+        // { text: 'Today', handler: () => {
+        //   if (this.period !== 'today') {
+        //     this.period = 'today';
+        //     this.fetch();
+        //   }
+        // }}
       ]
     });
     action.present();
