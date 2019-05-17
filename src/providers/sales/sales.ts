@@ -6,7 +6,7 @@ import { Observable, Subject } from "rxjs";
 import { switchMap, map, take } from "rxjs/operators";
 
 import { ApiUrlModules } from "../../functions/config";
-import { sales, summary, groupSales, salesIo } from "../../models/sales";
+import { sales, groupSales, salesIo } from "../../models/sales";
 import { store } from "../../models/store";
 
 interface salesResponse {
@@ -34,24 +34,19 @@ interface groupResponse {
   downline?: number;
 }
 
-interface summaryOutput {
-  cases: number;
-  total: string;
-}
-
-interface salesStatus {
-  in_hand: summaryOutput;
-  submitted: summaryOutput;
-  rejected: summaryOutput;
-  disburst: summaryOutput;
+interface summary {
+  in_hand: { cases: number; total: number; };
+  submitted: { cases: number; total: number; };
+  rejected: { cases: number; total: number; };
+  disburst: { cases: number; total: number; };
 };
 
 interface summaryResponse {
-  year: salesStatus;
-  month: salesStatus;
-  week: salesStatus;
-  today: salesStatus;
-};
+  in_hand: { cases: number; total: string; };
+  submitted: { cases: number; total: string; };
+  rejected: { cases: number; total: string; };
+  disburst: { cases: number; total: string; };
+}
 
 @Injectable()
 export class SalesProvider extends ApiUrlModules {
@@ -138,8 +133,14 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  getPersonalSummary(salesType: string): Observable<summary> {
-    const url = this.profileUrl(`sales/summary/?st=${salesType}`);
+  getPersonalSummary(salesType: string, period: string, dateSelect: { from: Date; until: Date; }): Observable<summary> {
+    function dateSelectFunc() {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    }
+    const url = this.profileUrl(`sales/summary/?st=${salesType}&p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => {
@@ -186,88 +187,34 @@ export class SalesProvider extends ApiUrlModules {
   }
 
   summarySerializer(value: summaryResponse): summary {
-    const year = value.year,
-          month = value.month,
-          week = value.week,
-          today = value.today;
     return {
-      year: {
-        in_hand: {
-          ...year.in_hand,
-          total: parseFloat(year.in_hand.total)
-        },
-        rejected: {
-          ...year.rejected,
-          total: parseFloat(year.rejected.total)
-        },
-        disburst: {
-          ...year.disburst,
-          total: parseFloat(year.disburst.total)
-        },
-        submitted: {
-          ...year.submitted,
-          total: parseFloat(year.submitted.total)
-        }
+      in_hand: {
+        ...value.in_hand,
+        total: parseFloat(value.in_hand.total)
       },
-      month: {
-        in_hand: {
-          ...month.in_hand,
-          total: parseFloat(month.in_hand.total)
-        },
-        rejected: {
-          ...month.rejected,
-          total: parseFloat(month.rejected.total)
-        },
-        disburst: {
-          ...month.disburst,
-          total: parseFloat(month.disburst.total)
-        },
-        submitted: {
-          ...month.submitted,
-          total: parseFloat(month.submitted.total)
-        }
+      rejected: {
+        ...value.rejected,
+        total: parseFloat(value.rejected.total)
       },
-      week: {
-        in_hand: {
-          ...week.in_hand,
-          total: parseFloat(week.in_hand.total)
-        },
-        rejected: {
-          ...week.rejected,
-          total: parseFloat(week.rejected.total)
-        },
-        disburst: {
-          ...week.disburst,
-          total: parseFloat(week.disburst.total)
-        },
-        submitted: {
-          ...week.submitted,
-          total: parseFloat(week.submitted.total)
-        }
+      disburst: {
+        ...value.disburst,
+        total: parseFloat(value.disburst.total)
       },
-      today: {
-        in_hand: {
-          ...today.in_hand,
-          total: parseFloat(today.in_hand.total)
-        },
-        rejected: {
-          ...today.rejected,
-          total: parseFloat(today.rejected.total)
-        },
-        disburst: {
-          ...today.disburst,
-          total: parseFloat(today.disburst.total)
-        },
-        submitted: {
-          ...today.submitted,
-          total: parseFloat(today.submitted.total)
-        }
+      submitted: {
+        ...value.submitted,
+        total: parseFloat(value.submitted.total)
       }
     };
   }
 
-  getGroupSummary(type: string): Observable<summary> {
-    const url = this.profileUrl(`sales/group/summary/?st=${type}`);
+  getGroupSummary(type: string, period: string, dateSelect: { from: Date; until: Date; }): Observable<summary> {
+    function dateSelectFunc() {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    }
+    const url = this.profileUrl(`sales/group/summary/?st=${type}&p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => this.summarySerializer(response)));
@@ -305,8 +252,14 @@ export class SalesProvider extends ApiUrlModules {
     }));
   }
 
-  downlinesSummary(memberId: number, type: string): Observable<summary> {
-    const url = this.profileUrl(`sales/group/downlines/${memberId}/summary/?st=${type}`);
+  downlinesSummary(memberId: number, type: string, period: string, dateSelect: { from: Date; until: Date; }): Observable<summary> {
+    function dateSelectFunc() {
+      if (dateSelect) {
+        return `&f=${dateSelect.from.toISOString()}&u=${dateSelect.until.toISOString()}`;
+      }
+      return '';
+    }
+    const url = this.profileUrl(`sales/group/downlines/${memberId}/summary/?st=${type}&p=${period}${dateSelectFunc()}`);
     return url.pipe(switchMap(url => {
       return this.httpOptions().pipe(switchMap(httpOptions => {
         return this.http.get<summaryResponse>(url, httpOptions).pipe(map(response => this.summarySerializer(response)));

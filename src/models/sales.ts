@@ -26,13 +26,6 @@ export interface salesStatus {
   disburst: summaryOutput;
 };
 
-export interface summary {
-  year: salesStatus;
-  month: salesStatus;
-  week: salesStatus;
-  today: salesStatus;
-};
-
 export interface groupSales {
   pk: number;
   name: string;

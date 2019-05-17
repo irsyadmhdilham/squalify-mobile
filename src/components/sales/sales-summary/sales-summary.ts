@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams, ActionSheetController } from "ionic-angular";
+import { ViewController, NavParams, ActionSheetController, ModalController } from "ionic-angular";
 
 import { SalesProvider } from "../../../providers/sales/sales";
 import { salesStatus } from "../../../models/sales";
+import { SalesDateComponent } from "../sales-date/sales-date";
 
 @Component({
   selector: 'sales-summary',
@@ -16,23 +17,22 @@ export class SalesSummaryComponent {
     disburst: { cases: 0, total: 0 },
     in_hand: { cases: 0, total: 0 }
   };
-  today: salesStatus = this.salesStatus;
-  week: salesStatus = this.salesStatus;
-  month: salesStatus = this.salesStatus;
-  year: salesStatus = this.salesStatus;
+  summary: salesStatus = this.salesStatus;
   screenStatus: string;
   segment: string = this.navParams.get('segment');
-  period: string = this.navParams.get('period');
+  period: string = this.navParams.get('period') === 'all' ? 'Period': this.navParams.get('period');
   dateSelect: { from: Date; until: Date; } = this.navParams.get('dateSelect');
   salesType = 'sales type';
   salesTypeActive = false
+  periodActive = false;
   cancel = false;
 
   constructor(
     private salesProvider: SalesProvider,
     private viewCtrl: ViewController,
     private navParams: NavParams,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private modalCtrl: ModalController
   ) { }
 
   dismiss() {
@@ -68,14 +68,52 @@ export class SalesSummaryComponent {
     });
   }
 
+  periodChange() {
+    const action = this.actionSheetCtrl.create({
+      title: 'Select options below',
+      buttons: [
+        { text: 'All', handler: () => {
+          this.period = 'All';
+          this.periodActive = true;
+          this.dateSelect = undefined;
+          if (this.segment === 'personal') {
+            this.fetch();
+          } else {
+            this.fetchGroup();
+          }
+        }},
+        { text: 'Select date', handler: () => {
+          const pickDate = this.modalCtrl.create(SalesDateComponent, { dateSelect: this.dateSelect });
+          pickDate.present();
+          pickDate.onDidDismiss((data: { from: Date; until: Date }) => {
+            if (data) {
+              this.dateSelect = data;
+              this.period = 'select date';
+              this.periodActive = true;
+              if (this.segment === 'personal') {
+                this.fetch();
+              } else {
+                this.fetchGroup();
+              }
+            }
+          });
+        }}
+      ]
+    });
+    action.present();
+  }
+
   fetch() {
     this.screenStatus = 'loading';
-    this.salesProvider.getPersonalSummary(this.salesType).subscribe(summary => {
+    const period = () => {
+      if (this.period === 'Period' || this.period === 'All') {
+        return 'all';
+      }
+      return this.period.toLowerCase();
+    };
+    this.salesProvider.getPersonalSummary(this.salesType, period(), this.dateSelect).subscribe(summary => {
       this.screenStatus = undefined;
-      this.today = summary.today;
-      this.month = summary.month;
-      this.year = summary.year;
-      this.week = summary.week;
+      this.summary = summary;
     }, () => {
       this.screenStatus = 'error';
     });
@@ -83,12 +121,15 @@ export class SalesSummaryComponent {
 
   fetchGroup() {
     this.screenStatus = 'loading';
-    this.salesProvider.getGroupSummary(this.salesType).subscribe(summary => {
+    const period = () => {
+      if (this.period === 'Period' || this.period === 'All') {
+        return 'all';
+      }
+      return this.period.toLowerCase();
+    };
+    this.salesProvider.getGroupSummary(this.salesType, period(), this.dateSelect).subscribe(summary => {
       this.screenStatus = undefined;
-      this.today = summary.today;
-      this.month = summary.month;
-      this.year = summary.year;
-      this.week = summary.week;
+      this.summary = summary;
     }, () => {
       this.screenStatus = 'error';
     });
